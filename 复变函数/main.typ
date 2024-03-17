@@ -49,7 +49,7 @@
   #theorem[三角不等式][
     由于复平面的模就是欧式平面的模，自然成立三角不等式：
     $
-    |norm(a) - norm(b)| <= norm(a + b) <= norm(a) + norm(b)\
+    |norm(a) -)\
     $
   ]
   #theorem[][
@@ -353,6 +353,12 @@
         最后一式即表示 $f$ 在 $x_0 + y_0 i$ 处可导
     ]
     #theorem[][
+      设函数 $f$ 在连通区域 $G$ 上解析，且 $f' = 0$，则它是常函数
+    ]
+    #proof[
+      利用 
+    ]
+    #theorem[][
       设 $f = u + i v$ 可微，$u, v in C^2$，则有：
       $
       (diff^2 u)/(diff x^2) = (diff^2 v)/(diff x diff y)\
@@ -405,11 +411,48 @@
       设 $Omega$ 单连通，其上的 $C^2$ 解析函数 $f != 0$，则存在解析函数 $g(z)$ 使得 $e^(g(z)) = f(z)$
     ]
     #proof[
-      令 $u'(z) = ln norm(f(z))$ 
+      令 $u_1(z) = ln norm(f(z))$ 
       - 它是调和函数，因为\
-        // TODO
-      进而由之前的结论，存在 $v'(z)$ 使得 $h(z) := u'(z) + i v'(z)$ 是调和函数\
-      // TODO
+        $
+        ln norm(f(z)) = ln (x(z)^2 + y(z)^2)\
+        u'_1(a, b) = 1/(x(z)^2 + y(z)^2) (2 x(z) x'(z) + 2 y(z) y'(z))\
+        u''_1(a, b) = lambda ((x'^T x' + x x'' + y'^T y' + y y'')(x^2 + y^2) -2(x x' + y y')^T (x x' + y y'))\
+        $
+        计算得（这里 $x', y'$ 是行向量，$x'', y''$ 是矩阵）：
+        $
+        tr(u'') = lambda((x^2 + y^2)tr(x'^T x' + x x'' + y'^T y' + y y'') - 2 tr((x x' + y y')^T (x x' + y y'))) \
+        = lambda ((x^2 + y^2)tr(x'^T x' + y'^T y') - 2 (x x' + y y') (x x' + y y')^T)\
+        = lambda ((x^2 + y^2)(x' x'^T + y' y'^T) - 2 (x x' + y y') (x x' + y y')^T)\
+        = lambda (-x^2 norm(x')^2 - y^2 norm(y')^2+ x^2 norm(y')^2 + y^2 norm(x')^2 - 4 x y x' y'^T)\
+        = 0
+        $
+        过程中分别利用了：
+        $
+        tr(x'') = tr(y'') = 0\
+        norm(x') = norm(y')\
+        x' y'^T = 0\
+        $
+        这些性质都来源于 @C-R 
+
+      进而由之前的结论，存在 $v_1 (z)$ 使得 $h(z) := u_1(z) + i v_1(z)$ 是调和函数\
+      我们发现：
+      $
+      norm(f(z)/e^h(z)) = norm(f(z)/e^(u_1(z))) = 1
+      $
+      而上式右侧是解析函数，利用如下引理：
+      #lemma[][
+        设 $f$ 于连通区域 $G$ 上解析，且 $norm(f(z)) = 1$，则 $f(z)$ 是常数
+      ]
+      #proof[
+        设 $f = u + v i$，则有：
+        $
+        1 = u^2 + v^2\
+        0 = u u' + v v'\
+        0 = u u'' + u'^T u' + v v'' + v'^T v'\
+        0 = tr(u u'' + u'^T u' + v v'' + v'^T v') = norm(u')^2 + norm(v')^2 = 0
+        $
+        因此 $f' = 0$，结合 $G$ 的连通性得到结论
+      ]
     ]
     #corollary[][
       在上面类似的条件下，存在解析函数 $g(z)$ 使得 $(g(z))^n = f(z)$
@@ -552,7 +595,7 @@
         但上式右侧趋于无穷，显然级数发散
     ]
     #proposition[][
-      给定幂级数 $sum a_n(z - a)^n$，若 $lim_(n -> infinity) norm(a_n/a_(n+1))$ 存在，则它就是 $R$
+      给定幂级数 $sum a_n (z - a)^n$，若 $lim_(n -> infinity) norm(a_n/a_(n+1))$ 存在，则它就是 $R$
     ]
     #definition[][
       设两级数 $sum a_n, sum_ b_n$ ，定义它们的乘积为：
@@ -561,13 +604,36 @@
       $
     ]
     #proposition[][
-      若两级数 $sum a_n, sum b_n$ 都绝对收敛，则它们的乘积也绝对收敛，并且恰有：
+      若两级数 $sum a_n, sum b_n$ 至少有一个绝对收敛，则它们的乘积也收敛，并且恰有：
       $
       sum_(n = 0)^(+infinity) (sum_(k = 0)^(n) a_k b_(n-k))  = sum_(n = 0)^(+infinity) a_n sum_(n = 0)^(+infinity) b_n
       $
+      若两个都绝对收敛，则乘积也绝对收敛
+    ]
+    #proof[
+      不妨设 $a_n$ 绝对收敛
+      先考虑有限和，设 $a_n, b_n$ 的前 $n$ 项和分别为 $A_n, B_n$，有：
+      $
+      sum_(n = 0)^(N) (sum_(k = 0)^(n) a_k b_(n-k)) = sum_(k = 0)^N (sum_(n=k)^N a_k b_(n - k)) = sum_(k = 0)^N a_k B_(N-k) \
+      = sum_(k=0)^N a_k B_N + sum_(k = 0)^N a_k (B_(N-k) - B_N)\
+      = A_N B_N + sum_(k = 0)^N a_k (B_(N-k) - B_N)
+      $
+      注意到上式第二项 $B_(N-k) - B_N -> 0, N -> +infinity$，结合 $a_n$ 绝对收敛知该项收敛于零
     ]
     #remark[][
-      不绝对收敛时，结论当然不成立
+      两项都不绝对收敛时，结论当然不成立。例如取 
+      $
+      a_n = (-1)^n 1/(n^(1/4))\
+      B_n = (-1)^n 1/(n^(1/4))\
+      B_(N-k)  = (-1)^(N - k) 1/(N - k)^(1/4) \
+      a_k B_(N-k) = (-1)^N 1/((N - k) k )^(1/4) 
+      $
+      其中:
+      $
+      1/((N - k) k )^(1/4) >= 1/((N/2)^(1/2))\
+      sum_(k = 1)^(N-1) a_k B_(N - k) >= (N-1)/((N/2)^(1/2))
+      $
+      上式右侧趋于无穷，观察证明过程可得结论不成立
     ]
     #corollary[][
       设两个幂级数的收敛半径 $>= r$，则幂级数的和/积就是对应系数和/积的幂级数在 $B(a, r)$ 上都成立，且和/积的收敛半径至少为 $r$
@@ -622,7 +688,7 @@
     ]
     #proof[
       首先，$limsup_(n -> +infinity) norm(n a_n)^(1/n) = limsup_(n -> +infinity) norm(a_n)^(1/n)$ 给出它们具有相同的收敛半径\
-      其次，任取 $r < R$ 使得 $z in B(a, r)$，幂级数和形式导数将在 $B(a, r)$ 上一致收敛，由前面的命题知结论成立
+      其次，计算收敛半径幂级数和形式导数将在 $B(a, R)$ 上内闭一致收敛，由前面的命题知结论成立
     ]
     #corollary[][
       - 幂级数函数无穷阶可导
@@ -643,6 +709,38 @@
     ]
   == 多值函数
     #definition[多值函数|multi valued function][
-      称一个映射 $F: s -> P(CC)$ 为多值函数 / 对应|correspondence
+      称一个映射 $F: s -> P(CC)$ 为多值函数 / 对应|correspondence\
+      若存在解析函数 $f(x): s -> CC$ 使得：
+      $
+      f(x) in F(x), forall x in s
+      $
+      则称 $f(x)$ 是 $F(x)$ 的解析分支
+    ]
+    #let Log = "Log"
+    #definition[对数函数][
+      定义：
+      $
+      Log x = {z in CC: e^z = x},forall x in CC - {z | z <= 0}
+      $
+      为多值函数，显然有：
+      $
+      Log x = {x_0 + 2 k i pi | k in ZZ}, forall x_0 in Log x
+      $
+    ]
+    #remark[][
+      多值函数某种意义上可以理解为无穷维复平面 $CC^infinity$ 到 $CC$ 的函数
+    ]
+  == 分式线性变换
+    #definition[分式线性变换/莫比乌斯变换 | linear fractional transformation/Mobius Transformation][\
+      称 $f: CC -> CC$ 为分式线性变换，如果存在 $a, b, c, d in CC$ 使得：
+      $
+      f(z) = (a z + b)/(c z + d)
+      $
+      当 $a d - b c != 0$ 时，称之为莫比乌斯变换
+    ]
+    #proposition[][
+      - 分式线性变换的逆映射还是分式线性变换
+      - 分式线性变换的复合还是分式线性变换
+      - 分式线性变换由三点的像唯一确定
     ]
   

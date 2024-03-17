@@ -10,6 +10,7 @@
 ) = default-theorems("thm-group", lang: "en")
 #let (answer) = default-theorems("thm-group-a", lang: "en")
 $1 + 1$
+#let TODO = [#text("TODO", fill: red)]
 #let der(y, x) = $(d #y) / (d #x)$
 #let partialDer(y, x) = $(diff #y) / (diff #x)$
 #let elasticity(P, Q) = $((diff #Q)/(diff #P))/(#Q / #P)$
@@ -45,6 +46,15 @@ $1 + 1$
 #let End = $"End"$
 #let ReT = $"Re"$
 #let ImT = $"Im"$
+#let incrementSign(x, i, k) = {
+  let i1 = int(i)
+  if i1 = 0 {
+    $#x_#k$
+  }
+  else {
+      $#x_#(i + k)$
+  }
+}
 #let coker = $"coker"$
 #let coim = $"coim"$
 #let Ad1(x, G) = $"Ad"_#G (#x)$
@@ -68,7 +78,13 @@ $1 + 1$
 #let existsST(var, condition) = $exists #var space s.t. space #condition$
 #let forallSa(var, condition) = $forall #var space , space #condition$
 #let funcDef(f, A, B, x, fx) = $#f: space #A &-> #B \ #x &|-> #fx$
-
+#let seqLimit(n) = $lim_(#n -> +infinity)$
+#let seqLimitn = $seqLimit(n)$
+#let inj_str = "inj"
+#let surj_str = "surj"
+#let bij_str = "bij"
+#let def_str = "def"
+#let nat_str = "nat"
 // Theorem and definition environments.
 #let base_env(type: "Theorem", numbered: true, fg: black, bg: white,
           name, body) = locate(

@@ -1,5 +1,6 @@
-#import "../template.typ": proof, note, corollary, lemma, theorem,  proposition, definition, example, remark, der, partialDer, AModule
+#import "../template.typ": proof, note, corollary, lemma, theorem,  proposition, definition, example, remark, der, partialDer, AModule, incrementSign, inj_str, surj_str, bij_str, def_str, nat_str
 #import "../template.typ": *
+#import "@preview/commute:0.2.0": node, arr, commutative-diagram
 // Take a look at the file `template.typ` in the file panel
 // to customize this template and discover how it works.
 #show: note.with(
@@ -675,7 +676,7 @@
       因此可以利用上面的引理
     ]
     #proposition[][
-      设 $A$ 是局部环，唯一素理想是 $m$，则：
+      设 $A$ 是局部环，唯一素理想是 $m$，$M$ 是有限生成 $AModule(A)$ 则：
       $
       M quo m M 是 A quo m "上的有限维向量空间"
       $
@@ -683,19 +684,20 @@
     ]
     #proof[
 
-      设 $x_i$ 是这样一组基，取 $N = sum_i A x_i subset M$，取满同态 $phi: N -> M -> (M quo m) M$，往证：
+      设 $x_i$ 是这样一组基，取 $N = sum_i A x_i subset M$，取满同态 $phi: N -> M -> (M quo m) M$
+      显然 $N quo m M = M quo m M$，因此有
       $
       N + m M = M
       $
-      TODO
       由上面的引理可知 $N = M$
     ]
   == 同调代数简介
     #definition[复形][
       设有一列 $AModule(A)$:
       $
-      ... -> M_(i-1) ->^(f_i) M_i ->^(f_(i+1)) M_(i+1) ...
+      ... -> M_(i-1) ->^(f_i) M_i ->^(f_(i+1)) M_(i+1) ...\
       $
+      
       - 称之为一个 复形|(cochain) complex，如果 $f_(i+1) compose f_i = 0 <=> im f_i subset ker f_(i+1)$
       - 称之为在 $i$ 处 正合|exact，如果 $im f_i = ker f_(i+1)$
       对一般的复形，定义：
@@ -707,7 +709,7 @@
     #example[][
       - $0 -> M' ->^f M$ 正合当且仅当 $f$ 单射
       - $M ->^g -> M' -> 0$  正合当且仅当 $g$ 满射
-      - $0 -> M' ->^f -> M ->^g -> M'' -> 0$  正合当且仅当 $f$ 单射，$g$ 满射
+      - $0 -> M' ->^f  M ->^g -> M'' -> 0$  正合当且仅当 $f$ 单射，$g$ 满射
       - 长正合列可以分裂，例如设 $... -> M_(i-1) ->^(f_i) M_i ->^(f_(i+1)) M_(i+1) ...$ 于该处正合，则令 $N_i = ker f_(i+1) = im f_i$，有：
         $
         0 -> N_i -> M_i -> im f_(i+1) = N_(i+1) -> 0
@@ -718,7 +720,7 @@
       在 $AModule(A)$ 范畴中：
       - $M' ->^mu M ->^nu M'' -> 0$ 正合当且仅当任取 $AModule(A) space N$，序列：
         $
-        0 -> Hom_A (M', N) ->^(nu') Hom_A (M, N) ->^(mu') Hom_A (M'', N) -> 0
+        0 -> Hom_A (M'', N) ->^(nu') Hom_A (M, N) ->^(mu') Hom_A (M', N) -> 0
         $ 
         正合\
         换言之，如果将 $N -> Hom_A (M, N)$ 看作函子，则这个函子是左正合的\
@@ -726,27 +728,33 @@
     ]
     #proof[
         只证明一个方向，另一侧是类似的\
-        设 $forall N in "Mod"_A, 0 -> Hom_A (M'', N) ->^nu' Hom_A (M, N) ->^mu' Hom_A (M', N) $，往证：
+        设 $forall N in "Mod"_A, 0 -> Hom_A (M'', N) ->^nu' Hom_A (M, N) ->^mu' Hom_A (M', N) $ 正合，往证：
         $
-        M' ->^mu M ->^mu M' -> 0
+        M' ->^mu M ->^nu M' -> 0
         $
         正合，只需验证：
         - $nu$ 是满射 $<=> M'' \/ im nu = 0$\
-          取 $N = M' \/ im nu$，注意到：
+          取 $N = M'' \/ im nu$，注意到：
           $
           Hom_A (M'', N) ->^nu' Hom_A (M, N)
           $
-          其中诱导的 $nu'$ 是单射（条件），取自然同态 $pi: M' -> M' \/ im nu = N$,发现：
+          其中诱导的 $nu'$ 是单射（条件），取自然同态 $pi: M'' -> M'' \/ im nu in Hom_A (M'', N)$,发现：
           $
-          
+          nu'(pi) = pi compose nu = 0 => pi = 0 => M'' \/ im nu = 0
           $
-        - $im nu = ker v$
-          - 先证明 $im mu_ subset ker v$，事实上，注意到：
+          证毕
+        - $im mu = ker nu$
+          - 先证明 $im mu subset ker v$，事实上，注意到：
             $
-            mu' compose nu' = 0 => * compose mu' compose nu' = 0, forall * in M' -> (M'' -> N) 
+            mu' compose nu' = 0 => (mu' compose nu')(*) = 0 => * compose nu compose mu = 0, forall * in M'' -> N
             $
-            取 $f = id_M''$ 即得 $nu compose mu = 0$
-          - 再证明 $ker nu subset im mu$，取 $N = M \/ im nu$ 和自然的同态 $pi: M -> N$
+            取 $* = id_M''$ 即得 $nu compose mu = 0$
+          - 再证明 $ker nu subset im mu$，取 $N = M \/ im mu$ 和自然的同态 $pi: M -> N$，有：
+            $
+            pi compose mu = mu'(pi) =0 => pi in ker mu' = im nu' => pi = nu'(f) = f compose nu\
+            ker(nu) subset ker(f compose nu) = ker(pi) = im nu
+            $
+            证毕
     ]
     
     #definition[（共变/反变函子|covarient/contravarient functor）][$F: "Mod"_A -> "Mod"_B$ 称为共变/反变函子，包括以下资料和性质：
@@ -819,23 +827,120 @@
       "Ext"^i (M, *) := R^i Hom(M, *)
       $ 称为拓展组 (extension group)，显然需要验证从两种方法定义的 $"Ext"^i (M, N)$ 是相同的，这称之为 Balance property
       - 若 $Hom(M, *)$ 正合，则称 $M$ 是 投射|projective 模
-      - 若 $Hom(*, N)$ 正合，则称 $N$ 是 嵌入|injective 模
+      - 若 $Hom(*, N)$ 正合，则称 $N$ 是 入射|injective 模
 
     ]
   问题：何时 $Hom(*, N), Hom(M, *)$ 正合？
 
-  既然上述两个函子都左正合，只要它们都右正合即可，事实上就是对于任何满射 $phi: X -> Y$，诱导的 $phi': Hom_A (M, X) -> Hom_A (M, Y)$ 也是满射，或者说对于所有 $phi: X- > Y$ 是满射和同态 $psi: M -> Y$，均存在 $psi' : M -> X$ 使得 $phi compose psi' = psi$
-
+  既然上述两个函子都左正合，只要它们都右正合即可
   #proposition[][
-    $0 -> &X ->^f &&Y -> && Z -> 0$ 正合，且 $X$ 是嵌入模，
-    + 它分裂，也即：
-    $
-    Y tilde.eq X plus.circle Z
-    $
-    + $Y$ 嵌入 $<=> Z$ 嵌入 
+    - $N$ 是入射模当且仅当任取单同态 $phi: X -> Y$，都有 $phi': Hom(Y, N) -> Hom(X, N)$ 是满射
+    - $N$ 是投射模当且仅当任取满同态  $phi: X -> Y$，都有 $phi': Hom(N, X) -> Hom(N, Y)$ 是满射
   ]
   #proof[
-    + 根据之前的性质
+    只证明第一条，第二条类似\
+    - 假如它是入射模，则它应该保持正合列：
+      $
+      0 &-> X &&->^(phi) Y &&->^() Y quo im phi &&-> 0\
+      0 &-> Hom(Y quo im phi, N) &&->^() Hom(Y, N) &&->^(phi') Hom(X, N) &&-> 0
+      $
+      蕴含 $phi'$ 是满射
+    - 反之，任取正合列：
+      $
+      0 &-> X &&->^(phi_1) Y &&->^(phi_2) Z &&-> 0
+      $
+      往证：
+      $
+      0 &-> Hom(Z, N) &&->^(phi'_2) Hom(Y, N) &&->^(phi'_1) Hom(X, N) &&-> 0
+      $
+      的正合性，前面已经证明了左正合，这里只需要 $phi'_1$ 是满射就足够了，而这就是条件
+  ]
+
+  #proposition[提升性质][
+    - $N$ 是入射模当且仅当任取单同态 $phi: X -> Y$ 和同态 $psi: X -> N$，存在 $psi': Y -> N$ 使得以下交换图表成立：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $X$, "1"),
+      node((0, 1), $Y$, "2"),
+      node((1, 0), $N$, "3"),
+      arr("1", "2", $phi$,inj_str),
+      arr("2", "3", $exists psi'$),
+      arr("1", "3", $psi$),
+    )]
+    - $M$ 是投射模当且仅当以下交换图表：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $X$, "1"),
+      node((0, 1), $Y$, "2"),
+      node((1, 0), $M$, "3"),
+      arr("2", "1", $phi $, surj_str),
+      arr("3", "2", $exists psi' $),
+      arr("3", "1", $psi $),)]
+  ]
+  #proof[
+    $
+    phi' 满 <=> forall x: X -> N, exists y: Y -> N, x = y compose phi 
+    $
+    这就是之前的命题
+  ]
+  
+  事实上就是对于任何满射 $phi: X -> Y$，诱导的 $phi': Hom_A (M, X) -> Hom_A (M, Y)$ 也是满射，或者说对于所有 $phi: X- > Y$ 是满射和同态 $psi: M -> Y$，均存在 $psi' : M -> X$ 使得 $phi compose psi' = psi$
+
+  #proposition[][
+    设 $0 -> &X ->^f &&Y ->^g && Z -> 0$ 正合，
+    + 若 $X$ 入射或 $Z$ 投射，则该正合列分裂，也即：
+      $
+      Y tilde.eq X plus.circle Z
+      $
+    + 若 $X$ 入射，则 $Y$ 入射 $<=> Z$ 入射; 若 $Z$ 投射，则 $Y$ 投射 $<=> X$ 投射 
+  ]
+  #proof[
+    只证明入射一侧
+    + 根据之前的性质，题上的正合列给出 $f$ 单射，因此有下面的交换图表：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $X$, "1"),
+      node((0, 1), $Y$, "2"),
+      node((1, 0), $X$, "3"),
+      arr("1", "2", $f$,inj_str),
+      arr("2", "3", $exists f'$),
+      arr("1", "3", $id$),
+    )]
+      进一步，有：
+      $
+      f' compose f = id => (id - f compose f')f = 0
+      $
+      表明 $im f = ker g subset ker (id - f compose f')$。 
+      如下交换图表给出：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $Y$, "1"),
+      node((0, 1), $Z$, "2"),
+      node((1, 0), $Y quo ker h$, "3"),
+      node((1, 1), $g(Y) quo g (ker h)$, "4"),
+      arr("1", "2", $g$),
+      arr("1", "3", $$),
+      arr("2", "4", $$),
+      arr("3", "4", $$, bij_str),
+      node((1, -1), $im g$),
+      arr("3", $im g$, $$, bij_str),
+      arr($im g$, "1", $$)
+      )]
+      存在 $r: Z -> Y$ 使得:
+      $
+      id - f compose f' = r compose g\
+      g(id - f compose f') = g - (g compose f) compose f' = g = g (r g) = (g r) g
+      $
+
+      由于 $g$ 是满射，故有右逆，上式给出 $g r= id$\
+      此外还有：
+      $
+      f f' + r g = id\
+      $
+      以下性质：
+      $
+      g f = 0\
+      f f' + r g = id\
+      f' f = id\
+      g r = id
+      $
+      表明直积分解成立
     + 由于 $Y tilde.eq X plus.circle Z$ 故 $Hom(*, X) plus.circle Hom(*, Z) tilde.eq Hom(*, Y)$，再加上 $Hom(*, X)$ 是正合函子，因此当且仅当 $Hom(*, Z)$ 正合
   ]
 
@@ -861,7 +966,7 @@
 
   ]
   #theorem[Baer][
-    $M$ 是嵌入模当且仅当任取 $A$ 的理想 $A$ 以及模同态 $I ->^phi M$，存在 $psi: A -> M$ 使得：
+    $M$ 是入射模当且仅当任取 $A$ 的理想 $A$ 以及模同态 $I ->^phi M$，存在 $psi: A -> M$ 使得：
     $
     psi|_I = phi
     $
@@ -869,8 +974,8 @@
   ]
   #proof[
 
-    - 若 $M$ 嵌入，则这就是之前讨论中的一种特殊情况
-    - 反之，若延拓总是存在,令 $X = phi(I)$，利用 Zoun 引理找出所有嵌入：
+    - 若 $M$ 入射，则这就是之前讨论中的一种特殊情况
+    - 反之，若延拓总是存在,令 $X = phi(I)$，利用 Zoun 引理找出所有入射：
       $
       Sigma = {X' subset Y | X subset X' subset Y "是子模，使得" X -> M "可延拓到" X' -> M}
       $
@@ -886,17 +991,17 @@
   ]
   证明：
   #example[][
-    - 设 $I = (a)$ 且 $m$ 嵌入，则有：
+    - 设 $I = (a)$ 且 $m$ 入射，则有：
       $
       psi(a) = phi(a)\
       psi(a) = psi(a dot 1) = 
       $
-    - 考虑 $"Mod"_ZZ$ 作为阿贝尔群的范畴，则直和函子将成为嵌入模
-    - 设 $A$ 是环，$I$ 是嵌入 $ZZ$  模，则：
+    - 考虑 $"Mod"_ZZ$ 作为阿贝尔群的范畴，则直和函子将成为入射模
+    - 设 $A$ 是环，$I$ 是入射 $ZZ$  模，则：
       $
       Hom_ZZ (A, I)
       $
-      是嵌入 $A-$模\
+      是入射 $A-$模\
       这是因为注意到：
       $
       Hom_A (M, Hom_ZZ (A, I)) tilde.eq Hom_ZZ (M, I)
@@ -913,7 +1018,7 @@
 
   #proof[
     考虑左正合函子的导出，如此定义 $R^i F$:
-    - 首先，找到嵌入同态 $M -> I^0$  使得 $I^0$ 嵌入。只需取：
+    - 首先，找到入射同态 $M -> I^0$  使得 $I^0$ 入射。只需取：
       $
       I' = Hom_ZZ (A, times.circle/ZZ)
       I^0 = product_(Hom_A (M, I')) I'\
@@ -923,7 +1028,7 @@
       $
       0 -> M -> I^0 -> I^1 -> ...
       $
-      使得 $I^i$ 都是嵌入模
+      使得 $I^i$ 都是入射模
     - 定义：
       $
       R^i F(M) = H^i (0 -> F I^0 -> F I^1-> ... )

@@ -231,5 +231,112 @@
     mu D Sgn(x) = 2 mu vec(1, [-1, 1], [-1,1])
     $
     显然可取 $mu = 2$ ，对应的一个特征向量为 $vec(1, 0, 0)$
-      
+= 3月13日
+  == 
+    不太懂这里应该有什么“几何”的意义，比如某种意义上 $Delta_1 = 0$ 和 $Delta_2 = 0$ 都可以理解为某种“梯度”的“散度”稳定，或者说在每一点附近函数的变化率都在一定程度上稳定
+  ==
+    ===
+      #lemma[][
+        凸函数在有界闭凸集内的最大值可以在边界处取得
+      ]
+      #proof[
+        如若不然，设 $x_0 in X$ 是凸函数 $f$ 在有界闭凸集 $X$ 内的最大值点，而 $x_0$ 不在 $X$ 的边界上，并且：
+        $
+        f(diff X) subset (-infinity, f(x_0))
+        $
+        此时 $x_0$ 是内点，不妨任取一个方向向量 $v$ 可设：
+        $
+        h(t) = x_0 + t v\
+        T = {t in [-infinity, +infinity] |h(t) subset X} = Inv(h)(X)
+        $
+        显然 $T$ 是闭集（由 $h$ 连续性）且有界（否则 $X$ 无界），因此可取：
+        $
+        t_0 = cases(
+          sup T quad abs(sup T) < abs(inf T),
+          inf T quad abs(sup T) >= abs(inf T)
+        )
+        $
+        这是为了保证 $x_0 plus.minus t v in X$，由凸性有：
+        $
+        1/2 (f(x_0 + t_0 v) + f(x_0 - t_0 v)) >= f(x_0)
+        $
+        注意到 $x_0$ 已经是最大值点，因此一定有：
+        $
+        f(x_0 + t_0 v) = f(x_0 - t_0 v) = f(x_0)
+        $
+        但 $x_0 plus.minus t v$ 至少有一个在边界上，矛盾！
+      ]
+      回到目标，注意到：
+      $
+      f(x) = (I_p (x))/(2^(p-1) norm(x) "vol" V)
+      $
+      是齐次函数，因此：
+      $
+      max_(x in RR - {0} ) f(x)&= max_(abs(x) = 1) (I_p (x))/(2^(p-1) norm(x) "vol" V) \
+      &= max_(abs(x) = 1) (I_p (x))/(2^(p-1) "vol" V)\
+      &= 1/(2^(p-1) "vol" V) max_(abs(x) = 1) I_p (x)\
+      &= 1/(2^(p-1) "vol" V) max {max_(x in [-1, 1]^n quo [-1, 1]) I_p (x)|_(x_i = 1) | i in 1, 2, 3, ...,n}\
+      $
+      这里 $max_(x in [-1, 1]^n quo [-1, 1]) I_p (x)|_(x_i = 1)$ 就是如下的最大值问题：
+      $
+      max_(x' in [-1, 1]^(n-1)) I'(x')
+      $
+      由引理，它的最大值应该在边界处取得，也即至少一个 $x_i = 1$，进而：
+      $
+      max_(x' in [-1, 1]^(n-1)) I'(x') = max {max_(x' in [-1, 1]^(n-1) quo [-1, 1]) I' (x')|_(x_i = 1) | i in 1, 2, 3, ..., n-1}
+      $
+      归纳进行即得最大值 $I_p (x)$ 的最大值点 $x_0 in {-1, 1}^n$，因此：
+      $
+      max_(x in RR - {0} ) f(x)= max_(x in {-1, 1}^n)f(x)
+      $<eq11>
+      另一方面，容易计算得到：
+      $
+      h_(max) (G) = max_(x in {0, 1}^n) (I_p (x))/("vol" V) 
+      $
+      定义一一映射：
+      $
+      phi: {0, 1} &<-> {-1,1}\
+      0 &<-> -1\
+      1 &<-> 1
+      $
+      将其广播得到的一一映射映射 ${0, 1}^n <-> {-1,1}^n$ 也记作 $phi$，容易验证：
+      $
+      I_p (x) = 1/2^(p-1) I_p (phi(x))
+      $
+      进而有：
+      $
+      max_(x in {0, 1}^n) (I_p (x))/("vol" V) = max_(phi(x) in {-1, 1}^n) (I_p (x))/("vol" V) = max_(phi(x) in {-1, 1}^n) (I_p (phi(x)))/(2^(p-1) "vol" V)
+      $
+      将 $phi(x)$ 换成 $x$ 结合@eq11 即得结论成立
+    ===
+      熟知 $norm(x) = max abs(x_i)^p$ 作为若干凸函数的最大值仍是凸函数，因此仿照之前的理论我们希望：
+      $
+      diff I_p (x) sect mu diff norm(x) != emptyset
+      $
+      - 先计算 $diff I_p (x)$:
+        $
+        diff sum_({i, j} in E) abs(x_i - x_j)^p = p sum_({i, j} in E) abs(x_i - x_j)^(p-1) "Sgn"(x_i - x_j)
+        $
+    == 
+      我们需要在 $pi = {x | norm(x) = 1}$ 上最大化 $f(x)$，也即希望：
+      $
+      diff I_p (x) sect mu norm(x) != emptyset 
+      $
+      分别计算：
+      - 
+        $
+        diff I_p (x) = p sum_({i, j} in E) abs(x_i - x_j)^(p-1) "Sgn"(x_i - x_j) (epsilon_i - epsilon_j)
+        $
+      - 
+        #lemma[][
+          $
+          diff max(f, g) = 1/2 diff (abs(f + g) + abs(f - g)) = 1/2 "Sgn"(f + g)(diff f + diff g) + 1/2 "Sgn"(f - g) (diff f - diff g)
+          $
+        ]
+        由引理，将有：（假设链式法则成立）
+        $
+        diff norm(x) = diff max{abs(x_i)^p} = p/2^n sum_(k in {1, -1}^n) "Sgn"(sum_(i in V) k_i abs(x_i)^p) (sum_(i in V)  k_i abs(x_i)^(p-1) Sgn(x_i)epsilon_i) \
+        = sum_(i in V)  (sum_(k in {1, -1}^n)  "Sgn"(sum_(i in V) k_i abs(x_i)^p) (sum_(i in V)  k_i abs(x_i)^(p-1) Sgn(x_i)))epsilon_i
+        $
+
     
