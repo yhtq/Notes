@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: fontist/setup-fontist@v2
+      - run: fontist install "Noto Serif CJK SC"
       - uses: typst-community/setup-typst@v3
         with:
           cache-dependency-path: requirements.typ
@@ -13,7 +15,7 @@ jobs:
       - run: |
               for file in "代数学二/main.typ" "几何学/main.typ" "复变函数/main.typ" "常微分方程/main.typ" "抽象代数/main.typ" "数学模型/main.typ"
                   do
-                         typst compile $file --root .
+                         typst compile $file --root . --font-path ~/.fontist/fonts
                   done
       - uses: actions/upload-artifact@v4
         with:
