@@ -82,7 +82,7 @@
 
 #definition[][
   给定 a 是向量，$lambda$ 是实数，则 $lambda a$ 是向量，称为 $a$ 的数乘，满足：
-  -  若 $lambda >= 0$，则 $lambda a$ 与 $a$ 同向；若 $lambda leq 0$，则 $lambda a$ 与 $a$ 反向
+  -  若 $lambda >= 0$，则 $lambda a$ 与 $a$ 同向；若 $lambda <= 0$，则 $lambda a$ 与 $a$ 反向
   -  $|lambda a| = |lambda| |a|$
   显然这样定义的 $lambda a$ 是存在且唯一的
 ]
