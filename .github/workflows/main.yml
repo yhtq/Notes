@@ -11,4 +11,9 @@ jobs:
         uses: lvignoli/typst-action@main
         with:
           source_file: |
-                        **/main.typ
+                        代数学二/main.typ
+                        几何学/main.typ
+                        复变函数/main.typ
+                        常微分方程/main.typ
+                        抽象代数/main.typ
+                        数学模型/main.typ
