@@ -21,4 +21,25 @@ jobs:
         with:
           name: 数学模型
           path: 数学模型/main.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 代数学二
+          path: 代数学二/main.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 几何学
+          path: 几何学/main.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 复变函数
+          path: 复变函数/main.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 常微分方程
+          path: 常微分方程/main.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 抽象代数
+          path: 抽象代数/main.pdf
+      
                   
