@@ -180,9 +180,9 @@
   
     - 传递性：$forall a, b, c in A , a R b and b R c => a R c$\
   
-    将 $a R b$ 记作 $a leq b$ 或 $b >= a$\
+    将 $a R b$ 记作 $a <= b$ 或 $b >= a$\
   
-    若 $a leq b$ 或 $b leq a$，则称 $a$ 和 $b$ 可比\
+    若 $a <= b$ 或 $b <= a$，则称 $a$ 和 $b$ 可比\
   
     若所有元素均可比，则称 $R$ 为全序关系\
   

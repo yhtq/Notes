@@ -18,7 +18,7 @@
         - 若 $M tilde.eq quotient(R, p^s R)$，则：
           $
           p^r M = cases(
-            quotient(p^r R, p^s R) space& r leq s,
+            quotient(p^r R, p^s R) space& r <= s,
             {0} & r > s
           )
           $
