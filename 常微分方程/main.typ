@@ -796,3 +796,141 @@
     #corollary[][
       若原点是等时中心且 $f(x)$ 是奇函数，则 $f(x)$ 一定线性
     ]
+= 微分方程的解理论
+  == Peano 定理
+    #theorem[Peano][
+      设：
+      $
+      f(x, y) in C(DD), DD = {abs(x - x_0) <= a, abs(y -y_0) <= b}
+      $
+      方程：
+      $
+      cases(
+        der(y, x) = f(x, y),
+        y(x_0) = y_0
+      )
+      $
+      在 $[x_0 - h, x_0 + h]$ 上有解，其中：
+      $
+      h = min{a, b/(max_DD abs(f))}
+      $
+      若 $y, f$ 是向量值函数，结论也是类似的
+    ]<peano>
+    本节的目标就是证明它。\
+    #lemma[][
+      有界区间上等度连续的一致有界的函数列有一致收敛的子列
+    ]
+    #proof[ 
+      #lemma1[
+        设 $f_n: I -> RR$ 对于每个 $x in I, f_n (x)$ 都有界 $M_x$，$I$ 是有限区间，则任取 $I$ 的一个可数子集 $E$，存在 $f_n$ 的子列使得这个子列在 $E$ 上收敛
+      ]
+      #proof[
+        设 $E = {x_1, x_2, ..., x_n}$，注意到 $f_n (x_1)$ 是有界序列，有收敛子列 $f_(n_1) (x_1)$\
+        再考虑 $f_(n_1) (x_2)$ ，它当然也有收敛子列，记为 $f_(n_2) (x_2)$\
+        不断进行下去，我们得到了若干子列 $f_(n_k) (x_k)$。\
+        用对角线法，发现：
+        $
+        f_(n_n) (x_n), n = 1, 2, 3, ...
+        $
+        在每个 $x_k$ 上都收敛，证毕
+      ]
+      #lemma1[
+        设 $I$ 是有限区间，$f_n : I -> RR$ 等度连续，且在 $I$ 的稠密子集上收敛，那么它在 $I$ 上一致收敛
+      ]
+      #proof[
+        利用柯西收敛原理，任取 $epsilon > 0$，存在 $delta >0$，使得：
+        $
+        forall n in NN, forall x_1, x_2, abs(x_1 - x_2) < delta => abs(f_n (x_1) - f_n (x_2)) < epsilon
+        $
+        对于这个 $delta$，我们可以取出 $E$ 中有限个点 $E'$ 使得：
+        $
+        union_(x in E') B(x, delta) = I
+        $
+        由于这里只有有限个 $x$，当然 $f_n|_E'$ 将一致收敛，因此可设存在 $N$ 使得：
+        $
+        forall m, n > N, forall x in E', abs(f_m (x) - f_n (x)) < epsilon
+        $
+        因此，有：
+        $
+        forall m, n > N, forall x in I, exists x' in E'\
+           abs(x - x') < delta &=>  abs(f_m (x) - f_n (x)) \
+          &< abs(f_m (x) - f_m (x')) + abs(f_m (x') - f_n (x')) + abs(f_n (x') - f_n (x)) < 3 epsilon
+        $
+      ]
+      在引理中取 $E = QQ sect I$，它是 $I$ 的稠密子集，因此结论成立
+    ]
+    回到 @peano 的证明，这个方法是所谓的欧拉折线法
+    #proof[
+      微分方程可以转化为积分方程:
+      $
+      y(x) = y_0 + integral_(x_0)^(x) f(t, y(t)) dif t
+      $
+      只需证明它在 $[x_0, x_0 + h]$ 上有解，另一侧类似。\
+      将其 $n$ 等分，设分点为 $x_0, x_1, ..., x_n$，按照以下定义分段线性函数：
+      $
+      (x_(i-1), y_(i-1)) 到 (x_i, y_i) "的斜率由" f(x_(i-1), y_(i-1)) "给出"
+      $
+      需要验证这些点落在 $DD$ 中，显有：
+      $
+      y_k - y_(k-1) = f(x_(k-1), y_(k-1)) (x_k - x_(k-1))
+      $
+      两边求和：
+      $
+      y_k - y_0 &= sum_(i = 1)^(k) f(x_(i-1), y_(i-1)) (x_i - x_(i-1))\
+      abs(y_k -y_0) &<= sum_(i = 1)^(k) abs(f(x_(i-1), y_(i-1)) (x_i - x_(i-1))) \
+      &<= max_DD abs(f) sum_(i = 1)^(k) (x_i - x_(i-1)) <= max_DD abs(f) abs(x_k - x_0) \
+      &<= h max_DD abs(f) <= b
+      $
+      这也体现了 $h$ 为何如此定义\
+      设得到的函数为 $g_n (x)$，验证它们：
+      - 一致有界：显然
+      - 等度连续：注意到所有 $g_n (x)$ 均满足：
+        $
+        abs(g_n (x) - g_n (y)) <= max_DD abs(f) abs(x - y)
+        $
+        因此也成立
+      由引理，它有一致收敛子列。不妨设其收敛，只需证明极限函数 $g(x)$ 满足积分方程\
+      事实上（注意到 $f$ 是有界闭集上的连续函数，进而一致连续，从而 $f(t, g_n (x))$ 也一致收敛）：
+      $
+      g(x) - integral_(x_0)^x f(t, g(t)) dif t = lim_(n->+infinity)  g_n (x) - integral_(x_0)^x f(t, g_n (t)) dif t
+      $
+      有：
+      $
+      g_n (x_0 + k/(n h)) &= sum_(i = 1)^(k) f(x_i, y_i) (x_i - x_(i-1))\
+      integral_(x_0)^(x_0 + k/(n h)) f(t, g_n (t)) dif t = sum_(i = 1)^(k) integral_(x_(i-1))^(x_i) f(t, g_n (t)) dif t &= sum_(i = 1)^(k) f(xi_i, g_n (xi_i)) (x_i - x_(i-1))\
+      g_n (x_0 + k/(n h)) - integral_(x_0)^(x_0 + k/(n h)) f(t, g_n (t)) dif t &= sum_(i = 1)^(k) (f(x_i, y_i) - f(xi_i, g_n (xi_i))) (x_i - x_(i-1))\
+      &=sum_(i = 1)^(k) (f(x_i, g_n (x_i)) - f(xi_i, g_n (xi_i))) (x_i - x_(i-1))
+      $
+      任意 $epsilon > 0$ ，令 $delta, delta'$ 满足：
+      - $abs(x-x') < delta, abs(y-y') < delta => abs(f(x, y) - f(x', y')) < epsilon$
+      - $abs(x-x') < delta' => abs(g_n (x) - g_n (x')) < min(delta, epsilon), forall x, forall n$
+      取 $N$ 充分大使得 $forall n > N$：
+      - $1/(n h) < delta' => abs(g_n (x) - g_n (x_0 + k/(n h))) < epsilon, g_n (x_i) - g_n (xi_i) < delta$
+      - $1/(n h) < delta => abs(x_i - xi_i) < delta$
+      - $1/(n h) $
+    
+
+    ]
+    #lemma[Gronwall][
+      设 $f, g in C[a, b], g(x) >= 0$，则有：
+      $
+      f(x) <= C + integral_a^x f(t) g(t) dif t => f(x) <= C e^(integral_a^x g(t) dif t)
+      $
+    ]
+    #proof[
+      令 $Phi(x) = integral_a^x f(t) g(t) dif t$，则有：
+      $
+      Phi' <= (C + Phi)g(x)
+      $
+      #TODO
+
+    ]
+    #corollary[][
+      若在 Gronwall 不等式中，有 $C <= 0, f(x) >= 0$，则 $f(x) = 0$
+    ]
+    #theorem[][
+      在@peano 中，若 $f$ 是 Lipschitz 连续的，则解是唯一的。更进一步，构造出的折线列 $g_n (x)$ 本身即一致收敛
+    ]
+    #proof[
+      #TODO
+    ]

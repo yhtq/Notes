@@ -556,22 +556,270 @@
 
         因此，我们有 $0 in diff(I(x) - h(G) v^T x) = diff I(x) - h(G) v subset diff I(x) - h(G) diff norm(x)_(1, d) $\
         上式即说明 $h(G), x$ 是一个特征对，证毕
-      == 从 cheeger 问题到最大割
-        或许我们会想用类似的思路解决最大割问题，然而稍加尝试便可发现，最大割问题将是在求凸函数的最大值，这使得我们用过的许多性质不再成立。类似的对 $p in{1, 2}$，（这个 $p$ 并不重要，只是和之前的结果统一）定义：
-        $
-        I_p (x) = sum_({i, j} in E) abs(x_i -x_j)^p\
-        norm(x)_p = max abs(x_i)^p
-        $
-        类似于之前的两值向量，希望取 $x in {-1, 1}^n$ 模拟凸函数的最大值问题（它总是应该在边界处取得）\
-        注意到：
-        $
-        h_(max) (G) = max_(x in {0, 1}^n, x != 0) (I_p (x))/(2^(p-1)  "vol"V )
-        $
+  == 从 cheeger 问题到最大割
+    或许我们会想用类似的思路解决最大割问题，然而稍加尝试便可发现，最大割问题将是在求凸函数的最大值，这使得我们用过的许多性质不再成立。类似的对 $p in{1, 2}$，（这个 $p$ 并不重要，只是和之前的结果统一）定义：
+    $
+    I_p (x) = sum_({i, j} in E) abs(x_i -x_j)^p\
+    norm(x)_p = max abs(x_i)^p
+    $
+    类似于之前的两值向量，希望取 $x in {-1, 1}^n$ 模拟凸函数的最大值问题（它总是应该在边界处取得）\
+    注意到：
+    $
+    h_(max) (G) = max_(x in {0, 1}^n, x != 0) (I_p (x))/(2^(p-1)  "vol"V )
+    $
 
-        #theorem[][
+    #theorem[][
+      $
+      h_(max)(G) = max_(x != 0) (I_p (x))/(2^(p-1) norm(x) "vol"V )
+      $
+    ]
+    #proof[
+      #lemma[][
+        凸函数在有界闭凸集内的最大值可以在边界处取得
+      ]
+      #proof[
+        如若不然，设 $x_0 in X$ 是凸函数 $f$ 在有界闭凸集 $X$ 内的最大值点，而 $x_0$ 不在 $X$ 的边界上，并且：
+        $
+        f(diff X) subset (-infinity, f(x_0))
+        $
+        此时 $x_0$ 是内点，不妨任取一个方向向量 $v$ 可设：
+        $
+        h(t) = x_0 + t v\
+        T = {t in [-infinity, +infinity] |h(t) subset X} = Inv(h)(X)
+        $
+        显然 $T$ 是闭集（由 $h$ 连续性）且有界（否则 $X$ 无界），因此可取：
+        $
+        t_0 = cases(
+          sup T quad abs(sup T) < abs(inf T),
+          inf T quad abs(sup T) >= abs(inf T)
+        )
+        $
+        这是为了保证 $x_0 plus.minus t v in X$，由凸性有：
+        $
+        1/2 (f(x_0 + t_0 v) + f(x_0 - t_0 v)) >= f(x_0)
+        $
+        注意到 $x_0$ 已经是最大值点，因此一定有：
+        $
+        f(x_0 + t_0 v) = f(x_0 - t_0 v) = f(x_0)
+        $
+        但 $x_0 plus.minus t v$ 至少有一个在边界上，矛盾！
+      ]
+      回到目标，注意到：
+      $
+      f(x) = (I_p (x))/(2^(p-1) norm(x) "vol" V)
+      $
+      是齐次函数，因此：
+      $
+      max_(x in RR - {0} ) f(x)&= max_(abs(x) = 1) (I_p (x))/(2^(p-1) norm(x) "vol" V) \
+      &= max_(abs(x) = 1) (I_p (x))/(2^(p-1) "vol" V)\
+      &= 1/(2^(p-1) "vol" V) max_(abs(x) = 1) I_p (x)\
+      &= 1/(2^(p-1) "vol" V) max {max_(x in [-1, 1]^n quo [-1, 1]) I_p (x)|_(x_i = 1) | i in 1, 2, 3, ...,n}\
+      $
+      这里 $max_(x in [-1, 1]^n quo [-1, 1]) I_p (x)|_(x_i = 1)$ 就是如下的最大值问题：
+      $
+      max_(x' in [-1, 1]^(n-1)) I'(x')
+      $
+      由引理，它的最大值应该在边界处取得，也即至少一个 $x_i = 1$，进而：
+      $
+      max_(x' in [-1, 1]^(n-1)) I'(x') = max {max_(x' in [-1, 1]^(n-1) quo [-1, 1]) I' (x')|_(x_i = 1) | i in 1, 2, 3, ..., n-1}
+      $
+      归纳进行即得最大值 $I_p (x)$ 的最大值点 $x_0 in {-1, 1}^n$，因此：
+      $
+      max_(x in RR - {0} ) f(x)= max_(x in {-1, 1}^n)f(x)
+      $<eq11>
+      另一方面，容易计算得到：
+      $
+      h_(max) (G) = max_(x in {0, 1}^n) (I_p (x))/("vol" V) 
+      $
+      定义一一映射：
+      $
+      phi: {0, 1} &<-> {-1,1}\
+      0 &<-> -1\
+      1 &<-> 1
+      $
+      将其广播得到的一一映射映射 ${0, 1}^n <-> {-1,1}^n$ 也记作 $phi$，容易验证：
+      $
+      I_p (x) = 1/2^(p-1) I_p (phi(x))
+      $
+      进而有：
+      $
+      max_(x in {0, 1}^n) (I_p (x))/("vol" V) = max_(phi(x) in {-1, 1}^n) (I_p (x))/("vol" V) = max_(phi(x) in {-1, 1}^n) (I_p (phi(x)))/(2^(p-1) "vol" V)
+      $
+      将 $phi(x)$ 换成 $x$ 结合@eq11 即得结论成立
+    ]
+    然而凸函数在凸区域的上的最大值问题并不容易，上面的证明本质上只有形式上的意义，丝毫没有减少求最大值的困难。
+  == Lovasz 延拓
+    回顾之前的过程，我们发现我们总是在将一个离散的最值问题延拓到连续区间，变成连续的优化问题。更加广泛地说，我们发现解决连续的问题往往比解决离散的问题更加简单，因此当然希望能把离散的问题延拓到连续的问题进行求解。
+    
+    显然，对于任何一个离散最优化问题，我们可以找到无穷个连续曲线使得它们有相同的最优解。而给出一个具体的并不容易，本节就给出了一种具体的方法
+    #let absSigmaI(i) = $abs(x_sigma(#i))$
+    #let fL = $f^L$
+    #definition[Lovasz 延拓][
+      $forall x in RR^n, sigma: V union {0} -> V union {0}$ 使得 $abs(x_(sigma(i))) <= abs(x_sigma(i+1) ) $\
+      约定：
+      $
+      sigma(0) = 0\
+      x_(sigma(0)) = 0
+      $
+      对于 $i in {0, 1, 2..., n}$ 定义如下集合：
+      $
+      V_(sigma(i))^plus.minus = {j in V | plus.minus x_j > abs(x_(sigma(i)))}
+      $
+      对于任给的函数：
+      $
+      f: P_2 (V) -> RR
+      $
+      其中 $P_2 (V) = {(a, b) in V times V | a sect b = emptyset}$\
+      称其 Lovasz 延拓为：
+      $
+      f^L (x) = sum_(i=0)^(n-1) (abs(x_(sigma(i+1))) - abs(x_(sigma(i)))) f(V_(sigma(i))^plus, V_(sigma(i))^minus)
+      $
+    ]
+    #example[][
+      对于 $(A, B) in P_2 (V) - {(emptyset, emptyset)}$，定义：
+        $
+        1_(A, B) = 1_A - 1_B in {-1, 0, 1}^n
+        $
+        则：
+        $
+        f^L (1_(A, B)) = (1 - 0)f(V_sigma(i)^+, V_sigma(i+1)^-)
+        $
+        其中 $sigma(i) = 0, abs(sigma(i+1)) = 1$\
+        从而：
+        $
+        V_sigma(i)^+ = {j in V| x_j > 0} = A\
+        V_sigma(i)^- = {j in V| x_j < 0} = B
+        $
+        进而 $f^L (1_(A, B)) = f(A, B)$
+    ]
+    #proposition[][
+      - 设 $f: P_2 (V) -> RR$ 满足 $f(emptyset, emptyset)$，则有：
+        $
+        forall (A, B) in P_2 (V), f^L (1_(A, B)) = f(A, B)
+        $
+      - Lovasz 延拓有积分表示，也即：
+        $
+        f^L (x) = integral_0^(norm(x)_infinity) f(V_t^+ (x), V_t^- (x)) dif t
+        $
+        其中 $V_t^(plus.minus) (x) = {i in V | plus,minus x_i > t}$\
+        这给出 $f^L$ 是连续函数，事实上被积函数是分段常函数
+      - $forall alpha > 0, f^L (alpha x) = alpha f^L (x)$
+    ]
+    #proof[
+      - 只是在上面的计算中补充了平凡情况
+      - 当 $absSigmaI(i) < t < absSigmaI(i+1)$ 时，有：
+        $
+        V_t^+ (x) = V_(sigma(i))^+\
+        V_t^- (x) = V_(sigma(i))^-
+        $
+        从而：
+        $
+        f^L (x) &= sum_(i=0)^(n-1) (abs(x_(sigma(i+1))) - abs(x_(sigma(i)))) f(V_(sigma(i))^plus, V_(sigma(i))^minus) \
+        &= sum_(i=0)^(n-1)integral_(absSigmaI(i))^(absSigmaI(i+1)) f(V_t^+ (x), V_t^- (x)) dif t\
+        &= integral_0^(norm(x)_infinity) f(V_t^+ (x), V_t^- (x)) dif t
+        $
+        证毕
+      - 做积分变换即可
+    ]
+    #theorem[Lovasz 延拓][
+      设 $f, g: P_2 (V) -> [0, +infinity]$，且对任意 $(A, B) in P_2 (V) - {(emptyset, emptyset)}$ 有 $g(A, B) > 0$，则我们有：
+      $
+      min_((A, B) in P_2 (V) - {(emptyset, emptyset)}) (f(A, B))/(g(A, B)) = min_(x in RR^n - {0}) (f^L (x))/(g^L (x))\
+      max_((A, B) in P_2 (V) - {(emptyset, emptyset)}) (f(A, B))/(g(A, B)) = max_(x in RR^n - {0}) (f^L (x))/(g^L (x))
+      $
+    ]
+    #proof[
+      + 先证明最小值形式，最大值形式同理可得
+        - 首先要证明右侧的最小值存在。事实上前面证明了 $f^L, g^L$ 是一次齐次的连续函数，因此可以在任何一个有界闭集上取得最小值，例如 ${x | norm(x) = 1}$，其上的最小值也是它在整个定义域上的最小值
+        - 其次，显然有：
           $
-          h_(max)(G) = max_(x != 0) (I_p (x))/(2^(p-1) norm(x) "vol"V )
+          min_((A, B) in P_2 (V) - {(emptyset, emptyset)}) (f(A, B))/(g(A, B)) = min_((A, B) in P_2 (V) - {(emptyset, emptyset)}) (f^L (1_(A, B)))/(g^L (1_(A, B))) >= min_(x in RR^n - {0}) (f^L (x))/(g^L (x))
           $
-        ]
+          因此只要证明另一侧不等式
+        - 任取 $x !=0 $:
+          $
+          (f^L (x))/(g^L (x)) = (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i)))) /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) 
+          $
+          注意到我们总可以取得 $(C, D) in P_2 (V)$ 使得：
+          $
+          (f(C, D))/(g(C, D)) = min_(0<= i <= n-1) (f(V^+_(sigma(i)), V^-_(sigma(i)))) /(g(V^+_(sigma(i)), V^-_(sigma(i))))
+          $
+          有：
+          $
+          &(f^L (x))/(g^L (x)) - (f(C, D))/(g(C, D))  \
+            &=
+            (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i))) - (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(C, D))/(g(C, D))) /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) \
+            &>= (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i))) - (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(V^+_(sigma(i)), V^-_(sigma(i))))/(g(V^+_(sigma(i)), V^-_(sigma(i))))) /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i))))\
+            &= 0
+          $
+          因此 
+          $
+          min_(x in RR^n - {0}) (f^L (x))/(g^L (x)) >= (f(C, D))/(g(C, D)) >= min_((A, B) in P_2 (V) - {(emptyset, emptyset)}) (f(A, B))/(g(A, B))
+          $
+          证毕
+    ]
+    我们得到了很强的结论，但是会发现最大割问题或者 Cheeger 问题要求集对是图割而不是一般的集对，因此必须使用下面的引理进行处理
+    #lemma[][
+      设 $f, g: P(V) -> [0, +infinity]$ 是对称的函数，也即：
+      $
+      f(A) = f(V - A)\
+      g(A) = g(V - A)
+      $
+      且满足 $g > 0$\
+      记：
+      $
+      F(A, B) = f(A) + f(B)\
+      G(A, B) = g(A) + g(B)
+      $
+      则：
+      $
+      min_(A in P(V)) (f(A))/(g(A)) = min_((A, B) in P_2 (V)) (F(A, B))/(G(A, B))\
+      $
+      最大值形式也对
+    ]
+    #proof[
+      以最小值形式为例，设 $(A_0, B_0)$ 使得上式右侧取得最小值，不妨设：
+      $
+      (f(A_0))/(g(A_0)) <= (f(B_0))/(g(B_0))
+      $
+      于是：
+      $
+      (f(A_0) + f(B_0))/(g(A_0) + g(B_0)) - (f(A_0))/(g(A_0)) = (f(B_0) -(f(A_0))/(g(A_0))g(B_0))/(g(A_0) + g(B_0))  >= 0
+      $
+      给出：
+      $
+      min_((A, B) in P_2 (V)) (F(A, B))/(G(A, B)) = (f(A_0) + f(B_0))/(g(A_0) + g(B_0)) >= (f(A_0))/(g(A_0)) >= min_(A in P(V)) (f(A))/(g(A))
+      $
+      另一侧也是类似的
+    ]
+    #example[][
+      对于最大割问题，可设：
+      $
+      f(A) = "cut"(A)\
+      g(A) = 1/2 "vol"(A)
+      $
+      则：
+      $
+      h_(max)(G) = max_(A in P(V)) (f(A))/(g(A)) = max_((A, B) in P_2 (V)) (F(A, B))/(G(A, B)) = max_((A, B) in P_2 (V)) ("cut"(A) + "cut"(B))/("vol"(A))
+      $
+      只需计算：
+      $
+      F^L (x) &= integral_0^(norm(x)_infinity) ("cut"(V_t^+ (x)) + "cut"(V_t^- (x))) dif t\
+      &= integral_0^(norm(x)_infinity) "cut"(V_t^+ (x)) dif t + integral_0^(norm(x)_infinity)  "cut"(V_t^- (x)) dif t\
+      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) kai_{x_j <= t < x_i} (t) + kai_{x_i <= t < x_j} (t) dif t \ &+ integral_0^(norm(x)_infinity) kai_{x_j <= -t < x_i} (t) + kai_{x_i <= -t < x_j} (t) dif t\ 
+      &"（注意这里积分可以改变有限个点值，因此正负号无所谓）"\
+      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) kai_{x_j <= t < x_i} (t) + kai_{x_i <= t < x_j} (t) dif t \ &+ integral_(-norm(x)_infinity)^(0) kai_{x_j <= t < x_i} (t) + kai_{x_i <= t < x_j} (t) dif t\ 
+      &= sum_({i, j} in E) integral_(-norm(x)_infinity)^(norm(x)_infinity) kai_{x_j <= t < x_i} (t) + kai_{x_i <= t < x_j} (t) dif t \
+      &= sum_({i, j} in E) abs(x_i - x_j)\
+      G^L (x) &= integral_0^(norm(x)_infinity) "vol"(V) dif t = "vol"(V) norm(x)_infinity
+      $
+      这就可以得到和之前一致的结论
+
+      对于 cheeger 问题，它们分子是一样的，只需要计算：
+      $
+      G^L (x) = min {vol(A), vol(V - A)} + min {vol(B), vol(V - B)}
+      $
+    ]
+  
 
 
