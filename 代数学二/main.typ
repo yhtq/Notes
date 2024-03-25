@@ -1,4 +1,4 @@
-#import "../template.typ": proof, note, corollary, lemma, theorem,  proposition, definition, example, remark, der, partialDer, AModule, incrementSign, inj_str, surj_str, bij_str, def_str, nat_str
+#import "../template.typ": proof, note, corollary, lemma, theorem,  proposition, definition, example, remark, der, partialDer, AModule, incrementSign, inj_str, surj_str, bij_str, def_str, nat_str, tensorProduct
 #import "../template.typ": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 // Take a look at the file `template.typ` in the file panel
@@ -13,6 +13,7 @@
   $#x -$ 
   "模"
   }
+#let ModS = "Mod"
 = 前言
   == 课程介绍
     - 学习内容：前半学期交换代数，后半学期同调代数
@@ -42,6 +43,7 @@
     - idempotent：幂等元
     - nilpotent：幂零元
     - nilradical：幂零根
+    - saturated：饱和的
 
 = 环与模
   == 模
@@ -718,14 +720,14 @@
     ]
     #theorem[正合判别法][
       在 $AModule(A)$ 范畴中：
-      - $M' ->^mu M ->^nu M'' -> 0$ 正合当且仅当任取 $AModule(A) space N$，序列：
+      - $0 -> M' ->^mu M ->^nu M''$ 正合当且仅当任取 $AModule(A) space N$，序列：
         $
-        0 -> Hom_A (M'', N) ->^(nu') Hom_A (M, N) ->^(mu') Hom_A (M', N) -> 0
+        0 -> Hom_A (M'', N) ->^(nu') Hom_A (M, N) ->^(mu') Hom_A (M', N) 
         $ 
         正合\
         换言之，如果将 $N -> Hom_A (M, N)$ 看作函子，则这个函子是左正合的\
         对偶的，函子 $M -> Hom_A (M, N)$ 是反变左正合的
-    ]
+    ]<exact-test>
     #proof[
         只证明一个方向，另一侧是类似的\
         设 $forall N in "Mod"_A, 0 -> Hom_A (M'', N) ->^nu' Hom_A (M, N) ->^mu' Hom_A (M', N) $ 正合，往证：
@@ -774,14 +776,17 @@
     #definition[正合函子][
       设 $F$ 是加性共变函子，$G$ 是加性反变函子，称 $F | G$ 是左正合函子，如果任给正合列：
       $
-      0 -> M' -> M  -> M' -> 0
+      0 -> M' -> M  -> M' 
       $，均有：
       $
       0 -> F M' -> F M -> F M'' \
       0 -> G M'' -> G M -> G M' 
       $
       正合\
-      反之，若：
+      反之，若如果任给正合列：
+      $
+      M' -> M  -> M' -> 0
+      $，均有：：
       $
       F M' -> F M -> F M'' -> 0\
       G M'' -> G M -> G M' -> 0
@@ -1040,6 +1045,735 @@
       $
       正合，可得 $H^0 (0 -> F I^0 -> F I^1-> ... ) = F M$，表明 $R^0 F = F$\
       之后的证明要把短正合列延长至长正合列，具体细节在下半学期补充]
+  
+  #lemma[Snake Lemma|蛇形引理][
+    设 $A$ 是环，图：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $0$, "1"),
+    node((1, 0), $Y'$, "3"),
+    node((1, 1), $X'$, "4"),
+    node((2, 0), $Y$, "5"),
+    node((2, 1), $X$, "6"),
+    node((3, 0), $Y''$, "7"),
+    node((3, 1), $X''$, "8"),
+    node((4, 1), $0$, "9"),
+    arr("1", "3", $$),
+    arr("4", "3", $alpha$),
+    arr("3", "5", $mu$),
+    arr("4", "6", $f$),
+    arr("6", "5", $beta$),
+    arr("5", "7", $nu$),
+    arr("6", "8", $g$),
+    arr("8", "7", $gamma$),
+    arr("8", "9", $$),
+    
+    )
+    
+    ]
+    是两个正合列，按照如下方式定义 $delta: ker gamma -> coker alpha$，任取 $x' in X''$
+    - 由 $g$ 是满射，存在 $x$ 使得 $g(x) = x''$
+    - 令 $y = beta(x)$，则：
+      $
+      nu(y) = nu(beta(x)) = gamma(g(x)) = gamma(x'') = 0
+      $
+      因此 $y in ker nu$
+    - 由 $ker nu = im mu$，可取 $y' in Y'$ 使得 $mu(y') = y$，定义：
+      $
+      delta(x'') = overline(y')
+      $
+    为了保证这是良定义的，第三步 $y'$ 对应的等价类当然是唯一的，我们需要验证第一步 $x$ 的取法不影响结果。事实上:
+    - 设 $g(x_1) = g(x_2) = x'' => x_1 - x_2 in ker g = im f$，因此存在 $x'$ 使得 $f(x') = x_1 -x_2$
+    - 从而：
+      $
+      y_1 - y_2 = beta(x_1 - x_2) = beta(f(x')) = mu(alpha(x'))\
+      mu(y'_1 - y'_2) = y_1 - y_2 = mu(alpha(x'))\
+      $
+      而 $mu$ 是单射，因此：
+      $
+      y'_1 - y'_2 = alpha(x) in im(alpha)
+      $
+      它们当然在 $coker(alpha)$ 中对应相同的等价类
+    
+    我们将有结论：
+    - #align(center)[#commutative-diagram(
+      node((1, 0), $ker alpha$, "3"),
+      node((1, 1), $coker alpha$, "4"),
+      node((2, 0), $ker beta$, "5"),
+      node((2, 1), $coker beta$, "6"),
+      node((3, 0), $ker gamma$, "7"),
+      node((3, 1), $coker gamma$, "8"),
+      arr("3", "5", $f$),
+      arr("4", "6", $mu$),
+      arr("5", "7", $g$),
+      arr("6", "8", $nu$),
+      arr("7", "4", $delta$)
+      )
+      
+      ]
+      给出正合列
+    - 若 $$
+  ]
+  #proof[
+    - 除了 $delta$ 处之外的结论都是显然的，只证明 $delta$ 处。有：
+      $
+      delta(x'') = 0 <=> exists x' in X', x - x' in ker(alpha) \
+      <=> x'' in im(ker beta -> ker gamma)
+      $
+      $
+      overline(y') in ker(coker(alpha) -> coker(beta)) <=> exists x_0 in X, beta(x_0) = mu(y')\
+      => exists x_0 in X, gamma(g(x_0)) = mu(beta(x_0)) = nu(mu(y') = 0)\
+      => exists x_0 in X, x'' = g(x_0) in ker gamma
+      $
+  ]
+  有时通过蛇引理得到的正合列是自然的/典范的/函子的，因为若两组符合蛇引理条件的正合列之间有态射，则蛇引理给出的两个正合列之间也有相应的态射
 
+  #theorem[同调代数基本定理][
+    设 $A$ 是环，$0 -> X^* ->^f Y^* ->^g Z^* -> 0 $ 是模的复形的正合列
+        #align(center)[#commutative-diagram(
+    node((0, 0), $0$, "1"),
+    node((0, 1), $0$, "2"),
+    node((1, 0), $X^(n)$, "3"),
+    node((1, 1), $X^(n-1)$, "4"),
+    node((2, 0), $Y^n$, "5"),
+    node((2, 1), $Y^(n-1)$, "6"),
+    node((3, 0), $Z^n$, "7"),
+    node((3, 1), $Z^(n-1)$, "8"),
+    node((4, 1), $0$, "9"),
+    node((4, 0), $0$, "10"),
+    arr("1", "3", $$),
+    arr("2", "4", $$),
+    arr("4", "3", $alpha^n$),
+    arr("3", "5", $mu$),
+    arr("4", "6", $f$),
+    arr("6", "5", $beta^n$),
+    arr("5", "7", $nu$),
+    arr("6", "8", $g$),
+    arr("8", "7", $gamma^n$),
+    arr("8", "9", $$),
+    arr("7", "10", $$),
+    
+    )
+    ]
+    蛇引理给出正合列：
+    #align(center)[#commutative-diagram(
+      node((1, 0), $ker alpha^n$, "3"),
+      node((1, 1), $coker alpha^n$, "4"),
+      node((2, 0), $ker beta^n$, "5"),
+      node((2, 1), $coker beta^n$, "6"),
+      node((3, 0), $ker gamma^n$, "7"),
+      node((3, 1), $coker gamma^n$, "8"),
+      arr("3", "5", $$),
+      arr("4", "6", $$),
+      arr("5", "7", $$),
+      arr("6", "8", $$),
+      arr("7", "4", $delta$)
+      )
+      
+    ]
+    #TODO
+
+    最终给出上同调群的长正合列：
+    #align(center)[#commutative-diagram(
+      node((0, 0), $dots.v$, "2"),
+      node((1, 0), $H^(n-1)(X)$, "3"),
+      node((1, 1), $H^n (X)$, "4"),
+      node((2, 0), $H^(n-1) (Y)$, "5"),
+      node((2, 1), $H^n (Y)$, "6"),
+      node((3, 0), $H^(n-1) (Z)$, "7"),
+      node((3, 1), $H^n (Z)$, "8"),
+      node((4, 1), $dots.v$, "9"),
+      arr("3", "5", $$),
+      arr("4", "6", $$),
+      arr("5", "7", $$),
+      arr("6", "8", $$),
+      arr("7", "4", $delta^n$),
+      arr("2", "3", $$),
+      emptyArrow(2, 3),
+      emptyArrow(8, 9),      )
+      
+    ]
+  ]
+  #corollary[][
+    - 若 $X^*, Y^*, Z^*$ 之中有两个已经正合，则第三个也正合
+    - （9-Lemma）设三列短正合列有：
+      $
+      0 -> X^* -> Y^* -> Z^* -> 0
+      $
+      - 若三者中间项构成的行正合，则上下行有相同的正合性
+      - 若上下两行正合，并且中间行是复形，则三行都是正合的
+  ]
+
+  #lemma[5-lemma][
+    设有交换图上下行都正合：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $X_0$, 0),
+    node((0, 1), $X_1$, 1),
+    node((0, 2), $X_2$, 2),
+    node((0, 3), $X_3$, 3),
+    node((0, 4), $X_4$, 4),
+    node((1, 0), $Y_0$, 5),
+    node((1, 1), $Y_1$, 6),
+    node((1, 2), $Y_2$, 7),
+    node((1, 3), $Y_3$, 8),
+    node((1, 4), $Y_4$, 9),
+    arr(0, 0 + 1, $u_0$),
+    arr(1, 1 + 1, $u_1$),
+    arr(2, 2 + 1, $u_2$),
+    arr(3, 3 + 1, $u_3$),
+    arr(0 + 5, 0 + 6, $v_0$),
+    arr(1 + 5, 1 + 6, $v_1$),
+    arr(2 + 5, 2 + 6, $v_2$),
+    arr(3 + 5, 3 + 6, $v_3$),
+    arr(0, 0 + 5, $f_0$),
+    arr(1, 1 + 5, $f_1$),
+    arr(2, 2 + 5, $f_2$),
+    arr(3, 3 + 5, $f_3$),
+    arr(4, 4 + 5, $f_4$),)]
+    - 若 $f_0$ 满，$f_1 f_3$ 是单射，则 $f_2$ 单射
+    - 若 $f_4$ 单，$f_1 f_3$ 是满射，则 $f_2$ 满射
+    - 特别的，若 $f_0$ 满，$f_4$ 单，$f_1 f_3$ 是双射，则 $f_2$ 是双射
+  ]
+  #proof[
+    - 
+      $
+      forall x_2 in X_2, f_2 (x_2) = 0 &=> f_3 (u_2 (x_2)) = v_2 (f_2 (x_2)) = 0\
+      &=> u_2 (x_2) = 0\
+      &=> exists x_1 in X_1,x_2 = u_1 (x_1)\
+      & quad=> f_2 (u_1 (x_1)) = nu_1 (f_1 (x_1)) = 0\
+      & quad=> f_1 (x_1) in ker v_1 = im v_0\
+      & quad=> exists y_0 in Y_0, nu_0 (y_0) = f_1 (x_1)\
+      & quad quad => exists x_0 in X_0, f_0 (x_0) = y_0\
+      & quad quad quad =>nu_0 (f_0 (x_0)) = f_1 (x_1) = f_1 (u_0 (x_0))\
+      & quad quad quad =>x_1 = u_0 (x_0)\
+      & quad  => x_1 in im u_0 = ker u_1\
+      & quad  => u_1(x_1) = 0\
+      &  => x_2 = 0\
+      $
+    - 
+      $
+      y_2 in Y_2 &=> exists x_3 in X_3, v_2 (y_2) = f_3 (x_3)\
+      &quad => v_3 (f_3 (x_3)) = v_3 (v_2 (y_2)) = 0 = f_4 (u_3 (x_3))\ 
+      &quad => u_3 (x_3) = 0\ 
+      &quad => exists x_2 in X_2, u_2(x_2) = x_3\ 
+      &quad quad =>v_2 (y_2) = f_3 (x_3) = f_3 (u_2 (x_2))=v_2 (f_2 (x_2))\ 
+      &quad quad =>y_2 - f_2 (x_2) in ker v_2 = im v_1\ 
+      &quad quad quad =>exists x_1 in X_1 y_2 - f_2 (x_2) = v_1 (f_1 (x_1))=f_2 (u_1 (x_1))\ 
+      &quad quad quad =>exists x_1 in X_1 y_2 = f_2 (x_2 + u_1 (x_1))\ 
+      & => y_2 = im f_2\ 
+      
+      $
+  ]
+
+  #remark[Diagram Chasing][
+    Diagram chasing（追图）是常见的证明正合列的方法，也即在交换图上追踪对象。以上两个引理的证明即体现了这个思想
+  ]
+= 局部化
+  == 环的局部化
+  设 $X = Spec(A), x in X$ 往往看作点，此时 $A$ 可以看作 $X$ 上的全局同态函数。当然，我们也应该考虑在 $x$ 邻域处的同态函数，这就是局部化（localization）的思想
+  #definition[乘法封闭|multiclosed][
+    称 $S subset A$ 乘法封闭，如果 $1 in S$ 且 $S$ 关于乘法封闭
+  ]
+  #example[][
+    - 设 $p$ 是素理想，则 $A - p$ 是乘法封闭的
+    - 设 $f in A$，则 $union_(n in NN) {f^n}$ 是乘法封闭的
+  ]
+  #let InvSA = $Inv(S) A$
+  #definition[][
+    设 $S subset A$ 乘法封闭，则存在环 $Inv(S) A$ 以及同态 $phi: A -> Inv(S) A$ 满足以下的泛性质：
+    - $phi(S) in U(InvSA)$
+    - 若 $g : A -> B$ 满足 $g(S) subset U(B)$，则存在唯一的同态 $g' : InvSA -> B$ 使得：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $A$, 1),
+      node((0, 1), $B$, 2),
+      node((1, 0), $InvSA$, 3),
+      arr(1, 2, $g$),
+      arr(3, 2, $exists ! g'$),
+      arr(1, 3, $phi$),)]
+    称该环为 $A$ 关于 $S$ 的局部化/分式环
+  ]
+  #proof[
+    - 先给出 $InvSA$ 的构造，先定义集合：
+      $
+      InvSA = S times A quo ~ := {a/s}\
+      (a_1, s_1) ~ (a_2, s_2) <=> exists s in S, s(a_1 s_2 - a_2 s_1) = 0
+      $
+      这里乘以 $s$ 是因为环中未必有消去律，可以验证它确实是等价关系
+    - 再给出环运算，完全仿照分式的运算定义：
+      $
+      (a_1/s_1) + (a_2/s_2) = (a_1 s_2 + a_2 s_1) / (s_1 s_2)\
+      (a_1/s_1) * (a_2/s_2) = (a_1 a_2) / (s_1 s_2)
+      $
+      并且 $1/1$ 是其中单位。可以验证它这些运算良定义并且满足环的公理
+    - 定义:
+      $
+      funcDef(phi, A, InvSA, a, a/1)
+      $
+      显然：
+      $
+      forall s in S, phi(s) * 1/s = 1
+      $
+      因此满足要求
+    - 最后验证泛性质，定义：
+      $
+      funcDef(g', InvSA, B, a/s, g(a) / g(s))
+      $
+      注意到 $g(s)$ 是可逆元，定义是有意义的。\
+      可以验证它是良定义的同态，并且确实满足交换图表。\
+      同时定义当然是唯一的，因为：
+      $
+      g'(a/1) = g'(phi(a)) = g(a)\
+      g'(a/s) = g'(a/1) * g'(1/s) = g(a) * g(s)^{-1} = g(a) / g(s)
+      $
+      因此同态已经被唯一确定
+  ]
+  #remark[][
+    - 注意 $phi$ 未必是单射，因此 $phi(a) = a/1 = 0 <=> exists s in S, s a = 0$\
+      显然在一般的环中不能保证 $phi$ 是单射，但是在整环中，$phi$ 是单射
+    - 若 $s in S$ 幂零，则 $phi(s)^n = 0$ 可逆，意味着 $InvSA = 0$
+  ]
+  #definition[][
+    - 设 $p$ 是素理想，则称 $A_p = Inv((A - p)) A$，并有 $A_p$ 是局部环，唯一的极大理想便是 $p A_p$
+    - $A_f = Inv({f_n}) A = A[1/f] = A[x] quo (x f - 1)$ 也是分式环
+    - $ZZ_((p)) = {m/n | (p, n) = 1}$ 是素理想生成的局部化
+  ]
+  #proof[
+    只要证明 $A_p quo p A_p$ 是域，任取其中元素：
+      $
+      a/s + p A_p = (a + p)/s
+      $
+      - $a in p => (a + p)/s = 0$
+      - $a in.not p => a/s$ 可逆
+      因此结论成立
+  ] 
+  == 模的局部化
+  #definition[模的局部化][
+    设 $S subset A$ 乘法封闭，则有函子：
+    $
+    Inv(S) : ModS_A -> ModS_(InvSA)
+    $
+    及交换图表：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $M$, 1),
+    node((0, 1), $Inv(S) A$, 2),
+    node((1, 0), $N$, 3),
+    node((1, 1), $Inv(S) N$, 4),
+    arr(1, 2, $$),
+    arr(1, 3, $f$),
+    arr(2, 4, $exists f'$),
+    arr(3, 4, $$),)]
+  ]
+  #theorem[][
+    $Inv(S)$ 是正合函子
+     
+  ]
+  #proof[
+    给定正合列：
+      $
+      M' ->^f M ->^g M''
+      $
+      验证：
+      $
+      Inv(S) M' ->^f' Inv(S) M ->^g' Inv(S) M''
+      $
+      也正合
+      - $Inv(S) g compose Inv(S) f = Inv(S)(g compose f) = 0$，至少是复形
+      - 只需证明 $im Inv(S) f supset ker Inv(S) g$，为此
+    
+  ]
+  #corollary[][
+    - $Inv(S)(N quo M) tilde.eq (Inv(S) N) quo (Inv(S) M)$
+    - $Inv(S) (N sect P) = Inv(S) N sect Inv(S) P$
+    - $Inv(S) (N + P) = Inv(S) N + Inv(S) P$
+  ]
+  #proof[
+    - 注意到：
+      $
+      0 -> M -> N -> N quo M -> 0
+      $
+      正合，由上面的命题知：
+      $
+      0 -> Inv(S) M -> Inv(S) N -> Inv(S) (N quo M) -> 0
+      $
+      正合，因此结论成立
+
+    - 利用正合列:
+      $
+      0 -> N sect P -> M -> M quo N times M quo P 
+      $
+      得到：
+      $
+      0 -> Inv(S) (N sect P) -> Inv(S) M -> Inv(S) (M quo N times M quo P) -> 0
+      $
+      正合，在最后一项将 $Inv(S)$ 换入即可
+    
+    - 利用正合列:
+      $
+      0 -> N plus.circle  P -> M -> M quo (N + P) -> 0
+      $
+      得到：
+      $
+      0 -> Inv(S) (N plus.circle P) -> Inv(S) M -> Inv(S) (M quo (N + P)) -> 0
+      $
+      利用事实 $N+P = im(N plus.circle P -> M )$ 再次换入即可
+  ]
+  #theorem[][
+    设 $M$ 是一个有限表示，也即存在正合列：
+    $
+    A^p -> A^q -> M -> 0
+    $
+    则：
+    $
+    Inv(S) Hom_A (M, N) tilde.eq Hom_(InvSA) (Inv(S) M, Inv(S) N)
+    $
+  ]
+  #proof[
+    由条件依次得到正合列：
+    $
+    0 -> Hom_A (M, N) -> Hom_A (A^q, N) -> Hom_A (A^p, N) -> 0\
+    0 -> Inv(S) Hom_A (M, N) -> Inv(S) Hom_A (A^q, N) -> Inv(S) Hom_A (A^p, N) -> 0
+    $
+    但是可以验证：
+    $
+    Inv(S) Hom_A (A^p, N) tilde.eq plus.circle Inv(S) N tilde.eq  Hom_(InvSA) (Inv(S) A^p, Inv(S) N)
+    $
+    得到：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $0$, 1),
+    node((0, 1), $Hom_A (M, N)$, 2),
+    node((0, 2), $Hom_A (A^p, N)$, 3),
+    node((0, 3), $Hom_A (A^q, N)$, 4),
+    node((1, 0), $0$, 5),
+    node((1, 1), $Hom_(Inv(S) A)(Inv(S) M, Inv(S), N)$, 6),
+    node((1, 2), $Hom_(Inv(S) A)(Inv(S) A^p, Inv(S), N)$, 7),
+    node((1, 3), $Hom_(Inv(S) A)(Inv(S) A^q, Inv(S), N)$, 8),
+    arr(1, 2, $$),
+    arr(2, 3, $$),
+    arr(3, 4, $$),
+    arr(5, 6, $$),
+    arr(6, 7, $$),
+    arr(7, 8, $$),
+    arr(2, 6, $$),
+    arr(3, 7, $$, bij_str),
+    arr(4, 8, $$, bij_str),)]
+    利用 5-Lemma 即可
+  ]
+  #proposition[][
+    $M -> product_(m in "Max" (A)) M_m$ 是单射 
+  ]
+  #proof[
+    换言之，需要证明：
+    $
+    forall x in M, (forall m in "Max"(A), x = 0 in M_m -> x = 0)
+    $
+    如若不然，取 $I = "Ann"(x) != (1)$，取包含 $I$ 的极大理想 $m$，有：
+    $
+    x/1 = 0 => exists t in A - M, t x = 0 => exists t in A -M, t in I
+    $
+    这与 $I subset m$ 矛盾！
+  ]
+  #corollary[][
+    以下事实等价：
+    - $M = 0$
+    - $M_p = 0, forall p in Spec(A)$
+    - $M_m = 0, forall m in "Max"(A)$
+  ]
+  #corollary[][
+    对于 $Mod(A)$同态 $phi$，它是单/满/双射当且仅当在所有素理想/极大理想的局部环中是单/满/双射
+  ]
+  #remark[][
+    像这样性质 $P$ 成立当且仅当它在所有素理想/极大理想的局部化中成立的性质被称作局部性质（local property）
+  ]
+  == 分式环的素理想
+    #proposition[][
+      - $I(InvSA) = (1) <=> S sect I != emptyset$
+      - $Spec (InvSA) = {p InvSA | p in Spec(A) and p sect S = emptyset}$
+      - $Inv(S) sqrt(I) := sqrt(Inv(S) I)$
+    ]
+    #proof[
+      +
+        - 设 $I(InvSA) = (1)$，则存在 $1 = i /s$，表明：
+          $
+          exists s' in S, s'(a - s) = 0 => s' a = s' s
+          $
+          则 $s' a = s' s in I sect S$
+        - 
+      + 注意到存在自然同态 $f: A -> Inv(S) A$，从而诱导同态：
+        $
+        f': Spec(Inv(S) A) -> Spec(A)
+        $
+        同时，断言 $f'(q) = Inv(f)(q) sect S = emptyset$，否则 $q$ 中将存在单位，这当然是不可能的\
+        另一方面，设 $p in Spec(A)$ 并且 $p sect S = emptyset$，我们断言 $Inv(S) p$ 是素理想，也即：
+          $
+          Inv(S) A quo Inv(S) p = Inv(S) (A quo p) 
+          $
+          是整环，但是注意到 $A quo p$ 已经是整环，它的局部化当然也是整环
+      
+    ]
+    #corollary[][
+      $
+      Spec(A_p) = {q A_p | q in Spec(A) and q sect A - p = emptyset}\
+      = {q A_p | q in Spec(A) and q subset p}
+      $
+    ]
+    #proposition[][
+      设 $S subset A$ 是乘法子集，$M$ 是有限生成 $Mod(A)$，则：
+      - $Inv(S) "Ann"_A (M) = "Ann"_(InvSA) (Inv(S) M)$
+      - $Inv(S) (N : P) = Inv(S) N : Inv(S) P$
+    ]
+    #proof[
+      设 $M = sum A x_i$，注意到：
+      $
+      Inv(S) "Ann"(M) = Inv(S) sect.big "Ann"(x_i)\
+      = sect.big Inv(S) "Ann"(x_i)\
+      = sect.big "Ann"_(Inv(S) A) (x_i / 1)\
+      = "Ann"_(Inv(S) A) (Inv(S) M) 
+      $
+      因此结论一成立
+
+      对于下一个结论，注意到：
+      $
+      N :P = "Ann" ((N + P) quo N)
+      $
+      以及有限生成模的商模仍然是有限生成，因此结论自然成立
+    ]
+= 张量积
+  == 构造与性质
+    #definition[双线性|bilinear][
+      设 $M, N$ 是 $Mod(A)$，称 $f: M times N -> P$ 双线性，如果：
+      $
+      f(x, *), f(*, y)
+      $
+      都是线性的
+    ]
+    张量积的目的是希望将双线性映射转换成某种线性映射
+    #definition[][
+      设 $M, N$ 是 $Mod(A)$，定义张量积为 $(T, g)$，其中 $T$ 为 $Mod(A)$而 $g$ 是双线性映射 $M times N -> T$，并且满足泛性质：
+      $
+      forall (D, f):ModS_A times (M times N -> D)
+      $
+      有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $M times N$, 1),
+      node((0, 1), $D$, 2),
+      node((1, 0), $T$, 3),
+      arr(1, 2, $f$),
+      arr(3, 2, $exists !f'$),
+      arr(1, 3, $g$),)]
+      此时记 $T = M times.circle_A N$，
+    ]
+    #proposition[][
+      上面定义的张量积存在且在同构的意义下唯一
+    ]
+    #proof[
+      - 唯一性由它是范畴的始对象给出
+      - 存在性由如下构造给出
+        - 令 $C$ 是 $M times N$ 中元素生成的自由 $Mod(A)$
+          $
+          C = {sum a_i (x_i, y_i)}
+          $
+          令 $C$ 是
+        
+    ]
+    #proposition[][
+      张量积函子 $- times.circle N, M times。circle -$ 是右正合的，但未必左正合
+    ]
+    #proof[
+
+    ]
+    #corollary[][
+      设有限个 $x_i in M, y_i in N$ 使得 $sum x_i tensorProduct y_i = 0 in M tensorProduct N$，则存在有限生成子模 $M_0 subset N$ 和有限生成子模 $N_0 subset N$ 使得 $sum x_i tensorProduct y_i = 0 in M_0 tensorProduct N_0$
+    ]<zero-tensor-product-fg>
+    #proof[
+      由张量积的构造：
+      $
+      sum x_i tensorProduct y_i = 0 => sum (x_i, y_i) in D
+      $
+      而 $sum (x_i, y_i) in D$ 是 $D$ 中元素的有限和，设：
+      - $M_0$ 由 $x_i$ 生成，且第一个坐标落在有限和之中
+      - $N_0$ 由 $y_i$ 生成，且第二个坐标落在有限和之中
+      从而当然有：
+      $
+      sum x_i tensorProduct y_i = 0 in M_0 tensorProduct N_0
+      $
+    
+    ]
+    这样的定义完全可以推广到多重线性函数，给出多重的张量积，将其记作 $tensorProduct_i M_i$。然而还有一种自然的构造方式 $(((M_1 tensorProduct M_2) tensorProduct M_2) ...) tensorProduct M_r$，下一个命题给出了它们的一致性
+    
+
+    #proposition[][
+      + $M tensorProduct N tilde.eq N tensorProduct M$
+      + $(M tensorProduct N) tensorProduct P tilde.eq M tensorProduct(N tensorProduct P) tilde.eq M tensorProduct N tensorProduct P$
+      + $(M plus.circle N) tensorProduct P tilde.eq (M tensorProduct P) plus.circle (N tensorProduct P) $
+      + $A tensorProduct M tilde.eq M$，映射如下给出：
+        $
+        funcDef(phi, A tensorProduct M, M, a tensorProduct m, a m)
+        $
+      + 设 $N$ 是 $A, B-$ 模，则：
+        $
+        (M tensorProduct_A N) tensorProduct_B P tilde.eq M tensorProduct_A (N tensorProduct_B P)
+        $
+    ]
+    #proof[
+      + #TODO
+      + #TODO
+      + #TODO
+      + 验证 $Hom(A tensorProduct M, P) tilde.eq Hom(M, P)$
+      + #TODO
+    ]
+  == 标量的限制与扩张 restriction/extension of scalar
+    #definition[限制][
+      设 $f: A -> B$ 是环同态，$N$ 是 $Mod(B)$，则可以自然导出 $N$ 的 $Mod(A)$ 性，由：
+      $
+      A times N -> B times N -> M
+      $
+      这个模被称为标量限制
+    ]
+    #definition[扩张][
+      设 $f: A -> B$ 是环同态，给出函子：
+      $
+      funcDef(f, ModS_A, ModS_B, M,  B tensorProduct_A M := M_B)
+      $
+      称为扩张
+    ]
+    #proposition[][
+      设 $M$ 是有限生成 $Mod(A)$，则扩张 $M_B$ 也是有限生成 $Mod(A)$，但限制未必
+    ]
+    #proposition[][
+      设 $Inv(S) A$ 是分式环，有：
+      $
+      Inv(S) A tensorProduct_A M tilde.eq Inv(S) M
+      $
+      映射由：
+      $
+      f: (a/s, m) -> (a m)/s
+      $
+      给出
+    ]
+    #proof[
+      + 首先给出直接的证明，先证明 $Inv(S) A tensorProduct_A M$ 总可以写成 $1/s tensorProduct m$ 的形式\
+        事实上，由定义张量积均形如：
+        $
+        sum_i a/s_i tensorProduct m_i 
+        $
+        通分化为：
+        $
+        sum_i 1/s tensorProduct (a_i t_i m_i)
+        $
+        这就是我们要的形式，进而表明 $f$ 是满射\
+        再证明 $f$ 是单射，注意到：
+        $
+        f(1/s tensorProduct m) = 0\
+        => exists t in S, t m = 0\
+        => t/s tensorProduct m = t/(s t) tensorProduct m = 1/(s t) tensorProduct t m = 0
+        $
+        得证
+    ]
+    #theorem[][
+      函子 $Inv(S)$ 保持张量积，换言之：
+      $
+      Inv(S) M tensorProduct_(Inv(S) A) Inv(S) N tilde.eq Inv(S) (M tensorProduct_A N)
+      $
+      映射由：
+      $
+      m/s tensorProduct n/t -> (m tensorProduct n)/(s t)
+      $
+      给出
+    ]
+    #proof[
+      $
+      Inv(S) M tensorProduct_(Inv(S) A) Inv(S) N t\
+      tilde.eq (Inv(S) A tensorProduct M) tensorProduct_(Inv(S) A) (Inv(S) A tensorProduct N)\
+      tilde.eq Inv(S) tensorProduct_A (M tensorProduct N)\
+      tilde.eq Inv(S) (M tensorProduct N)
+      $
+      我们证明了它们之间存在同构，容易验证该同构只能是上述形式
+    ]
+  == $Hom, tensorProduct$ 的伴随性
+    #definition[][
+      设 $T: ModS_A -> ModS_B, U = Hom_A (N, -)$ ，称 $(T, N)$ 是伴随对，如果：
+      $
+      Hom_B (T M, P) tilde.eq Hom_A (M, U P), forall M, P
+      $
+    ]
+    #theorem[][
+      设 $M, N, P$ 是 $Mod(A)$，则有自然同构：
+      $
+      Hom(M tensorProduct N, P) &tilde.eq Hom(M, Hom(N, P))\
+      (f: M tensorProduct N -> P) &->[ m -> [n -> f(m tensorProduct n)]]\
+      ([(m, n) -> phi(m)(n)]arrow.t) &<- phi 
+      $
+    ]
+    #corollary[][
+      $- tensorProduct N$ 是右正合函子
+    ]
+    #proof[
+      设:
+      $
+      E := M' -> M -> M'' -> 0
+      $
+      是正合列，往证：
+      $
+      E tensorProduct N = M' tensorProduct N -> M tensorProduct N -> M'' tensorProduct N -> 0
+      $
+      正合，由 @exact-test 只需证明：
+      $
+      Hom(E tensorProduct N, P)
+      $
+      对于任意 $P$ 正合，而上式等价于
+      $
+      Hom(E, Hom(N, P))
+      $
+      再由 @exact-test，这显然成立
+    ]
+    #remark[][
+      - 右正合意味着张量积函子可以产生左导出函子，记 $"Tor"_i^A (M, N) := L_i (- tensorProduct_A N) (M)$
+      - 然而，张量积本身往往不是左正合的，例如 $f: x -> 2 x$ 是单射，但：
+        $
+        ZZ tensorProduct ZZ_2 ->^f' ZZ tensorProduct ZZ_2  
+        $
+        不是单射（事实上，是零映射）
+    ]
+  == 平坦模
+    #definition[平坦模|flat][
+      以下性质等价
+      + 张量积函子 $- tensorProduct N$ 是正合的
+      + 任意正合列 $E$，张量积 $E tensorProduct N$ 也是正合的
+      + 设 $M' ->^f M$ 是单射，则 $M' tensorProduct N ->^f M tensorProduct N$ 也是单射
+      + 对于任意 $M, M'$ 有限生成，$M' ->^f M$ 单导出 $M' tensorProduct N ->^f M tensorProduct N$ 也是单射
+      此时，称 $N$ 是平坦模
+    ]
+    #proof[ 
+      只证明 $4 => 3$，假设 $M' ->^f M$ 是单射，往证 $M' tensorProduct N ->^f' M tensorProduct N$ 单
+      
+      设 $u = sum x_i tensorProduct y_i in ker (f') => 0 = sum f(x'_i) tensorProduct y_i$，由 @zero-tensor-product-fg 知存在有限生成子模 $M_0$ 使得 $0 = sum f(x'_i) tensorProduct y_i in M_0 tensorProduct N$，由于 $f$ 在有限生成模上的提升是单射，$x'_i = 0$，因此 $u = 0$
+    ]
+    #proposition[平坦性是局部性质][
+      以下命题等价：
+      - $M$ 是平坦模
+      - 对于任意素理想 $p$，$M_p$ 是平坦模
+      - 对于任意极大理想 $m$，$M_m$ 是平坦模
+    ]
+    #proof[
+      + $1 => 2$：注意到局部化函子 $(-)_p$ 也是正合函子，则复合也是正合函子，而它们的复合恰为：
+       $
+       (- tensorProduct_A M)_p = (-)_p tensorProduct_(A_p) M_p
+       $
+       证毕
+      + $2 => 3$ 显然
+      + $3 => 1$：\
+        设 $N ->^f P$ 是单射，往证 $N tensorProduct M ->^f P tensorProduct M$ 也是单射\
+        之前已经证明单射是局部性质，只需要验证 $(N tensorProduct M)_m -> (P tensorProduct M)_m$ 是单射即可，但：
+        $
+        (N tensorProduct M)_m -> (P tensorProduct M)_m\
+        <=> (N_m tensorProduct M_m) -> (P_m tensorProduct M_m)\
+        $
+        由条件，结论显然成立
+    ]
+    #proposition[][
+      平坦模的扩张仍是平坦模
+    ]
+    #proof[
+      设 $N -> P$ 是单射，往证 $N tensorProduct M_B -> P tensorProduct M_B$ 是单射
+    ]
     
   

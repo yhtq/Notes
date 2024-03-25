@@ -922,7 +922,20 @@
       $
       Phi' <= (C + Phi)g(x)
       $
-      #TODO
+      设 $h = e^(integral_a^x g(s) dif s), Phi = u h$，有：
+      $
+      u' h + u h' <= (C + u h)g\
+      u' h <= C g\
+      u' <= C g/h\
+      u(x) - u(a) <= C integral_a^x g(s)/h(s) dif s\
+      (Phi(a) = 0 => u(a) = 0)\
+      u(x) <= C integral_a^x g(s)/h(s) dif s = C integral_a^x g(s) e^(-integral_a^x g(s) dif s) dif s = C (1 - 1/h(x))\
+      $
+      从而：
+      $
+      f(x) <= C + Phi(x) = C + u h <= C h
+      $
+      证毕
 
     ]
     #corollary[][
@@ -932,5 +945,334 @@
       在@peano 中，若 $f$ 是 Lipschitz 连续的，则解是唯一的。更进一步，构造出的折线列 $g_n (x)$ 本身即一致收敛
     ]
     #proof[
+      假设 $y = phi(x), y= psi(x)$ 是两个解，则：
+      $
+      abs(phi(x) - psi(x)) = abs(integral_(x_0)^x f(t, phi(t)) dif t - integral_(x_0)^x f(t, psi(t)) dif t) <= L abs(integral_(x_0)^x abs(phi(t) - psi(t)) dif t)
+      $
+      - 当 $x > x_0$ 时，上式即为：
+        $
+        abs(phi(x) - psi(x)) <= L integral_(x_0)^x abs(phi(t) - psi(t)) dif t
+        $
+        直接利用 Gronwall 不等式可得 $abs(phi(x) - psi(x)) <= 0 => abs(phi(x) - psi(x)) = 0$
+      - 当 $x < x_0$ 时，类似可以证明结论成立
+      综上，$phi(x) = psi(x)$
+    ]
+    事实上，在一维的情形下，我们可以找到更弱的条件
+    #theorem[][
+      设 $f$ 满足 Osgoad 条件，也即：
+      $
+      exists F: [0, +infinity] -> [0, +infinity)\
+      integral_(0)^(t)  1/F(r) dif r = +infinity\
+      abs(f(x, y) - f(x, z)) <= F(abs(y - z))
+      $
+      则上述方程的解存在且唯一
+    ]
+    #proof[
+      设 $y_1, y_2$ 是两个不同的解，令 $r(x) = y_1 (x) - y_2(x)$\
+      注意到 $r(x_0) = 0$，若 $r$ 不恒为零，不妨设 $x_1$ 是零点且 $r(x) > 0 ,forall x in (x_1, x_2]$\
+      此时：
+      $
+      der(r, x) = y'_1 - y'_2 = f(x, y_1) - f(x, y_2) <= F(abs(y_1 - y_2)) = F(r(x))\
+      => r'/F(r(x)) <= 1\
+      => integral_(s)^(t) r'/F(r(x)) dif x <= t -s\
+      => integral_(r(s))^(r(t)) 1/F(r) dif r <= t - s
+      $
+      令 $s -> x_1$，上式左侧趋于无穷，而右侧有限，矛盾！
+    ]
+    #theorem[][
+      设 $f(x, y)$ 满足 $f(x, y)$ 关于 $y$ 单调下降，则解也存在并唯一
+    ]
+    #proof[
+      设 $y_1, y_2$ 是两个不同的解，令 $r(x) = y_1 (x) - y_2(x)$\
+      注意到 $r(x_0) = 0$，若 $r$ 不恒为零，不妨设 $x_1$ 是零点且 $r(x) > 0 ,forall x in (x_1, x_2]$\
+      此时：
+      $
+      der(r, x) = y'_1 - y'_2 = f(x, y_1) - f(x, y_2) <= 0
+      $
+      而 $r(x_1) = 0$，上式表明 $r$ 单调下降，进而 $r(x) <= 0$，因此只能 $= 0$，矛盾！
+    ]
+    本节利用的欧拉折线不仅在理论上很重要，在数值计算上也广泛用于数值求解微分方程，理论依据就是本节的定理
+  == Picard 定理
+    Picard 定理表面上和 Peano 定理的结论类似但条件更强，但是它的方法非常重要，因此仍有必要专门学习
+    #theorem[Picard][
+      在 @peano 中，再补充 $f$ Lipschitz 连续，则方程的解存在
+    ]
+    #proof[
+      仍然转化为积分方程:
+      $
+      y(x) = y_0 + integral_(x_0)^(x) f(t, y(t)) dif t
+      $
+      总体思想是所谓的不动点法，递归定义：
+      - $phi_0 (x) = y_0$
+      - $phi_n (x) = y_0 + integral_(x_0)^(x) f(t, phi_(n-1) (t)) dif t$
+
+      + 首先验证定义合理，需要保证所有的值不超出区域。
+        - $x$ 的合理性是显然的
+        - 假设 $phi_(n - 1) subset overline(U(y_0, b))$，则：
+          $
+          abs(phi_n (y_1) - y_0) <= integral_(x_0)^(x) abs(f(t, phi_(n-1) (t))) dif t\
+          <= max_DD abs(f) h <= b
+          $
+          这就验证了 $phi_(n) subset overline(U(y_0, b))$
+      + 接下来证明它一致收敛
+        - 首先归纳证明 $abs(phi_n (x) - phi_(n-1)(x)) <= (M L^(n-1))/(n!) abs(x -x_0)^n$
+          $
+          abs(phi_n (x) - phi_(n-1)(x)) = abs(integral_(x_0)^(x) f(t, phi_(n-1) (t)) - f(t, phi_(n-2) (t)) dif t)\
+          <= integral_(x_0)^(x) abs(f(t, phi_(n-1) (t)) - f(t, phi_(n-2) (t))) dif t\
+          <= integral_(x_0)^(x) L abs(phi_(n-1) (t) - phi_(n-2) (t)) dif t 
+          $
+          利用归纳条件计算即可
+        - 其次：
+          $
+          (M L^(n-1))/(n!) abs(x -x_0)^n <= (M L^(n-1))/(n!) h^n
+          $
+          上式右侧只需利用比较判别法知求和收敛，从而容易利用维尔斯特拉斯判别法知道原级数 $sum (phi_n (x) - phi_(n-1)(x))$ 一致收敛
+      + 最后我们得到了极限函数 $phi(x)$，显然应当满足：
+        $
+        phi(x) = y_0 + integral_(x_0)^(x) f(t, phi(t)) dif t
+        $
+        这就是原方程
+    ]
+    #remark[][
+      这个定理的证明有以下优点：
+      - 可以推广到抽象的函数空间，例如 Banach 空间
+      - 假设 $f$ 是解析函数，则构造的 $phi_n$ 都是解析函数，进而可以证明 $phi$ 也是解析的
+    ]
+  == 解的延拓
+    之前我们给出了至少在某个局部，标准形式的微分方程是有解的。然而我们往往需要在更大的定义域上找到解
+    #theorem[][
+      设 $G$ 是开区域，$f(x, y)$ 在 $G$ 上连续，$(x_0, y_0) in G$\
+      对含 $(x_0, y_0)$ 的任意有界闭区域 $G_1 subset G$，过 $(x_0, y_0)$ 点的微分方程的解 $y=f(x)$ 都可以延拓到 $G_1$ 的边界上
+    ]
+    #proof[
+      由题设，$G_1$ 中的点到 $G$ 的边界的距离有正下界 $d$\
+      因此可以找到闭集：
+      $
+      G_2 = {(x, y) | abs(x - x') <= delta, abs(y - y') <= delta, exists (x, y) in G_1} subset G
+      $
+      再令：
+      $
+      M = max_(f in G_2) abs(f) +1\
+      delta'_0 = delta_0 / M
+      $
+      利用之前的存在性定理，可以找到 $U(x_0, delta'_0)$ 内的解。再次利用存在性定理可以继续前进，且步长为 $delta'_0$ 不变，因此经过有限步之后，我们就得到了直到 $G_1$ 的边界上的解
+    ]
+    #example[][
+      - 
+        设微分方程 $der(y, x) = x^2 + y^2$ 容易验证过任何一点的解存在且唯一。然而，可以证明任何一个解都只在有界区间上成立
+
+        事实上，任取 $y(x)$ 在区间 $I$ 上是方程的一个解，假设 $I$ 无界，不妨取为 $[0, +infinity]$，则：
+        $
+        y' = x^2 + y^2 >= 1 + y^2\
+        y'/(1+y^2) >= 1\
+        integral_(1)^(t)  y'/(1+y^2) dif x >= x - 1\
+        integral_(1)^(y(t))  1/(1+y^2) dif y >= x - 1\
+        $
+        然而令 $t -> +infinity$，上式左侧有界而右侧无界，矛盾！
+
+        这不与解的延拓定理矛盾，容易想到它在 $x$ 方向有垂直渐近线，而在 $y$ 方向可以进行无限延伸
+      - 给定微分方程：
+        $
+        der(y, x) = (x^2 + y^2 +1) sin (pi y)
+        $
+        可以验证它也满足存在唯一的条件，并且
+        - $y = k, k in ZZ$ 当然是一个解
+        - 对于其他的解，显然必须夹在上下两个水平直线之间（否则若相交，则交点处解将不唯一），因此在 $x$ 方向必将可以无限延伸
+      - 给定微分方程：
+        $
+        der(y, x) = (y-3)(y+1) e^(x+y)^2
+        $
+        容易验证满足存在唯一的条件
+        - 显然 $y = 3, -1$ 是两个解
+        - 若 $y_0 in [-1, 3]$，过该点的解同样与 $y = 3, -1$ 不相交，进而导数总为负数，单调下降，因此在 $-infinity, +infinity$ 方向都有极限。观察等式可知极限只能分别为 $3, -1$
+        - 若 $y_0 in [3, +infinity]$ ，负向仍然有水平渐近线，而正向类似刚才的将会存在垂直渐近线
+      这些例子都说明，只要延拓定理的条件成立，最终得到的解一定在某个方向上无界
+    ]
+  == 比较定理
+    给定两个微分方程，我们希望从形式看出解的大小关系，由如下定理：
+    #theorem[第一比较定理][
+      设 $f, F$ 都连续，且 $f < F$，两个微分方程：
+      $
+      cases(
+        der(y, x) = f(x, y),
+        y(x_0) = y_0
+      )\
+      cases(
+        der(Y, X) = F(X, Y),
+        Y(X_0) = Y_0
+      )
+      $
+      在区间 $I$ 上各有解 $y, Y$，则有：
+      $
+      y < Y, forall x > x_0\
+      y > Y, forall x < x_0
+      $
+    ]
+    #proof[
+      显然 $Y'(x_0) = F(x_0, y_0) > y'(x_0)$，而 $Y(x_0) = y(x_0)$，因此可取 $delta$ 使得：
+      $
+      forall x in (x_0, x_0 + delta), Y(x) > y(x)\
+      forall x in (x_0 - delta, x_0), Y(x) < y(x)
+      $
+      设 $S = {x in I | Y(x) = y(x) }$，仿照之前的过程可以看出 $S$ 中每个点都孤立，然而任取 $x_1 > x_2 in S$，设 $g(x) = Y(x) - y(x)$，既然：
+        $
+        g(x_1) = g(x_2) = 0
+        $
+        且 $g$ 在 $x_2$ 右侧严格单增，在 $x_1$ 左侧严格单减，因此其间一定有 $S$ 中的点。反复进行，这将与 $S$ 中每个点都孤立矛盾\
+        这意味着 $S$ 中恰有一点，只能是 $x_0$，故结论当然成立
+    ]
+    #corollary[][
+      设 $f in C(a, b), abs(f) <= A(x) abs(y) + B(x), forall x in (a, b)$，则微分方程：
+      $
+      cases(
+        der(y, x) = f(x, y),
+        y(x_0) = y_0
+      )
+      $
+      所有的解都可以延拓到 $(a, b)$
+    ]
+    #proof[
+      #lemma1[
+        两个微分方程：
+        $
+        der(y, x) = A(x) abs(y) + B(x)\
+        der(y, x) = - A(x) abs(y) - B(x)
+        $
+        过任意点的解存在唯一，且解的存在区间都是 $(a, b)$ 
+      ]
+      #proof[
+        存在唯一性是容易的。对于存在区间，只证明第一个方程\
+        显然它的解单调递增，若解的存在区间不是 $(a, b)$ ，则必然在某点 $x_0 in (a, b)$ 处的左/右极限为 $+\/minus infinity$，不妨设为左极限为正无穷\
+        这意味着存在 $delta, (x_0 - delta, delta)$ 上时有：
+        $
+        der(y, x) = A(x) abs(y) + B(x) = A(x) y + B(x) < M_1 y + M_2
+        $
+        但稍加计算可得 $der(y, x) = M_1 y + M_2$ 的解不可能在有界区间内趋于无穷，进而该方程的解由比较定理被控制在有界区间，矛盾！
+      ]
+      回到原题，显然有：
+      $
+      -(A(x) abs(y) + B(x) + 1)<= der(y, x) = f < A(x) abs(y) + B(x) + 1
+      $
+      由比较定理，每个有限区间上的解当然被控制在有界区间，证毕
+
+    ]
+    #definition[][
+      给定微分方程
+      $
+      cases(
+        der(y, x) = f(x, y),
+        y(x_0) = y_0
+      )
+      $
+      称其解 $f, g$ 为最大解，最小解，若任取 $y$ 为一个解，都有：
+      $
+      g <= y <= f
+      $
+    ]
+    #theorem[][
+      设 $D = {abs(x-x_0) < delta_x, abs(y - y_0) < delta_y}$，则存在 $tau > 0$ 使得方程
+      $
+      cases(
+        der(y, x) = f(x, y),
+        y(x_0) = y_0
+      )
+      $
+      在 $x in [x_0 , x_0 + tau]$ 上有最大/最小解
+    ]
+    #proof[
+      设 $y_n$ 是微分方程：
+      $
+      cases(
+        der(y, x) = f(x, y) + 1/n,
+        y(x_0) = y_0
+      )
+      $
+      由 @peano，每个方程的解都在：
+      $
+      [x_0 - h_n, x_0 + h_n] "where"
+      h_n = min{delta_x, delta_y/(max_DD abs(f_n))}
+      $
+      存在，显然 $h_n$ 有公共正下界，取 $tau$ 是一个正下界，则这些方程都在 $[x_0 - tau, x_0 + tau]$ 上有界\
+      // 我们希望找到一些一致收敛性。事实上，这些函数：
+      // - 等度连续，既然：
+      //   $
+      //   y'_n (x) <= max_DD abs(f) + 1.n <= max_DD abs(f) + 1
+      //   $
+      // - 一致有界，既然导数有一致界且都定义在有限区间上
+      事实上，这些解一致收敛。这是因为若设 $forall n, m > N, phi(x) = y_n (x) - y_m (x) $，则：
+      $
+      abs(der(phi, x)) = abs(1/n - 1/m) < 1/N\
+      abs(phi(x) - phi(0)) = abs(integral_(x_0)^(x) der(y, x) dif s) <= integral_(x_0)^(x) abs(der(y, x)) dif s <= (x - x_0)/N <= tau/N 
+      $
+      柯西原理给出了一致收敛性，因此我们可以取极限，而转化为积分方程，它们的极限就是原方程的解，而容易验证这个解一定是原方程的最大解
+    ]
+    #remark[][
+      我们当然可以将两端的最大解拼接，得到双边的最大解
+    ]
+    #theorem[][
+      设 $f, g$ 是微分方程：
+      $
+      cases(
+        der(y, x) = f(x, y) ,
+        y(x_0) = y_0
+      )
+      $
+      在 $I$ 上的最大/最小解，则任取 $x_1 in I, y_1 in [g(x_1), f(x_1)]$，存在方程的解 $h$ 使得 $h(x_1) = y_1$
+    ]
+    #proof[
       #TODO
+    ]
+    #corollary[][
+      若微分方程的单侧的最大解，最小解均存在且不相等，则该侧微分方程有无穷多解，这无穷多解被控制在最大/最小解之间
+    ]
+    #example[][
+      -  微分方程：
+        $
+        cases(
+          der(y, x) = y^(1/3),
+          y(0) = 0
+        )
+        $
+        通解为：
+        $
+        y = cases(
+          0 quad x <= -C\
+          plus.minus (2/3 x + C)^(3/2) quad x > C
+        )
+        $
+        在 $0$ 右侧的最大解为 $y = (2/3 x)^(3/2)$，最小解为 $y = -(2/3 x)^(3/2)$
+      - 微分方程：
+        $
+        cases(
+          der(y, x) = abs(y)^(1/2),
+          y(0) = 0
+        )
+        $
+        通解为：
+        $
+        y = cases(
+          1/4(C_1 - x)^2 quad x <= C_1,
+          0 quad C_1 <= x <= C_2,
+          1/4(x - C_2)^2 quad x >= C_2
+        )
+        $
+    ]
+    #theorem[第二比较定理][
+      设 $f, F$ 都连续，且 $f <= F$，两个微分方程：
+      $
+      cases(
+        der(y, x) = f(x, y),
+        y(x_0) = y_0
+      )\
+      cases(
+        der(Y, X) = F(X, Y),
+        Y(X_0) = Y_0
+      )
+      $
+      则：
+      - 在初值右侧，前者的最小解小于等于后者的任意解;在初值左侧，前者的最大解大于等于后者的任意解
+      - 在初值右侧，后者的最大解大于等于前者的任意解;在初值左侧，后者的最小解小于等于前者的任意解
+    ]
+    #proof[
+      仿照上面的逼近过程再使用第一比较定理即可
     ]

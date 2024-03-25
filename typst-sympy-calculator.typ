@@ -78,3 +78,6 @@ def convert_sign(a):
     return sympy.sign(a)
 ```
 ]
+$
+(x + 1) exp(-x)
+$

@@ -3,6 +3,7 @@
 //#import "typst-sympy-calculator.typ": *
 
 #import "@preview/lemmify:0.1.4": *
+#import "@preview/commute:0.2.0": node, arr, commutative-diagram
 #let (
   theorem, lemma, corollary,
   remark, proposition, example, definition,
@@ -22,30 +23,35 @@ $1 + 1$
   let data = (row(1), row(2), row(3))
   math.mat(delim: delim, ..data)
 }
-#let Gal = $ "Gal" $
+#let where = "where"
+#let with = "with"
+#let inner(x, y) = $<#x, #y>$
+#let Gal = math.op("Gal")
 #let HomoCoor = math.vec.with(delim: "[")
 #let autoHomoCoor3 = autoVec3.with(delim: "[")
 #let Det(arr) = mat(delim: "|", ..arr)
-#let Hom = $"Hom"$
-#let Proj = $"Proj"$
-#let Spec = $"Spec"$
+#let Hom = math.op("Hom")
+#let Proj = math.op("Proj")
+#let Spec = math.op("Spec")
 #let Sylow(p) = $"Sylow"-#p$
-#let Isom = $"Isom"$
-#let GL = $"GL"$
-#let char = $"char"$
-#let Frac = $"Frac"$
+#let Isom = math.op("Isom")
+#let GL = math.op("GL")
+#let char = math.op("char")
+#let Frac = math.op("Frac")
 #let Inv(a) = $#a^(-1)$
 #let conjugateLeft(g, a) = $#g^(-1) #a #g$
 #let conjugateRight(g, a) = $#g #a #g^(-1)$
-#let quotient(G, H) = $#G\/#H$
-#let quo = math.class("relation", $\/$)
-#let ord = $"ord"$
-#let sgn = $"sgn"$
-#let lcm = $"lcm"$
-#let Arg = $"Arg"$
-#let End = $"End"$
-#let ReT = $"Re"$
-#let ImT = $"Im"$
+#let quotient(G, H) = $#G\\#H$
+#let quo = math.class("relation", $\\$)
+#let ord = math.op("ord")
+#let sgn = math.op("sgn")
+#let lcm = math.op("lcm")
+#let Arg = math.op("Arg")
+#let End = math.op("End")
+#let ReT = math.op("Re")
+#let ImT = math.op("Im")
+#let argmax = math.op("argmax")
+#let argmin = math.op("argmin")
 #let incrementSign(x, i, k) = {
   let i1 = int(i)
   if i1 = 0 {
@@ -55,11 +61,12 @@ $1 + 1$
       $#x_#(i + k)$
   }
 }
-#let coker = $"coker"$
-#let coim = $"coim"$
+#let emptyArrow(s, e) = arr(str(s), str(e), $$)
+#let coker = math.op("coker")
+#let coim = math.op("coim")
 #let Ad1(x, G) = $"Ad"_#G (#x)$
-#let Ad = $"Ad"$
-#let Aut = $"Aut"$
+#let Ad = math.op("Ad")
+#let Aut = math.op("Aut")
 #let algClosure(F) = $#F^"alg"$
 #let inverseLimit(n) = $lim_(arrow.l.long_#n)$
 #let AModule(A) = [$#A -$模]
@@ -67,14 +74,16 @@ $1 + 1$
   $#G -$ 
   "等变"
 }
+#let Mod = math.op("Mod")
+#let tensorProduct = math.times.circle
 #let generatedBy(body) = $angle.l #body angle.r$
 #let normalSub(H, G) = $#H lt.tri.eq #G$
 #let norS = math.class("relation", math.lt.tri.eq)
 #let semiProd = math.class("relation", math.times.r)
-#let diam = $"diam"$
+#let diam = math.op("diam")
 //#let quot = math.class("relation", $\/$)
-#let Stab = $"Stab"$
-#let Orb = $"Orb"$
+#let Stab = math.op("Stab")
+#let Orb = math.op("Orb")
 #let existsST(var, condition) = $exists #var space s.t. space #condition$
 #let forallSa(var, condition) = $forall #var space , space #condition$
 #let funcDef(f, A, B, x, fx) = $#f: space #A &-> #B \ #x &|-> #fx$

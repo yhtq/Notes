@@ -186,7 +186,7 @@
       funcDef(gamma, [0,1], CC, t, (x(t), y(t)))
       $
       - 若 $gamma$ 连续，则称之为连续|continuous/$C^0$曲线
-      - 若 $x(t), y(t)$ 都可导且 $x'(t)^2 + y'(t)^2 != 0$，则称之为光滑|smooth/$C^1$曲线
+      - 若 $x(t), y(t)$ 都连续可导且 $x'(t)^2 + y'(t)^2 != 0$，则称之为光滑|smooth/$C^1$曲线
       - 若曲线在有限个段上都是光滑的，则称之为分段光滑曲线
       - 若
         $
@@ -743,4 +743,131 @@
       - 分式线性变换的复合还是分式线性变换
       - 分式线性变换由三点的像唯一确定
     ]
+= 积分
+  #theorem[Cauthy 1][
+    设 $G$ 是有界区域，其边界是有限多条光滑曲线。$f$ 在区域内解析，在区域的闭包上连续，则有：
+    $
+    integral_(diff G) f(z) dif z = 0
+    $
+  ]
+  #proof[
+    - 首先，先放松一点条件，假设 $G$ 是三角形区域，而 $f$ 在区域的闭包上解析。\
+      设三角形为 $A B C$，取三边的中点 $A', B', C'$，注意到积分恰可以分到四个三角形上，也即：
+      $
+      integral_(diff G) f(z) dif z = sum_(i=1)^4 integral_(triangle.t_i) f(z) dif z
+      $
+      以三角形 $A C' B'$ 为例，注意到 $f$ 解析，有：
+      $
+      integral_(diff A C' B) f(z) dif z = integral_(diff A C' B) f(z_0) + (z-z_0) f'(z_0) + o(z- z_0)  dif z\
+      = integral_(diff A C' B) o(z- z_0)  dif z
+      $
+      这里的 $z_0$ 可以任取\
+      假设积分非零，不妨设为 $M > 0$，则四个三角形中总有一个积分的绝对值大于等于 $M/4$，记为 $triangle.t_1$\
+      接下来，再次四分并取其中一个积分大于等于 $M/16$，记为 $triangle.t_2$，如此下去，我们得到一个序列 $triangle.t_i$，使得：
+      $
+      abs(integral_(diff triangle.t_i) f(z) dif z) >= abs(M/4^i)\
+      integral_(diff triangle.t_i) abs(f(z)) >= M/4^i
+      $
+      另一方面，注意到:
+      $
+      integral_(diff triangle.t_i) abs(f(z)) <= integral_(diff triangle.t_i) abs(o(z- z_0))  dif z <= c(triangle.t_i) d(triangle.t_i) a_i
+      $
+      其中 $c$ 是周长，$d$ 是直径，$a_i -> 0$，有：
+      $
+      c(triangle.t_i) d(triangle.t_i) a_i = b_i 1/(4^i), b_i -> 0
+      $
+      两式结合即得 $M <= b_i => M <= 0$，矛盾！
+    - 下一步，对于一般的多边形，它可以进行三角剖分（证明略显复杂和初等，这里不证），对每个三角形应用之前的结论便可得证
+    - 对于一般的区域 $G$，我们希望对于任意 $epsilon > 0$，取得多边形区域 $D$，它的闭包含于 $G$，而：
+      $
+      abs(integral_(diff G)^() f(z) dif z - integral_(diff D) f(z) dif z) < epsilon
+      $
+      假若能取得，由引理立得结论成立。\
+      该命题作为 bonus question\
+      首先处理单个光滑曲线 $S$：
+      $
+      forall t in [0, 1]
+      cases(
+        x = u(t),
+        y = v(t)
+      )\
+      $
+      目标相当于构造相同起点的终点的分段线性曲线使得 $f$ 在两者上积分的差足够小。取分段线性曲线一致收敛于原曲线是容易的，但一致收敛不能保证曲线积分收敛（这就是楼梯悖论），因此需要更精细的估计。\
+      先给出如下引理：
+      #lemma1[
+        设 $T_n subset G$：
+        $
+        forall t in [0, 1]
+        cases(
+        x = x_n (t),
+        y = y_n (t)
+      )
+        $
+        是一族分段线性曲线，且有：
+        $
+        x_n arrows.rr u, y_n arrows.rr v\
+        x'_(n-) arrows.rr u', y'_(n-) arrows.rr v'
+        $
+        （分量左导数一致收敛于原曲线分量的导数）\
+        则有：
+        $
+        lim_(n -> infinity) integral_(T_n) f(z) dif z = integral_(S) f(z) dif z
+        $
+      ]
+      #proof[
+        // 注意到 $u'(t)^2 + v'(t)^2 != 0$，从而将有正下界\
+        // 同时由一致收敛性，$x'_(n-)^2 + y'_(n-)^2$ 与 $u'(t)^2 + v'(t)^2$ 将有共同的一致正下界，不妨设为 $m'$\ 
+        由 $sqrt(x)$ 在 $[0, +infinity)$ 上的一致连续性（有限区间由连续函数一致连续给出，之后的无穷区间由导数有界给出）可以得到：
+        $
+        sqrt(x'_(n-)^2 + y'_(n-)^2) arrows.rr sqrt(u'^2 + v'^2)
+        $
+        同时由 $f$ 在有界闭集上的连续性，它也一致连续，进而：
+        $
+        f(x_n (t) + i y_n (t)) arrows.rr f(u(t) + i v(t))
+        $
+        注意到 $f(u(t) + i v(t)), sqrt(u'^2 + v'^2)$ 都是有界闭集上的连续函数，继而有界。\
+        由此 $f(x_n (t) + i y_n (t)), sqrt(x'_(n-)^2 + y'_(n-)^2)$ 也有公共上界，由两个一致有界，一致收敛的函数列相乘的性质可得：
+        $
+        f(x_n (t) + i y_n (t)) sqrt(x'_(n-)^2 + y'_(n-)^2) arrows.rr f(u(t) + i v(t)) sqrt(u'^2 + v'^2)
+        $
+        进而利用一致收敛性保持积分的性质：
+        $
+        lim_(n -> infinity) integral_(0)^1 f(x_n (t) + i y_n (t))  sqrt(x'_(n-)^2 + y'_(n-)^2) dif t = integral_(0)^1 f(u(t) + i v (t)) sqrt(u'^2 + v'^2) dif t
+        $
+        而：
+        $
+        integral_(0)^1 f(u(t) + i v (t)) sqrt(u'^2 + v'^2) dif t = integral_(S) f(z) dif z\
+        integral_(0)^1 f(x_n (t) + i y_n (t))  sqrt(x'_(n-)^2 + y'_(n-)^2) dif t = integral_(T_n) f(z) dif z
+        $
+        前项成立是定义，后项成立是仅差有限个点的积分有相等的值，得证
+      ]
+
+  ]
+  #theorem[Cauthy 2][
+    设 $G$ 是有界区域，其边界是有限多条光滑曲线。$f$ 在区域内解析，在区域的闭包上连续，则对任意 $z in G$，$omega$ 是任意一个将 $z$ 包括在内的简单闭曲线，有：
+    $
+    f(z) = 1/(2 pi i) integral_(diff omega) f(w)/(w - z) dif w
+    $
+  ]
+  #proof[
+    由之前的 Cauthy 定理，只需要考虑 $omega$ 是某个任意小的球形开邻域，则：
+    $
+    1/(2 pi i) integral_(diff omega) f(w)/(w - z) dif w = 1/(2 pi i) integral_(diff omega) f(z)/(w - z) + f'(z) + o(1) dif z\
+    = f(z) + 1/(2 pi i) integral_(diff omega) o(1) dif w\
+    $
+    注意到 $delta$ 可以任意小，因此上式右侧可以任意小，进而得证
+  ]
+  #theorem[Cauthy 3][
+    设 $G$ 是有界区域，其边界是有限多条光滑曲线。$f$ 在区域的闭包上解析，则 $f$ 可在 $G$ 上可以表示为级数，且该级数的收敛半径至少为 $G$ 的最大半径\
+    特别的，$f$ 无穷阶可导
+  ]
+  #proof[
+    不妨设将 $f$ 延拓到更大的区域上，我们有：
+    $
+    f(z) = 1/(2 pi i)integral_(diff G)^() f(w)/(w - z) dif w\
+    = 1/(2 pi i)integral_(diff G)^() - 1/w f(w)(sum_(k=0)^infinity (z/w)^k ) dif w\ 
+    = z^k sum_(k=0)^infinity 1/(2 pi i)integral_(diff G)^() - 1/w f(w) 1/w^k dif w\
+    $
+    不难看出上式右侧恰为幂级数，得证
+  ]
   

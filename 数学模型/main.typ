@@ -1,4 +1,4 @@
-#import "../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, der, partialDer
+#import "../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, der, partialDer, inner
 #import "../template.typ": *
 // Take a look at the file `template.typ` in the file panel
 // to customize this template and discover how it works.
@@ -748,8 +748,16 @@
           $
           &(f^L (x))/(g^L (x)) - (f(C, D))/(g(C, D))  \
             &=
-            (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i))) - (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(C, D))/(g(C, D))) /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) \
-            &>= (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i))) - (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(V^+_(sigma(i)), V^-_(sigma(i))))/(g(V^+_(sigma(i)), V^-_(sigma(i))))) /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i))))\
+            (
+              sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i)))
+               - 
+              (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(C, D))/(g(C, D)))
+               /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i))))
+              \
+              &>= (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i))) 
+              - 
+              (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(V^+_(sigma(i)), V^-_(sigma(i))))/(g(V^+_(sigma(i)), V^-_(sigma(i)))))
+             /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i))))\
             &= 0
           $
           因此 
@@ -806,10 +814,10 @@
       $
       F^L (x) &= integral_0^(norm(x)_infinity) ("cut"(V_t^+ (x)) + "cut"(V_t^- (x))) dif t\
       &= integral_0^(norm(x)_infinity) "cut"(V_t^+ (x)) dif t + integral_0^(norm(x)_infinity)  "cut"(V_t^- (x)) dif t\
-      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) kai_{x_j <= t < x_i} (t) + kai_{x_i <= t < x_j} (t) dif t \ &+ integral_0^(norm(x)_infinity) kai_{x_j <= -t < x_i} (t) + kai_{x_i <= -t < x_j} (t) dif t\ 
+      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t \ &+ integral_0^(norm(x)_infinity) chi_{x_j <= -t < x_i} (t) + chi_{x_i <= -t < x_j} (t) dif t\ 
       &"（注意这里积分可以改变有限个点值，因此正负号无所谓）"\
-      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) kai_{x_j <= t < x_i} (t) + kai_{x_i <= t < x_j} (t) dif t \ &+ integral_(-norm(x)_infinity)^(0) kai_{x_j <= t < x_i} (t) + kai_{x_i <= t < x_j} (t) dif t\ 
-      &= sum_({i, j} in E) integral_(-norm(x)_infinity)^(norm(x)_infinity) kai_{x_j <= t < x_i} (t) + kai_{x_i <= t < x_j} (t) dif t \
+      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t \ &+ integral_(-norm(x)_infinity)^(0) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t\ 
+      &= sum_({i, j} in E) integral_(-norm(x)_infinity)^(norm(x)_infinity) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t \
       &= sum_({i, j} in E) abs(x_i - x_j)\
       G^L (x) &= integral_0^(norm(x)_infinity) "vol"(V) dif t = "vol"(V) norm(x)_infinity
       $
@@ -819,7 +827,119 @@
       $
       G^L (x) = min {vol(A), vol(V - A)} + min {vol(B), vol(V - B)}
       $
+      （如果课程有时间会讲到）
     ]
-  
+  == 图模型算法简介
+    本节我们给出一些近似算法。以最大割问题为例，前面已经证明答案就是：
+    $
+    h_(max) (G) = max_(x in RR^n - {0}) I(x)/(norm(x) vol V)
+    $
+    我们发现比例式的形式颇为常见，往往将这种问题称为 分式规划|fractional programming
+    #theorem[Dinkerbach 迭代][
+      设 $A$ 是紧集，$P, Q$ 是连续函数，针对分式规划问题：
+      $
+      max_(x in A) P(x)/Q(x)
+      $
+      可以构造迭代
+      $
+      cases(
+        x^(k+1) = argmin_(x in A) {P(x) y^k - Q(x) },
+        y^(k+1) = P(x^(k+1))/Q(x^(k+1))
+      )
+      $
+      - 述迭代产生的序列 ${y^k}$ 单调递增
+      - 若原问题有最优值，则上述迭代产生的序列收敛于原问题的解
+    ]
+    #example[][
+      对于最大割问题迭代方法是：
+      $
+      cases(
+        x^(k+1) = argmin_(norm(x) = 1) {r^k norm(x) vol V - I(x)},
+        r^(k+1) = I(x^(k+1))/(norm(x^(k+1)) vol V)
+      )
+      $
+      则对任意初始点 $x_0$ 满足 $norm(x_0) = 1$，上述迭代产生的序列 ${r^k}$ 单调递增，且收敛于原问题的解。\
+      然而对于该问题，由于迭代过程本身也有难解的优化问题，我们需要进一步采用次梯度下降，变成：
+      $
+      cases(
+        x^(k+1) = argmin_(norm(x) = 1) {r^k norm(x) vol V - s^(k) dot x},
+        r^(k+1) = I(x^(k+1))/(norm(x^(k+1)) vol V),
+        s^(k+1) in partial I(x^(k+1))
+      )
+      $
+      虽然如何选取次梯度以及收敛性更为困难，但至少它在计算上已经没有了困难。
+
+      事实上，我们可以证明 $r^k$ 仍然单调，但未必能收敛到原问题的最优解。如果次梯度选取恰当，它可以收敛到原问题的局部最优解。在此不会证明这些结果。
+    ]
+    #proof[
+      注意到：
+      $
+      r^k norm(x^(k+1)) vol V - I(x^(k+1)) <= r^k norm(x^k) vol V - I(x^k) = 0\
+      r^k <= I(x^(k+1))/(norm(x^(k+1)) vol V) = r^(k+1)
+      $
+      注意到最大割问题的解 $r_(max)$ 存在，且每个 $r_n$ 都不超过 $r_(max)$，因此序列单调有上界，进而有极限 $r <= r_(max)$\
+      同时，设 $x_0$ 是取得原问题最大值的点，将有：
+      $
+      r^n norm(x^(n+1)) vol V - I(x^(n+1)) <= r^n norm(x_0) vol V - I(x_0)
+      $
+      注意到 $x^n$ 是紧集上的序列，可取其一个收敛子列，不妨设它本身就收敛，上式取极限即得：
+      $
+      r >= r_(max)
+      $
+      或者定义 $f(r) = min_(norm(x) = 1) {r norm(x) - I(x)} in C(RR)$，计算得：
+      $
+      f(r^k) = norm(x) (r^k - r^(k+1))
+      $
+      取极限的 $f(r) = 0$，进而 $r norm(x_0) - I(x_0) >= 0 => r >= r_(max)$，得证
+    ]
+
+    这是使用 $norm(x)_1 = max_(i) abs(x_i)$ 的结果，但已有的结果更多是使用 $norm(x)_2 = max_i x_i^2$，也就是要解最优化问题：
+    $
+    max_(1 <= i <j <=n) w_(i j) (x_i^2 - x_j^2) where w_(i j) = 1 "if" (i, j) in E "else" 0
+    $
+    上式化为：
+    $
+    max_(1 <= i <j <=n) w_(i j) (2 - 2 x_i x_j) := P_1
+    $
+    简化一下，只需要：
+    $
+    min_(x in {-1, 1}^n) sum_(i, j in V) w_(i j) x_i x_j\
+    <=> min sum_(i, j in V) w_(i j) x_i x_j with abs(x_i) = 1 := P_2\
+    $
+    令 $X = x x^T$，将问题转化为
+    $
+    min inner(W, X) with "rank"(X) = 1, X_(i i) = 1, X >= 0 := P_3
+    $
+    可以证明 $P_2, P_3$ 两个问题等价：
+    #lemma[][]
+    解决半正定矩阵空间上最优化问题的学科称为 SDP semi-definite programming，有很多成熟的结论。然而秩 1 的要求是很困难的，因此有下面的松弛形式（往往称为秩 2 松弛）：
+    $
+    min inner(W, X) with "rank"(X) <= 2, X_(i i) = 1, X >= 0 := P_6\
+    <=>^(X = V^T V) min sum_(i j) w_(i j) inner(v_i, v_j)  with inner(v_i, v_j) = 1, v_i in SS^1 := P_7\
+    where SS^1 = {(x, y) in RR^2 | x^2 + y^2 < 1}
+    $
+    再用参数表示 $SS^1$，经计算可得：
+    $
+    min_(theta in RR^n) sum_(i, j) w_(i j) cos(theta_i - theta_j) := P_8
+    $
+    这种算法称为 Circut，不过我们还面临如下问题：
+    + 如何计算上面的最优化
+    + 如何从上面的问题回到最初的 cut
+    + $P_8$ 的解与 $P_3$ 的解有什么关系
+    这已经是非常前沿的问题，这里不再赘述。这种算法的误差很好，但是计算量大，主要问题还没有非常快的方法解决 $P_8$ 
+
+    回到之前的 $P_3$，还有更激进的方法是在 $P_3$ 中放弃秩 1 的要求，放弃后的最优化问题称为 $P_4$。这种算法是 Goemans-Williamson (G_W) 算法，问题转化为了标准的 SDP 问题，已经是多项式内可解的问题。
+
+    假设 $P_4$ 的最优值点是 $X^*$，反推代回原问题可以得到最大割问题的一个近似解 $Z_("SDP")$，我们还要面临如何恢复 cut 以及近似解的估计问题，G-W 算法采取的策略是
+    - 首先将 $X^*$ 分解为 $u^T u$，再设 $u$ 的列向量组为 $u_i$。注意到由约束条件，$u_i in SS^(n-1)$，为了将其恢复到 ${-1, 1}$ 上，以均匀分布在 $SS^(n-1)$ 上随机选择 $a in SS^(n-1)$，再令 $u_i$ 取 $a, -a$ 中夹角为锐角的一方 $u'_i$（也就是以 $a$ 为轴分成两个半球，取 $u_i$ 在的一方），最后取 $x_i := u'_i / a$ 
+    - 计算这个 $X$ 对应的割值，记为 $z$
+    #theorem[][
+      $
+      E z >= alpha h_(max "cut") where alpha = min_(theta in [0, pi]) {2/pi theta/(1 - cos theta)} approx 0.879 
+      $
+    ]
+    然而，这个算法的实际表现往往不如一些简单的启发式算法，只不过它作为有理论保证的算法具有重要意义。  
+
+
 
 
