@@ -1,4 +1,4 @@
-#import "../template.typ": proof, note, corollary, lemma, theorem,  proposition, definition, example, remark, der, partialDer, AModule, incrementSign, inj_str, surj_str, bij_str, def_str, nat_str, tensorProduct
+#import "../template.typ": proof, note, corollary, lemma, theorem,  proposition, definition, example, remark, der, partialDer, AModule, Mod, incrementSign, inj_str, surj_str, bij_str, def_str, nat_str, tensorProduct
 #import "../template.typ": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 // Take a look at the file `template.typ` in the file panel
@@ -9,11 +9,6 @@
   date: none,
   logo: none,
 )
-#let Mod(x) = {
-  $#x -$ 
-  "模"
-  }
-#let ModS = "Mod"
 = 前言
   == 课程介绍
     - 学习内容：前半学期交换代数，后半学期同调代数
@@ -54,7 +49,7 @@
       - 对于每一对对象 $A, B, C in H$，一个映射 $Hom(A, B) * Hom(B, C) -> Hom(A, C)$，称为复合映射
       - 对于每一个对象 $A in H$，一个元素 $1_A in Hom(A, A)$，称为恒等态射
     ]
-    #definition[模|Module][
+    #definition[模|AModuleule][
       设 $A$ 是环，一个 $A-$模是指：
       - 加法交换群 $M$
       - $A-$作用 $A times M -> M$，记作 $(a, m) = a dot m$
@@ -72,10 +67,10 @@
         - $x$ 在上述线性空间的作用，也即一个线性变换/k-矩阵
       - 设 $G$ 是有限群，$A = k[G]$ 是群代数（也是线性空间），其中元素形如 $sum_(g in G) a_g g$\
         $G$ 中每个元素给出 $A$ 上的一个可逆线性变换，这就给出 $G -> GL(k)$ 的一个一一映射
-      - $A$ 是环，$A$ 作用于自己当然也构成 $Mod(A)$
+      - $A$ 是环，$A$ 作用于自己当然也构成 $AModule(A)$
     ]
     #definition[模同态][
-      两个 $Mod(A)$ 之间的群同态 $f: M -> N$ 称为模同态，如果：
+      两个 $AModule(A)$ 之间的群同态 $f: M -> N$ 称为模同态，如果：
       - $f(x + y) = f(x) + f(y)$
       - $f(a x) = a f(x)$
       有时也称其为 $A-$线性映射\
@@ -86,7 +81,7 @@
       - $coim f = M quo ker f$
       有熟知的同构定理 $coim f tilde.eq im f$
 
-      所有$Mod(A)$之间的同态构成态射集 $Hom_A (M, N)$。注意到 $Hom_A (M, N)$ 本身就是一个 $Mod(A)$，运算是自然的运算：
+      所有$AModule(A)$之间的同态构成态射集 $Hom_A (M, N)$。注意到 $Hom_A (M, N)$ 本身就是一个 $AModule(A)$，运算是自然的运算：
         $
         &[a: A -> \
             [f: Hom_A (M, N) ->\ 
@@ -96,13 +91,13 @@
         $
     ]
     #example[][
-      设 $M$ 是$Mod(A)$，则 $Hom_A (A, M) tilde.eq M$，它由双向的映射：
+      设 $M$ 是$AModule(A)$，则 $Hom_A (A, M) tilde.eq M$，它由双向的映射：
       - $[f: (A -> M) -> f(1)] $
       - $[m: M -> [a: A -> a m]] $
       给出
     ]
-    #definition[子模|submodule 商模|quotient module][
-      设 $M$ 是 $Mod(A)$，$N$ 是 $M$ 的子集，如果：
+    #definition[子模|subAModuleule 商模|quotient AModuleule][
+      设 $M$ 是 $AModule(A)$，$N$ 是 $M$ 的子集，如果：
       - $N$（在相同运算下）也是 $A-$模，或者
       - $N$ 在 $A$ 作用下稳定，也即 $A M subset M$
       那么称 $N$ 是 $M$ 的子模\
@@ -115,15 +110,15 @@
       $M$ 的包含 $N$ 的子模与 $M quo N$ 的子模之间存在一一对应关系，并且保持各种性质
     ]
     #definition[理想|ideal][
-      将 $A$ 视作$Mod(A)$，则 $A$ 的子模称为 $A$ 的理想，这等同于在 $A$ 乘法下稳定的加法子群，与环中理想的概念是一致的。\
+      将 $A$ 视作$AModule(A)$，则 $A$ 的子模称为 $A$ 的理想，这等同于在 $A$ 乘法下稳定的加法子群，与环中理想的概念是一致的。\
       自然的，此时的商模就是商环
     ]
   == 子模/理想上的操作
     #definition[][
-        + 设 $M$是$Mod(A)$，$M_i in I$ 是若干子模，定义：
+        + 设 $M$是$AModule(A)$，$M_i in I$ 是若干子模，定义：
           - $M_j subset sum_(i in I) M_i = {sum_(i in I) m_i | m_i in M_i, m_i "中至多有限个非零"} subset M$
           - $sect.big_(i in I) M_i subset M_j$
-          都是子$Mod(A)$
+          都是子$AModule(A)$
         + 设 $I$ 是 $A$ 的理想，定义：
           $
           I M = phi: (A -> (M -> M)) |_I
@@ -139,7 +134,7 @@
         + 设 $M_i$ 是若干子模，定义：
           - 直和 $circle_(i in I) M_i = {(m_i) | m_i in M_i, m_i "中至多有限个非零"} subset M$
           - 直积 $product_(i in I) M_i = {(m_i) | m_i in M_i} subset M$
-          都是子$Mod(A)$
+          都是子$AModule(A)$
         + 设 $N P$ 是子模，定义：
           $
           (N : P) = {a in A | a P subset N}
@@ -170,9 +165,9 @@
       - 若存在满同态 $phi$，取 $m_i = phi(0, 0, 0, ..., 1, 0,... >,0)$ 即可
     ]
     #theorem[][
-      设 $M$ 是$Mod(A)$ ，则 $"ann"(M)$ 是子模，将有：
+      设 $M$ 是$AModule(A)$ ，则 $"ann"(M)$ 是子模，将有：
       $
-      M " 是 " Mod(A quo "ann"(M))
+      M " 是 " AModule(A quo "ann"(M))
       $
     ]
   == 素理想和极大理想
@@ -592,7 +587,7 @@
       设 ${p_i} subset Spec(A)$，假设 ${p_i}$ 被有限个主开集 $union.big_n D(x_n)$ 所覆盖，则存在某一个主开集 $D(x)$ 覆盖住 ${p_i}$
     ]
   == 自由模
-    #definition[自由模|free module][
+    #definition[自由模|free AModuleule][
       称一个自由 $A-$模是同构于：
       $
       plus.circle_(i in I) A
@@ -653,7 +648,7 @@
       
     ]
     #corollary[][
-      设 $M, I$ 满足  $I M = M$，则 $exists x in A, x = 1 mod I and x M = 0$
+      设 $M, I$ 满足  $I M = M$，则 $exists x in A, x = 1 AModule I and x M = 0$
     ]
     #proof[
       在上面的于引理中取 $id: M -> I M$ 即可
@@ -663,7 +658,7 @@
       若 $I M = M$, 则 $M = 0$
     ]
     #proof[
-      根据引理，可获得 $x$ 满足 $x = 1 mod I and x M = 0$\
+      根据引理，可获得 $x$ 满足 $x = 1 AModule I and x M = 0$\
       注意到 $x in 1 +$ Jacob radical 给出它是一个单位（@radicalForm），继而 $M = 0$
     ]
     #corollary[][
@@ -704,7 +699,7 @@
       - 称之为在 $i$ 处 正合|exact，如果 $im f_i = ker f_(i+1)$
       对一般的复形，定义：
       $
-      H_i (M) = (ker f_(i+1)) quo (im f_i)
+      H_i (M) = ker f_(i+1) quo im f_i
       $
       为（上）同调群，显然该处正合当且仅当 $H_i = {0}$
     ]
@@ -730,7 +725,7 @@
     ]<exact-test>
     #proof[
         只证明一个方向，另一侧是类似的\
-        设 $forall N in "Mod"_A, 0 -> Hom_A (M'', N) ->^nu' Hom_A (M, N) ->^mu' Hom_A (M', N) $ 正合，往证：
+        设 $forall N in "AModule"_A, 0 -> Hom_A (M'', N) ->^nu' Hom_A (M, N) ->^mu' Hom_A (M', N) $ 正合，往证：
         $
         M' ->^mu M ->^nu M' -> 0
         $
@@ -759,8 +754,8 @@
             证毕
     ]
     
-    #definition[（共变/反变函子|covarient/contravarient functor）][$F: "Mod"_A -> "Mod"_B$ 称为共变/反变函子，包括以下资料和性质：
-      - $forall M in "Mod"_A, exists F M in "Mod"_B$
+    #definition[（共变/反变函子|covarient/contravarient functor）][$F: "AModule"_A -> "AModule"_B$ 称为共变/反变函子，包括以下资料和性质：
+      - $forall M in "AModule"_A, exists F M in "AModule"_B$
       - 共变函子是指： $forall phi in Hom_A (M, N), exists F(phi) in Hom_A (F M,F N)$，使得：
         $
         F(g compose h) = F(g) compose F(h)\
@@ -796,12 +791,12 @@
     ]
 
     #example[][
-      $Hom(M, *) : "Mod"_A -> "Mod"_A$ 是共变的加性函子，另一侧 $Hom(*, N)$ 是反变函子，它们都是左正合的
+      $Hom(M, *) : "AModule"_A -> "AModule"_A$ 是共变的加性函子，另一侧 $Hom(*, N)$ 是反变函子，它们都是左正合的
     ]
     #definition[导出函子][
-      对于任意的左正合（加性）函子 $F$，一族函子 $"Mod"_A -> "Mod"_B$：
+      对于任意的左正合（加性）函子 $F$，一族函子 $"AModule"_A -> "AModule"_B$：
       $
-      {R^i F : "Mod"_A -> "Mod"_B}
+      {R^i F : "AModule"_A -> "AModule"_B}
       $
       称为（右）导出函子，如果：
       - $R^0 F = F$
@@ -821,7 +816,7 @@
         $
         则上下两正合列对应的长正合列也交换
       
-      给定右正合函子，其左导出函子 ${L_i F : "Mod"_A -> "Mod"_B}$ 也可以对偶地定义
+      给定右正合函子，其左导出函子 ${L_i F : "AModule"_A -> "AModule"_B}$ 也可以对偶地定义
     ]
     #example[][
       命题：若 $F$ 正合，则导出函子就是 $R^0 F = 0, R^i F = 0$ （这当然也是 $F$ 右正合的充要条件）因此一般的导出函子可以看作与正合函子的距离
@@ -884,7 +879,10 @@
     $
     phi' 满 <=> forall x: X -> N, exists y: Y -> N, x = y compose phi 
     $
-    这就是之前的命题
+    这就是之前的命题\
+    $
+    Y = ZZ, X = ZZ_p
+    $
   ]
   
   事实上就是对于任何满射 $phi: X -> Y$，诱导的 $phi': Hom_A (M, X) -> Hom_A (M, Y)$ 也是满射，或者说对于所有 $phi: X- > Y$ 是满射和同态 $psi: M -> Y$，均存在 $psi' : M -> X$ 使得 $phi compose psi' = psi$
@@ -952,7 +950,7 @@
   #proposition[][
     - 自由 $A-$模是投射模
     - 投射模都是自由模的直和
-  ]
+  ]<projective-module>
   #proof[
     - 设文字集为 $I$，有：
       $
@@ -1001,7 +999,7 @@
       psi(a) = phi(a)\
       psi(a) = psi(a dot 1) = 
       $
-    - 考虑 $"Mod"_ZZ$ 作为阿贝尔群的范畴，则直和函子将成为入射模
+    - 考虑 $"AModule"_ZZ$ 作为阿贝尔群的范畴，则直和函子将成为入射模
     - 设 $A$ 是环，$I$ 是入射 $ZZ$  模，则：
       $
       Hom_ZZ (A, I)
@@ -1349,7 +1347,7 @@
   #definition[模的局部化][
     设 $S subset A$ 乘法封闭，则有函子：
     $
-    Inv(S) : ModS_A -> ModS_(InvSA)
+    Inv(S) : Mod_A -> Mod_(InvSA)
     $
     及交换图表：
     #align(center)[#commutative-diagram(
@@ -1478,7 +1476,7 @@
     - $M_m = 0, forall m in "Max"(A)$
   ]
   #corollary[][
-    对于 $Mod(A)$同态 $phi$，它是单/满/双射当且仅当在所有素理想/极大理想的局部环中是单/满/双射
+    对于 $AModule(A)$同态 $phi$，它是单/满/双射当且仅当在所有素理想/极大理想的局部环中是单/满/双射
   ]
   #remark[][
     像这样性质 $P$ 成立当且仅当它在所有素理想/极大理想的局部化中成立的性质被称作局部性质（local property）
@@ -1516,7 +1514,7 @@
       $
     ]
     #proposition[][
-      设 $S subset A$ 是乘法子集，$M$ 是有限生成 $Mod(A)$，则：
+      设 $S subset A$ 是乘法子集，$M$ 是有限生成 $AModule(A)$，则：
       - $Inv(S) "Ann"_A (M) = "Ann"_(InvSA) (Inv(S) M)$
       - $Inv(S) (N : P) = Inv(S) N : Inv(S) P$
     ]
@@ -1539,7 +1537,7 @@
 = 张量积
   == 构造与性质
     #definition[双线性|bilinear][
-      设 $M, N$ 是 $Mod(A)$，称 $f: M times N -> P$ 双线性，如果：
+      设 $M, N$ 是 $AModule(A)$，称 $f: M times N -> P$ 双线性，如果：
       $
       f(x, *), f(*, y)
       $
@@ -1547,9 +1545,9 @@
     ]
     张量积的目的是希望将双线性映射转换成某种线性映射
     #definition[][
-      设 $M, N$ 是 $Mod(A)$，定义张量积为 $(T, g)$，其中 $T$ 为 $Mod(A)$而 $g$ 是双线性映射 $M times N -> T$，并且满足泛性质：
+      设 $M, N$ 是 $AModule(A)$，定义张量积为 $(T, g)$，其中 $T$ 为 $AModule(A)$而 $g$ 是双线性映射 $M times N -> T$，并且满足泛性质：
       $
-      forall (D, f):ModS_A times (M times N -> D)
+      forall (D, f):Mod_A times (M times N -> D)
       $
       有交换图：
       #align(center)[#commutative-diagram(
@@ -1567,7 +1565,7 @@
     #proof[
       - 唯一性由它是范畴的始对象给出
       - 存在性由如下构造给出
-        - 令 $C$ 是 $M times N$ 中元素生成的自由 $Mod(A)$
+        - 令 $C$ 是 $M times N$ 中元素生成的自由 $AModule(A)$
           $
           C = {sum a_i (x_i, y_i)}
           $
@@ -1622,7 +1620,7 @@
     ]
   == 标量的限制与扩张 restriction/extension of scalar
     #definition[限制][
-      设 $f: A -> B$ 是环同态，$N$ 是 $Mod(B)$，则可以自然导出 $N$ 的 $Mod(A)$ 性，由：
+      设 $f: A -> B$ 是环同态，$N$ 是 $AModule(B)$，则可以自然导出 $N$ 的 $AModule(A)$ 性，由：
       $
       A times N -> B times N -> M
       $
@@ -1631,12 +1629,12 @@
     #definition[扩张][
       设 $f: A -> B$ 是环同态，给出函子：
       $
-      funcDef(f, ModS_A, ModS_B, M,  B tensorProduct_A M := M_B)
+      funcDef(f, Mod_A, Mod_B, M,  B tensorProduct_A M := M_B)
       $
       称为扩张
     ]
     #proposition[][
-      设 $M$ 是有限生成 $Mod(A)$，则扩张 $M_B$ 也是有限生成 $Mod(A)$，但限制未必
+      设 $M$ 是有限生成 $AModule(A)$，则扩张 $M_B$ 也是有限生成 $AModule(A)$，但限制未必
     ]
     #proposition[][
       设 $Inv(S) A$ 是分式环，有：
@@ -1690,13 +1688,13 @@
     ]
   == $Hom, tensorProduct$ 的伴随性
     #definition[][
-      设 $T: ModS_A -> ModS_B, U = Hom_A (N, -)$ ，称 $(T, N)$ 是伴随对，如果：
+      设 $T: Mod_A -> Mod_B, U = Hom_A (N, -)$ ，称 $(T, N)$ 是伴随对，如果：
       $
       Hom_B (T M, P) tilde.eq Hom_A (M, U P), forall M, P
       $
     ]
     #theorem[][
-      设 $M, N, P$ 是 $Mod(A)$，则有自然同构：
+      设 $M, N, P$ 是 $AModule(A)$，则有自然同构：
       $
       Hom(M tensorProduct N, P) &tilde.eq Hom(M, Hom(N, P))\
       (f: M tensorProduct N -> P) &->[ m -> [n -> f(m tensorProduct n)]]\
@@ -1726,7 +1724,8 @@
       再由 @exact-test，这显然成立
     ]
     #remark[][
-      - 右正合意味着张量积函子可以产生左导出函子，记 $"Tor"_i^A (M, N) := L_i (- tensorProduct_A N) (M)$
+      - 右正合意味着张量积函子可以产生左导出函子，记 $"Tor"_i^A (M, N) := L_i (- tensorProduct_A N) (M)$\
+        $"Tor"_i^A (M, N) := H_i (... -> P_1 tensorProduct N -> P_0 tensorProduct N )$
       - 然而，张量积本身往往不是左正合的，例如 $f: x -> 2 x$ 是单射，但：
         $
         ZZ tensorProduct ZZ_2 ->^f' ZZ tensorProduct ZZ_2  
@@ -1740,6 +1739,7 @@
       + 任意正合列 $E$，张量积 $E tensorProduct N$ 也是正合的
       + 设 $M' ->^f M$ 是单射，则 $M' tensorProduct N ->^f M tensorProduct N$ 也是单射
       + 对于任意 $M, M'$ 有限生成，$M' ->^f M$ 单导出 $M' tensorProduct N ->^f M tensorProduct N$ 也是单射
+      + 任意有限生成理想 $I subset A$，序列 $0 -> I tensorProduct M -> M$ 正合（也即 $I M tilde.eq I tensorProduct M$
       此时，称 $N$ 是平坦模
     ]
     #proof[ 
@@ -1775,5 +1775,247 @@
     #proof[
       设 $N -> P$ 是单射，往证 $N tensorProduct M_B -> P tensorProduct M_B$ 是单射
     ]
-    
+    #proposition[][
+      投射模都是平坦模
+    ]
+    #proof[
+      前面 @projective-module 给出投射模是自由模的直和，而自由模是平坦的，它的直和也是平坦的
+    ]
+    #definition[忠实平坦|faithful flat][
+      以下等价的事实成立：
+      + 复形 $E$ 正合当且仅当 $E tensorProduct M$ 正合
+      + $M$ 是平坦模且任意非零 $AModule(A) space N$，有 $M tensorProduct N != 0$ 
+      则称 $M$ 是忠实平坦模
+    ]
+    #proof[
+      
+    ]
+    #proposition[][
+      自由模是忠实平坦的
+    ]
+    #lemma[][
+      任取投射模构成的正合列：
+      $
+      ... -> P_2 -> P_1 -> P_0 -> N -> 0
+      $
+      则：
+      $
+      "Tor"_i^A (M, N) = H_i (... -> P_2 tensorProduct M -> P_1 tensorProduct M  -> 0)
+      $
+    ]
+    #proof[
+      #TODO
+    ]
+    #theorem[][
+      以下事实等价：
+      + $M$ 平坦
+      + $forall N in Mod_A, "Tor"_1^A (M, N) = 0$
+      + 任意有限生成理想 $I subset A$，序列 $0 -> I tensorProduct M -> M$ 正合（也即 $I M tilde.eq I tensorProduct M$
+      + 任意有限生成理想 $I subset A$，$"Tor"_1^A (M, A quo I) = 0$
+      + 任何有限生成 $AModule(A)$，有 $"Tor"_1^A (M, N) = 0$
+      + 若 $a_i in A, x_i in M$，且：
+        $
+        sum_(i=1)^r a_i x_i = 0
+        $
+        则：
+        $
+        exists s >= 1, b_(i_j) in A, y_j in M, 1 <= j <= s, s.t.\
+        x_i = sum_j b_(i_j) y_j\
+        sum_i a_i b_(i_j) = 0, forall j
+        $
+    ]
+    #proof[
+      - $1 => 2, 2 => 3$ 显然\
+      - $3 <= 4$，注意到：
+        $
+        0 -> I -> A -> A quo I -> 0
+        $
+        正合，无论如何都有长正合列：
+        $
+        "Tor"_1^N (A, M) -> "Tor"_1^N (A quo I, M) -> I tensorProduct M -> M -> A quo I tensorProduct M tilde.eq M quo I M -> 0
+        $
+        但是 $"Tor"_1^N (A, M) = 0$\
+        #TODO
+      - $3 => 1$，之前证明了 $M$ 平坦当且仅当任意有限生成模 $N, N'$ 均有：
+        $
+        0 -> N' -> N 正 合 => N' tensorProduct M -> N tensorProduct M -> 0 单
+        $
+        不妨设 $N' subset N$，继而：
+        $
+        N = N' + A x_1 + A x_2 + ... + A x_n
+        $
+        我们只要递归的证明 $N' tensorProduct M -> (N' + A x_i) tensorProduct M$ 单射即可\
+        不妨设 $N = N' + A x_i$，则有正合列：
+        $
+        0 -> N' -> N -> N quo N' = A quo I -> 0 where I = {a in A | a x_1 in N'}
+        $
+        将有长正合列：
+        $
+        "Tor"_1^A (A quo I, M) -> N' tensorProduct M -> N tensorProduct M -> A quo I tensorProduct M -> 0
+        $
+        由 4 结论成立
+      - $1 => 6$：\
+        设 $sum_i a_i x_i = 0$，考虑：
+        $
+        phi: A^r &-> A\
+        (b_i) &-> sum_i b_i a_i
+        $
+        $M$  是平坦模表明：
+        $
+        0 -> (ker phi) tensorProduct M -> M^r ->^f M where f(t_i) = sum_i a_i t_i
+        $
+        正合\
+        注意到：
+        $
+        X in ker f = im (g tensorProduct 1)
+        $
+        从而当然有：
+        $
+        X = sum_j beta_j tensorProduct y_j
+        $
+        计算可得这就是结论
+      - $6 -> 3$\
+        假设 $sum_i a_i x_i = 0$，往证 $sum_i a_i tensorProduct x_i = 0$，继而对应位置是单射，结论成立\
+        由条件，可设：
+        $
+        x_i = sum_j b_(i j) y_j\
+        sum a_i b_(i_j) = 0
+        $
+        从而：
+        $
+        sum_i a_i tensorProduct x_i = sum_i a_i tensorProduct (sum_j b_(i_j) y_j) = sum_j (sum_i a_i b_(i_j)) tensorProduct y_j = 0
+        $
+
+    ]
+    #remark[][
+      注意到理想都是有限生成理想的正向极限，而可以证明：
+      $
+      (lim_(->) M_i) tensorProduct N tilde.eq lim_(->) (M_i tensorProduct N) 
+      $
+      因此上面的有限生成理想条件可以去掉
+    ]
+    #definition[平坦同态][
+      设 $phi: A -> B$ 是环同态，若 $B$ 成为平坦 $A-$模，则称 $phi$ 是平坦同态
+    ]
+    #proposition[][
+      - *平坦同态具有传递性*，也即平坦 $AModule(B)$ 成为平坦 $AModule(A)$
+      - *平坦在换基下保持不变*，也即若 $phi: A -> B$ 是任意环同态，$M$ 是平坦 $AModule(A)$，则 $M tensorProduct_A B$ 是平坦 $AModule(B)$
+      - *局部化是平坦模*，也即设 $S$ 是乘性子集，则 $A -> Inv(S) A$ 是平坦同态。事实上，有：
+        $
+        Inv(S) A tensorProduct E tilde.eq Inv(S) E
+        $
+    ]
+    #proof[
+      - 设 $E$ 是 $AModule(A)$正合列，则有：
+        $
+        E tensorProduct N = (E tensorProduct_A B) tensorProduct_B N
+        $
+        然而注意到 $E tensorProduct_A B$ 仍正合，$N$ 是平坦 $AModule(B)$，因此上式当然正合
+      - 类似的，检查：
+        $
+        E tensorProduct_B (M tensorProduct_A B) = (E tensorProduct_B B) tensorProduct_A M = E tensorProduct_A M
+        $
+        当然正合
+    ]
+    #proposition[][
+      设 $phi: A -> B$ 是平坦同态，则：
+      $
+      "Tor"_i^A (M, N) tensorProduct B tilde.eq "Tor"_i^B (M tensorProduct_A B, N tensorProduct_A B)
+      $
+      特别的：
+      $
+      ("Tor"_i^A (M, N) tensorProduct B)_p = "Tor"_i^A (M, N) tensorProduct B tensorProduct A_p = "Tor"_i^A (M_p, N_p)
+      $
+    ]
+    #proof[
+      选取投射模正合列：
+      $
+      ... -> P_1 -> P_0 -> M -> 0
+      $
+      有：
+      $
+      ... -> P_1  tensorProduct B-> P_0 tensorProduct B-> M tensorProduct B -> 0
+      $
+      注意到 $P_i tensorProduct B$ 是自由 $AModule(B)$ 的直和项，因此还是投射模\
+      #TODO\
+      计算：
+      $
+      "Tor"_i^B (M tensorProduct_A B, N tensorProduct_A B) = H_i (P tensorProduct B tensorProduct (N tensorProduct B))\
+      = H_i (P tensorProduct N tensorProduct B)\
+      = H_i (P tensorProduct N) tensorProduct B\
+      = "Tor"_i^A (M, N) tensorProduct B
+      $
+    ]
+    #theorem[][
+      设 $A$ 是局部环，$k = A quo m$ 是留域，$M in Mod_A$。若 $m$ 幂零或 $M$ 是有限生成 $AModule(A)$，则：
+      $
+      M "是自由模" <=> M "是平坦模" <=> M "是投射模"
+      $
+      一般的，局部环上的投射模都是自由模
+    ]
+    #proof[
+      只需证明若 $M$ 是平坦模，则它是自由模，也即需要找到一组基。\
+      注意到：
+      $
+      M quo m M = M tensorProduct k
+      $
+      是有限维 $k-$线性空间，当然可以找到一组自由基。由 Nakayama，可以设 $x_i in M$ 使得 $overline(M_i) in M tensorProduct k$ 是一组基\
+      只需证明在 $M$ 上的线性无关性即可，用归纳法：
+      - $n = 1$ 时，$a x_1 = 0$ 及 $M$ 平坦给出：
+        $
+        x_1 = sum b_i y_i, a b_i = 0
+        $
+        显然不可能所有 $b_i in m$，不妨假设 $b_1 in.not m$\
+        然而由于 $A$ 是局部环，这给出 $b_1$ 是单位，从而 $b_1 a = 0 => a = 0$
+      - $n > 1$ 时方法是类似的，设 $sum_i a_i x_i = 0$，由平坦性知：
+        $
+        x_i = sum_j b_(i_j) y_j, sum a_i b_(i_j) = 0
+        $
+        由于 $x_1 in.not m M$，因此不妨假设 $b_(1_1) in.not m$，从而是单位。然而 $sum a_i b_(i_1) = 0 => a_1 = - sum_(i > 1) Inv(b_(1_1)) b_(i_1) a_i$，代回得：
+        $
+        0 = sum_i a_i x_i = sum_(i > 1) a_i x_i + c_i x_1
+        $
+        由归纳假设立得 $a_i = 0$
+    ]
+    #example[][
+      $A = ZZ_((p)), M = QQ$ 它不是自由模但是是平坦模
+    ]
+    #proof[
+      - 断言它不是投射模，否则 $QQ$ 是自由模的直和，进而存在 $f: QQ -> L$ 是满射，其中 $L$ 是自由模。然而考虑：
+        $
+        n f(1/n) - f(1) = 0
+        $
+        给出 $f(1) = 0$，从而只能是零环，矛盾！
+      - 证明它是平坦模，
+    ]
+  == 代数
+    #definition[代数][
+      给定环同态 $A ->^f B$ ，可将 $B$ 看作 $AModule(A)$，这个模就称为环上的代数。$A-$代数的同态自然定义为环之间的同态，保证交换图表：
+      $
+      #align(center)[#commutative-diagram(
+      node((0, 0), $A$, 1),
+      node((0, 1), $C$, 2),
+      node((1, 0), $B$, 3),
+      arr(1, 2, $$),
+      arr(3, 2, $$),
+      arr(1, 3, $$),)]
+      $
+    ]
+    #example[][
+      - 每个环都是 $ZZ$ 代数
+      - 设 $k$ 是域，$phi: k -> B$ 是环同态。熟知 $phi$ 一定是单射，进而 $k$ 一定是 $k-$代数的子环
+    ]
+    #definition[][
+      - 称 $B$ 是有限 $A-$代数，如果它作为 $AModule(A)$ 是有限生成的
+      - 称 $B$ 是有限生成的，如果存在有限集 ${x_i}$，存在满射：
+        $
+        A[x_1, x_2, ..., x_n] -> B
+        $
+    ]
+    #example[][
+      - 多项式环当然是有限生成代数，但不是有限代数
+    ]
+    #definition[张量积][
+      设 $B, C$ 是 $A-$代数，则 $B tensorProduct C$ 也有自然的代数结构，称为代数的张量积
+    ]
   

@@ -234,6 +234,12 @@
       = min_(x in {0, 1}^n) (sum_((i, j) in E) |x_i - x_j|)/(min_(c in {0, 1}) sum_(i in V) d_i |x_i - c|)\
       $
       我们尝试另一条道路，不用二次型将上式光滑化，而是保持绝对值，将取值范围放松。我们将会惊喜地得到以下结果
+      #lemma[][
+          $
+          N(x) = min_(c in RR) sum_(i in V) d_i |x_i - c| := min_(c in RR) g(c_i, x)
+          $
+          在 $c^*$ 取最小值的当且仅当 $c^* in "median"(x)$
+      ]<median-min>
       #theorem[][
         设:
         $
@@ -243,13 +249,7 @@
       ]
       #proof[
         记 $I(x) = sum_((i, j) in E) |x_i - x_j|, N(x) = min_(c in RR) sum_(i in V) d_i |x_i - c|$\
-        断言：
-        - 
-          $
-          N(x) = min_(c in RR) sum_(i in V) d_i |x_i - c| := min_(c in RR) g(c_i, x)
-          $
-          在 $c^*$ 取最小值的当且仅当 $c^* in "median"(x)$
-        如此我们仿照之前的操作进行 $c$ 平移，结合平移不变性，原式化为：
+        由引理，我们仿照之前的操作进行 $c$ 平移，结合平移不变性，原式化为：
         $
         min_(0 in "median"(x)) I(x)/(norm(x)_d)
         $
@@ -823,11 +823,63 @@
       $
       这就可以得到和之前一致的结论
 
-      对于 cheeger 问题，它们分子是一样的，只需要计算：
+      对于 cheeger 问题，会这里有些小问题，如果允许 $x = 0, 1$，则可能出现 $0/0$ 的问题，我们需要修改一下定理，利用：
+      #corollary[][
+        设 $f, g: P_2(V) -> [0, +infinity]$ 是集对函数，并且满足：
+        $
+        f(emptyset, V) = f(V, emptyset) = 0
+        $
+        记：
+        $
+        P'_2(V) = P_2(V) - {(emptyset, V), (V, emptyset), (emptyset, emptyset)}
+        $
+        若 $g(x) > 0, forall x in P'_2(V)$
+        则：
+        $
+        min_((A, B) in P'_2 (V)) (f(A, B))/(g(A, B)) = min_(x in RR^n - {0, 1}) (f^L (x))/(g^L (x))\
+        $
+        最大值形式也对
+      ]
+      回到具体的计算，与上面的例子相比分子是一样的，只对：
       $
-      G^L (x) = min {vol(A), vol(V - A)} + min {vol(B), vol(V - B)}
+      G (x) = min {vol(A), vol(V - A)} + min {vol(B), vol(V - B)}
       $
-      （如果课程有时间会讲到）
+      进行计算：
+      $
+      G^L (x) &= integral_(0)^(norm(x)) min {vol(A), vol(V - A)} + min {vol(B), vol(V - B)} dif t\
+      &= integral_(0)^(norm(x)) min {vol(V_t^+), vol(V - V_t^+)} + min {vol(V_t^-), vol(V - V_t^-)} dif t\
+      &= integral_(-norm(x))^(norm(x)) min {vol(V_t^+), vol(V - V_t^+)} dif t\
+      $
+      取 $sigma in S_n$ 使得：
+      $
+      x_(sigma(1)) <= x_(sigma(2)) <= ... <= x_(sigma(n))
+      $
+      则一定存在 $k_0$ （中位数）使得：
+      $
+      sum_(i=1)^(k_0 - 1) d_(sigma(i)) < 1/2 "vol" V <= sum_(i=1)^(k_0) d_(sigma(i)) 
+      $
+      则有：
+      $
+      min {vol(V_t^+), vol(V - V_t^+)} = cases(
+        vol(V - V_t^+) quad t < x_(sigma(k_0)),
+        vol(V_t^+) quad t >= x_(sigma(k_0))
+      )
+      $
+      原式化为：
+      $
+      &quad integral_(-norm(x))^(norm(x)) min {vol(V_t^+), vol(V - V_t^+)} dif t\
+      &= integral_(-norm(x))^(x_(sigma(k_0))) vol(V - V_t^+) dif t + integral_(x_(sigma(k_0)))^(norm(x)) vol(V_t^+) dif t\
+      &= sum_(i=1)^(k_0 - 1) (x_sigma(i+1) - x_(sigma(i))) sum_(j=1)^i d_(sigma(i)) + sum_(i=k_0)^(n - 1) (x_sigma(i+1) - x_(sigma(i))) sum_(j=i+1)^n d_(sigma(i))\
+      &"（利用阿贝尔变换）"\
+      &= sum_(i=1)^(k_0 - 1) d_(sigma(i)) (x_sigma(k_0) - x_sigma(i) ) + sum_(i=k_0 + 1)^(n - 1) d_(sigma(i)) (x_sigma(i) - x_sigma(k_0) )\
+      &= sum_(i=1)^(n_1) d_(sigma(i)) abs(x_sigma(k_0) - x_sigma(i) ) \
+      $
+      使用 @median-min，注意到 $k_0$ 是一个中位数，上式恰为：
+      $
+      min_(c in RR) sum_(i=1)^n d_i abs(x_i - c)
+      $
+
+      
     ]
   == 图模型算法简介
     本节我们给出一些近似算法。以最大割问题为例，前面已经证明答案就是：
@@ -843,7 +895,7 @@
       可以构造迭代
       $
       cases(
-        x^(k+1) = argmin_(x in A) {P(x) y^k - Q(x) },
+        x^(k+1) = argmin_(x in A) {Q(x) y^k - P(x) },
         y^(k+1) = P(x^(k+1))/Q(x^(k+1))
       )
       $
@@ -859,7 +911,7 @@
       )
       $
       则对任意初始点 $x_0$ 满足 $norm(x_0) = 1$，上述迭代产生的序列 ${r^k}$ 单调递增，且收敛于原问题的解。\
-      然而对于该问题，由于迭代过程本身也有难解的优化问题，我们需要进一步采用次梯度下降，变成：
+      然而对于该问题，由于迭代过程本身也有难解的优化问题，我们需要进一步采用所谓的*次梯度下降*，问题变成：
       $
       cases(
         x^(k+1) = argmin_(norm(x) = 1) {r^k norm(x) vol V - s^(k) dot x},
@@ -895,11 +947,11 @@
 
     这是使用 $norm(x)_1 = max_(i) abs(x_i)$ 的结果，但已有的结果更多是使用 $norm(x)_2 = max_i x_i^2$，也就是要解最优化问题：
     $
-    max_(1 <= i <j <=n) w_(i j) (x_i^2 - x_j^2) where w_(i j) = 1 "if" (i, j) in E "else" 0
+    max_(x in {-1, 1}^n)  1/8sum_(i, j in V) w_(i j) (x_i - x_j)^2 where w_(i j) = 1 "if" (i, j) in E "else" 0
     $
     上式化为：
     $
-    max_(1 <= i <j <=n) w_(i j) (2 - 2 x_i x_j) := P_1
+    max_(x in {-1, 1}^n)  1/4 sum_(i, j in V) w_(i j) (1 - x_i x_j) := P_1
     $
     简化一下，只需要：
     $
@@ -910,9 +962,10 @@
     $
     min inner(W, X) with "rank"(X) = 1, X_(i i) = 1, X >= 0 := P_3
     $
-    可以证明 $P_2, P_3$ 两个问题等价：
-    #lemma[][]
-    解决半正定矩阵空间上最优化问题的学科称为 SDP semi-definite programming，有很多成熟的结论。然而秩 1 的要求是很困难的，因此有下面的松弛形式（往往称为秩 2 松弛）：
+    #lemma[][
+      $P_2, P_3$ 两个问题是等价的
+    ]
+    解决半正定矩阵空间上最优化问题的学科称为 SDP(semi-definite programming)，由于半正定矩阵空间是凸的，这本质是凸优化问题，有很多成熟的结论。然而秩 1 的要求是很困难的，因此有下面的松弛形式（往往称为秩 2 松弛）：
     $
     min inner(W, X) with "rank"(X) <= 2, X_(i i) = 1, X >= 0 := P_6\
     <=>^(X = V^T V) min sum_(i j) w_(i j) inner(v_i, v_j)  with inner(v_i, v_j) = 1, v_i in SS^1 := P_7\
@@ -928,7 +981,7 @@
     + $P_8$ 的解与 $P_3$ 的解有什么关系
     这已经是非常前沿的问题，这里不再赘述。这种算法的误差很好，但是计算量大，主要问题还没有非常快的方法解决 $P_8$ 
 
-    回到之前的 $P_3$，还有更激进的方法是在 $P_3$ 中放弃秩 1 的要求，放弃后的最优化问题称为 $P_4$。这种算法是 Goemans-Williamson (G_W) 算法，问题转化为了标准的 SDP 问题，已经是多项式内可解的问题。
+    回到之前的 $P_3$，还有更激进的方法是在 $P_3$ 中放弃秩 1 的要求，放弃后的最优化问题称为 $P_4$。这种算法是所谓的 Goemans-Williamson (G-W) 算法，问题转化为了标准的 SDP 问题，已经是多项式内可解。
 
     假设 $P_4$ 的最优值点是 $X^*$，反推代回原问题可以得到最大割问题的一个近似解 $Z_("SDP")$，我们还要面临如何恢复 cut 以及近似解的估计问题，G-W 算法采取的策略是
     - 首先将 $X^*$ 分解为 $u^T u$，再设 $u$ 的列向量组为 $u_i$。注意到由约束条件，$u_i in SS^(n-1)$，为了将其恢复到 ${-1, 1}$ 上，以均匀分布在 $SS^(n-1)$ 上随机选择 $a in SS^(n-1)$，再令 $u_i$ 取 $a, -a$ 中夹角为锐角的一方 $u'_i$（也就是以 $a$ 为轴分成两个半球，取 $u_i$ 在的一方），最后取 $x_i := u'_i / a$ 
@@ -938,7 +991,68 @@
       E z >= alpha h_(max "cut") where alpha = min_(theta in [0, pi]) {2/pi theta/(1 - cos theta)} approx 0.879 
       $
     ]
+    #proof[
+      $
+      E z &= E (sum_(i < j) 1/2(1- x_i x_j) w_(i j))\
+          &= 1/2 sum_(i < j) w_(i j) E (1 - x_i x_j)\
+          &= 1/2 sum_(i < j) w_(i j) (0 P(x_i x_j = 1) + 2 P(x_i x_j = -1 ))\
+          &= sum_(i < j) w_(i j) P(x_i x_j = -1 )\
+      $
+      #lemma1[
+        $P(x_i x_j = -1 ) = theta/pi$，其中 $theta$ 是 $u_i, u_j$ 夹角中的锐角
+      ]
+      #proof[
+        考虑 $0, u_i, u_j$  构成的平面，在该平面做 $a$ 的垂线 $v$ 。由构造过程，$x_i x_j = -1$ 意味着直线 $v$ 穿过 $x_i, x_j$ 的夹角之内。由对称性直线的角度在圆盘上均匀分布，因此这个概率就是 $theta/pi$
+      ]
+      由引理，继续化简可得：
+      $
+      E z &= E (sum_(i < j) 1/2(1- x_i x_j) w_(i j))\
+          &= sum_(i < j) w_(i j) P(x_i x_j = -1 )\
+          &= 1/pi sum_(i < j) w_(i j) theta_(i j)\
+      $
+      取：
+      $
+      alpha = min_(theta in [0, pi]) {2/pi theta/(1 - cos theta)}
+      $
+      则有：
+      $
+      theta/pi >= alpha/2 (1- cos theta)
+      $
+      从而：
+      $
+      1/pi sum_(i < j) w_(i j) theta_(i j) &>= alpha/2 sum_(i < j) w_(i j) (1 - cos theta_(i j)) \
+      &= alpha/2 sum_(i < j) w_(i j) (1 - u_i^T u_j) \
+      &= alpha/4 sum_(i, j in V) w_(i j) (1 - u_i^T u_j) \
+      $
+      回顾上面的松弛过程，应当有：
+      $
+      sum_(i, j in V) w_(i j) u_i^T u_j &= inner(W, X) \
+      &<=  min inner(W, X) "with" "rank"(X) = 1, X_(i i) = 1. X >= 0\
+      &= min_(x in {-1, 1}^n) sum_(i, j in V) w_(i j) x_i x_j\
+      $
+      因此：
+      $
+      &quad alpha/4 sum_(i, j in V) w_(i j) (1 - u_i^T u_j)\
+      &= alpha/4 sum_(i, j in V) w_(i j)  - alpha/4 sum_(i, j in V) w_(i j) u_i^T u_j\
+      &>= alpha/4 sum_(i, j in V) w_(i j)  - alpha/4 min_(x in {-1, 1}^n) sum_(i, j in V) w_(i j) x_i x_j\
+      &= alpha/4 max_(x in {-1, 1}^n) sum_(i, j in V) w_(i j) (1 - x_i x_j)\
+      &= alpha/4 sum_(i, j in V) w_(i j) (1 - x_i x_j)\
+      &= alpha h_(max "cut")
+      $
+    ]
+
     然而，这个算法的实际表现往往不如一些简单的启发式算法，只不过它作为有理论保证的算法具有重要意义。  
+= 高维模型
+  高维模型往往追求精度与效率的平衡
+  == 傅里叶级数
+    对于可积函数 $f(x)$，可以写出形式傅里叶级数：
+    $
+    f(x) &tilde a_0/2 + sum_(n=1)^infinity (a_n cos(n pi x) + b_n sin(n pi x)) \
+    where
+    &a_n = integral_(-pi)^pi f(x) cos(n x) dif x\
+    &b_n = integral_(-pi)^pi f(x) sin(n x) dif x
+    $
+    它当然未必取等。由分析学的知识，我们接下来的讨论都在 $L^2$ 空间中进行，可以保证取得等号。
 
 
 
