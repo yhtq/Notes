@@ -42,7 +42,8 @@ $1 + 1$
 #let conjugateLeft(g, a) = $#g^(-1) #a #g$
 #let conjugateRight(g, a) = $#g #a #g^(-1)$
 #let quotient(G, H) = $#G\\#H$
-#let quo = math.class("relation", $\\$)
+#let lift = math.arrow.t
+#let quo = math.class("relation", $\/$)
 #let ord = math.op("ord")
 #let sgn = math.op("sgn")
 #let lcm = math.op("lcm")
@@ -76,6 +77,7 @@ $1 + 1$
 }
 #let Mod = math.op("Mod")
 #let tensorProduct = math.times.circle
+#let directSum = math.plus.circle
 #let generatedBy(body) = $angle.l #body angle.r$
 #let normalSub(H, G) = $#H lt.tri.eq #G$
 #let norS = math.class("relation", math.lt.tri.eq)
@@ -92,6 +94,7 @@ $1 + 1$
 #let inj_str = "inj"
 #let surj_str = "surj"
 #let bij_str = "bij"
+#let fourierTrans(f) = $hat(#f)$
 #let def_str = "def"
 #let nat_str = "nat"
 // Theorem and definition environments.

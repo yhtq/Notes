@@ -744,6 +744,56 @@
       - 分式线性变换由三点的像唯一确定
     ]
 = 积分
+  == 有界变差
+    #definition[][
+      称一个实函数 $f: [a, b] -> RR$ 是有界变差函数，如果对于任意划分 $P : x_0 = a < x_1 < x_2 <...< x_n = b$，均有：
+      $
+      v(f;P) := sum_(i=1)^(n) abs(f(x_i) - f(x_(i-1))) < M
+      $
+      其中 $M$ 是与 $P$ 无关的常数，此时记：
+      $
+      v(f) = sup_P v(f;P)
+      $
+      称一个曲线是可求长的，如果函数是有界变差函数
+    ]
+    #proposition[][
+      分段光滑曲线是有界变差的，且：
+      $
+      v(f) = integral_a^b abs(f'(x)) dif x
+      $
+    ]
+    #definition[积分][
+      设 $f$ 是连续实值函数，$gamma$ 是有界变差曲线，则存在唯一的复数 $I$ 使得对于任意 $epsilon > 0$，存在 $delta > 0$ 及分划 $P$ 满足 $norm(P) < delta$，且：
+      $
+      norm(I - sum_i f(tau_i)(gamma(t_k) - gamma(t_(k-1)))) < epsilon
+      $
+      此时，记 $I = integral_(gamma)^() f dif z$
+    ]
+    #proposition[][
+      设 $f$ 是连续实值函数，$gamma$ 是分段光滑曲线，则：
+      $
+      integral_(gamma)^() f dif z = integral_a^b f(gamma(t)) gamma'(t) dif t
+      $
+    ]
+    #definition[积分][
+      设 $f$ 是复连续函数，$gamma$ 是可求长曲线，则称：
+      $
+      integral_(gamma)^() f(gamma(t)) dif gamma(t)
+      $
+      为函数在曲线上的积分，也记作 $integral_(gamma)^() f(z) dif z$ 或 $integral_(gamma) f$
+    ]
+    #definition[][
+      设 $abs(gamma)(t) = sup{sum_(k=1)^n abs(gamma(t_k) - gamma(t_(k-1))), t_i "is partition of "[a, t]}$，则它是单调函数，继而有界变差，记：
+      $
+      integral_(gamma)^() f abs(dif z) = integral_a^b f(gamma(t)) dif abs(gamma)(t)
+      $
+    ]
+    #proposition[][
+      $
+      norm(integral_(gamma)^() f ) <= integral_(gamma)^() norm(f) abs(dif z) <= V(gamma) sup_{z in gamma} norm(f(z))
+      $
+    ]
+
   #theorem[Cauthy 1][
     设 $G$ 是有界区域，其边界是有限多条光滑曲线。$f$ 在区域内解析，在区域的闭包上连续，则有：
     $
@@ -870,4 +920,190 @@
     $
     不难看出上式右侧恰为幂级数，得证
   ]
-  
+= 整函数与解析函数的基本定理
+  == 基本定理
+    #definition[整函数][
+      称一个 $CC -> CC$ 的解析函数是整函数。等价的，它的幂级数表示的收敛半径为正无穷
+    ]
+    #theorem[Liouville][
+      设 $f$ 是整函数，且有界，则 $f$ 是常数
+    ]
+    #proof[
+      假设 $sup norm(f) = M < +infinity$，由柯西估计，有：
+      $
+      norm(f'(z)) <= M / r, forall r in CC
+      $
+    ]
+    #corollary[代数基本定理][
+      设 $p(z)$ 是非常数多项式，则 $p(z)$ 有根
+    ]
+    #proof[
+      如若不然，此时可设 $norm(p(z)) > c > 0$，
+      这是因为可以验证 $lim_(z -> infinity) norm(p(z)) = +infinity$，而在任何有限闭区域上，函数有最小值 $m > 0$\
+      则：
+      $
+      1/(p(z))
+      $
+      是整函数，并且有界 $1/c$，由 Liouville 定理知它是常数，矛盾
+    ]
+    #theorem[][
+      设 $f: Omega -> CC$ 是解析函数，以下事实等价：
+      - $f= 0$
+      - $exists z in Omega, forall n in NN, f^((n))(z) = 0$
+      - $Inv(f)(0)$ 有极限点
+    ]
+    #proof[
+      略
+    ]
+    #theorem[开映射原理][
+      非常数的解析函数是开映射，也即将开集映成开集
+    ]
+    #proof[
+      这个定理的证明比较复杂，留在下节
+    ]
+    #theorem[最大模原理][
+      设 $f: Omega -> f$ 是开区域上的解析函数，并且存在 $a$ 使得：
+      $
+      norm(f(z)) <= norm(f(a)), forall z in Omega
+      $
+      则 $a$ 是常数
+    ]
+    #proof[
+      如若不然，注意到 $f(B(a, r))$ 是开集，显然矛盾！
+    ]
+  == 缠绕数，柯西积分定理
+    #definition[Index/winding number of a closed curve][
+      设 $gamma: [0, 1] -> CC$ 是一个可求长闭曲线，任取 $a in.not gamma$，则称：
+      $
+      1/(2 pi i) integral_(gamma)^() 1/(z-a) dif z
+      $
+      为曲线的缠绕数 $b(gamma, a)$
+    ]
+    对于可求长曲线，这个数字描述了曲线绕着 $a$ 的次数，如果是正数，那么曲线绕着 $a$ 逆时针旋转，否则顺时针旋转。颇为神奇的是，我们有：
+    #proposition[][
+      缠绕数为一个整数
+    ]
+    #proof[
+      不失一般性，设曲线是光滑的（否则可以取得远离 $a$ 的曲线使得积分逼近）\
+      定义：
+      $
+      g(t) := integral_(0)^(t) (gamma'(s))/(gamma(s) - a) dif s
+      $
+      则：
+      $
+      g'(t) = (gamma'(t))/(gamma(t) - a)\
+      (e^(-g)(gamma - a))' = e^(-g) gamma' - e^(-g) g'(gamma - a) = 0
+      $
+      从而 $e^(-g)(gamma - a) = e^(-g(0))(gamma(0) - a) = gamma(0) - a = e^(-g(1))(gamma(1) - a)$
+      注意到 $gamma(0) = gamma(1) != a$，故 $g(1) = 2 k pi i, k in ZZ$\
+      这就给出了：
+      $
+      1/(2 pi i) integral_(gamma)^() 1/(z-a) dif z = 1/(2 pi i) g(1) = k in ZZ
+      $
+    ]
+    #example[][
+      - 由柯西积分定理，简单闭曲线对于内部点的缠绕数当然就是 $1$
+    ]
+    #proposition[][
+      - $n(gamma, a) = -n(-gamma, a)$
+      - $n(gamma + sigma, a) = n(gamma, a) + n(sigma, a)$
+      - 在 $gamma$ 产生的每个连通分支上，缠绕数是常数
+      - 在 $gamma$ 唯一一个非有界连通分支上，缠绕数为 $0$
+    ]
+    #proof[
+      - 积分的定义
+      - 同样利用定义
+      - 注意到积分是连续函数，而值域是离散的，因此只能在每个连通分支上是常数
+      - 首先说明非有界连通分支唯一。由于 $gamma$ 是紧集上的连续函数，当然有界 $M$ 。无界连通分支当然有 $M$ 之外的点，因此只能是唯一一个。\
+        其次，$a$ 充分大时积分当然趋于零，而在该连通分支上享有相同的值，因此只能是零
+    ]
+    #lemma[][
+      设 $gamma$ 是可求长曲线，$phi: gamma -> CC$ 连续，$m in NN$，则：
+      $
+      F_m (z) = 1/(2 pi i) integral_(gamma)^() phi(w)/(w - z)^m dif w, forall z in CC -gamma
+      $
+      是解析函数，且：
+      $
+      F'_m (z) = m F_(m+1) (z)
+      $
+    ]<lemma-der>
+    #proof[
+      - 由积分的性质知道它是连续函数，固定 $z, a in CC - gamma$，计算:
+        $
+        1/(w-z)^m - 1/(w - a)^m = (1/(w-z) - 1/(w-a))(sum_(k=0)^(m-1) 1/(w-z)^k 1/(w-a)^(m-1-k))\
+        = (z-a) sum_(k=0)^(m-1) 1/(w-z)^(k+1) 1/(w-a)^(m-k)
+        $
+      - 则：
+        $
+        (F_m (z) - F_m (a))/(z-a) = 1/(2 pi i) integral_(gamma)^() phi(w)  sum_(k=0)^(m-1) 1/(w-z)^(k+1) 1/(w-a)^(m-k) dif w\
+        $
+        令 $z -> a$，上式右侧当然趋于（这里一致性可以保证）：
+        $
+        1/(2 pi i) integral_(gamma)^() phi(w)  sum_(k=0)^(m-1) 1/(w-a)^(m+1) dif w\
+        = m F_(m+1) (a)
+        $
+    ]
+    #theorem[Cauthy Integral formula 1][
+      设 $G subset CC$ 是开集，$f: G -> CC$ 解析，$gamma subset G$ 可求长并且：
+      $
+      n(gamma, w) = 0, forall w in CC - G
+      $
+      则对于任意 $a in G - gamma$，有：
+      $
+      n(gamma, a) f(a) = 1/(2 pi i) integral_(gamma)^() f(w)/(w - a) dif w
+      $
+    ]
+    #proof[
+      定义：
+      $
+      funcDef(phi, G times G, CC, (z, w) , cases(
+        (f(w) - f(z))/(w - z) "if" w != z,
+        f'(z) "if" w = z
+      ))
+      $
+      断言 $phi$ 是连续函数，且任给 $z$，$phi(z)$ 是解析函数\
+      再定义：
+      $
+      funcDef(g, CC, CC, z, cases(
+          integral_(gamma)^() phi(z, w) dif w "if" z in G,
+          integral_(gamma)^() f(w)/(w - z) dif w "if" n(gamma, z) = 0 
+      ))
+      $
+      为了证明它是良定义的，取 $z in G$ 使得 $n(gamma, w) = 0$，此时：
+      $
+      integral_(gamma)^() (f(w) - f(z))/(w - z) dif w  = integral_(gamma)^() f(w)/(w-z) dif w - 2 pi i f(z) n(gamma, w) = integral_(gamma)^() f(w)/(w-z) dif w
+      $
+      可以验证 $g$ 是解析的，然而有界并在 $z$ 充分大时趋于零，因此就是 $0$\
+      换言之：
+      $
+      0 = integral_(gamma)^() (f(w) - f(z))/(w - z) dif w  = integral_(gamma)^() f(w)/(w-z) dif w - 2 pi i f(z) n(gamma, w)
+      $
+    ]
+    #theorem[Cauthy Integral formula 2][
+      设 $G subset CC$ 是开集，$f: G -> CC$ 解析，$gamma_i subset G$ 可求长并且：
+      $
+      sum_i n(gamma_i, w) = 0, forall w in CC - G
+      $
+      则对于任意 $a in G - union_i gamma$，有：
+      $
+      sum_k n(gamma_k, w) f(a) = sum_k 1/(2 pi i) integral_(gamma_k)^() f(w)/(w - a) dif w
+      $
+    ]
+    #theorem[Cauthy theorem 1][
+      设 $G, f, gamma_i$ 条件同上，则：
+      $
+      sum_k integral_(gamma)^() f dif z = 0
+      $
+    ]
+    #proof[
+      任取 $a$，对 $f(z) (z-a)$ 利用积分公式 2 即可
+    ]
+    #theorem[][
+      设 $G, f, gamma_i$ 条件同上，则对于任意 $a in G - union_i gamma$，有：
+      $
+      sum_k n(gamma_k, w) f^(k)(a) = k! sum_k 1/(2 pi i) integral_(gamma_k)^() f(w)/(w - a)^(k+1) dif w
+      $
+    ]
+    #proof[
+      由 @lemma-der，上式右侧就是 $F_(k+1) (a)$，归纳即可
+    ]

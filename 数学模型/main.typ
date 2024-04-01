@@ -1,4 +1,4 @@
-#import "../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, der, partialDer, inner
+#import "../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, der, partialDer, inner, fourierTrans
 #import "../template.typ": *
 // Take a look at the file `template.typ` in the file panel
 // to customize this template and discover how it works.
@@ -10,7 +10,7 @@
 )
 #let vol = $"vol"$
 = 前言
-  - 教师：卲嗣洪
+  - 教师：邵嗣烘
   - 没有教材，每次具体留作业
   主要涉及的数学模型：
   + 图模型
@@ -1052,7 +1052,64 @@
     &a_n = integral_(-pi)^pi f(x) cos(n x) dif x\
     &b_n = integral_(-pi)^pi f(x) sin(n x) dif x
     $
-    它当然未必取等。由分析学的知识，我们接下来的讨论都在 $L^2$ 空间中进行，可以保证取得等号。
+    它当然未必取等。由分析学的知识，我们接下来的讨论都在 $L^2$ 空间中进行，可以保证取得等号。\
+    傅里叶技术有更常用的复形式，也称之为平面波形式。将 $e^(i x) = cos x + i sin x$ 代入上面的级数，在收敛性较好的情况下可以重排，得到：
+    $
+    a_0/2 + sum_(n=1)^infinity (a_n cos(n pi x) + b_n sin(n pi x))  = sum_(n = -infinity)^(infinity) c_n e^(n x i)
+    $
+    （注意最后一个求和是主值意义下的极限也即 $lim_(N -> +infinity) sum_(n = -N)^(N) c_n e^(n x i)$）\
+    其中：
+    $
+    c_n = cases(
+      (a_n - i b_n)/2 quad n>=0,
+      (a_(n) + i b_(n))/2 quad  n<0
+    )
+    $\
+
+    注意到$sin n x \/ cos n x \/ e^(i n x)$ 都是周期函数，周期为 $(2 pi )/n$，换言之 $n$ 恰好是其对应的频率。因此在实际应用中往往会将 $n$ 看作频率。在复形式的求和式中，$n >= 0$ 的部分称为正频，$n < 0$ 的部分称为负频，它们往往都很关键，往往应该对称考虑而不能只考虑一部分。
+    
+  == 函数空间与傅里叶变换
+    令 $E([-pi, pi])$ 为 $(-pi, pi]$ 上所有复值连续函数构成的线性空间：
+    $
+    E([-pi, pi]) = {f(x) + i g(x) | f, g in C([-pi, pi])}
+    $ 
+    并且定义复内积：
+    $
+    (f, g) = integral_(-pi)^pi f(x) overline(g(x))  dif x
+    $
+    易知 ${1/sqrt(2 pi ) e^(i n x) | n in ZZ}$ 构成一组标准正交基，进而函数 $f$ 的傅里叶系数 $c_n$ 满足：
+    $
+    c_n sqrt(2 pi) = (f, 1/sqrt(2 pi) e^(i n x)) => c_n = 1/(2 pi) (f, e^(i n x))
+    $
+    一般的，对函数在区间 $[-l, l]$ 上做 $2l$ 为傅里叶展开的结果是：
+    $
+    f(x) = sum_(n = -infinity)^(infinity) c_n e^(i omega_n x)\
+    where &c_n = 1/(2 l) (f, e^(i omega_n x))\
+          &omega_n = (n pi)/l
+    $<fourier-discrete>
+    往往认为 $triangle.t omega_n = omega_n - omega_(n-1) = pi/l$ 是频谱上最小的区分间隔，计算发现：
+    $
+    f(x) = 1/(2 pi) sum_(n = -infinity)^(infinity) triangle.t omega_n integral_(-l)^(l) f(t) e^(i omega_n (x- t)) dif t
+    $
+    不严格地说，令 $l -> +infinity$，上式几乎化为：
+    $
+    f(x) = 1/(2 pi) integral_(-infinity)^infinity dif omega integral_(-infinity)^(infinity) f(t) e^(i omega (x- t)) dif t
+    $<fourier-continuous>
+    在实际应用中，$[-l, l]$ 往往代表了输入信号的时间。假如输入更长的时间，采用更高的频率分辨率，可以想象估计得到的函数将会更加准确，这就是上面式子的含义，进而引出了下面的傅里叶变换。
+    #definition[傅里叶变换][
+      设 $f in E(RR)$，则称：
+      $
+      fourierTrans(f)(omega) = 1/sqrt(2 pi) integral_(-infinity)^(infinity) f(x) e^(-i omega x) dif x
+      $
+      为傅里叶变换，对应的还有傅里叶逆变换：
+      $
+      f(x) = 1/sqrt(2 pi) integral_(-infinity)^(infinity) fourierTrans(f)(omega) e^(i omega x) dif omega
+      $
+      以上两个积分都是主值意义下的无穷积分，具体的存在性/收敛性和两者互逆的条件这里不作说明，至少在比较良好的条件下这是成立的。
+    ]
+    #remark[][
+      在@fourier-discrete 中，系数 $c_n$ 的衰减速度可以表现有限截断的误差，同时也在 $fourierTrans(f)$ 中体现为在无穷处的衰减速度（事实上，如果衰减过慢，可能导致 $fourierTrans(f)$ 的逆变换不存在）。一些较为复杂的分析表明，这个衰减速度与 $f$ 的光滑性有密切的关系，光滑性越好，衰减速度越快。
+    ]
 
 
 

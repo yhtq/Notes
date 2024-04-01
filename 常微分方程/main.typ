@@ -1332,3 +1332,162 @@
     #proof[
       仿照上面的逼近过程再使用第一比较定理即可
     ]
+  == 奇解
+    #definition[奇解][
+      设 $Gamma = {(x, y) | y = f(x)}$ 是微分方程 $F(x, y') = 0$ 的一个解，若对任意的 $(x_, y_) in Gamma$，在该点的任何一个邻域里存在过 $(x_0, y_0)$ 的不同于 $Gamma$ 的解，且该解与 $Gamma$ 在该点相切，则称 $Gamma$ 是奇解
+    ]
+    #example[][
+      - $y = x y' - 1/2 y'^2$，它的解为：
+        $
+        y = 1/2 x^2\
+        y = c x - c^2/2
+        $
+        注意到下面的直线族恰好是上面抛物线的所有切线，因此抛物线当然就是一个奇解
+      - $y^2 + y'^2 = 1$\
+        令 $y = cos theta, y' = sin theta, x = u(theta)$，有：
+        $
+        (-sin theta)/(u') = sin theta\
+        sin theta = 0 或 u' = -1
+        $
+        因此解为：
+        $
+        y' = 0 => y = plus.minus 1\
+        u' = -1 => x = -theta + C => y = cos(x - C)
+        $
+        可以看出 $y = plus.minus 1$ 是奇解
+    ]
+    #theorem[奇解的必要条件][
+      设 $G subset RR^3, F(x, y, y') in C^0, partialDer(F, y), partialDer(F, y')$ 存在且连续。假设 $y = phi(x)$ 是奇解，则：
+      $
+      cases(
+        F(x, phi(x), phi'(x)) = 0,
+        partialDer(F, y') (x, phi(x), phi'(x)) = 0
+      )
+      $
+    ]
+    #proof[
+      第一个式子是显然的。对于第二个式子，假设存在 $x_0$ 使得 $partialDer(F, y) (x_0, phi(x_0), phi'(x_0)) != 0$，设 $(x_0, y_0, P_0) = (x_0, phi(x_0), phi'(x_0))$，在该点对 $F$ 利用隐函数定理，存在某个开邻域使得：
+      $
+      F(x, y, P) = 0 <=> P = f(x, y)
+      $
+      且 $f$ 是连续函数且关于 $y$ 连续可导，将在 $(x_0, y_0)$ 的某个邻域内 Lipschitz 连续，可以利用解的存在唯一性定理可知该邻域内微分方程的解存在唯一，与 $phi$ 是奇解显然矛盾
+    ]
+    上面的定理给出了奇解的一个必要条件。这里有两个等式，若可以化简直到可解出 $y$，便可能求出原方程的奇解。更进一步，若能消去 $y'$ 得到：
+    $
+    Delta (x, y) =  0
+    $
+    则奇解就在该曲线之中，这条曲线被称为判别曲线
+    #example[][
+      -
+        $
+        y = P x ln x + (x p)^2 - y\
+        $ 
+        可以解得判别曲线为
+        $y = -1/4 (ln x)^2$，容易验证它是一个解，稍后会判断它是否是奇解
+      - $y'^2 + y - x = 0$\
+        可以解得判别曲线为 $y = x$，但不是原方程的解，因此原方程没有奇解
+      - $y'^2 - y'^2 = 0$，它的判别曲线是 $y = 0$ 是解，然而容易看出它的所有解是:
+        $
+        y = C e^(plus.minus x)
+        $
+        以及它们可能的拼接，然而仅有 $y = 0$ 唯一一个解可能经过 $x$ 轴，因此过 $(x_0, 0)$ 的解都是存在且唯一的
+    ]
+    #theorem[奇解的充分条件][
+      设 $F(x, y, y') in C^infinity$，假设：
+      $
+      cases(
+        F(x, phi(x), phi'(x)) = 0,
+        partialDer(F, y) (x, phi(x), phi'(x)) = 0
+      ) <=> y = psi(x)
+      $
+      （事实上，也就是 $Delta(x, y)$ 是原方程的解）\
+      若：
+      $
+      cases(
+        (diff^(k+l) F)/(diff y^k diff p^l) (x, psi(x), psi'(x)) = 0\, forall 0 <=k <= m-1\, 0 <= l <= n-1,
+        (diff^m F)/(diff y^m) (x, psi(x), psi'(x)) != 0,
+        (diff^n F)/(diff p^n) (x, psi(x), psi'(x)) != 0
+      )
+      $
+      其中 $n, m in NN, n > m$。如果：
+      - $m, n$ 之一为奇数，或
+      - $m, n$ 均为偶数，且 $(diff^m F)/(diff y^m) (diff^n F)/(diff p^n) < 0$
+      则 $psi$ 是奇解
+    ]
+    #proof[
+      #lemma[][
+        设 $f(x, y) : C^infinity (RR^n times RR -> RR)$，设：
+        $
+        f(x, y) = sum_(k=0)^n f_k (x) y^k + R_(n+1) (x, y) y^n
+        $
+        是关于 $y$ 的泰勒展开，则 $R_n (x)$ 也是 $C^infinity$
+      ]
+      #proof[
+        利用积分余项：
+        $
+        f(x, y) - sum_(k=0)^n f_k (x) y^k = y^n/n! integral_0^1 (1-t)^n (diff^n f(x, y t))/(diff t^n)   dif t
+        $
+        容易看出结论成立
+      ]
+      #lemma[][
+        考虑微分方程 $u' = plus.minus A(x, u) abs(u)^alpha, 0< alpha <1 $ 其中有：
+        - $A$ 连续且在 $u !=0$ 时连续可导
+        - $A$ 有正下界 $c_0$，正上界 $c_1$
+        则 $u = 0$ 是奇解
+      ]<lemma0_is_odd>
+      #proof[
+        不妨设符号取正，此时方程的解当然递增。\
+        我们的目标是在 $x_0$ 处构造一个原方程的非平凡解。先考虑右侧，注意到：
+        $
+        u' = A(x, u)u^alpha\
+        u^(-alpha) u' = A(x, u)\
+        $
+        设 $v = u^(1 - alpha), v' = (1-alpha) u^(-alpha) u'$，则：
+        $
+        1/(1-alpha) v' = A(x, v^(1/(1-alpha)))
+        $
+      ]
+      回到原方程，做换元 $y = psi(x) + u$，方程变成：
+      $
+      H(x, u, u') = F(x, psi(x) + u, psi'(x) + u')  = 0
+      $
+      只需证明 $u = 0$ 是奇解即可。事实上，$H$ 满足如下条件：
+      $
+      cases(
+        (diff^(k+l) F)/(diff y^k diff p^l) (x, 0, 0) = 0\, forall 0 <=k <= m-1\, 0 <= l <= n-1,
+        (diff^m F)/(diff y^m) (x, 0, 0) != 0,
+        (diff^n F)/(diff p^n) (x, 0, 0) != 0
+      )
+      $
+      可以想象，$H$ 泰勒展开后的形式非常简单。事实上，有：
+      $
+      H(x, u, u') = u^m H_1 (x, u, u') + u'^n H_2 (x, u, u')
+      $
+      其中 $H_1, H_2$ 都无穷阶可导，且：
+      $
+      H_1 (x, 0, 0) = (diff^m F)/(diff y^m) (x, psi(x), psi'(x)) != 0\
+      H_2 (x, 0, 0) = (diff^n F)/(diff p^n) (x, psi(x), psi'(x)) != 0
+      $
+      因此可以（在某个小邻域内）不妨设 $H_1, H_2 !=0 $，方程化为：
+      $
+      u^m H_1 (x, u, u') + u'^n H_2 (x, u, u') = 0
+      $
+      我们当然希望进行开方，可以验证在假设的条件下（即 $m, n$ 之一为奇数，或 $m, n$ 均为偶数，且 $(diff^m F)/(diff y^m) (diff^n F)/(diff p^n) < 0$），我们将确实可以开方，对开方后的函数利用 @lemma0_is_odd 即可
+    ]
+    #corollary[][
+      设 $F(x, y, y') in C^2$，且：
+      $
+      cases(
+        F(x, phi(x), phi'(x)) = 0,
+        partialDer(F, y) (x, phi(x), phi'(x)) = 0
+      ) <=> y = psi(x)
+      $
+      若：
+      $
+      (diff^2 F)/(diff p^2) (x, psi(x), psi'(x)) != 0
+      $
+      则 $psi$ 是奇解
+    ]
+    #proof[
+      就是在上面的定理中取 $n = 2, m = 1$ 的结果，至于条件可以放松的原因可以在上面的证明过程中仔细验证
+    ]
