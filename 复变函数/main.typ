@@ -1107,3 +1107,190 @@
     #proof[
       由 @lemma-der，上式右侧就是 $F_(k+1) (a)$，归纳即可
     ]
+    #definition[zero][
+      设 $G$ 是开集，$f: G -> CC$ 解析，将 $f$ 在 $G$ 内的零点带重数排成 $x_1, x_2, ..., x_n$，称为零点集。
+    ]
+    #proposition[][
+      设 $x_i$ 是所有零点，若闭的可求长曲线 $gamma$ 满足：
+      $
+      forall z in CC - G, n(gamma, z) = 0\
+      forall i, x_i in.not gamma
+      $
+      则有积分公式：
+      $
+      1/(2 pi i) integral_(gamma)^() (f'(w))/f(w) dif w = sum_k n(gamma, x_k) 
+      $
+    ]
+    #proof[
+      可设：
+      $
+      f(z) = (product_i (z - x_i)) g(z)
+      $
+      则 $g(z)$ 解析且非零。将有：
+      $
+      1/(2 pi i) integral_(gamma)^() (f'(w))/f(w) dif w\
+      = 1/(2 pi i) integral_(gamma)^() sum_k 1/(z - x_k) + (g'(z))/g(z) dif w
+      $
+      利用柯西定理即得
+    ]
+    #corollary[][
+      设 $x_i$ 是 $f(x) = lambda$ 在 $G$ 上的带重数零点，则：
+      $
+      1/(2 pi i) integral_(gamma)^() (f'(w))/(f(omega) - lambda)dif w = sum_k n(gamma, x_k) 
+      $
+    ]
+    #proof[
+      对 $f(x) - lambda$ 利用上面的命题即可
+    ]
+    #theorem[][
+      设 $f: B(a, R) -> CC$ 解析，$alpha = f(a)，$若 $f(x) - f(a)$ 有 $m >= 1$ 重零点，则存在 $alpha$ 的开邻域 $B_alpha$ 和 $a$ 的开邻域 $B_a$，使得：
+      $
+      forall beta in B, f(z) - beta 在 B_a "上恰有" m "个简单零点（重数为 1 的零点）"
+      $
+    ]
+    #proof[
+      先取 $epsilon_1 in B(z, 1/2 R)$，满足：
+      $
+      forall z in B(a, 2 epsilon_1) - {a}, f(z) != alpha and f'(z) != 0
+      $
+      这样的 $epsilon$ 存在是因为注意到 $Inv(f)(0)$ 在 $G$ 内是离散的，$Inv(f')(0)$ 也是，从而 $a$ 不是两者的聚点，当然有去心邻域与两者不交
+
+      定义：
+      $
+      gamma(t) = a + epsilon e^(2 pi i t), t in [0, 1]\
+      sigma(t) = f(gamma(t)) 
+      $
+      注意到 $alpha in.not sigma$，故存在 $alpha$ 的开邻域 $B_alpha$ 与 $gamma$ 不交，这个邻域当然属于 $sigma$ 分割出的同一个连通分支，进而缠绕数是常数。事实上，有：
+      $
+      forall beta in B_a,  m = n(sigma, alpha) = n(sigma, beta)
+      $
+      取 $G = B(a, 2 epsilon)$，应用之前的定理得：
+      $
+      n(sigma, beta) = sum_(k=1)^p n(gamma, z_k) = m
+      $
+      $z_k$ 是 $f(z) - beta$ 在 $G$ 中的所有零点，注意到这里 $n(gamma, z_k)$ 只能为 $0, 1$（既然 $epsilon$ 的取法保证了导数非零，进而没有重根。\
+      同时，观察曲线的取法可得 $gamma subset B(a, epsilon)$，因此所有 $z_k in B(a, 2 epsilon) - B(a, epsilon)$ 对应的缠绕数都是零，由上面的等式看出 $B(a, epsilon)$ 上恰有 $m$ 个一重零点，证毕
+    ]
+    终于可以回到开映射定理的证明：
+    #corollary[开映射原理][]
+    #proof[
+      任取 $a, alpha = f(a)$，由上面的定理，存在 $B_a, B_alpha$ 使得：
+      $
+      B_alpha subset f(B_a)
+      $
+      因此 $f$ 将内点映成内点，进而是开映射
+    ]
+    上面的定理还给出了如下有用的推论
+    #corollary[][
+      设 $f$ 是 $omega -> omega'$ 的满的单叶解析函数，则 $f' != 0$，且 $f$ 有解析的逆映射，满足：
+      $
+      (Inv(f))'(f(z)) = 1/(f'(z))
+      $
+    ]
+    #proof[
+      - 先证明导数非零，假设 $f'(a) = 0$，则 $f(z) - f(a)$ 有二重零点，由上面的定理知道存在 $beta$，$f - beta$ 至少有两个零点，矛盾！
+      - 既然是双射，当然有逆映射。注意到 $f$ 是开映射，因此逆映射当然也连续。
+    ]
+  == 其他常用定理
+    #theorem[Weierstrass][
+    设 $f$ 是非常值的整函数，则有：
+    $
+    overline(f(CC)) = CC
+    $
+    ]
+    #proof[
+    如若不然，存在 $z in CC$ 使得 $norm(f(x) - z) > epsilon$，此时：
+      $
+      1/(f(x) - z), forall x in CC
+      $
+      成为有界的整函数，继而是常数，矛盾！
+    ]
+    #theorem[Little Picard][
+      设整函数 $f$ 不是多项式，则称之为 transcendental entire function|超越整函数。对于超越整函数，它的像集至多比 $CC$ 少一个点
+    ]
+    #proof[
+      有时间的话稍后进行证明
+    ]
+    #theorem[Mean Value theorem|平均值定理][
+      \
+      设 $f: Omega -> CC$，$forall z in Omega, r > 0 with overline(B(z, r)) subset Omega$，有：
+      $
+      f(z) = 1/(2 pi) integral_(0)^(2 pi) f(z + r e^(i theta)) dif theta\
+      norm(f(z)) <= 1/(2 pi) integral_(0)^(2 pi) norm(f(z + r e^(i theta))) dif theta
+      $
+      换言之，$f(z)$ 就是周围值的平均值\
+      更进一步，还有：
+      $
+      norm(f(z)) <= 1/(pi r^2) integral_(B(z, r))^() norm(f(z)) dif z
+      $
+      （实平面上的二重积分）
+      
+    ]
+    #proof[
+      就是柯西积分的特殊情况
+    ]
+  == 与几何与分析有关的定理
+    #lemma[Schwarz][
+      设 $f: B(0, 1) -> B(0, 1)$ 解析，且 $f(0) = 0$，则：
+      - $forall z in B(0, 1), norm(f(z)) <= norm(z), norm(f'(0)) <=1$
+      - 以下事实等价：
+        - 存在 $z_0 != 0$，使得 $norm(f(z_0)) = norm(z_0)$
+        - $f'(0) = 1$
+        - 存在 $theta$ 使得 $f(z) = z e^(i theta)$
+    ]
+    #proof[
+      - 对它做级数展开得到：
+        $
+        f(z)/z = sum a_i z^i
+        $
+        若它是常数已经证毕，否则根据最大模原理，$forall 0 < r < 1$ 它的模在 $B(0, r)$ 上不能取最大值，在 $overline(B(0, r))$ 上的最大值只能在边界处取得，继而：
+        $
+        norm(f(z)/z) <= norm(f(z_r)/r) <= 1/r , forall z in B(0, r)
+        $
+        令 $r -> 1$ 即得第一条。特别的，$f'(0) = a_0$ 满足 $norm(f'(0)) <= 1$
+      - 直接利用最大模原理即可
+    ]
+    #lemma[][
+      设 $g$ 是 $B(0, 1)$ 上的双全纯映射，则:
+      $
+      g(z) = e^(i theta) (z - z_0)/(1 - overline(z_0) z)
+      $
+      其中 $z_0$ 是 $B(0, 1)$ 上的一个点
+    ]
+    #proof[
+      设 $l_(z_0) (z) = e^(i theta) (z - z_0)/(1 - overline(z_0) z_)$，可以检查 $l_(z_0) compose l_(-z_0) = 0$，进而双全纯\
+      令 $l = l_(g(0)), l(g(0)) = 0$\
+      令 $f = l(g(z))$，则：
+      $
+      f(0) = 0
+      $
+      利用之前的 Schwarz，将有：
+      $
+      norm(f'(0)) <= 1\
+      norm(f^(-1)(0)) <= 1
+      $
+      从而取等，进而 $f$ 是旋转，倒回即可
+
+    ]
+    #lemma[Schwarz（更强的版本）][
+      设 $f: B(0, 1) -> B(0, 1)$ 解析，则：
+      $
+      norm(f(z_1) - f(z_2))/norm(1-overline(f(z_1)) f(z_2)) <= norm(z_1 - z_2)/(norm(1 - overline(z_1) z_2))
+      $
+      取等当且仅当双全纯
+    ]
+    #corollary[][
+      令 $z_1 -> z_2 -> z$，得：
+      $
+      norm(f'(z))/(1 - norm(f(z))^2) <= 1/(1 - norm(z)^2)
+      $
+    ]
+    #definition[庞加莱圆盘][
+      在圆盘 $B(0, 1)$ 上定义长度微元：
+      $
+      dif s = (norm(dif z))/(1 - norm(z)^2)
+      $
+    ]
+
+
+    

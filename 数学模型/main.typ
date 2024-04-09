@@ -1110,6 +1110,123 @@
     #remark[][
       在@fourier-discrete 中，系数 $c_n$ 的衰减速度可以表现有限截断的误差，同时也在 $fourierTrans(f)$ 中体现为在无穷处的衰减速度（事实上，如果衰减过慢，可能导致 $fourierTrans(f)$ 的逆变换不存在）。一些较为复杂的分析表明，这个衰减速度与 $f$ 的光滑性有密切的关系，光滑性越好，衰减速度越快。
     ]
+  == 谱方法
+    在更加现实的问题中，我们往往不知道 $u(x)$ 的所有值，只知道它在个别点的值，因此如何构造一个谱逼近是一个十分经典的问题。假设总共有 $N$ 个点，均匀采样自然是最简单的方法，令：
+    $
+    x_j = j (2 pi)/N, j = 0, 1, 2, ..., N - 1\
+    u_j = u(x_j)
+    $
+    #let (hu, tu) = ($hat(u)$, $tilde(u)$)
+    目标是逼近：
+    $
+    hu_k = 1/(2 pi) integral_(0)^(2 pi ) u(x) e^(-i k x) dif x 
+    $
+    最简单的想法当然是用黎曼和，用：
+    $
+    tu_k := 1/N sum_(j = 0)^(N - 1) u_j e^(-i k x_j)
+    $
+    最后函数的估计式是：
+    $
+    u(x) approx sum_(k = -A)^(A) tu_k e^(i k x)
+    $
+    自然我们需要解决：
+    - 最多能确定多少 $A$\
+      事实上，容易验证 $tu_(k+N) = tu_k$，表明约 $A = N/2$ 是较好的选择。继而，我们得到的逼近空间是：
+      $
+      g_N = {sum_(i = -N/2)^(N/2) tu_k e^(i k x) | tu_(N/2) = tu_(-N/2)}
+      $ 
+      同时，应该处理一下边界情况，实际使用：
+      $
+      tu_k := 1/N 1/c_k sum_(j = 0)^(N - 1) u_j e^(-i k x_j)\
+      c_k = cases(
+        2 quad k = N/2,
+        1 quad "else"
+      )
+      $
+      计算上面的系数，效果更好
+    - 逼近的效果如何：\
+      令：
+      $
+      I_N (u: L^2(omega)) = x: omega -> sum_(k = -N/2)^(N/2) tu_k e^(i k x)  
+      $
+      #theorem[][
+        $
+        I_N (u)(x_j) = u(x_j)
+        $
+      ]
+      #proof[
+        #definition[Dirichlet 核][
+          $
+          D_N (x) = sum_(k=-N)^N e^(i k x) = (e^(-i N x)(1 - e^((2 N + 1) i x)))/(1 - e^(i x))\
+          = (e^(i (N+1/2) x) - e^(- i (N + 1/2) x))/(e^(1/2 x) - e^(-1/2 x))\
+          = sin((N + 1/2) x)/sin(x/2) 
+          $
+        ]
+        计算可得：
+        $
+        sum_(k = - N/2)^(N/2) hu_k e^(i k x) = 1/(2 pi) integral_(0)^(2 pi) D_(N/2)(x-tau) hu(tau) dif tau
+        $
+        进而：
+        $
+        I_N (u)(x) = sum_(k = - N/2)^(N/2) (1/N 1/c_k sum_(j=0)^(N-1) u_j e^(-i k x_j)) e^(i k x_j)\
+        = 1/N sum_(j=0)^(N-1) u_j sum_(k = - N/2)^(N/2) 1/c_k e^(i k (x - x_j))\
+        = 1/N sum_(j=0)^(N-1) u_j D_(N/2 - 1)(x - x_j) +1/2 e^(i N/2 (x - x_j)) + 1/2 e^(-i N/2 (x - x_j))\
+        = 1/N sum_(j=0)^(N-1) u_j (sin ((N-1) (x-x_j)/2))/ (sin (x-x_j)/2) + cos (N (x-x_j)/2)\
+        = 1/N sum_(j=0)^(N-1) u_j sin(N (x-x_j)/2) cot ((x-x_j)/2) \
+        $
+        代入 $x_j$ 取极限即可
+      ]
+      因此，称上面的 $I$ 为插值算子
+
+      更进一步，可以进一步求导数构造导数的逼近。当然有两种求导数方式，一种是计算导数的傅里叶系数，另一种是计算刚刚逼近的导数。
+
+      #theorem[谱精度][
+        任意 $u in H_p^m (omega), m > 1/2$，将有：
+        $
+        norm((I(u) - u)^((mu)))_2 <= k N^(mu - m) abs(u)_mu
+        $
+        其中 
+        - $H_p^m (omega)$ 是指 ${u in L^2(Omega) | forall mu = 0, 1, 2, ..., m, u^((mu))(x) in L^2(Omega) "且以" 2 pi "为周期"}$
+        - $norm(u)_mu = (sum_(k = -infinity)^(+infinity) (1+k^2)^mu norm(hu_k)^2)^(1/2)$
+        - $abs(u)_mu =  (sum_(k = -infinity)^(+infinity) (k^2)^mu norm(hu_k)^2)^(1/2)$
+        - $mu in NN^+, k$ 是与 $N$ 无关的常数
+      ]
+      #proof[
+        从现在开始我们索性假设有 $2 N$ 个点，既然只关心 $N$ 的阶
+        #let hp = $hat(P)$
+        #definition[投影算子][
+          定义投影算子：
+          $
+          hp_N (u)(x) = sum_(k = -N)^(N) hu_k e^(i k x)
+          $
+          也就是取出傅里叶级数的有限项
+        ]
+        #lemma[][
+          $forall u in H_p^m (Omega)$，将有：
+          $
+          norm(hp_N u - u)_mu <= k N^(mu-m) abs(u)_m
+          $
+        ]
+        #proof[
+          考虑 $hp_N u - u$ 的傅里叶系数，将有：
+          $
+          norm(hp_N u - u)_mu^2 = sum_(abs(k) > N) (1+k^2)^mu norm(hu_k)^2\
+          = sum_(abs(k) > N) (k^2)^(m-mu) (1+k^2)^mu (1/k^2)^m_mu norm(hu_k)^2\
+          <= (1/N^2)^(m - mu) sum_(abs(k) > N) ((1+k^2)/k^2)^mu (k^2)^m norm(hu_k)^2
+          $
+          注意到上式中 $((1+k^2)/k^2)^mu$ 是有界量，自然有：
+          $
+          <= M (1/N^2)^(m - mu) sum_(abs(k) > N)  (k^2)^m norm(hu_k)^2\
+          <= M (1/N^2)^(m - mu) sum_(k)  (k^2)^m norm(hu_k)^2
+          $
+          得证
+        ]
+        #lemma[][
+          $
+          c_k tu_k = hu_k + sum_(r) hu_(k plus.minus 2 r)
+          $
+        ]
+      ]
 
 
 

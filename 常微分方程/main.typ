@@ -1334,7 +1334,7 @@
     ]
   == 奇解
     #definition[奇解][
-      设 $Gamma = {(x, y) | y = f(x)}$ 是微分方程 $F(x, y') = 0$ 的一个解，若对任意的 $(x_, y_) in Gamma$，在该点的任何一个邻域里存在过 $(x_0, y_0)$ 的不同于 $Gamma$ 的解，且该解与 $Gamma$ 在该点相切，则称 $Gamma$ 是奇解
+      设 $Gamma = {(x, y) | y = f(x)}$ 是微分方程 $F(x, y') = 0$ 的一个解，若对任意的 $(x_, y) in Gamma$，在该点的任何一个邻域里存在过 $(x_0, y_0)$ 的不同于 $Gamma$ 的解，且该解与 $Gamma$ 在该点相切，则称 $Gamma$ 是奇解
     ]
     #example[][
       - $y = x y' - 1/2 y'^2$，它的解为：
@@ -1490,4 +1490,300 @@
     ]
     #proof[
       就是在上面的定理中取 $n = 2, m = 1$ 的结果，至于条件可以放松的原因可以在上面的证明过程中仔细验证
+    ]
+  == 包络
+    #definition[包络][
+      设 $k_c, c in C$ 是光滑曲线族，称光滑曲线 $gamma$ 为 $k_c$ 的包络，如果 $forall (x, y) in gamma, exists k_c$ 使得 $k_c$ 与 $gamma$ 相切，且在该点的任意开邻域内 $k_c != gamma$
+    ]
+    #example[][
+      - 给定一族曲线 $y = (x-c)^2 + 1$，当然 $y = 1$ 是其一个包络
+      - 给定一族直线 $y = c x - c^2 / 4$，它就是 $y = x^2$ 的切线族，自然 $y = x^2$ 是包络
+    ]
+    #theorem[][
+      假设 $F(x, y, y') = 0$ 有通解 $u(x, y, c) = 0$，假设 $partialDer(u, y) != 0$。设 $u(x, y, c) = 0$ 关于 $c$ 构成的曲线族有包络 $gamma := y = phi(x)$，则 $y = phi(x)$ 是奇解
+    ]
+    #proof[
+       - 首先证明 $gamma$ 是解。当然 $gamma$ 上每点都可以找到解 $u(x, y, c_0) = 0$ 与之在该点相切。由假设条件和隐函数定理，可以反解出：
+        $
+        u(x, y, c_0) = 0<=> y = psi(x)
+        $
+        当然 $phi(x)$ 与 $psi(x)$ 相切但不相同，这表明该点处 $gamma$ 的函数值和导数值满足微分方程，因此 $gamma$ 是解
+       - 其次，过 $gamma$ 每点都可以找到与之相切的不同解，这就表明它是奇解
+    ]
+    #theorem[][
+      假设 $Gamma$ 是曲线族 $k_c: v(x, y, c) = 0$ 的包络，并且 $Gamma$ 与 $k_C$ 切于 $(f(c), g(c))$，其中 $f, g in C^1$，则 $Gamma$ 满足方程：
+      $
+      cases(
+        v(x, y, c) = 0,
+        v'_c (x, y, c) = 0
+      )
+      $
+      如果这个方程组中能消去 $c$，则称消去后的曲线为 $C$ 判别曲线
+    ]
+    #proof[
+      任取 $(x_0, y_0) in Gamma sect k_c$，则首先第一个方程当然成立\
+      在 $v(f(c), g(c), c) = 0$ 中，两边对 $c$ 求导得：
+      $
+      v'_x (f(c), g(c), c) f'(c) + v'_y (f(c), g(c), c) g'(c) + v'_c (f(c), g(c), c) = 0
+      $
+      只需证明 $vec(v'_x (f(c), g(c), c), v'_y (f(c), g(c), c) ) dot vec(f'(c), g'(c)) = 0$，不妨设他们都不为零\
+      然而注意到 $vec(f(c), g(c))$ 事实上是 $Gamma$ 在局部上的一个参数方程，$vec(f'(c), g'(c))$ 将成为 $Gamma$ 的切向量。\
+      同时，$vec(v'_x (f(c), g(c), c), v'_y (f(c), g(c), c) )$ 事实上是 $v(x, y, c) = 0$ 在 $(f(c), g(c))$ 处的法向量，由于 $Gamma$ 是包络当然两者正交
+    ]
+    #theorem[][
+       假设 曲线族 $k_c: v(x, y, c) = 0$ 的 $C$ 判别曲线确定了一条 $C^1$ 曲线 $x = x(c), y = y(c)$，且满足非退化条件：
+       $
+       (x'(c), y'(c)) != (0, 0)\
+       (partialDer(v,y)(x(c), y(c), c), partialDer(v,x)(x(c), y(c), c)) != (0, 0)
+       $
+       并且该曲线在曲线上任意一点的局部都不在原曲线族中，则它是包络
+    ]
+    #proof[
+      任取 $c$，在 $P(c) = (x(c), y(c))$ 的局部都可以利用隐函数定理反解出 $v(x, y, c) = 0$ 的解，可以验证这个解与 $Gamma$ 在该点相切，因此是包络
+    ]
+    #example[][
+      求一条曲线，满足其任意一点的切线两个截距的倒数平方和为 $1$
+
+      事实上，容易想到满足这个条件的曲线一定是一族直线的包络，这族直线满足截距的倒数平方和为 $1$，进而形如
+      $
+      a x plus.minus sqrt(1 - a^2) y = 1
+      $
+      只需找到：
+      $
+      v(x, y, c) = c x plus.minus sqrt(1 - c^2) y - 1 = 0
+      $
+      的包络，计算：
+      $
+      partialDer(v, x) = c\
+      partialDer(v, y) = plus.minus sqrt(1 - c^2)\
+      partialDer(v, c) = x minus.plus y c/sqrt(1 - c^2)
+      $
+      计算其 $c$ 判别式，发现就是单位圆 $x^2 + y^2 = 1$\
+      当然，单位圆和满足要求的直线的任意光滑拼接都满足要求
+    ]
+= 解对参数和初值的依赖性
+  == $n$ 维欧式空间的微分方程
+    首先，叙述高维的常用定理，设 $R: abs(x - x_0) <= a, norm(y - y_0) <= b$
+    #theorem[Picard][
+      设 $f in C(R, RR^n), abs(f(x, y) - f(x, z)) <= L norm(y - z)$，则微分方程：
+      $
+      cases(
+        der(y, x) = f(x, y),
+        y(x_0) = y_0
+      )
+      $
+      在 $[x_0 - h, x_0 + h]$ 上有唯一解，其中 $h = min{a, b/(max_R norm(f))}$
+    ]
+    #theorem[Peano][
+      设 $f in C(R, RR^n)$，则微分方程：
+      $
+      cases(
+        der(y, x) = f(x, y),
+        y(x_0) = y_0
+      )
+      $
+      在 $[x_0 - h, x_0 + h]$ 上有解，其中 $h = min{a, b/(max_R norm(f))}$
+    ]
+    #definition[$n$ 维线性方程组][
+      设微分方程组：
+      $
+      cases(
+        der(y, x) = A(x) y + B(x),
+        y(x_0) = y_0
+      )
+      $
+      满足 $A, B$ 都在 $(a, b)$ 上是连续函数，则称其为 $n$ 维线性方程组
+    ]
+    #proposition[][
+      对于任意初值，$n$ 维线性方程组的解在 $(a, b)$ 内存在唯一
+    ]
+  == 解对初值和参数的依赖性
+    微分方程的初值当然依赖于初值。出于多种考虑，我们当然希望这种依赖有某种连续性，这就是本章的核心内容。
+    #example[][
+      考虑微分方程：
+      $
+      y' = y^(1/3),
+      y(0) = epsilon(epsilon < 0)
+      $
+      的最大解为：
+      $
+      cases(
+        -(2/3 x + epsilon^(2/3))^(3/2) quad x >= 0,
+        0 quad x < 0
+      )
+      $
+      然而令 $epsilon -> 0$，它与 $0$ 处的最大解相去甚远
+    ]
+    这个例子表明最大/最小解的连续依赖性往往并不成立，我们往往只研究微分方程解唯一时的初值依赖性\
+    此外，我们说明初值依赖性与参数依赖性之间是一致的。事实上，给定参数方程：
+    $
+    cases(
+      y' = f(x, y, lambda),
+      y(x_0) = y_0(lambda)
+    )
+    $
+    令 $Y = vec(y, lambda)$，它等价于：
+    $
+    cases(
+      Y' = vec(f, 0),
+      Y(x_0) = vec(y_0(lambda), lambda)
+    )
+    $
+    反过来，也可以通过平移将初值吸收进参数
+    #theorem[连续依赖性][
+      给定一族微分方程：
+      $
+      cases(
+        y' = f(x, y),
+        y(x_0) = y_0
+      )
+      $<ori-equation>
+      （其中 $f$ 连续）的解存在唯一，并设其解的存在区间为闭区间 $I$ \
+      设 $phi(x, xi, eta)$ 满足：
+      $
+      cases(
+        partialDer(phi, x) = f(x, phi(x, xi, eta)),
+        y(xi) = eta
+      )
+      $
+      则：
+      $
+      lim_((s, xi, eta) ->(x, x_0, y_0)) phi(s, xi, eta) = phi(x, x_0, y_0), forall x in I
+      $
+    ]
+    #proof[
+      用反证法。如若不然，则则存在点列使得：
+      $
+      (s_n, xi_n, eta_n) -> (x, x_0, y_0)\
+      d(phi(s_n, xi_n, eta_n), phi(x, x_0, y_0)) > epsilon
+      $
+      注意到有积分方程：
+      $
+      phi(x, xi_n, eta_n) = eta_n + integral_(xi_0)^(x) f(s, phi(s, xi_n, eta_n)) dif s
+      $
+      因此这族关于 $x$ 的函数等度收敛一致有界，不妨就假设一致收敛到 $psi(x)$，两边取极限将有：
+      $
+      lim_(n -> infinity) phi(x, xi_n, eta_n) = y_0 + integral_(x_0)^(x) f(s, lim_(n -> infinity) phi(x, xi_n, eta_n)) dif s
+      $
+      （还要利用 $f$ 一致连续/有界）\
+      表明 $lim_(n -> infinity) phi(x, xi_n, eta_n)$ 就是@ori-equation 的唯一一个解 $phi(x, x_0, y_0)$，与假设矛盾！
+    ]
+    #corollary[][
+      给定一族微分方程：
+      $
+      cases(
+        y' = f(x, y, lambda),
+        y(x_0) = y_0
+      )
+      $
+      对于任意 $x_0, y_0, lambda$ 的解都存在唯一，则设 $phi(x, x_0, y_0, lambda)$ 是上述方程的解，它将是连续函数
+    ]
+    #theorem[光滑依赖性][
+      $
+      cases(
+        y' = f(x, y, lambda),
+        y(x_0) = y_0
+      )
+      $
+      其中 $f$ 连续，对 $y, lambda$ 是 $C^1$ 的，且对于任意 $x_0, y_0, lambda$ 的解都存在唯一，则设 $phi(x, x_0, y_0, lambda)$ 是上述方程的解，它将是 $C^1$ 的
+    ]
+    #proof[
+      由定义，$phi$ 关于 $x space C^1$ 是显然的。对于 $y, lambda$，前面叙述了 $lambda, y_0$ 互相转换，只需证明关于 $lambda$ 连续可导就好，进一步，不妨假设方程就是：
+      $
+      cases(
+        y' = f(x, y, lambda),
+        y(0) = 0
+      )
+      $
+      为了证明结论，构造 Picard 序列：
+      $
+      phi_0 = 0\
+      phi_(n) (x) = integral_(0)^(x) f(s, phi_(n-1), lambda) dif s
+      $
+      由于这里关于 $y$ 已经 $C^1$，Lipschitz 条件当然成立，因此它一致收敛到原方程的解。同时，容易归纳得到 $phi_n$ 关于 $lambda$ 都是 $C^1$ 的，计算导数：
+      $
+      partialDer(phi_n (x), lambda) = integral_(0)^(x) partialDer(f, y) (s, phi_(n-1), lambda) partialDer(phi_(n-1), lambda) + partialDer(f, lambda) (s, phi_(n-1), lambda) dif s
+      $
+      这里如果 $lambda, y$ 是高维的，无非采用梯度/向量导数即可。\
+      由分析学结论，只需证明上面的序列一致收敛。不妨设：
+      $
+      norm(partialDer(f, y)), norm(partialDer(f, lambda)) <= M
+      $  
+      将有：
+      $
+      norm(partialDer(phi_1 (x), lambda)) <=  integral_(0)^(x) norm(partialDer(f, lambda) (s, phi_(n-1), lambda)) dif s <= alpha norm(x)\
+      norm(partialDer(phi_2 (x), lambda)) <= integral_(0)^(x) alpha^2 norm(x) + alpha dif s <= alpha^2 norm(x)^2/2 + alpha norm(x)\
+      $
+      可以归纳证明它一致有界\
+      设：
+      $
+      V_(k, n) = norm(partialDer(phi_(k+n) (x), lambda) - partialDer(phi_(k) (x), lambda))
+      $
+      将有：
+      $
+      V_(k+1, n) = norm(integral_(0)^(x) (partialDer(f, lambda) (s, phi_(k+n), lambda)  - partialDer(f, lambda) (s, phi_(k+1), lambda)) \
+      + (partialDer(f, y) (s, phi_(k+n), lambda)partialDer(phi_(k+n), lambda) - partialDer(f, y) (s, phi_(k+1), lambda)partialDer(phi_(k+1), lambda) )dif s)\
+      <=  integral_(0)^(x_0) norm(partialDer(f, y) (s, phi, lambda)) v_(k, k+1) dif s\
+      + d_(k, n) 
+      $
+      其中 $d_(k, n)$ 在 $k$ 充分大时一致收敛于零，因此 $exists E_n$ 单调下降使得 $d_(k, n) <= E_n$，原式化为：
+      $
+      V_(k+1, n) <= alpha integral_(0)^(x_0) V_(k, k+1) dif s + E_n
+      $
+      归纳计算将可得到 $V_(k, n)$ 关于 $k$ 一致收敛于零，由柯西法则知结论成立
+
+      最后，我们还要考察关于 $x_0$ 的偏导数。这里我们无法直接吸收，因为我们没有假设 $f$ 关于 $x$ 可求偏导，这里 $lambda,y_0$ 无关紧要，不妨设方程为：
+      $
+      cases(
+        y' = f(x, y),
+        y(x_0) = 0
+      )
+      $
+      仍然构造 Picard 序列：
+      $
+      phi_0 = 0\
+      phi_(n) (x) = integral_(x_0)^(x) f(s, phi_(n-1)) dif s
+      $
+      类似的，计算：
+      $
+      partialDer(phi_n, x_0) = -f(x_0, phi_(n-1)) + integral_(x_0)^(x) partialDer(f, y) partialDer(phi_(n-1), x_0) dif s
+      $
+      接下来的计算是完全类似的
+    ]
+    #remark[][
+      这里我们不对关于 $x$ 的光滑性有很高要求，当然是因为微分方程的解相当于 $x$ 的积分，当然会提高光滑性。
+    ]
+    #corollary[][
+      $
+      cases(
+        y' = f(x, y, lambda),
+        y(x_0) = y_0
+      )
+      $
+      其中 $f$ 连续，对 $y, lambda$ 是 $C^k$ 的（$k$ 可能为无穷），且对于任意 $x_0, y_0, lambda$ 的解都存在唯一，则设 $phi(x, x_0, y_0, lambda)$ 是上述方程的解，它将是关于 $y_0, lambda$ 是 $C^k$ 的
+    ]
+    #proof[
+      $C^1$ 刚刚已经证明，同时也可以将 $y_0$ 吸收，化为：
+      $
+      cases(
+        y' = f(x, y, lambda),
+        y(0) = 0
+      )
+      $
+      化为积分方程：
+      $
+      y = integral_(0)^(x) f(s, y, lambda) dif s
+      $
+      可以直接求导：
+      $
+      partialDer(y, lambda) = integral_(0)^(x) partialDer(f, y) (s, y, lambda) partialDer(y, lambda) + partialDer(f, lambda) (s, y, lambda) dif s
+      $
+      设 $p = partialDer(y, lambda)$，将有：
+      $
+      p' = partialDer(f, y) (x, y, lambda) p + partialDer(f, lambda) (x, y, lambda)
+      $
+      这是关于 $p$ 的线性微分方程，而右侧关于 $lambda$ 是 $C^(k-1)$，关于 $y$ 是 $C^infinity$ 的，不断利用定理即可
+    ]
+    #remark[][
+      上面的定理换成关于 $y, lambda$ 解析也对，既然 Picard 序列中每一项的解析，而解析函数的一致收敛极限也是解析的
     ]

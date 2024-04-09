@@ -33,8 +33,12 @@ $1 + 1$
 #let Hom = math.op("Hom")
 #let Proj = math.op("Proj")
 #let Spec = math.op("Spec")
+#let Tor = math.op("Tor")
+#let Ann = math.op("Ann")
+#let Ass = math.op("Ass")
 #let Sylow(p) = $"Sylow"-#p$
 #let Isom = math.op("Isom")
+#let directLimit = $limits(lim)_(arrow.long)$
 #let GL = math.op("GL")
 #let char = math.op("char")
 #let Frac = math.op("Frac")

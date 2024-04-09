@@ -1,4 +1,4 @@
-#import "../template.typ": proof, note, corollary, lemma, theorem,  proposition, definition, example, remark, der, partialDer, AModule, Mod, incrementSign, inj_str, surj_str, bij_str, def_str, nat_str, tensorProduct
+#import "../template.typ": proof, note, corollary, lemma, theorem,  proposition, definition, example, remark, der, partialDer, AModule, Mod, incrementSign, inj_str, surj_str, bij_str, def_str, nat_str, tensorProduct, directSum
 #import "../template.typ": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 // Take a look at the file `template.typ` in the file panel
@@ -146,9 +146,9 @@
           为 $P$ 的零化子\
           一般的，我们有：
           $
-          N : P = "ann"((N + P)/P)
+          N : P = "ann"((N + P)/N)
           $
-          （注意到 $a P subset N <=> a (N + P)/P = 0$）
+          （注意到 $a P subset N <=> a (N + P)/N = 0$）
     
     ]
     #theorem[][
@@ -761,7 +761,7 @@
     ]<exact-test>
     #proof[
         只证明一个方向，另一侧是类似的\
-        设 $forall N in "AModule"_A, 0 -> Hom_A (M'', N) ->^nu' Hom_A (M, N) ->^mu' Hom_A (M', N) $ 正合，往证：
+        设 $forall N in Mod(A), 0 -> Hom_A (M'', N) ->^nu' Hom_A (M, N) ->^mu' Hom_A (M', N) $ 正合，往证：
         $
         M' ->^mu M ->^nu M' -> 0
         $
@@ -789,8 +789,8 @@
             $
             证毕
     ]
-    #definition[（共变/反变函子|covarient/contravarient functor）][$F: "AModule"_A -> "AModule"_B$ 称为共变/反变函子，包括以下资料和性质：
-      - $forall M in "AModule"_A, exists F M in "AModule"_B$
+    #definition[（共变/反变函子|covarient/contravarient functor）][$Mod(A) -> Mod(B)$ 称为共变/反变函子，包括以下资料和性质：
+      - $forall M in Mod(A), exists F M in Mod(B)$
       - 共变函子是指： $forall phi in Hom_A (M, N), exists F(phi) in Hom_A (F M,F N)$，使得：
         $
         F(g compose h) = F(g) compose F(h)\
@@ -825,12 +825,12 @@
       若函子同时左正合，右正合，则称之为正合函子，它保持所有正合列
     ]
     #example[][
-      $Hom(M, *) : "AModule"_A -> "AModule"_A$ 是共变的加性函子，另一侧 $Hom(*, N)$ 是反变函子，它们都是左正合的
+      $Hom(M, *) : Mod(A) -> Mod(A)$ 是共变的加性函子，另一侧 $Hom(*, N)$ 是反变函子，它们都是左正合的
     ]
     #definition[导出函子][
-      对于任意的左正合（加性）函子 $F$，一族函子 $"AModule"_A -> "AModule"_B$：
+      对于任意的左正合（加性）函子 $F$，一族函子 $Mod(A)-> Mod(B)$：
       $
-      {R^i F : "AModule"_A -> "AModule"_B}
+      {R^i F : Mod(A) -> Mod(B)}
       $
       称为（右）导出函子，如果：
       - $R^0 F = F$
@@ -842,7 +842,7 @@
         $
         0 -> F X -> F Y -> F Z -> R^1 F X -> R^1 F Y -> R^1 F Z ->\ ... ->  R^n F X -> R^n F Y -> R^n F Z -> ... 
         $
-      - 具有函子性，也若有交换图：
+      - 具有函子性（保持复形的同态），也若有交换图：
         $
         0 -> &X -> &&Y -> && Z -> 0\
         &arrow.b &&arrow.b &&arrow.b \
@@ -850,7 +850,7 @@
         $
         则上下两正合列对应的长正合列也交换
       
-      给定右正合函子，其左导出函子 ${L_i F : "AModule"_A -> "AModule"_B}$ 也可以对偶地定义
+      给定右正合函子，其左导出函子 ${L_i F : Mod(A) -> Mod(B)}$ 也可以对偶地定义
     ]
     #example[][
       命题：若 $F$ 正合，则导出函子就是 $R^0 F = 0, R^i F = 0$ （这当然也是 $F$ 右正合的充要条件）因此一般的导出函子可以看作与正合函子的距离
@@ -982,7 +982,7 @@
 
     #proposition[][
       - 自由 $A-$模是投射模
-      - 投射模都是自由模的直和
+      - 投射模都是自由模的直和项（与其它模可以直和得到自由模）
     ]<projective-module>
     #proof[
       - 设文字集为 $I$，有：
@@ -995,10 +995,24 @@
         f: plus.circle_(m in M) A &-> M\
         (a_m) &-> sum a_m m
         $
-        这是满射，因此：
+        这是满射，因此有交换图表：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $M$, "1"),
+        node((0, 1), $plus.circle_(m in M) A$, "2"),
+        node((1, 0), $M$, "3"),
+        arr("2", "1", $f$, surj_str),
+        arr("3", "2", $exists! f' $),
+        arr("3", "1", $id $),
+        )]
+        不难看出 $f'$ 一定是单射，进而：
         $
-        plus.circle_(m in M)A tilde.eq M plus.circle ker f
+        0 -> ker f -> plus.circle_(m in M) A ->^(f) M -> 0
         $
+        是正合列，结合 $M$ 投射，$f f' = id$，利用上面的命题知正合列分裂，继而：
+        $
+        plus.circle_(m in M) A tilde.eq ker f directSum M
+        $
+        （之后？）
 
     ]
     #theorem[Baer][
@@ -1032,7 +1046,7 @@
         psi(a) = phi(a)\
         psi(a) = psi(a dot 1) = 
         $
-      - 考虑 $"AModule"_ZZ$ 作为阿贝尔群的范畴，则直和函子将成为入射模
+      - 考虑 $Mod(Z)Z$ 作为阿贝尔群的范畴，则直和函子将成为入射模
       - 设 $A$ 是环，$I$ 是入射 $ZZ$  模，则：
         $
         Hom_ZZ (A, I)
@@ -1384,7 +1398,7 @@
     及交换图表：
     #align(center)[#commutative-diagram(
     node((0, 0), $M$, 1),
-    node((0, 1), $Inv(S) A$, 2),
+    node((0, 1), $Inv(S) M$, 2),
     node((1, 0), $N$, 3),
     node((1, 1), $Inv(S) N$, 4),
     arr(1, 2, $$),
@@ -1902,8 +1916,7 @@
       再由 @exact-test，这显然成立
     ]
     #remark[][
-      - 右正合意味着张量积函子可以产生左导出函子，记 $"Tor"_i^A (M, N) := L_i (- tensorProduct_A N) (M)$\
-        $"Tor"_i^A (M, N) := H_i (... -> P_1 tensorProduct N -> P_0 tensorProduct N )$
+      - 右正合意味着张量积函子可以产生左导出函子，记 $"Tor"_i^A (M, N) := L_i (- tensorProduct_A N) (M) = H_i (... -> P_1 tensorProduct N -> P_0 tensorProduct N )$
       - 然而，张量积本身往往不是左正合的，例如 $f: x -> 2 x$ 是单射，但：
         $
         ZZ tensorProduct ZZ_2 ->^f' ZZ tensorProduct ZZ_2  
@@ -1971,7 +1984,7 @@
       $
     ]
     #proof[
-      #TODO
+      这是由导出函子的构造所给出的
     ]
     #theorem[][
       以下事实等价：
@@ -1992,8 +2005,8 @@
         $
     ]
     #proof[
-      - $1 => 2, 2 => 3$ 显然\
-      - $3 <= 4$，注意到：
+      - $1 => 2\/3\/4\/5, 2 => 3$ 显然\
+      - $3 <=> 4$，注意到：
         $
         0 -> I -> A -> A quo I -> 0
         $
@@ -2001,11 +2014,15 @@
         $
         "Tor"_1^N (A, M) -> "Tor"_1^N (A quo I, M) -> I tensorProduct M -> M -> A quo I tensorProduct M tilde.eq M quo I M -> 0
         $
-        但是 $"Tor"_1^N (A, M) = 0$\
-        #TODO
-      - $3 => 1$，之前证明了 $M$ 平坦当且仅当任意有限生成模 $N, N'$ 均有：
+        但是 $"Tor"_1^N (A, M) = 0$（$A$ 自己当然是平坦模）\
+        因此可得正合列：
         $
-        0 -> N' -> N 正 合 => N' tensorProduct M -> N tensorProduct M -> 0 单
+        0 -> "Tor"_1^N (A quo I, M) -> I tensorProduct M -> M 
+        $
+        以此不难看出 $3 <=> 4$
+      - $4 => 1$，之前证明了 $M$ 平坦当且仅当任意有限生成模 $N, N'$ 均有：
+        $
+        0 -> N' -> N 正 合 => 0 -> N' tensorProduct M -> N tensorProduct M  正 合
         $
         不妨设 $N' subset N$，继而：
         $
@@ -2021,6 +2038,7 @@
         "Tor"_1^A (A quo I, M) -> N' tensorProduct M -> N tensorProduct M -> A quo I tensorProduct M -> 0
         $
         由 4 结论成立
+      - $5 => 4$ 平凡
       - $1 => 6$：\
         设 $sum_i a_i x_i = 0$，考虑：
         $
@@ -2148,13 +2166,15 @@
       $A = ZZ_((p)), M = QQ$ 它不是自由模但是是平坦模
     ]
     #proof[
-      - 断言它不是投射模，否则 $QQ$ 是自由模的直和，进而存在 $f: QQ -> L$ 是满射，其中 $L$ 是自由模。然而考虑：
+      - 断言它不是投射模，否则 $QQ$ 是自由模的直和，进而 $QQ$ 中任何元素将含于某个自由的子模。\
+        设 $1 in L subset QQ$，其中 $L$ 是自由模，显然将有 $ZZ subset L$\
+        然而这是荒谬的，既然：
         $
-        n f(1/n) - f(1) = 0
+        2_(A) dot 1_L - 1_A dot 2_L = 0
         $
-        给出 $f(1) = 0$，从而只能是零环，矛盾！
+        这与 $L$ 是自由模矛盾
       - 证明它是平坦模，由局部性质只需验证对于唯一的极大理想 $m = (p)ZZ_((p))$，$M_m$ 是平坦模即可\
-  ]
+    ]
   == 忠实平坦
     #definition[忠实平坦|faithful flat][
     以下等价的事实成立：
@@ -2281,7 +2301,7 @@
       - 此时，双方都是局部环，进而 $psi$ 忠实平坦，由之前的结构性定理知 $psi^*$ 是满射，进而存在 $Q^* in Spec B_Q'$ lying over $p A_p's$，取 $Q = Q^* sect B$
       - 可以证明 $Q sect A = p$ #TODO
     ]
-= 链条件 Chain conditions
+= 链条件|Chain conditions, Artin 与 Noether
   本章的内容是关于代数结构的经典有限性条件
   == 链条件
     #theorem[acc / maximal condition for a partially ordered set][
@@ -2320,3 +2340,420 @@
       - 称 $M$ 是 Noether 模，如果子模族满足升链条件
       - 称 $M$ 是 Artin 模，如果子模族满足降链条件
     ]
+    #example[][
+      - 有限阿贝尔群是 Noether/Artin 模
+      - 唯一分解分解整环是 Noether 的
+      - $ZZ$ 是 Noether 但不是 Artin 的
+      - 设 $p$ 是素数，$G = ZZ[1/p] quo ZZ$，该 $G$ 是 Artin 模，但不是 Noether 模（作为 $ZZ$ 模）
+        事实上，不难发现其中子模均形如 $1/p^n ZZ quo ZZ$，既然 $n$ 可以无限上升（继而子模可以无限上升）但不能无限下降（继而子模不能无限下降），故它是 Artin 模但不是 Noether 模
+    ]
+    #proposition[][
+      设: 
+      $
+      0 -> M' ->^alpha M ->^beta M'' -> 0
+      $
+      是 $Mod_A$ 中正合列，则：
+      - $M "Noether" <=> M', M'' "Noether"$
+      - $M "Artin" <=> M', M'' "Artin"$
+    ]<exact-noether-artin>
+    #proof[
+      只证明 1\
+      - $=>$ \
+        任取 $M'$ 的子模升链，注意到 $alpha$ 是单射，该升链对应到 $im alpha$ 的子模升链，当然最终稳定\
+        任取 $M''$ 的子模升链，由于 $beta$ 是满射，该升链对应到 $M quo ker beta$ 的子模升链，当然最终稳定
+      - $arrow.double.l$ 
+        任取 $M$ 的子模升链 $M^i$
+        - 首先利用 $beta$ 给出的一一对应，$M^i + ker beta$ 对应到 $M''$ 的子模升链是最终稳定的
+        - 再利用 $alpha$ 给出的一一对应，$M^i sect im alpha$ 对应到 $M'$ 的子模升链是最终稳定的
+        - 由于 $M^i sect im alpha = M^i sect ker beta subset M^i subset M^i + ker beta$，两边夹逼得到 $M_i$ 最终也是稳定的
+
+    ]
+    #corollary[][
+      模的有限直和是 Noether/Artin 的当且仅当每项都是 Noether/Artin 的
+    ]
+    #proof[
+      只证明两项情况，此时有正合列：
+      $
+      0 -> M_1 -> M_1 directSum M_2 -> M_2 -> 0 
+      $
+      由上面的结论知结论成立
+    ]
+    #theorem[][
+      设 $M$ 是 $AModule(A)$，则 $M$ 诺特当且仅当所有子模都是有限生成的
+    ]<noether-finite>
+    #proof[
+      - $arrow.double.l$ \
+        取子模升链 $M_1 <= M_2 <= ... <= M_n <= ...$\
+        由假设条件，将有：
+        $
+        N = union M_i = sum_(i=1)^n A x_i
+        $
+        由于这里只有有限多个元素，找到充分大的 $k$ 使得 $x_i in M_k, forall i$，进而 $N = M_k$，表明升链稳定，证毕
+      - $=>$\
+        假设 $N subset M$ 不是有限生成的，令：
+        $
+        Sigma = {N "的有限生成子模"}
+        $  
+        由于 $Sigma$ 非空且 $M$ 诺特，$Sigma$ 将有极大元 $N_0$ 是 $N$ 的有限生成子模\
+        由假设 $N_0 != N$，将可以找到 $x in N - N_0$，此时 $A x + N_0$ 是比 $N_0$ 更大的有限生成子模，矛盾！
+    ]
+    #corollary[][
+      - 诺特模是有限生成的
+      - 环是诺特的当且仅当所有的理想都有限生成
+    ]
+    #lemma[][
+      Noether/Artin 环上的有限自由模是 Noether/Artin 的
+    ]
+    #proposition[][
+      Noether/Artin 环上的有限生成模是 Noether/Artin 的
+    ]
+    #proof[
+      设 $A^N$ 是自由模，$N$ 是模的生成元集（有限），则有正合列：
+      $
+      0 -> ker f -> A^N ->^f M -> 0
+      $
+      由于 $A^N$ 是 Noether/Artin 的，由 @exact-noether-artin 知 $M$ 也是 Noether/Artin 的
+    ]
+  == 有限长度模
+    #definition[子模链/合成序列][
+      设 $M$ 是 $AModule(A)$，一个子模链是指：
+      $
+      0 = M_0 < M_1 < ... < M_n = M
+      $
+      并记其长度为 $n$
+
+      若一个子模链不能再加入任何子模，则称其是合成序列|composition。这等价于 $M_n quo M_(n-1)$ 是单模（不含非平凡子模的模）
+    ]
+    #theorem[Jordan-Holder][
+      假设 $M$ 存在长度为 $n$ 的合成列，则每个合成列的长度都是 $n$，且每个子模链都可以被延长到一个合成列。更进一步，任意合成列中记重数集 ${M_n quo M_(n-1)}$ 是不变的
+    ]
+    #proof[
+      定义 $l(M)$ 是 $M$ 的合成列中的最小长度
+      #lemma1[
+        设 $N$ 是 $M$ 的真子模，则 $l(N) < l(M)$
+      ]
+      #proof[
+        设 $M_i$ 是 $M$ 的合成列，断言：
+        $
+        M_i sect N
+        $
+        是 $N$ 的合成列。事实上，有：
+        $
+        (M_(i-1) sect N) quo (M_(i) sect N) subset M_(i-1) quo M_(i)
+        $
+        因此这些商模要么是 $0$，要么是单模。去掉所有的 $0$ 之后便成为长度为 $l' <= l(M)$ 的合成列\
+        同时，假设 $l=  l(M)$，表明上面的 $N_(i-1) quo N_i tilde.eq M_(i-1) quo M_i$，可以递归证明 $M_i = N_i$，这是荒谬的
+      ]
+      #lemma1[
+        $M$ 中任何一个子模链的长度不超过 $l(M)$
+      ]
+      #proof[
+        在任意子模链：
+        $
+        M = M_0 supset.neq M_1 supset.neq ... supset.neq M_n = 0
+        $
+        中，将有：
+        $
+        l(M) > l(M_1) > ... > l(M_n) = 0
+        $
+        进而 $l(M) >= n$
+      ]
+      由定义及上面的引理，当然有任何一个合成列的长度都是 $l(M)$
+
+      对于第二个命题，任意子模链当然可以进行延拓。由上面的引理，延拓必将在有限步终止，终止时当然就得到一个合成列。
+    ]
+    #proposition[][
+      设: 
+      $
+      0 -> M' ->^alpha M ->^beta M'' -> 0
+      $
+      是 $Mod_A$ 中正合列，则 $l(M) = l(M') + l(M'')$
+    ]
+    #proof[
+      $M'$ 的合成列合并 $Inv(beta)(M'' "的合成列")$  可得 $M$ 的合成列
+    ]
+    #theorem[][
+      设 $V$ 是 $k$ 上的线性空间，则以下事实等价：
+      - $dim V < infinity$
+      - $l(V) < infinity$
+      - $V$ 是 Noether 的
+      - $V$ 是 Artin 的
+      成立时，将有 $dim V = l(V)$
+    ]
+    #proof[
+      利用线性代数的基本结论，这是容易的
+    ]
+    #lemma[][
+      模是 Artin/Noether 的当且仅当合成列中每一项都是 Artin/Noether 的
+    ]<compositor-noether-artin>
+    #proof[
+      #TODO
+    ]
+    #corollary[][
+      设 $A$ 是环且存在有限多个极大理想（允许重复） $m_i$ 使得 $m_1 m_2 ... m_n = (0)$，则 $A$ 是 Artin 环当且仅当 $A$ 是 Noether 环
+    ]<artin-noether>
+    #proof[
+      考虑合成列：
+      $
+      A > m_1 > m_1 m_2 > ... > m_1 m_2 ... m_n = (0)
+      $
+      注意到每个合成因子：
+      $
+      m_1 m_2 .. m_i quo m_1 m_2 ... m_(i+1) 
+      $
+      都是线性空间，从而每个因子是 Artin 当且仅当是 Noether 的，利用 @compositor-noether-artin 即可
+    ]
+  == Noether 环的构造
+    #lemma[][
+      设 $A$ 是 Noether 环，则：
+      - $A$ 的满射像是 Noether 环
+      - $A$ 的局部化 $Inv(S) A$ 是 Noether 环
+      - $A$ 的扩张（也就是有限 $A-$代数或者有限生成 $A-$模）是 Noether 环
+    ]
+    #proof[
+      - $A$ 的满射像中的理想与 $A$ 中包含 $ker f$ 的理想一一对应，当然满足升链条件
+      - $Inv(S) A$ 与 $A$ 中与 $S$ 不交的理想一一对应，当然满足升链条件
+      - 前面证明了有限生成 $AModule(A)$ 是 Noether 模，因此它的理想作为子模有限生成，当然有限生成
+    ]
+    #theorem[Hilbert's base theorem][
+      设 $A$ 是 Noether 环，则 $A[x]$ 也是 Noether 环。特别的，有限生成的 $A-$代数是 Noether 环
+    ]
+    #proof[
+      由 @noether-finite，只要证明所有的理想都有限生成即可。任取 $I$ 是 $A[x]$ 的理想，定义：
+      - $I_0 = {I "中多项式的首项系数"}$，它是 $A$ 的理想，进而有限生成，可设 $I_0 = (a_1, a_2, ..., a_n)$
+      - 设 $f_i$ 分别是首项系数为 $a_i$ 的 $I$ 中多项式，由于可以同时乘一个因子，不妨设它们都是 $r$ 次，再设 $I' = (f_1, f_2, ..., f_n)$
+      - 断言：$I = union_(h in I, deg(h) < r) I' + h$\
+        事实上，任取 $f$ 使得 $deg f >= r$，它的首项系数 $a in I_0$，继而存在 $u_i$ 使得：
+        $
+        deg(f - sum u_i a_i) < deg(f)
+        $
+        反复进行即可将 $f$ 的次数降至 $r$ 以下，证毕
+      - 接下来，归纳证明：设 $I$ 由次数小于 $n$ 的元素生成，则 $I$ 是有限生成的
+    ]
+    #theorem[weak form of Hilbert's Nullstellensatz][
+      设 $A$ 是有限生成 $A-$代数，$m$ 是极大理想，则 $A quo m$ 是 $k$ 的有限扩张\
+      等价的，如果 $E$ 是有限生成 $k-$代数，且 $E$ 是域，则它是 $k$ 的有限代数扩张
+    ]
+  == 环的维数
+    #definition[Krull chain][
+      设 $A$ 是环，一个 Krull 链是指：
+      $
+      p_0 < p_1 < ... < p_n
+      $
+      其中每个 $p_i$ 是素理想，$n$ 称为长度
+
+      对于一个环，这样的链的长度的上确界称为环的维数（可能为无穷）
+    ]
+    #proposition[][
+      - $dim(A) >= 0$
+      - $dim(k) = 0, k$ 是域
+      - $dim(ZZ) = 1$
+   ]
+  == Artin 环的结构
+    #lemma[][
+      Artin 环的满射像/局部化仍然是 Artin 环
+    ]
+    #proof[
+      同前
+    ]
+    #proposition[][
+      设 $A$ 是 Artin 环，则：
+      - 每个素理想都极大
+      - $Spec A$ 是有限集
+      - $A$ 的幂零根是幂零的（也即存在 $n$ 使得 $Re^n = 0$）
+    ] 
+    #proof[
+      - 考虑 $A quo p$，它是整环，同时也是 Artin 环\
+        考察 $x in A quo p$，降链：
+        $
+        (x) >= (x^2) ... >= (x^n) >= ...
+        $
+        最终稳定，进而 $(x^n) = (x^(n+1)) => x^n = x^(n+1) y => x y = 1$，表明 $x$ 是可逆元。这就表明 $A quo p$ 是域
+      - 任取一列 $p_i in Spec(A)$，考虑：
+        $
+        m_n = sect_i^n p_i
+        $
+        它是理想的降链，最终稳定，设它稳定到 $m = sect_i^n p_i$，将有：
+        $
+        m subset p_i, forall i >= n
+        $
+        #TODO
+      - 由降链条件，存在 $k$ 使得：
+        $
+        Re^k = Re^(k+1) = ... := I
+        $
+        假设 $I != 0$，设：
+        $
+        Sigma = { J subset A | I J != 0}
+        $
+        则 $Sigma$ 有极小元 $J$，这样的理想当然由唯一的元素 $x$ 生成。\
+        注意到：
+        $
+        (x I) * I  = x I^2 = x I != 0 
+        $
+        因此 $x I in Sigma$，由极小性知 $x I = (x)$，因此存在 $y in I$ 使得 $x y = x = x y^2 = ... = x y^n = 0$，矛盾！进而结论成立
+    ]
+    #theorem[][
+      $A$ 是 Artin 环当且仅当 $dim A = 0$ 且 $A$ 是 Noether 环
+    ]
+    #proof[
+        熟知 $max(A) = Spec(A)$ 有限，不妨设 $max(A) = {m_1, m_2, ..., m_n}$\
+        注意到取充分大的 $k$ 将有：
+        $
+        product_(i) m_i^k subset (sect m_i)^k = Re^k = 0 
+        $
+        这就是 @artin-noether
+    ]
+    #proposition[][
+        设 $A$ 是 Noether local 环，则下面两者有且只有一个成立：
+        - $m^n != m^(n+1), forall n$ 进而 $A$ 不是 Artin 环
+        - $exists n, m^n = 0$ 进而 $A$ 是 Artin 环，此时它也只有一个素理想
+    ]
+    #proof[
+        假设 $m^n = m^(n+1)$，由 Nakayama 得 $m^n = 0$，进而由 @artin-noether 知它是 Artin 环
+    ]
+    #example[][
+      任取 $A$ 是 Noether 环，则 $A_p$ 是 Noether local 环，进而 $(A_p) quo (p A_p)^n$ 是 Artin 局部环，这样我们便可以构造出很多的 Artin 环
+    ]
+    #theorem[Artin 环的结构定理][
+      设 $A$ 是 Artin 环，则 $A$ 是有限个 Artin 局部环的直积
+    ]
+    #proof[
+      选出所有极大理想 $m_i$，注意到这些 $m_i^k$ 当然互素，且 $product_(i) m_i^k = 0$，由中国剩余定理：
+      $
+      A = product_(i) A quo m_i^k
+      $
+      而 $A quo m_i^k$ 当然是 Artin 的局部环，证毕
+    ]
+    #example[][
+      我们构造一个仅有一个素理想的环，但不是 Noether 的，进而也不是 Artin 的。\
+      令 $A = k[x_1, x_2, ..., x_n,...] quo (x_i^2)$，任取其中素理想 $p$，将有 $x_i^2 = 0 in p => x_i in p$，因此：
+      $
+      (x_1, x_2, ..., x_n, ...) subset p
+      $
+      然而上式左侧是极大理想，进而就是 $p$，而这不是有限生成的，因此 $A$ 不是 Noether 环
+    ]
+    #example[][
+      设 $A$ 是局部环，$m$ 是素理想，则模 $m quo m^2$ 也是 $A quo m$ 上的向量空间。事实上我们之后会证明：
+      $
+      dim m quo m^2 >= dim A quo m
+      $
+      若 $m$ 有限生成，则它的生成元当然也是向量空间的生成元
+    ]
+    #proposition[][
+      设 $A$ 是 Artin local 环，以下事实等价：
+      - $A$ 是主理想环
+      - 极大理想 $m$ 是主理想
+      - $dim_k m quo m^2 <= 1$
+    ]
+    #proof[
+      前两项显然，只证明 $3 => 1$
+      - 假设 $dim_k m quo m^2 = 0$，则 $m = m^2$，由 Nakayama 得 $m = 0$，进而 $A$ 是域，结论当然正确
+      - 反之，设 $dim_k m quo m^2 = (1)$，当然有 $m = (x)$，继而我们证明所有理想都是主理想。\
+        任取 $I subset m$，注意到 $m$ 幂零，取 $r$ 使得 $I subset m^r, I subset.not m^(r+1)$\
+        取 $y in.not (x^(r+1))$，但 $y = a x^r$，进而 $a in.not (x) = m$，然而局部环中不在极大理想意味着 $a$ 是单位，表明 $x^r in I => m^r subset I$\
+        根据取法，一定有 $I = (x^r)$，证毕
+    ]
+    #example[][
+      设 $A = k[x^2, x^3] quo (x^4)$，注意到生成元都是幂零的，进而有唯一素理想 $(x^2, x^3)$，且是 Noether 的，进而是 Artin 的局部环。然而极大理想不是主理想，因此 $dim_k m quo m^2 >= 2$\
+      事实上 $m^2 = 0$，因此 $dim_k m = 2$
+    ]
+  == Noether 环中模的 filtration
+    #theorem[][
+      设 $A$ 是 Noether 环，$M$ 是有限生成模，则存在升链：
+      $
+      (0) = M_0 < M_1 < ... < M_n = M
+      $
+      使得 $M_i quo M_(i-1) tilde.eq A quo p_i, p_i in Spec(A)$
+    ]<noether-filtration>
+    #proof[
+      只需证明存在 $M_1$ 使得 $M_1 tilde.eq A quo p$，接下来不断取商即可\
+      #definition[associated prime][
+        设 $A$ 是 Noether 环，若以下等价条件成立：
+        - $exists x in M, Ann(x) = p$
+        - $M$ 包含同构于 $A quo p$ 的子模
+        则称 $p$ 是 $M$ 的 associated prime，记这些素理想的集合为 $Ass(M)$
+      ]
+      化归成证明这样的素理想存在
+      #proposition[][
+        设 $Sigma = {Ann(x) | x != 0 in M}$，由 Noether 环知它有极大元，则极大元是素理想。特别的：
+        $
+        union_(p "是 associated prime") p = union_(x != 0 in M) Ann(x)
+        $
+      ]
+      #proof[
+        设 $p = Ann(x)$ 是极大元，取 $a b in p, b in.not p$，则：
+        $
+        b x != 0\
+        a b x = 0 => a in Ann(b x)\
+        Ann(b x) supset Ann(x) => Ann(b x) = Ann(x) => a in Ann(x)
+        $
+        证毕
+      ]
+    ]
+    #lemma[][
+      设 $0 -> M' -> M -> M''$ 正合，则 $Ass(M) subset Ass(M') union Ass(M'')$
+    ]
+    #proof[
+      取 $p in Ass(M), M supset N tilde.eq A quo p$
+      - 若 $N sect M' = 0$，则 $N subset M''$（#TODO
+      - 若 $N sect M' != 0$ 取 $x in N sect M'$，注意到：
+        $
+        N tilde.eq A quo p => Ann(x) = p => p in Ass(M')
+        $
+    ]
+    #lemma[][
+      设 $M$ 是有限生成模，则 $Ass(M)$ 有限
+    ]
+    #proof[
+      取 @noether-filtration 中升链，（？）有正合列：
+      $
+      0 = M_0 -> M_1 quo M_0 -> M_2 quo M_1 -> ... -> M quo (M_n) -> M
+      $
+      #TODO
+      将有：
+      $
+      Ass(M) subset Ass(M_1 quo M_0) union Ass(M_2 quo M_1) union ... union Ass(M quo (M_n))
+      $
+      右边都是些整环，其 $Ass$ 只能是 $p_i$
+    ]
+    #lemma[][
+      $Ass(Inv(S)A) = Ass(A) sect {p | p sect S = 0}$
+    ]<localization-ass>
+    #theorem[][
+      $
+      Ass(M) subset "Supp"(M) := {p | M_p != 0}
+      $
+      且 $"Supp"(M)$ 的极小元落在 $Ass(M)$
+    ]
+    #proof[
+      先任取 $p in Ass(M)$，有正合列：
+      $
+      0 -> A quo p -> M
+      $
+      利用局部化的正合性：
+      $
+      0 -> (A quo p)_p -> M_p\
+      0 -> (A_p quo p A_p) -> M_p\
+      $
+      从而显然有 $M_p != 0$
+
+      取 $p$ 是极小元，利用 @localization-ass，不妨通过局部化假设 $p$ 是唯一极大理想。然而由极小性，将有 $"Supp" M = {p}$，结合 $Ass(M)$ 非空得 $p in Ass(M)$
+    ]
+    期中考试内容到此
+= 整独立|Integral dependence
+
+  #definition[整元][
+    设 $A subset B$ 是子环，称 $b in B$ 在 $A$ 上是整的，如果存在首一多项式 $f(x) in A[x]$ 使得 $f(b) = 0$
+  ]
+  整元的概念当然是代数扩张的自然推广
+  #lemma[][
+    $B$ 中的 $A$ 上整元构成子环，这个子环称为 $A$ 在 $B$ 中的整闭包
+  ]
+  #definition[][
+    - 若 $B$ 中 $A$ 上整元只有 $A$ 中元素，则称 $A$ 在 $B$ 中整闭
+    - 若 $B$ 中所有元素都在 $A$ 上整，则称 $B$ 在 $A$ 上整
+  ]
+  #example[][
+    - $ZZ subset QQ$ 是整闭的（注意我们只选首一多项式）
+  ]
