@@ -1131,6 +1131,7 @@
     $
     自然我们需要解决：
     - 最多能确定多少 $A$\
+      当然了，有限个点总不能区分比较接近的原函数，这种现象称为混淆。\
       事实上，容易验证 $tu_(k+N) = tu_k$，表明约 $A = N/2$ 是较好的选择。继而，我们得到的逼近空间是：
       $
       g_N = {sum_(i = -N/2)^(N/2) tu_k e^(i k x) | tu_(N/2) = tu_(-N/2)}
@@ -1183,11 +1184,11 @@
       #theorem[谱精度][
         任意 $u in H_p^m (omega), m > 1/2$，将有：
         $
-        norm((I(u) - u)^((mu)))_2 <= k N^(mu - m) abs(u)_mu
+        norm((I(u) - u)^((mu)))_mu <= k N^(mu - m) abs(u)_mu
         $
         其中 
         - $H_p^m (omega)$ 是指 ${u in L^2(Omega) | forall mu = 0, 1, 2, ..., m, u^((mu))(x) in L^2(Omega) "且以" 2 pi "为周期"}$
-        - $norm(u)_mu = (sum_(k = -infinity)^(+infinity) (1+k^2)^mu norm(hu_k)^2)^(1/2)$
+        - $norm(u) = (sum_(k = -infinity)^(+infinity) (1+k^2)^mu norm(hu_k)^2)^(1/2)$
         - $abs(u)_mu =  (sum_(k = -infinity)^(+infinity) (k^2)^mu norm(hu_k)^2)^(1/2)$
         - $mu in NN^+, k$ 是与 $N$ 无关的常数
       ]
@@ -1206,7 +1207,7 @@
           $
           norm(hp_N u - u)_mu <= k N^(mu-m) abs(u)_m
           $
-        ]
+        ]<projection-approx>
         #proof[
           考虑 $hp_N u - u$ 的傅里叶系数，将有：
           $
@@ -1223,11 +1224,104 @@
         ]
         #lemma[][
           $
-          c_k tu_k = hu_k + sum_(r) hu_(k plus.minus 2 r)
+          c_k tu_k = hu_k + sum_(r) hu_(k plus.minus 2 N r)
           $
         ]
+        #proof[
+          由定义：
+          $
+          c_k tu_k = 1/(2 N) sum_(j = 0)^(2 N - 1) (sum_(norm(n) < infinity) hu_n e^(i n x_i)) e^(-i k x_j) \
+          = sum_(norm(n) < infinity) 1/(2 N) hu_n sum_(j = 0)^(2 N - 1) e^(i (n - k) x_j)\
+          = sum_(norm(n) < infinity) 1/(2 N) hu_n sum_(j = 0)^(2 N - 1) e^(i (n - k) (pi)/n j)\
+          $
+          为了利用等比数列求和，稍微讨论一下特殊情况，也即 $n = k$ 时求和恰为 $2 N$。计算可得上式就是：
+          $
+          sum_(norm(n) < infinity) hu_(k + 2 N n)
+          $
+        ]
+        #lemma[][
+          $
+          norm(P_N u - I_N u) <= k N^(-m) abs(u)_m
+          $
+        ]
+        #proof[
+          利用正交性：
+          $
+          norm(P_N u - I_N u)^2 = (P_N u - I_N u, P_N u - I_N u)\
+          = sum_(abs(k) <= N) abs(hu_k - tu_k)^2\
+          = sum_(abs(k) < N) abs(hu_k - tu_k)^2 +1/4 sum_(abs(k) = N) abs(2 hu_k - 2 tu_k)^2\
+          <= sum_(abs(k) < N) abs(hu_k - tu_k)^2 + 1/2 sum_(abs(k) = N) abs(hu_k - 2 tu_k)^2 + 1/2 sum_(abs(k) = N) abs(hu_k)^2\
+          <= sum_(abs(k) <= N) abs(hu_k - c_k tu_k)^2 + 1/2 sum_(abs(k) = N) abs(hu_k)^2\
+          <= sum_(abs(k) <= N) abs(sum_(abs(r) < infinity) hu_(k + 2 N r) )^2 + 1/2 abs(hu_(-N))^2 + 1/2 abs(hu_N)^2\
+          <= sum_(abs(k) <= N) abs((sum_(abs(r) < infinity) (k+2 N r)^(-2m))(sum_(abs(r) < infinity) (k+2 N r)^(2m)abs(hu_(k+2 N r))^2 ) ) + 1/2 abs(hu_(-N))^2 + 1/2 abs(hu_N)^2\
+          "（利用柯西不等式）"\
+          <= k abs((sum_(abs(r) < infinity) (1 + 2 N r)^(-2m))) sum_(abs(k) <= N) (sum_(abs(r) < infinity) (k+2 N r)^(2m)abs(hu_(k+2 N r))^2 )  + 1/2 abs(hu_(-N))^2 + 1/2 abs(hu_N)^2\
+          "（调和级数的收敛性）"\
+          <= k N^(-2 m) 2 abs(u)_m^2  + 1/N^(2 m) sum_(abs(k) > N) abs(k)^(2m) abs(hu_k)^2)\
+          <= k' N^(-m) abs(u)_m
+          $
+        ]
+        最后，我们只剩下对导函数的谱逼近
+        #lemma[][
+          $
+          forall u in "Span"{e^(i k x) | -N <= k <= N},\
+          norm(u^(mu) (x)) <= N^(mu) norm(u)
+          $
+        ]<anti-der>
+        #proof[
+          只需证明 $mu = 1$，之后逐次求导即可\
+          有：
+          $
+          u(x) = sum_(k = -N)^(N) c_k e^(i k x)\
+          u' (x) = sum_(k = -N)^(N) i k c_k e^(i k x)\
+          norm(u' (x)) = sum_(k = -N)^(N) k^2 abs(c_k)^2 <= N^2 sum_(k = -N)^(N) abs(c_k)^2 = N^2 norm(u)
+          $
+        ]
+        这个不等式被称为反不等式，因为它利用了函数值去估计导数值。我们终于可以估计导数的谱逼近：
+        $
+        norm((I_N u - u)') <= norm((I_N u - P_N u)') + norm((P_N u - u)') \
+        $
+        分别利用 @anti-der 和 @projection-approx，可得上式：
+        $
+        <= N^mu norm(I_N u - P_N u) + N^(mu - m) abs(u)_m\
+        <= N^mu k N^(-m) abs(u)_m + N^(mu - m) abs(u)_m\
+        $
+        证毕
+        
       ]
-
-
-
-
+  == 快速傅里叶变换
+    用最朴素的方法，计算 $N$ 个傅里叶级数的系数需要 $O(N^2)$ 的时间，这在 $N$ 较大时是不可接受的。因此，我们需要一种快速算法，这就是快速傅里叶变换（FFT, Fast Fourier Transformation）。它的出现确保了谱分析方法的实用性。\
+    #let FFT = math.op("FFT")
+    #let IFFT = math.op("InverseFFT")
+    #definition[DFT][
+      离散傅里叶变换/反离散傅里叶变换是指两个向量上的算法，使得：
+      $
+      "DFT"(X) &= (sum_(j=1)^n X_j w_n^((j - 1)(k-1))) := W X\
+      "InverseDFT"(Y) &= 1/n (sum_(j=1)^n Y_j w_n^(-(j - 1)(k-1)))\
+      &where w_n = e^(-2 pi i/n)
+      $
+      这里从 $1$ 开始是为了和 Matlab 统一，与之前的记号有对应：
+      $
+      u_j = X_(j + 1)\
+      tu_k = cases(
+        1/N Y_(k+1) quad k = 0\, 1\, ...\, N/2 - 1,
+        1/N Y_(N+k+1) quad k = - N/2 + 1\, - N/2 + 2\, ...\, -1,
+        1/(2 N) Y_(N/2 + 1) quad k = plus.minus N/2
+      )
+      $
+    ]
+    #FFT/#IFFT 是解决上述问题的高效算法，利用了适当的分治来减少重复计算。为了方便，接下来不妨设 $n = 2^k$
+    #let pOdd = $p_("odd")$
+    #let pEven = $p_("even")$
+    #definition[FFT][
+      快速傅里叶变换是指一个递归算法，使得：
+      $
+      FFT(X) &= (p(w^(k-1)))_k\
+      where p(theta) &= x_1 + x_2 theta + x_3 theta^2 + ... + x_n theta^(n-1)\ 
+      $
+      计算 $p(theta)$ 时，进行奇偶分拆：
+      $
+      p(theta) = pOdd (theta) + theta pEven (theta)\
+      $
+    ]
+    本次作业下次讲完这部分之后再做
