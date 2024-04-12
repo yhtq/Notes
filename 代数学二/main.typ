@@ -266,7 +266,7 @@
       - 记所有幂零元的集合为 $N$，容易验证它是理想。比较困难的是证明它是所有素理想的交（暂记为 $N'$）
         - 首先容易验证 $N$ 应该包含在所有素理想之中，进而 $N subset N'$
         - 再证明另一方面，只需证明：
-          #lemma[][任取 $x in A$ 不是幂零元，它不含于某个素理想]
+          #lemma[][任取 $f in A$ 不是幂零元，它不含于某个素理想]
           #proof[
             令 
             $
@@ -539,13 +539,13 @@
     #proof[
       TODO
     ]
-    #lemma[Prime avoidance lemma][
+    #lemma[Prime avoidance][
       + 设 $P_i$ 是若干素理想，$I$ 是理想且 $I subset union_i P_i$，则 $exists i,I subset P_i$\
         反之，若 $I$ 不在任何一个 $P_i$ 中，则它不在 $union_i P_i$ 中
       + 设 $I_i$ 是理想，$P$ 是素理想，若 $sect_i I_i subset P$，则 $exists i, I_i subset P$\
         进一步，若 $sect_i I_i = P$，则 $exists i, I_i = P$
       + 设 $P_i$ 是若干理想，其中至多两个不是素理想，$I$ 是理想且 $I subset union_i P_i$，则 $exists i,I subset P_i$\
-    ]
+    ]<prime-avoidance>
     #proof[
       + 我们证明它的反面，目标是构造 $x$ 不落在 $union_i P_i$ 中\
         - 若 $n = 1$ 结论平凡
@@ -620,7 +620,7 @@
       $
 
       特别的，取 $I = A$，则 $End_A (M)$ 中每一个元素都被某个多项式零化
-    ]
+    ]<Hamiton-Cayley>
     #proof[
       设 $M = sum_i A x_i$，注意到 $phi(x_i) in I M$，因此存在 $alpha_i in I^n$ 使得：
       $
@@ -648,17 +648,17 @@
       
     ]
     #corollary[][
-      设 $M, I$ 满足  $I M = M$，则 $exists x in A, x = 1 AModule I and x M = 0$
+      设 $M, I$ 满足  $I M = M$，则 $exists x in A, x = 1 mod I and x M = 0$
     ]
     #proof[
-      在上面的于引理中取 $id: M -> I M$ 即可
+      在上面的引理中取 $id: M -> I M$ 即可
     ]
     #corollary[Nakayama, another form][
       $M$ 有限生成，$I subset $ Jacob radical\
       若 $I M = M$, 则 $M = 0$
     ]
     #proof[
-      根据引理，可获得 $x$ 满足 $x = 1 AModule I and x M = 0$\
+      根据引理，可获得 $x$ 满足 $x = 1 mod I and x M = 0$\
       注意到 $x in 1 +$ Jacob radical 给出它是一个单位（@radicalForm），继而 $M = 0$
     ]
     #corollary[][
@@ -666,11 +666,11 @@
       若 $M = N + I M$ 则 $N = M$
     ]
     #proof[
-      考虑 $M quo N$ 中，验证：
+      考虑 $M quo N$ 中，注意到：
       $
-      I dot (M quo N) = I dot (N + I M quo N) = M quo N
+      M quo N = (N + I M) quo N = I (M quo N)
       $
-      因此可以利用上面的引理
+      结合有限生成模的商模仍然有限生成，因此可以利用上面的引理
     ]
     #proposition[][
       设 $A$ 是局部环，唯一素理想是 $m$，$M$ 是有限生成 $AModule(A)$ 则：
@@ -943,22 +943,25 @@
         $
         f' compose f = id => (id - f compose f')f = 0
         $
-        表明 $im f = ker g subset ker (id - f compose f')$。 
+        表明 $im f = ker g subset ker (id - f compose f')$，令 $h = id - f compose f'$
         如下交换图表给出：
         #align(center)[#commutative-diagram(
         node((0, 0), $Y$, "1"),
-        node((0, 1), $Z$, "2"),
-        node((1, 0), $Y quo ker h$, "3"),
-        node((1, 1), $g(Y) quo g (ker h)$, "4"),
-        arr("1", "2", $g$),
-        arr("1", "3", $$),
-        arr("2", "4", $$),
-        arr("3", "4", $$, bij_str),
-        node((1, -1), $im g$),
-        arr("3", $im g$, $$, bij_str),
-        arr($im g$, "1", $$)
+        node((0, 1), $Y quo ker g$, "2"),
+        node((1, 0), $Y$, "3"),
+        node((-1, 1), $Z$, "4"),
+        arr("1", "2", $$, surj_str),
+        arr("1", "3", $h$),
+        arr("2", "3", $exists !h'$),
+        arr("2", "4", $$, bij_str),
+        arr("1", "4", $g$, surj_str)
         )]
-        存在 $r: Z -> Y$ 使得:
+        其中，$h'$ 利用 $ker g subset ker h$ 产生，上半部分和下半部分的交换性是熟知的，注意到：
+        $
+        Y -> Z -> Y quo ker g -> Y =  (Y -> Z -> Y quo ker g) -> Y = (Y -> Y quo ker g) -> Y\
+        = Y -> (Y quo ker g -> Y)  = Y -> Y
+        $
+        因此存在 $r: Z -> Y$ 使得:
         $
         id - f compose f' = r compose g\
         g(id - f compose f') = g - (g compose f) compose f' = g = g (r g) = (g r) g
@@ -1012,11 +1015,10 @@
         $
         plus.circle_(m in M) A tilde.eq ker f directSum M
         $
-        （之后？）
 
     ]
     #theorem[Baer][
-      $M$ 是入射模当且仅当任取 $A$ 的理想 $A$ 以及模同态 $I ->^phi M$，存在 $psi: A -> M$ 使得：
+      $M$ 是入射模当且仅当任取 $A$ 的理想 $I$ 以及模同态 $I ->^phi M$，存在 $psi: A -> M$ 使得：
       $
       psi|_I = phi
       $
@@ -1046,7 +1048,7 @@
         psi(a) = phi(a)\
         psi(a) = psi(a dot 1) = 
         $
-      - 考虑 $Mod(Z)Z$ 作为阿贝尔群的范畴，则直和函子将成为入射模
+      - 由 Baer 可以证明，$M$ 是 $AModule(ZZ)$当且仅当对于所有 $n in NN$，都有 $n M = M$
       - 设 $A$ 是环，$I$ 是入射 $ZZ$  模，则：
         $
         Hom_ZZ (A, I)
@@ -1094,7 +1096,7 @@
 
         对偶的，右正合函子的导出函子大约是：
         $
-        H_i (... -> F P^1 -> F P^0 -> 0) = R^i F
+        H_(-i) (... -> F P^1 -> F P^0 -> 0) = R^i F
         $
         其中 $P$ 是投射对象
         
@@ -1485,8 +1487,8 @@
   #proof[
     由条件依次得到正合列：
     $
-    0 -> Hom_A (M, N) -> Hom_A (A^q, N) -> Hom_A (A^p, N) -> 0\
-    0 -> Inv(S) Hom_A (M, N) -> Inv(S) Hom_A (A^q, N) -> Inv(S) Hom_A (A^p, N) -> 0
+    0 -> Hom_A (M, N) -> Hom_A (A^q, N) -> Hom_A (A^p, N) \
+    0 -> Inv(S) Hom_A (M, N) -> Inv(S) Hom_A (A^q, N) -> Inv(S) Hom_A (A^p, N) 
     $
     但是可以验证：
     $
@@ -1552,7 +1554,7 @@
           exists s' in S, s'(a - s) = 0 => s' a = s' s
           $
           则 $s' a = s' s in I sect S$
-        - 
+        - 取元素 $in S sect I$ 显然
       + 注意到存在自然同态 $f: A -> Inv(S) A$，从而诱导同态：
         $
         f': Spec(Inv(S) A) -> Spec(A)
@@ -2199,8 +2201,20 @@
     #proof[
       - $1 => 2$  
         若 $N tensorProduct M = 0$，则 $0 -> N tensorProduct M -> 0$ 正合，由定义知 $0 -> N -> 0$ 正合，继而 $N = 0$
-      - $2 => 3$ #TODO
-      - $3 => 2$ #TODO
+      - $2 => 3$\
+        任取极大理想 $m$，将有：
+        $
+        M tensorProduct A quo m = M quo m M != 0 => m M != M
+        $
+      - $3 => 2$\
+        事实上，不妨设 $N$ 有限生成。如果不是，就在其中选出有限个元素生成新的 $N'$，证明对于这个 $N$ 有 $M tensorProduct N$ 足以（既然 $M$ 平坦，保持嵌入仍为嵌入）\
+        此时不可能对于所有极大理想均有 $m N = N$，否则利用 Nakayama 引理得 $N_m = 0$ 对于所有极大理想都成立，进而 $N = 0$，矛盾！\
+        此时，注意到 $(M quo m M) tensorProduct_(A quo m) (N quo m N)$ 是域上两个非零线性空间的张量积，当然非零，因此：
+        $
+        0 != (M quo m M) tensorProduct_(A quo m) (N quo m N) = (M tensorProduct_A A quo m) tensorProduct_(A quo m) (N tensorProduct_A A quo m) \
+        =M tensorProduct_A (A quo m tensorProduct_(A quo m) (N tensorProduct_A A quo m)) = (M tensorProduct_A N) tensorProduct_A A quo m
+        $
+        导出我们的结论
       - $2 => 1$\
         取序列：
         $
@@ -2243,9 +2257,9 @@
         取 $x !=0 in N$，则 $A x != 0$，以下序列正合：
         $
         0 -> A x -> N\
-        0 -> A x tensorProduct B -> N tensorProduct B
+        0 -> A x tensorProduct_A B -> N tensorProduct_A B
         $
-        注意到 $A x tensorProduct B = (x tensorProduct 1)B $，由忠实平坦知 $x tensorProduct 1 != 0$，再结合单射知它在 $N tensorProduct B$ 中也不为零
+        注意到 $A x tensorProduct_A B = (x tensorProduct_A 1)B $，由忠实平坦知 $x tensorProduct 1 != 0$，再结合正合性知它在 $N tensorProduct B$ 中也不为零
       - 断言 $B tensorProduct_A A quo I = B quo I B$ 在 $A quo I$ 上忠实平坦，从而：
         $
         A quo I -> B quo I B
@@ -2304,15 +2318,39 @@
       是 $psi: A -> B$ 是平坦同态，则下降性质对于 $psi$ 成立，也即：
       $
       forall p, p' in Spec A, p subset p'\
-      forall Q' in Spec B "lying over" p'\
-      exists Q in Spec A "lying over" p, s.t. Q subset Q'
+      forall q' in Spec B "lying over" p'\
+      exists q in Spec B "lying over" p, s.t. q subset q'
       $
     ]
     #proof[
-      首先做局部化，将 $psi$ 延拓到 $A_p' -> B_Q'$
-      - 这个映射仍然是平坦映射 #TODO
-      - 此时，双方都是局部环，进而 $psi$ 忠实平坦，由之前的结构性定理知 $psi^*$ 是满射，进而存在 $Q^* in Spec B_Q'$ lying over $p A_p's$，取 $Q = Q^* sect B$
-      - 可以证明 $Q sect A = p$ #TODO
+      首先做局部化，将 $psi$ 延拓到 $A_p' -> B_q'$，这个延拓产生于以下的交换图表：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $A$, 1),
+      node((0, 1), $B$, 2),
+      node((1, 0), $A_p'$, 3),
+      node((1, 1), $B_q'$, 4),
+      arr(1, 2, $phi$),
+      arr(1, 3, $$),
+      arr(2, 4, $$),
+      arr(3, 4, $phi'$),
+      )]
+      这是因为条件给出：
+      $
+      Inv(phi)(q') = p'\
+      A - p' = Inv(phi)(B) - Inv(phi)(q') = Inv(phi)(B - q')
+      $
+      因此：
+      $
+      ((B -> B_q') compose phi)(A - p') = (B -> B_q')(phi(A - p')) subset (B -> B_q')(B - q') subset U(B_q')
+      $
+      故泛性质给出 $phi'$\
+      - 首先，证明这个映射仍然是平坦同态。事实上，$B -> B_(q')$ 作为局部化是平坦同态，由传递性 $A -> B_q'$ 平坦，它在局部化函子下的提升 $phi'$ 当然也平坦（注意到 $Inv((A-p')) B_(q') = B_(q')$，因此 $phi'$ 确实是 $Inv((A-p')) (A -> B_q')$
+      - 此时，双方都是局部环，进而 $phi'$ 忠实平坦，由之前的结构性定理知 $phi^*$ 是满射，进而存在 $q^* in Spec (B_q')$ lying over $p A_p'$，也即 $Inv(phi')(q^*) = p A_p$，取 $q = q^* sect B subset q'$
+      - 只需证明 $Inv(phi)(q) = p$，事实上交换图表给出：
+        $
+        Inv(phi)(q) = Inv(phi) compose Inv((B -> B_q')) (q^*) = Inv((A -> A_p')) compose Inv(phi') (q^*) = p
+        $
+        证毕
     ]
 = 链条件|Chain conditions, Artin 与 Noether
   本章的内容是关于代数结构的经典有限性条件
@@ -2499,9 +2537,6 @@
     #lemma[][
       模是 Artin/Noether 的当且仅当合成列中每一项都是 Artin/Noether 的
     ]<compositor-noether-artin>
-    #proof[
-      #TODO
-    ]
     #corollary[][
       设 $A$ 是环且存在有限多个极大理想（允许重复） $m_i$ 使得 $m_1 m_2 ... m_n = (0)$，则 $A$ 是 Artin 环当且仅当 $A$ 是 Noether 环
     ]<artin-noether>
@@ -2590,7 +2625,8 @@
         $
         m subset p_i, forall i >= n
         $
-        #TODO
+        再由 @prime-avoidance 知 $sect_i^n p_i subset p_j => exists i <= n, p_i subset p_j => p_i subset p_j, forall j > i$\
+        表明 $Spec(A)$ 中不存在无穷序列，继而是有限集
       - 由降链条件，存在 $k$ 使得：
         $
         Re^k = Re^(k+1) = ... := I
@@ -2610,12 +2646,17 @@
       $A$ 是 Artin 环当且仅当 $dim A = 0$ 且 $A$ 是 Noether 环
     ]
     #proof[
-        熟知 $max(A) = Spec(A)$ 有限，不妨设 $max(A) = {m_1, m_2, ..., m_n}$\
+        设环是 Artin 环，上面命题给出 $max(A) = Spec(A)$ 有限，不妨设 $max(A) = {m_1, m_2, ..., m_n}$\
         注意到取充分大的 $k$ 将有：
         $
         product_(i) m_i^k subset (sect m_i)^k = Re^k = 0 
         $
-        这就是 @artin-noether
+        由 @artin-noether 该环是 Noether 环，而 $dim A = 0$ 由每个素理想都极大立刻给出
+
+        反之，$dim A = 0$ 蕴含每个素理想都极大，设：
+        $
+        Sigma = {product S | S subset Spec(A) "且有限"}
+        $
     ]
     #proposition[][
         设 $A$ 是 Noether local 环，则下面两者有且只有一个成立：
@@ -2705,12 +2746,16 @@
       ]
     ]
     #lemma[][
-      设 $0 -> M' -> M -> M''$ 正合，则 $Ass(M) subset Ass(M') union Ass(M'')$
+      设 $0 -> M' ->^f M ->^g M''$ 正合，则 $Ass(M) subset Ass(M') union Ass(M'')$
     ]
     #proof[
       取 $p in Ass(M), M supset N tilde.eq A quo p$
-      - 若 $N sect M' = 0$，则 $N subset M''$（#TODO
-      - 若 $N sect M' != 0$ 取 $x in N sect M'$，注意到：
+      - 若 $N sect M' = 0$，则有：
+        $
+        N tilde.eq (N directSum ker g)quo ker g tilde.eq g(N)
+        $
+        因此 $g(M)$ 含有一个同构于 $N$ 的子模，故 $p in Ass(M'')$
+      - 若 $N sect M' != 0$ ，此时取 $x in N sect M'$，注意到：
         $
         N tilde.eq A quo p => Ann(x) = p => p in Ass(M')
         $
@@ -2719,16 +2764,27 @@
       设 $M$ 是有限生成模，则 $Ass(M)$ 有限
     ]
     #proof[
-      取 @noether-filtration 中升链，（？）有正合列：
+      取 @noether-filtration 中升链，有正合列：
       $
-      0 = M_0 -> M_1 quo M_0 -> M_2 quo M_1 -> ... -> M quo (M_n) -> M
+      0 = M_0 -> M_1 -> M_1 quo M_0 -> 0 -> M_1 -> M_2 -> M_2 quo M_1 ...\
+       -> 0 -> M_(n-1) -> M_n -> M_n quo M_(n-1) -> 0
       $
-      #TODO
       将有：
       $
-      Ass(M) subset Ass(M_1 quo M_0) union Ass(M_2 quo M_1) union ... union Ass(M quo (M_n))
+      Ass(M)  &subset Ass(M_n quo M_(n-1)) union Ass(M_(n-1))\
+              &subset Ass(M_n quo M_(n-1)) union Ass(M_(n-1) quo M_(n-2)) union Ass(M_(n-2))\
+              &...\
+              &subset union_(i = 0)^(n-1) Ass(M_(i+1) quo M_i)
       $
-      右边都是些整环，其 $Ass$ 只能是 $p_i$
+      右边都是些整环，断言其 $Ass$ 只能是 $p_i$\
+      事实上，若存在 $a + p in A quo p$ 使得 $Ann(a + p) = q$，首先当然有 $p subset q$，其次任取 $x in q$ 将有：
+      $
+      x(a+p) = 0 => x a in x p subset p => x in p or a in p
+      $
+      显然可设 $a in.not p$，因此 $q subset p$，故 $Ass(A quo p) = {p}$
+
+      因此它们的并当然有限，证毕
+
     ]
     #lemma[][
       $Ass(Inv(S)A) = Ass(A) sect {p | p sect S = 0}$
@@ -2755,18 +2811,194 @@
     ]
     期中考试内容到此
 = 整独立|Integral dependence
+  == 整元
+    #definition[整元][
+      设 $A subset B$ 是子环，称 $b in B$ 在 $A$ 上是整的，如果存在首一多项式 $f(x) in A[x]$ 使得 $f(b) = 0$
+    ]
+    整元的概念当然是代数扩张的自然推广
+    #lemma[][
+      以下条件等价：
+      + $x in B$ 在 $A$ 上整
+      + $A[x]$ 是有限生成 $AModule(A)$
+      + 存在有限扩张 $A[x] subset C subset B$ 其中 $C$ 是有限 $A-$代数
+      + 存在忠实 $AModule(A[x])$（$forall y in A[x], y M = 0 => y = 0$）作为 $AModule(A)$有限生成，
+    ]
+    #proof[
+      - 1 $=>$ 2 利用首一的带余除法即可
+      - 2 $=>$ 3 取 $C = A[x]$ 即可
+      - 3 $=>$ 4 取 $M = C$，注意到 $1 in M$ 从而当然忠实
+      - 4 $=> 1$ 考虑自同态 $phi: m: M -> x m$，可以利用 @Hamiton-Cayley 得存在首一多项式使得：
+        $
+        f(phi) = 0 => f(x) M = 0 => f(x) = 0
+        $
+        证毕
+    ]
+    #corollary[][
+      设 $x_i$ 是整元，则 $A[x_1, x_2, ..., x_n]$ 是有限 $A-$代数，特别的其中元素 $x_i + x_j, x_i x_j$ 是整元。故 $B$ 中的 $A$ 上整元构成子环，这个子环称为 $A$ 在 $B$ 中的整闭包
+    ]
+    #definition[][
+      - 若 $B$ 中 $A$ 上整元只有 $A$ 中元素，则称 $A$ 在 $B$ 中整闭
+      - 若 $B$ 中所有元素都在 $A$ 上整，则称 $B$ 在 $A$ 上整
+    ]
+    #example[][
+      - $ZZ subset QQ$ 是整闭的（注意我们只选首一多项式）
+      - 一般的，唯一分解整环在分式域中就是整闭的。否则，显然元素 $k/s$ 的零化多项式恰如：
+        $
+        (s x - k) in k[x]
+        $
+        无妨设 $k, s$ 互素，容易看出有首一多项式 $in (s x - k) sect A[x]$ 除非 $s$ 在 $A$ 中可逆，进而这个元素只能在 $A$ 中
+    ]
+    #definition[][
+      设 $phi: A -> B$ 是环同态，称 $B$ 在 $A$ 上整，如果 $B$ 在 $f(A)$ 上整，也称 $phi$ 是整的或者 $B$ 是整 $A-$代数
+    ]
+    #corollary[][
+      设 $f$ 是整的且有限生成，则 $f$ 是有限的
+    ]
+    #proof[
+      每一个生成元都整，进而作为模是有限生成的
+    ]
+    #theorem[传递性][
+      设 $B$ 在 $A$ 上整，$C$ 在 $B$ 上整，则 $C$ 在 $A$ 上整
+    ]<integral-transitivity>
+    #proof[
+      设 $x in C$，则存在首一多项式 $f(x) in B[x]$ 使得 $f(x) = 0$\
+      设 $f$ 的系数为 $b_i$，这些系数都在 $A$ 上整，进而：
+      $
+      f(x) in (A[b_i])[x]
+      $
+      而 $A[b_i]$ 是有限生成的代数，$x$ 在其上整，进而 $A[b_i, x]$ 也是有限生成代数，故 $x$ 在 $A$ 上整
+    ]
+    #corollary[][
+      设 $A subset B$, $C$ 是 $A$ 的整闭包，则 $C$ 在 $B$ 上整闭
+    ]
+    #proof[
+      否则，设 $C'$ 是 $C$ 的整闭包，由 @integral-transitivity 得 $C'$ 在 $A$ 上也整，矛盾！
+    ]
+    #proposition[][
+      设 $A subset B$ 且 $B$ 在 $A$ 上整，则
+      - 任取 $B$ 的理想 $J, B sect J$ 在 $A quo (J sect A)$ 上整
+      - 任取 $A$ 的乘性子集 $S, Inv(S) B$ 在 $Inv(S) A$ 上整 
+    ]
+    #proposition[][
+      设 $A subset B$， $C$ 是 $A$ 在 $B$ 上的整闭包，则 $Inv(S) C$ 是对应的整闭包
+    ]
+    #proof[
+      $Inv(S) C$ 是整扩张前面已经证明，任取 $b / s$ 在 $Inv(S) A$ 上整，只需证明它落在 $Inv(S)C$，也即：
+      $
+      exists t in S, t b in C
+      $
+      由条件，存在多项式使得：
+      $
+      (b/s)^n + a_1/s_1 (b/s)^(n-1) + ... + a_n/s_n = 0\
+      b^n + (a_1 s)/s_1 b^(n-1) + ... + a_n/s_n s^n = 0\
+      (s_1 s_2 ... s_n b)^n + a_1 s_2 s_3 ... s_n (b s_1 s_2 ... s_n)^(n-1) + ... + a_n (s_1 s_2 ... s_n)^n = 0
+      $
+      取 $t = s_1 s_2 ... s_n$，上式给出了 $b t$ 的一个首一零化多项式，进而 $b t in C$，得证
+    ]
+    == going-down 与 going-up
+      #proposition[][
+        设 $A subset B$ 且 $B$ 在 $A$ 上整
+        - 若 $A, B$ 是整环，则 $B$ 是域当且仅当 $A$ 是域
+        - 若 $q in Spec(B)$ 在 $p = q sect A in Spec(A)$ 之上，则有整环间的整扩张 $A quo p -> B quo q$，从而 $p$ 是极大理想当且仅当 $q$ 是极大理想
+        - 设 $q subset q' in Spec(B)$，若 $q sect A = q' sect A := p$，则 $q = q'$
+      ]
+      #proof[
+        - 先证明假设 $A$ 是域，则 $B$ 也是域\
+          任取 $b in B$，存在多项式使得：
+          $
+          b^n + a_1 b^(n-1) + ... + a_n = 0
+          $
+          不妨设 $a_n != 0$，则：
+          $
+          b(b^(n-1) + a_1 b^(n-2) + ... + a_(n-1)) = -a_n
+          $
+          然而上式右侧是单位，因此 $b$ 也是单位，证毕
 
-  #definition[整元][
-    设 $A subset B$ 是子环，称 $b in B$ 在 $A$ 上是整的，如果存在首一多项式 $f(x) in A[x]$ 使得 $f(b) = 0$
-  ]
-  整元的概念当然是代数扩张的自然推广
-  #lemma[][
-    $B$ 中的 $A$ 上整元构成子环，这个子环称为 $A$ 在 $B$ 中的整闭包
-  ]
-  #definition[][
-    - 若 $B$ 中 $A$ 上整元只有 $A$ 中元素，则称 $A$ 在 $B$ 中整闭
-    - 若 $B$ 中所有元素都在 $A$ 上整，则称 $B$ 在 $A$ 上整
-  ]
-  #example[][
-    - $ZZ subset QQ$ 是整闭的（注意我们只选首一多项式）
-  ]
+          再假设 $B$ 是域，任取 $x in A, Inv(x) in B$ 是整元，存在多项式：
+          $
+          x^(-n) + a_1 x^(-n+1) + ... + a_n = 0\
+          x^(-1) + a_1 + ... + a_n x^(n-1) = 0
+          $
+          上式中除 $Inv(x)$ 外的项都在 $A$ 中，进而它也在 $A$ 中，证毕
+        - 就是前一个命题的直接推论
+        - 做局部化 $A_p$，设 $B_p = Inv((A - p))B$，则 $p A_p$ 是极大理想，且 $q B_p subset q' B_p$ 是 $B_p$ 的素理想，由上面结论得它们都是极大理想，进而 $q B_p = q' B_p$\
+          假设 $q' != q$，取 $y' in q' - q$，则 $y'/1 in q' B_p => y'/1 = y/1 => exists x in A - p, x(y' - y) = 0 => x y' = x y in q => x in q or y' in q => x in q => x in A sect q = p$，这是荒谬的
+      ]
+      #theorem[][
+        设 $A subset B$ 且 $B$ 在 $A$ 上整，则 $Spec(B) -> Spec(A)$ 是满射
+      ]
+      #proof[
+        任取 $p in Spec(A)$，类似的做 $A_p$ 并令 $B_p = Inv(A - p) B$，任取 $B_p$ 的极大理想 $m$，由之前的结论知 $m sect A_p$ 也是极大理想，从而只能是 $p A_p$，证毕
+      ]
+      #theorem[going-up][
+        设 $A subset B$ 且 $B$ 在 $A$ 上整。任取 $Spec(B)$ 中升链
+        $
+        q_1 < q_2 < ... < q_m
+        $
+        对应 $Spec(A)$ 中升链的一部分：
+        $
+        p_1 < p_2 < ... < p_m < p_(m+1) < ... < p_n
+        $
+        使得 $p_i = q_i sect A, forall i = 1, 2, ..., m$\
+        则 $q_i$ 可以被拓展到 $n$ 项，并且满足 $q_i = p_i sect A, forall i = 1, 2, ..., n$
+      ]
+      #proof[
+        由 $Spec(B) -> Spec(A)$ 的满射性，取原像即可
+      ]
+      #definition[][
+        称一个整环是整闭的，如果环在分式域上整闭
+      ]
+      #proposition[][
+        设 $A$ 是整环，则以下条件等价：
+        - $A$ 整闭
+        - 对于任何素理想 $p$ 均有 $A_p$ 整闭
+        - 对于任何极大理想 $m$ 均有 $A_m$ 整闭
+      ]
+      #proof[
+        取 $C$ 是 $A$ 在分式域中的整闭包，$f$ 是嵌入，则以上条件等价于 $f$ 是满射（可以验证兼容性） 
+      ]
+      #definition[][
+        设 $A subset B, I subset A$ 是理想，称 $b in B$ 在 $I$ 上整，如果 $exists f(x) in I[x], f(b)= 0$\
+        类似的，可以定义 $I$ 上的整闭包
+      ]
+      #lemma[][
+        设 $A subset B, I subset A$ 是理想，$C$ 是 $A$ 在 $B$ 中的整闭包，则 $I$ 在 $B$ 上的整闭包恰为：
+        $
+        sqrt(I C)
+        $
+        特别的，这是一个理想，因此整闭包对于加法和乘法有封闭性
+      ]
+      #proof[
+        任取 $x in B$ 在 $I$ 上整，则 $x in C$ 且：
+        $
+        x^n + a_1 x^(n-1) + ... + a_n = 0
+        $
+        其中除了 $x^n$ 之外都在 $I C$ 之中，进而 $x^n$ 也在，故 $x in sqrt(I C)$
+
+        对于另一个方向，设 $x in sqrt(I C)$，则：
+        $
+        x^n = sum a_i c_i
+        $
+        其中 $c_i$ 在 $A$ 上是整的，因此 $M := A[c_i]$ 是有限生成 $AModule(A)$\
+        考虑自同态 $phi: m : M -> x^n m$，上式给出 $phi(M) subset I M$，由 @Hamiton-Cayley 得存在首一多项式 $f(x) in I[x]$ 使得：
+        $
+        f(phi) = 0 => f(x^n) M = 0
+        $
+        而 $M$ 作为模忠实，故 $f(x^n) = 0$，表明 $x^n$ 是整的，继而 $x$ 也是，证毕
+      ]
+      #proposition[][
+        设 $A subset B$，$A$ 在分式域 $k$ 中整闭，设 $x in B$ 在 $I subset A$ 上整，则 $x$ 是 $k$ 上的代数元，并设其最小多项式为 $t^n + k_1 t^(n-1) + ... + k_n$，则有 $k_i in sqrt(I)$\
+        简而言之，整元的极小多项式是整系数的
+      ]
+      #proof[
+        $x$ 是 $k$ 上是代数元显然\
+        设极小多项式 $f = ^n + k_1 t^(n-1) + ... + k_n$，取 $f$ 的分裂域 $L$，其中有 $n$ 个零点：
+        $
+        x_1 = x, x_2 , ..., x_n 
+        $
+        显然 $x_i$ 都是 $I$ 上整元。注意到系数 $k_i$ 都是 $x_1$ 的多项式，因此落在 $I$ 的整闭包之中，进而：
+        $
+        k_i in sqrt(I C) = sqrt(I A) = sqrt(I)
+        $ 
+        证毕
+      ]

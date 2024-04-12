@@ -154,3 +154,45 @@
       $
       另一方面，断言 $epsilon$ 充分小时，有 $phi(x, x_0, y_0 + epsilon) >= phi(x, x_0, y_0)$，从而上式只能取等\
       事实上，设 $phi, psi$ 分别是微分方程过 $(x_0, y_0), (x_0, y_0 + epsilon)$ 的最大解，显然至少在 $x_0$ 的附近 $psi > phi$，断言 $psi >= phi$，否则设在某一段出现 $psi < phi$ 立刻与 $psi$ 是最大解矛盾！
+  == p161 1
+    方程中 $f$ 满足局部 Lipschitz 条件，因此解的存在唯一性定理成立，设解为 $phi(x, eta)$ 将有：
+    $
+    phi(x, eta) = eta + integral_(0)^(x) sin (s phi(s, eta)) dif s
+    $
+    对 $eta$ 求导：
+    $
+    partialDer(phi, eta) = 1 + integral_(0)^(x) s cos (s phi(s, eta)) partialDer(phi, eta) dif s
+    $
+    设 $u = partialDer(phi, eta)$，有微分方程：
+    $
+    cases(
+      u' = x cos (x phi(x, eta)) u,
+      u(0) = 1 
+    )
+    $
+    注意到 $u = 0$ 是微分方程 $ u' = x cos (x phi(s, eta)) u$ 在另一个初值的解，而这是线性方程，当然满足唯一性条件，因此不同初值的解不可能相交，结合 $u(0) = 1$ 知 $u > 0$，证毕
+  == 2
+    有积分方程：
+    $
+    y = y_0 + integral_(x_0)^(x) f(s, y) dif s
+    $
+    计算得：
+    $
+    partialDer(y, x_0) = - f(x_0, y_0) +  integral_(x_0)^(x) partialDer(y, x_0) partialDer(f(s, y), y) dif s\
+    partialDer(y, y_0) = 1 + integral_(x_0)^(x) partialDer(y, y_0) partialDer(f(s, y), y) dif s
+    $
+    进而：
+    $
+    partialDer(y, x_0) + f(x_0, y_0) partialDer(y, y_0)\
+    = integral_(x_0)^(x) f(x_0, y_0) partialDer(y, x_0) partialDer(f(s, y), y) + partialDer(y, y_0) partialDer(f(s, y), y) dif s\
+    = integral_(x_0)^(x) (partialDer(y, x_0) + f(x_0, y_0) partialDer(y, y_0)) partialDer(f(s, y), y) dif s
+    $
+    设 $u = partialDer(y, x_0) + f(x_0, y_0) partialDer(y, y_0)$，上式表明：
+    $
+    u = integral_(x_0)^(x) u partialDer(f(s, y), y) dif s\
+    cases(
+      u' = u partialDer(f(x, y), y),
+      u(x_0) = 0
+    )\
+    $
+    显然该方程的唯一解是 $u = 0$，证毕
