@@ -889,9 +889,13 @@
         integral_(0)^1 f(u(t) + i v (t)) sqrt(u'^2 + v'^2) dif t = integral_(S) f(z) dif z\
         integral_(0)^1 f(x_n (t) + i y_n (t))  sqrt(x'_(n-)^2 + y'_(n-)^2) dif t = integral_(T_n) f(z) dif z
         $
-        前项成立是定义，后项成立是仅差有限个点的积分有相等的值，得证
+        前项成立是定义，后项成立是仅差有限个点的积分有相等的值，得证\
+        （证明未完成）
       ]
 
+  ]
+  #corollary[][
+    单连通区域上的解析函数有原函数
   ]
   #theorem[Cauthy 2][
     设 $G$ 是有界区域，其边界是有限多条光滑曲线。$f$ 在区域内解析，在区域的闭包上连续，则对任意 $z in G$，$omega$ 是任意一个将 $z$ 包括在内的简单闭曲线，有：
@@ -920,6 +924,7 @@
     $
     不难看出上式右侧恰为幂级数，得证
   ]
+
 = 整函数与解析函数的基本定理
   == 基本定理
     #definition[整函数][
@@ -927,7 +932,7 @@
     ]
     #theorem[Liouville][
       设 $f$ 是整函数，且有界，则 $f$ 是常数
-    ]
+    ]<Liouville>
     #proof[
       假设 $sup norm(f) = M < +infinity$，由柯西估计，有：
       $
@@ -1086,7 +1091,7 @@
       $
       则对于任意 $a in G - union_i gamma$，有：
       $
-      sum_k n(gamma_k, w) f(a) = sum_k 1/(2 pi i) integral_(gamma_k)^() f(w)/(w - a) dif w
+      sum_k n(gamma_k, a) f(a) = sum_k 1/(2 pi i) integral_(gamma_k)^() f(w)/(w - a) dif w
       $
     ]
     #theorem[Cauthy theorem 1][
@@ -1225,7 +1230,7 @@
       $
       （实平面上的二重积分）
       
-    ]
+    ]<integral-mean>
     #proof[
       就是柯西积分的特殊情况
     ]
@@ -1291,6 +1296,265 @@
       dif s = (norm(dif z))/(1 - norm(z)^2)
       $
     ]
+    == 双曲几何
+    设 $g$ 是 $B(0, 1)$ 上的双全纯映射，则:
+    $
+    g(z) = e^(i theta) (z - z_0)/(1 - overline(z_0) z)
+    $
+    其中 $z_0$ 是 $B(0, 1)$ 上的一个点
+
+    设 $l_(z_0) (z) = e^(i theta) (z - z_0)/(1 - overline(z_0) z_)$，可以检查 $l_(z_0) compose l_(-z_0) = 0$，进而双全纯\
+    令 $l = l_(g(0)), l(g(0)) = 0$\
+    令 $f = l(g(z))$，则：
+    $
+    f(0) = 0
+    $
+    利用之前的 Schwarz，将有：
+    $
+    norm(f'(0)) <= 1\
+    norm(f^(-1)(0)) <= 1
+    $
+    从而取等，进而 $f$ 是旋转，倒回即可
+
+    Schwarz（更强的版本）：
+    设 $f: B(0, 1) -> B(0, 1)$ 解析，则：
+    $
+    norm(f(z_1) - f(z_2))/norm(1-overline(f(z_1)) f(z_2)) <= norm(z_1 - z_2)/(norm(1 - overline(z_1) z_2))
+    $
+
+    推论：令 $z_1 -> z_2 -> z$，得：
+    $
+    norm(f'(z))/(1 - norm(f(z))^2) <= 1/(1 - norm(z)^2)
+    $
+
+    在给定长度微元下，两点间最短的曲线称为测地线，两点的距离定为测地线的长度。可以证明测地线是唯一的，且过原点的直径都是测地线。
+
+    显然，上面的引理表示了任何解析函数将曲线映成更短的曲线
+= 奇点
+  == 奇点(Singularity)
+    #definition[][
+      $z$ 是函数的孤立奇点，如果$f$ 在某个去心邻域上有定义并解析，但在任何一个邻域上无定义或者不解析。本门课程中我们所说的奇点都是孤立奇点
+      - 称 $z$ 是可去的|removable，如果存在某个邻域上的解析函数 $g$ 使得 $f$ 是它的限制
+      例：$0$ 是 $1/z, e^(1/z), z / (sin z)$ 的孤立奇点，但其中只对 $z / (sin z)$ 是可去奇点
+      - 称 $z$ 是极点|pole，如果 $lim_(z - > a) f(a) = infinity$
+      - 如果都不是，则称 $a$ 是本性奇点|essential singularity
+
+    ]
+    #theorem[Morera][
+      设 $f: G -> CC$ 连续，$G$ 是区域。若 $f$ 在任何三角形边界上的积分为零，则它是解析的
+    ]
+    #proof[
+
+      不妨假设 $G$ 是开圆盘，圆心为 $a$ 。为了证明它是解析的，我们试图找到一个解析的原函数。定义：
+      $
+      F(z) := integral_(a -> z) f dif z
+      $
+      注意到任取 $z_0$，由条件一定有：
+      $
+      integral_(a -> z) f dif z = integral_(a -> z_0) f dif z
+      + integral_(z_0 -> z) f dif z    
+      $
+      表明 $F(z) - F(z_0) = integral_(z_0 -> z) f dif z$，继而：
+      $
+      norm((F(z) - F(z_0))/(z - z_0) - f(z_0))\
+      = 1/norm(z - z_0) norm(integral_(z_0 -> z) (f(z) - f(z_0)) dif z)\
+      <= sup(norm(f(z) - f(z_0)))
+      $
+      当然趋于零，得证
+    ]
+
+    #theorem[][$a$ 是可去奇点当且仅当 $lim_(z -> a) (z-a)f(z) = 0$]
+    #proof[一方面是容易的，另一方面，令：
+      $
+      g(z) = (z-a)f(z)
+      $
+      容易验证 $g$ 是连续函数\
+      #lemma1[
+        $g(z)$ 在 $a$ 处解析
+      ] 
+      #proof[我们希望利用 Morera，设某个去心邻域上 $f$ 解析，进而 $g$ 解析。任取三角形
+        - 若 $a$ 在三角形外部，利用柯西定理即可
+        - 否则，可能在边上或者角上，而边的情况可以通过分割化成角的情形，角的情形可以用外部梯形逼近。这个逼近成立利用了 $g$ 在 $a$ 的某个邻域内有界，而三角形的边长任意小]
+      由引理及 $g(z)$ 解析性，可设：
+      $
+      g(z) = h(z) (z - a)
+      $
+      从而 $z != a$ 时都有 $h = f$，$h$ 就是我们找的函数]
+
+    #theorem[][若 $a$ 是极点，则存在 $n in NN, g$ 解析，使得：
+      $
+      f(z) = g(z)/(z - a)^n, space forall z in G - {a}
+      $
+      $G$ 是某个开邻域使得 $f$ 在其中除了 $a$ 点处外都解析]
+
+    #proof[选取某个开邻域使得 $f != 0$，令 $h = 1/(f(z))$，$a$ 成为可去奇点，将其去掉后找零点的阶，有：
+    $
+    h = (z-a)^n g\
+    f(z) = 1/(z-a)^n 1/g
+    $
+    在开邻域之外，$(z-a)^n f$ 有自然的定义，它们当然是一致的]
+
+    #definition[][使得上面的式子成立的最小的 $n$ 称为极点的阶|order of pole]
+
+    接下来，我们可以考虑双向无穷的序列/级数
+    
+    #definition[][称 ${z_n}_(n in ZZ)$ 是双向的序列，称：
+      $
+      sum_(n=-infinity)^(+infinity) z_n
+      $
+      收敛/绝对收敛，如果：
+      $
+      sum_(n=0)^(+infinity) z_n\
+      sum_(n=-1)^(-infinity) z_n
+      $
+      收敛/绝对收敛，并定义级数的值就是上面两式的和
+
+      对于函数序列，类似定义收敛/绝对收敛/一致收敛]
+    
+    #theorem[Laurent 级数][设 $0 <= R_1 < R_2 <= +infinity$，定义：
+      $
+      "ann"(a, R_1, R_2) = B(a, R_2) - B(a, R_1)
+      $
+      若 $f$ 在上面的区域内解析，则它有级数表达：
+      $
+      f(z) = sum_(n=-infinity)^(+infinity) a_n (z-a)^n
+      $
+      并且上式右侧在该区域内闭绝对一致收敛，且其系数是唯一的，有：
+      $
+      a_n = 1/(2 pi i) integral_gamma (f(z))/(z-a)^(n+1) dif z
+      $
+      其中 $gamma$ 是任意在圆弧区域内部的圆]
+    #proof[
+      首先要证明 $a_n$ 是良定义的，事实上由柯西定理立得积分值应与曲线的具体选取无关。\
+      任取 $z_0 in "ann"(a, R_1, R_2)$, 不妨取 $gamma_1, gamma_2$ 是两个圆弧，$gamma_2$ 更大并将 $z_0$ 夹在其中，由柯西积分定理有：
+      $
+      (n(-gamma_1, z_0) + n(gamma_2, z_0)) f(z_0) = 1/(2 pi i) integral_(gamma_2) f(w)/(w - z_0) dif w + 1/(2 pi i) integral_(-gamma_1) f(w)/(w - z_0) dif w\
+      f(z_0) = 1/(2 pi i) integral_(gamma_2) f(w)/(w - z_0) dif w - 1/(2 pi i) integral_(gamma_1) f(w)/(w - z_0) dif w
+      $
+      注意到 $1/(2 pi i) integral_(gamma_2) f(w)/(w - z) dif w, 1/(2 pi i) integral_(gamma_1) f(w)/(w - z) dif w$ 由 @lemma-der 在不在曲线上的所有点处解析，令：
+      $
+      f_2 (z) = 1/(2 pi i) integral_(gamma_2) f(w)/(w - z) dif w\
+      f_1 (z) = 1/(2 pi i) integral_(gamma_1) f(w)/(w - z) dif w
+      $
+      $z_0$ 分别落在 $f_1 (z)$ 的 $gamma_1$ 之外的连通分支，$f_2 (z)$ 的 $gamma_2$ 之内的连通分支，我们的目标是各自做幂级数展开\
+      - 对于 $gamma_2$，做直接的展开就有：
+        $
+        f_2 (z) = sum_(n = 0)^(+infinity) b_n (z - a)^n\
+        where b_n = 1/n! f_2^(n)(a) = 1/(2 pi i) integral_(gamma) f(w)/(w - a)^(n+1) dif w
+        $
+      - 对于 $gamma_1$，我们希望先取倒数再做展开。具体来说，令：
+        $
+        h(z) = f_1 (a + 1/z)
+        $
+        断言 $0$ 是 $h(z)$ 的可去零点，这是因为观察 $f_1 (z)$ 的定义式即可看出 $z$ 充分大时 $f_1(z) -> 0$，
+        故可将其在 $0$ 附近展开，将有：
+        $
+        h(z) = sum_(n = 1)^(+infinity) c_n z^n\
+        where c_n = 1/(2 pi i) integral_(1/(gamma- a)) h(w)/w^(n+1) dif w\
+        =^(w = 1/(u - a)) 1/(2 pi i) integral_(gamma) f_1(u) (u - a)^(n+1) dif u\
+        = 1/(2 pi i) integral_(gamma) f(w) (w - a)^(n+1) dif w - 1/(2 pi i) integral_(gamma) f_2(w) (w - a)^(n+1) dif w
+        $
+        反解得：
+        $
+        f_1 (z) = sum_(n = 0)^(+infinity) c_n (1/(z - a))^n\
+        $
+        最后只需证明 $integral_(gamma) f_2(w) (w - a)^(n+1) dif w = 0$ 即可，既然 $f_2(w) (w - a)^(n+1)$ 在整个 $gamma$ 内部都是解析的，由柯西定理这个积分当然为零
+      两式求和即得 $f(z)$ 的一个展开式，反推也可得到唯一性
+    ]
+    #corollary[][
+      设 $a$  是孤立奇点，设 $f(z) = sum_(n = - infinity)^(+infinity) a_n (z - a)^n$，则
+      - 以下事实等价：
+        + $a$ 是可去奇点
+        + $lim_(z -> a) f(z)$  存在
+        + $f(z)$ 在某个 $B(a, epsilon)$ 上有界
+        + $a_n = 0, forall n <= -1$
+      - $a$ 是 $m$ 阶极点当且仅当 $forall n <= -(m+1), a_n = 0$
+      - $a$ 是本质零点，如果有无穷多个 $n <0, a_n != 0$
+    ]<singularity>
+    #proof[
+      -  $3 => 4$:\
+        由 @integral-mean，注意到：
+        $
+        norm(a_n) <= 1/(2 pi) integral_(norm(z - a) < epsilon) norm(f(z))/(norm(z - a))^(n+1) dif s <= M epsilon^n
+        $
+        令 $epsilon -> 0$ 即得 $a_n = 0, forall n <= -1$\
+        $4 => 1$:\
+          显然级数在整个 $B(a, epsilon)$ 上由定义且解析，这个级数当然就是可去奇点定义中的延拓\
+        其他方向是显然的。
+      - $a$ 是 $m$ 阶零点当且仅当 $(z-a)^m f(z)$ 中 $a$  成为可去零点，因此结论成立
+      - 由前两者可得
+    ]
+    #theorem[][
+      设 $a$ 是 $f$ 的孤立本性奇点，则对任意 $epsilon > 0$，只要 $f$ 在 $B(0, epsilon)$ 解析，都有 $f(B(a, epsilon))$ 在 $CC$  中稠密
+    ]<C-W>
+    #proof[
+      如若不然，设 $b in CC$ 不是 $Inv(f)(B(a, epsilon))$ 的极限点，继而存在邻域 $B'$ 与 $B$ 不交\
+      观察：
+      $
+      1/(f(z) - b)
+      $
+      它将解析并且有上界（当然 $a$ 仍是它的奇点），由 @singularity 得 $a$ 将是它的可去奇点\
+      但是反过来计算得：
+      $
+      f(z) = 1/(g(z)) + b
+      $
+      不难发现 $a$ 要么是 $f$ 的可去奇点，要么是极点，矛盾！
+    ]
+    #theorem[Picard 大定理][
+      设 $a$ 是 $f$ 的孤立本性奇点，则对任意 $epsilon > 0$，只要 $f$ 在 $B(0, epsilon)$ 解析，都有 $CC - f(B(a, epsilon))$ 中至多只有一个点
+    ]
+    #proof[
+      它的证明颇为复杂，这里不证明
+    ]
+  == 无穷远点
+    #definition[][
+      称 $infinity$ 是 $f$ 的孤立奇点，如果存在 $f$ 在充分大的无穷区域上解析，此时设 $f(z) = sum_(n = - infinity)^(+infinity) a_n (z - a)^n$
+      - 若 $forall n >= 1, a_n = 0$，则称 $infinity$ 为可去奇点
+      - 若仅有有限多个 $n>0$ 使得 $a_n != 0$，则称 $infinity$ 为极点
+      - 若有无穷多个 $n>0$ 使得 $a_n != 0$，则称 $infinity$ 为本性奇点
+    ]
+    对于无穷远点，上面的定理都类似成立
+    #theorem[整双全纯函数的刻画][
+      设 $f: CC-> CC$ 是双全纯的，则存在 $a, b in CC$ 使得：
+      $
+      f(z) = a z + b
+      $
+    ]
+    #proof[
+      线性函数当然双全纯。反之可以发现，$infinity$ 成为孤立奇点，考虑：
+      - 如果可去，将有 $f$ 在整个平面上有界，由 @Liouville 可得它是常数，这是荒谬的
+      - 如果是本性零点，由 @C-W 可得 $f(CC - overline(B(0, A)))$ 稠密，然而 $overline(f(B(0, A)))$ 是含有内部点的非空闭集，这是荒谬的
+      - 因此一定是极点。然而观察到 $f$ 在 $0$ 处的泰勒级数和在 $infinity$ 处的 Laurent 级数形式上应该一致，因此可得泰勒级数仅有有限项非零，换言之将有 $f$ 是多项式
+      最后，由代数基本定理知多项式是单射当且仅当多项式是一次多项式，证毕
+    ]
+  == 亚纯函数|Meromorphic functions
+    #definition[亚纯函数][
+      设 $Omega$ 是区域（可能含有 $infinity$），若 $f: Omega -> CC$ 除了若干极点外都解析，则称 $f$ 为亚纯函数\
+      有时，也将 $f$ 在极点处的像定义为正无穷，此时也称 $f: Omega -> CC union {infinity}$ 在黎曼面 $CC union {infinity}$ 上解析。
+
+      一般的，称符合上面条件且不恒为 $infinity$ 的函数为 $Omega -> CC union {infinity}$ 的解析函数
+    ]
+    #proposition[][
+      亚纯函数构成域，其零元是零函数，其余元素均可逆
+    ]
+    #theorem[][
+      设 $f, g$ 是 $Omega$ 上的亚纯函数，若存在集合 $S$ 使得：
+      - $f|S = g|S$
+      - $S$ 在 $Omega$ 上有聚点
+      则 $f = g$
+    ]
+    #proof[
+      设 $S$ 有聚点 $x$，考虑 $h = f -g$\
+      显然 $h(x) = 0$，由连续性知存在一个邻域使得其中没有 $h$ 的奇点，$h$ 成为一般的解析函数，而这样的函数零点集有聚点除非恒零，故 $h = 0$，由 $Omega$ 的连通性知结论成立
+    ]
+    #theorem[][
+      $f: Omega -> C union infinity$ 在 $Omega$ 内部的紧集上仅有有限多个奇点
+    ]
+    #proof[
+      如果有无穷多个奇点，则将有聚点。由连续性极点的聚点还是极点，这与极点的孤立性矛盾！
+    ]
+
+
 
 
     
