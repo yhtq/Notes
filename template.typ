@@ -33,7 +33,9 @@ $1 + 1$
 #let Hom = math.op("Hom")
 #let Proj = math.op("Proj")
 #let Spec = math.op("Spec")
+#let Spv = math.op("Spv")
 #let Tor = math.op("Tor")
+#let ht = math.op("height")
 #let Ann = math.op("Ann")
 #let Ass = math.op("Ass")
 #let Sylow(p) = $"Sylow"-#p$

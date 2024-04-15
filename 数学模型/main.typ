@@ -1313,15 +1313,132 @@
     #FFT/#IFFT 是解决上述问题的高效算法，利用了适当的分治来减少重复计算。为了方便，接下来不妨设 $n = 2^k$
     #let pOdd = $p_("odd")$
     #let pEven = $p_("even")$
+    #let odd = $"odd"$
+    #let even = $"even"$
     #definition[FFT][
       快速傅里叶变换是指一个递归算法，使得：
       $
-      FFT(X) &= (p(w^(k-1)))_k\
+      FFT(X)_k &= p(w^(k-1)) := Y_k\
       where p(theta) &= x_1 + x_2 theta + x_3 theta^2 + ... + x_n theta^(n-1)\ 
       $
       计算 $p(theta)$ 时，进行奇偶分拆：
       $
-      p(theta) = pOdd (theta) + theta pEven (theta)\
+      p(theta) = pOdd (theta^2) + theta pEven (theta^2)\
       $
+      将有：
+      $
+      Y_k = pOdd (w^(2(k-1))) + w^(k-1) pEven (w^(2(k-1)))
+      $
+      在上式中将 $k$ 换成 $n/2$ 发现：
+      $
+      Y_(k + n/2) = pOdd (w^(2(k-1) + n)) + w^(k-1 + 2/ n) pEven (w^(2(k-1) + n))\
+      = pOdd (w^(2(k-1))) - w^(k-1) pEven (w^(2(k-1)))
+      $
+      （注意到 $w$ 是 $n$ 次单位根）\
+      此外，由定义得对于 $k <= n/2$
+      $
+      Y_k &= pOdd (w^(2(k-1))) + w^(k-1) pEven (w^(2(k-1))) \
+          &= FFT_(n/2)(odd(X))_k + w^(k-1) FFT_(n/2)(even(X))_k\
+      where &odd(X) = (x_1, x_3, ..., x_(n-1))^T\
+            &even(X) = (x_2, x_4, ..., x_n)^T
+      $
+      因此，分别计算 $FFT_(n/2)(odd(X)), FFT_(n/2)(even(X))$ 再按上面的公式即得 $FFT(X)$
     ]
-    本次作业下次讲完这部分之后再做
+    #proposition[][
+      $FFT(X)$ 的时间复杂度为 $O(n log n)$
+    ]
+    #proof[
+      设 $n$ 阶 $FFT$ 的乘法次数为 $M_n$，加法次数为 $A_k$ ，有：
+      $
+      M_1 = 0, A_1 = 0
+      $
+      根据上面的过程，将有：
+      $
+      M_k = 2 M_(k/2) + k/2\
+      A_k = 2 A_(k/2) + k
+      $
+      设 $k = 2^m$ 并令 $a_m = M_(2^m), b_m = A_(2^m)$，有：
+      $
+      a_m = 2 a_(m-1) + 2^(m-1)\
+      2^(-m) a_m = 2^(-(m-1))  a_(m-1) + 1/2\
+      2^(-m) a_m = 1/2 m => a_m = 1/2 m 2^m\
+      b_m = 2 b_(m-1) + 2^m\
+      2^(-m) b_m = 2^(-(m-1))  b_(m-1) + 1\
+      2^(-m) b_m = m => b_m = m 2^m
+      $
+      化简得 $A_k, M_k$ 都是 $O(n log n)$ 的，证毕
+    ]
+  == 高维模型中的维度灾难
+    #let kv = $bold(k)$
+    #let xv = $bold(x)$
+    #let toKB(x) = x/1024
+    #let toMB(x) = x/1024/1024
+    #let toGB(x) = x/1024/1024/1024
+    #let FG = $"FG"$
+    #let absMix(x) = $abs(#x)_"mix"$
+    #let absMix2(x) = $abs(#x)_"mix"^2$
+    设 $xv, kv$ 是 $d$ 维向量，注意到有简单的计算式：
+    $
+    e^(i kv^T xv) = product_(k) e^(i kv_k xv_k) 
+    $
+    表明高维的平面波可以自然地分裂成一维平面波的乘积，也称其为张量形式。用这种形式可以进行函数逼近：
+    $
+    u(xv) approx u_N (xv) = sum_(k in FG_N) tu_kv e^(i kv^T xv)\
+    $
+    其中 $FG_N$ 是指全网格（Full grid），具体定义为：
+    $
+    FG_N = ([-N, N] sect ZZ)^d
+    $
+    容易计算其中约有 $(2 N)^d$ 个网格点。即使有高效算法 $FFT$ 在维度较高的情况下计算量也是不可接受的，这是维度灾难的体现之一，例如 $d = 6, n = 100$ 时假设使用两字节的浮点数，将需要空间：
+    $
+    2 dot 2^6 dot 100^6 "Byte" = #(toGB(2*calc.pow(100, 6)*calc.pow(2, 6))) "GB"
+    $
+    同时，谱精度也会随着 $d$ 增加快速衰减，这也是十分糟糕的。
+
+
+    因此，我们当然需要更好的解决方法，有以下几个目标：
+    - 复杂度不随 $d$ 指数增长
+    - 精确度不随 $d$ 快速衰减
+  == 稀疏网格方法
+    #let SG = $"SG"$
+    上面的两个目标当然无法轻易实现，需要很多的设计和取舍。例如一个经典的方法是所谓的*双曲截断*，考虑到系数在每个维度上衰减都十分迅速，因此应该取那些合适的格点使得每个维度都不要取过高项的系数。具体来说，取格点：
+    $
+    SG_N = {kv | product_(j=1)^n max(kv_j, 1) := absMix(kv) <= N}
+    $
+    此时，近似函数所在的函数空间为：
+    $
+    Sigma_N = "span"{ e^(i kv xv)| kv in SG_N }
+    $
+    我们需要解决：
+    - 使用该方法取格点的精度如何，有定理：
+      #let absKpm(x) = $abs(#x)_K_p^m$
+      #let absKpm2(x) = $abs(#x)_(K_p^m)^2$
+      #theorem[][
+        若：
+        $
+        u(xv) = sum_(kv in ZZ^n) hu_kv e^(i kv^T xv)
+        $
+        则称 $u$ 函数有平面波展开\
+        任取 $u in K_p^m (Omega)$，有结论：
+        $
+        inf_(v in  Sigma_N) norm(u - v)_(K_p^mu) <= k N^(mu - m) absKpm(u)
+        $
+        其中：
+        - $absKpm2(sum_(kv in ZZ^n) hu_kv e^(i kv^T xv)) = sum_(kv in ZZ^n) (absMix(kv))^(2m) abs(hu_kv)^2$
+        - $K_p^m (Omega) = {u(xv) | u "可被平面波展开且" absKpm(u) < infinity}$
+        - $mu = 0, 1, 2, ..., m$
+      ]
+      #proof[
+        左侧取得接近下确界的最佳估计当然是投影，也即
+        $
+        inf_(v in ZZ_n) norm(u - v)_(K_p^mu)^2
+        &<=  norm(u - sum_(kv in SG_N) hu_kv e^(i kv^T xv))_(K_p^mu)^2\
+        &= norm(sum_(kv in ZZ^n - SG_N) hu_kv e^(i kv^T xv))_(K_p^mu)^2\
+        &= norm(sum_(kv in ZZ^n - SG_N) hu_kv e^(i kv^T xv))_(K_p^mu)^2\
+        &= sum_(kv in ZZ^n - SG_N) absMix(kv)^(2 mu) abs(hu_kv)^2\
+        &= sum_(absMix(kv) > N) absMix(kv)^(2 mu) abs(hu_kv)^2\
+        &< 1/N^(2 m - 2mu)sum_(absMix(kv) > N) absMix(kv)^(2m) abs(hu_kv)^2\
+        &< 1/N^(2 m - 2mu) absKpm2(u)
+        $
+        证毕
+      ]

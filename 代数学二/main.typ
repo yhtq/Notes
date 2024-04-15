@@ -827,6 +827,12 @@
     #example[][
       $Hom(M, *) : Mod(A) -> Mod(A)$ 是共变的加性函子，另一侧 $Hom(*, N)$ 是反变函子，它们都是左正合的
     ]
+    #lemma[][
+      设 $E_i$ 是复形，则 $directSum_i (E_i)$ 正合当且仅当 $forall i, E_i$ 正合
+    ]<directSum-exact>
+    #proof[
+      注意到 $ker(directSum_i (f_i)) = directSum_i ker f_i$，$im$ 类似，因此结论显然
+    ]
     #definition[导出函子][
       对于任意的左正合（加性）函子 $F$，一族函子 $Mod(A)-> Mod(B)$：
       $
@@ -1829,15 +1835,31 @@
       $
       这个模被称为标量限制
     ]
+    #proposition[][
+      若 $B$ 是有限 $A-$代数，$N$ 是有限生成 $AModule(B)$，则 $N$ 的标量限制是有限生成 $AModule(A)$
+    ]
+    #proof[
+      设 $B = sum_i A x_i, N = sum_i B y_i$，则：
+      $
+      N = sum_i B y_i = sum_i sum_j A x_j y_i 
+      $
+      这只是有限和，因此当然 $x_j y_i$ 成为一组生成元
+    ]
+    #remark[][
+      若 $B$ 不是有限的，限制当然未必有限生成。例如取 $B = A[x], N = A[x]$
+    ]
     #definition[扩张][
       设 $f: A -> B$ 是环同态，给出函子：
       $
       funcDef(f, Mod_A, Mod_B, M,  B tensorProduct_A M := M_B)
       $
-      称为扩张
+      称为扩张，也即将 $M$ 转化为了 $AModule(B)$
     ]
     #proposition[][
-      设 $M$ 是有限生成 $AModule(A)$，则扩张 $M_B$ 也是有限生成 $AModule(A)$，但限制未必
+      设 $M$ 是有限生成 $AModule(A)$，则扩张 $M_B$ 也是有限生成 $AModule(B)$
+    ]<extension-fg>
+    #proof[
+      容易验证若 $x_i$ 生成 $M$，则 $1 tensorProduct x_i$ （作为 $AModule(B)$ ）生成 $M_B$
     ]
     #proposition[][
       设 $Inv(S) A$ 是分式环，有：
@@ -1879,7 +1901,7 @@
       m/s tensorProduct n/t -> (m tensorProduct n)/(s t)
       $
       给出
-    ]
+    ]<tensor-product-localization>
     #proof[
       $
       Inv(S) M tensorProduct_(Inv(S) A) Inv(S) N \
@@ -1891,6 +1913,16 @@
       tilde.eq Inv(S) (M tensorProduct N)
       $
       我们证明了它们之间存在同构，容易验证该同构只能是上述形式
+    ]
+    #lemma[][
+      设 $M$ 是$A-$自由模，则 $M_B = B tensorProduct_A M$ 是 $B-$ 自由模
+    ]<free-extension>
+    #proof[
+      设 $M = directSum_i A$，则：
+      $
+      M_B = B tensorProduct_A M = directSum_i B
+      $
+      当然是自由模
     ]
   == $Hom, tensorProduct$ 的伴随性
     #definition[][
@@ -1946,13 +1978,12 @@
       + 任意正合列 $E$，张量积 $E tensorProduct N$ 也是正合的
       + 设 $M' ->^f M$ 是单射，则 $M' tensorProduct N ->^f M tensorProduct N$ 也是单射
       + 对于任意 $M, M'$ 有限生成，$M' ->^f M$ 单导出 $M' tensorProduct N ->^f M tensorProduct N$ 也是单射
-      + 任意有限生成理想 $I subset A$，序列 $0 -> I tensorProduct M -> M$ 正合（也即 $I M tilde.eq I tensorProduct M$
       此时，称 $N$ 是平坦模
     ]
     #proof[ 
-      只证明 $4 => 3$，假设 $M' ->^f M$ 是单射，往证 $M' tensorProduct N ->^f' M tensorProduct N$ 单
-      
-      设 $u = sum x_i tensorProduct y_i in ker (f') => 0 = sum f(x'_i) tensorProduct y_i$，由 @zero-tensor-product-fg 知存在有限生成子模 $M_0$ 使得 $0 = sum f(x'_i) tensorProduct y_i in M_0 tensorProduct N$，由于 $f$ 在有限生成模上的提升是单射，$x'_i = 0$，因此 $u = 0$
+      - $4 => 3$，假设 $M' ->^f M$ 是单射，往证 $M' tensorProduct N ->^f' M tensorProduct N$ 单  
+        设 $u = sum x_i tensorProduct y_i in ker (f') => 0 = sum f(x'_i) tensorProduct y_i$，由 @zero-tensor-product-fg 知存在有限生成子模 $M_0$ 使得 $0 = sum f(x'_i) tensorProduct y_i in M_0 tensorProduct N$，由于 $f$ 在有限生成模上的提升是单射，$x'_i = 0$，因此 $u = 0$
+      - 其余情况显然
     ]
     #proposition[平坦性是局部性质][
       以下命题等价：
@@ -1980,13 +2011,27 @@
       平坦模的扩张仍是平坦模
     ]
     #proof[
-      设 $N -> P$ 是单射，往证 $N tensorProduct M_B -> P tensorProduct M_B$ 是单射
+      事实上，设 $E$ 是正合列，有：
+      $
+      E tensorProduct_B M_B = E tensorProduct_B (B tensorProduct_A M) = (E tensorProduct_B B) tensorProduct_A M = E tensorProduct_A M
+      $
+      因此 $E tensorProduct_B M_B$ 作为 $Mod_A$ 中复形正合，而正合性与把它看作哪个环上的模当然无关，因此它也是 $Mod_B$ 中复形，证毕
+    ]
+    #proposition[][
+      $directSum_i M_i$ 平坦当且仅当对于每个 $i$ 均有 $M_i$ 平坦
+    ]
+    #proof[
+      注意到张量积与直和交换，因此任取正合列 $E$ 将有：
+      $
+      E tensorProduct (directSum_i M_i) = directSum_i (E tensorProduct M_i)
+      $
+      利用 @directSum-exact 可得结论成立
     ]
     #proposition[][
       投射模都是平坦模
     ]
     #proof[
-      前面 @projective-module 给出投射模是自由模的直和，而自由模是平坦的，它的直和也是平坦的
+      前面 @projective-module 给出投射模是自由模的直和项，而自由模是平坦的，它的直和项也是平坦的
     ]
     #lemma[][
       任取投射模构成的正合列：
@@ -2017,6 +2062,11 @@
         exists s >= 1, b_(i_j) in A, y_j in M, 1 <= j <= s, s.t.\
         x_i = sum_j b_(i_j) y_j\
         sum_i a_i b_(i_j) = 0, forall j
+        $
+        写成矩阵语言就是若 $alpha^T X = 0$，则存在 $C, Y$ 使得：
+        $
+        X = C Y\
+        alpha^T C = 0
         $
     ]
     #proof[
@@ -2074,7 +2124,7 @@
         X = sum_j beta_j tensorProduct y_j
         $
         计算可得这就是结论
-      - $6 -> 3$\
+      - $6 => 3$\
         假设 $sum_i a_i x_i = 0$，往证 $sum_i a_i tensorProduct x_i = 0$，继而对应位置是单射，结论成立\
         由条件，可设：
         $
@@ -2116,6 +2166,7 @@
         E tensorProduct_B (M tensorProduct_A B) = (E tensorProduct_B B) tensorProduct_A M = E tensorProduct_A M
         $
         当然正合
+      - 利用 @tensor-product-localization 显然
     ]
     #proposition[][
       设 $phi: A -> B$ 是平坦同态，则：
@@ -2128,22 +2179,22 @@
       $
     ]
     #proof[
-      选取投射模正合列：
+      选取投射 $AModule(A)$正合列：
       $
       ... -> P_1 -> P_0 -> M -> 0
       $
-      有：
+      有正合列：
       $
       ... -> P_1  tensorProduct B-> P_0 tensorProduct B-> M tensorProduct B -> 0
       $
-      注意到 $P_i tensorProduct B$ 是自由 $AModule(B)$ 的直和项，因此还是投射模\
-      #TODO\
+      断言 $P_i tensorProduct B$ 是自由 $AModule(B)$ 的直和项，因此还是投射模\
+      事实上，设 $B^X = P_i directSum Q$，则 $A^X tensorProduct_A B = (P_i tensorProduct B) directSum (Q tensorProduct B)$，只需证明 $A^X tensorProduct_A B$ 是自由 $AModule(B)$，这就是 @free-extension
       计算：
       $
-      "Tor"_i^B (M tensorProduct_A B, N tensorProduct_A B) = H_i (P tensorProduct B tensorProduct (N tensorProduct B))\
-      = H_i (P tensorProduct N tensorProduct B)\
-      = H_i (P tensorProduct N) tensorProduct B\
-      = "Tor"_i^A (M, N) tensorProduct B
+      "Tor"_i^B (M tensorProduct_A B, N tensorProduct_A B) = H_i ((P tensorProduct_A B) tensorProduct_B (N tensorProduct_A B))\
+      = H_i (P tensorProduct_A N tensorProduct_A B)\
+      = H_i (P tensorProduct_A N) tensorProduct_A B\
+      = "Tor"_i^A (M, N) tensorProduct_A B
       $
     ]
     #theorem[][
@@ -2234,7 +2285,7 @@
 
     ]
     #corollary[][
-      设 $A, B$ 是局部环，$psi: A -> B$ 是局部同态，$M$ 是有限 $AModule(A)$，则 $M$ 是 $A$ 上的忠实平坦模当且仅当它是平坦模
+      设 $A, B$ 是局部环，$psi: A -> B$ 是局部同态，$M$ 是有限 $AModule(B)$，则 $M$ 是 $A$ 上的忠实平坦模当且仅当它是平坦模
     ]
     #proof[
       设 $m_A, m_B$ 是极大理想，注意到：
@@ -2245,6 +2296,19 @@
     ]
     #proposition[][
       自由模是忠实平坦的
+    ]
+    #lemma[][
+      设 $M$ 在 $A$ 上忠实平坦，则：
+      - $M quo I M$ 在 $A quo I$ 上忠实平坦
+      - $Inv(S) M$ 在 $Inv(S) A$ 上忠实平坦
+    ]
+    #proof[
+      注意到：
+      $
+      (M quo I M) tensorProduct_(A quo I) E = (M tensorProduct_A A quo I) tensorProduct_(A quo I) E = M tensorProduct_A E\
+      Inv(S) M tensorProduct_(Inv(S) A) Inv(S) E = M tensorProduct_A E
+      $
+      因此结论显然
     ]
     #proposition[][
       设 $psi:A -> B$ 是环同态使得 $B$ 忠实平坦，则：
@@ -2268,7 +2332,7 @@
         $
         ker(A quo I -> B quo I B) = (A sect I B) quo I = 0 => A sect I B = I
         $
-      - 任取 $p in Spec(A)$，做局部化，断言 $B_p = B tensorProduct A_p$ 在 $A_p = A tensorProduct A_p$ 上忠实平坦\
+      - 任取 $p in Spec(A)$，做局部化，断言 $B_p = B tensorProduct A_p$ 在 $A_p$ 上忠实平坦\
         由之前的定理，这表明在唯一的极大理想 $p A_p$ 上，有：
         $
         p B_p != B_p
@@ -2277,11 +2341,27 @@
         $
         p B_p subset m subset.neq B_p
         $
-        此时，当然有：
-        $
-        m sect A_p supset p A_p => m sect A_p = p A_p
-        $
-        取 $overline(p) = m sect B$，则 $p sect A = p$，证毕
+        交换图：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $A$, 1),
+        node((0, 1), $B$, 2),
+        node((1, 0), $A_p$, 3),
+        node((1, 1), $B_p = B tensorProduct A_p$, 4),
+        arr(1, 2, $phi$),
+        arr(1, 3, $$),
+        arr(2, 4, $$),
+        arr(3, 4, $$),)]
+        中依次取逆像得：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $p_A$, 1),
+        node((0, 1), $p_B$, 2),
+        node((1, 0), $p_A A_p$, 3),
+        node((1, 1), $m$, 4),
+        arr(1, 2, $phi$),
+        arr(1, 3, $$),
+        arr(2, 4, $$),
+        arr(3, 4, $$),)]
+        然而注意到 $p A_p subset p_A A_p => p_A = p$，证毕
     ]
     #theorem[结构性定理][
       设 $psi:A -> B$ 是环同态，以下条件等价：
@@ -2293,16 +2373,16 @@
     #proof[
       - $1 => 2$ 已经证明
       - $2 => 3$\
-        注意到对于任取 $m in max(A)$，存在 $m' in Spec(B)$ 使得 $psi(m) = m'$\
+        注意到对于任取 $m in max(A)$，存在 $m' in Spec(B)$ 使得 $m = Inv(psi)(m')$\
         将 $m'$ 扩充成极大理想 $m''$，将有 $m subset Inv(psi)(m'')$，由极大性可得 $m = Inv(psi)(m'') => psi(m) subset m''$
       - $3 => 1$\
-        只要证任取 $m in max(A), m B != 0$\
+        只要证任取 $m in max(A), m B != B$\
         事实上，由条件存在 $m' in max(B)$ 使得 $m B subset m' != B$，因此当然有 $m B != B$
     ]
     #proposition[faithfully flat descent][
       设 $B$ 是 $A$ 上的忠实平坦代数，$M$ 是 $AModule(A)$，则：
       - $M$ 是平坦/忠实平坦 $<=> M tensorProduct_A B$ 在 $B$ 上平坦/忠实平坦
-      - 若 $A$ 是局部环且 $M$ 在 $A$ 上有限，则 $M$ 是自由 $AModule(A)$当且仅当 $M tensorProduct_A B$ 是自由 $AModule(B)$
+      - 若 $A$ 是局部环且 $M$ 在 $A$ 上有限生成，则 $M$ 是自由 $AModule(A)$当且仅当 $M tensorProduct_A B$ 是自由 $AModule(B)$
     ]
     #proof[
       - $=>$ 平凡，往证 $arrow.double.l$，注意到：
@@ -2312,7 +2392,7 @@
         因此 $S tensorProduct_A M$ 正合当且仅当 $(S tensorProduct_A M) tensorProduct_A B$ 正合当且仅当 $(S tensorProduct_A B) tensorProduct_B (M tensorProduct_A B)$ 正合
         - 若 $M tensorProduct B$ 忠实平坦，这就等价于 $S tensorProduct_A B$ 正合，等价于 $S$ 正合，证毕
         - 若 $M tensorProduct B$ 平坦且 $S$ 正合，则 $S tensorProduct_A B$ 正合进而 $(S tensorProduct_A B) tensorProduct_B (M tensorProduct_A B)$ 正合，证毕
-      - 注意到 $A$ 是局部环且 $M$ 有限生成，此时自由模等价于平坦模。同时，$M tensorProduct_A B$ 当然也是有限生成 $AModule(B)$
+      - 注意到 $A$ 是局部环且 $M$ 有限生成，此时自由模等价于平坦模，因此右推左成立。同时 @free-extension 给出了左推右
     ]
     #theorem[Going-down for flat morphism][
       是 $psi: A -> B$ 是平坦同态，则下降性质对于 $psi$ 成立，也即：
@@ -2344,7 +2424,7 @@
       ((B -> B_q') compose phi)(A - p') = (B -> B_q')(phi(A - p')) subset (B -> B_q')(B - q') subset U(B_q')
       $
       故泛性质给出 $phi'$\
-      - 首先，证明这个映射仍然是平坦同态。事实上，$B -> B_(q')$ 作为局部化是平坦同态，由传递性 $A -> B_q'$ 平坦，它在局部化函子下的提升 $phi'$ 当然也平坦（注意到 $Inv((A-p')) B_(q') = B_(q')$，因此 $phi'$ 确实是 $Inv((A-p')) (A -> B_q')$
+      - 首先，证明这个映射仍然是平坦同态。事实上，$B -> B_(q')$ 作为局部化是平坦同态，由传递性 $A -> B_q'$ 平坦，它在局部化函子下的提升 $phi'$ 当然也平坦（注意到 $Inv((A-p')) B_(q') = B_(q')$，故 $phi'$ 就是 $Inv((A-p')) (A -> B_q')$
       - 此时，双方都是局部环，进而 $phi'$ 忠实平坦，由之前的结构性定理知 $phi^*$ 是满射，进而存在 $q^* in Spec (B_q')$ lying over $p A_p'$，也即 $Inv(phi')(q^*) = p A_p$，取 $q = q^* sect B subset q'$
       - 只需证明 $Inv(phi)(q) = p$，事实上交换图表给出：
         $
@@ -2392,7 +2472,7 @@
       - 称 $M$ 是 Artin 模，如果子模族满足降链条件
     ]
     #example[][
-      - 有限阿贝尔群是 Noether/Artin 模
+      - 有限阿贝尔群是 $ZZ$ 上的 Noether/Artin 模
       - 唯一分解分解整环是 Noether 的
       - $ZZ$ 是 Noether 但不是 Artin 的
       - 设 $p$ 是素数，$G = ZZ[1/p] quo ZZ$，该 $G$ 是 Artin 模，但不是 Noether 模（作为 $ZZ$ 模）
@@ -2579,7 +2659,7 @@
       - 接下来，归纳证明：设 $I$ 由次数小于 $n$ 的元素生成，则 $I$ 是有限生成的
     ]
     #theorem[weak form of Hilbert's Nullstellensatz][
-      设 $A$ 是有限生成 $A-$代数，$m$ 是极大理想，则 $A quo m$ 是 $k$ 的有限扩张\
+      设 $k$ 是域且是有限生成 $A-$代数，$m$ 是极大理想，则 $A quo m$ 是 $k$ 的有限扩张\
       等价的，如果 $E$ 是有限生成 $k-$代数，且 $E$ 是域，则它是 $k$ 的有限代数扩张
     ]
   == 环的维数
@@ -2657,6 +2737,7 @@
         $
         Sigma = {product S | S subset Spec(A) "且有限"}
         $
+        #TODO
     ]
     #proposition[][
         设 $A$ 是 Noether local 环，则下面两者有且只有一个成立：
@@ -2901,7 +2982,7 @@
         - 若 $A, B$ 是整环，则 $B$ 是域当且仅当 $A$ 是域
         - 若 $q in Spec(B)$ 在 $p = q sect A in Spec(A)$ 之上，则有整环间的整扩张 $A quo p -> B quo q$，从而 $p$ 是极大理想当且仅当 $q$ 是极大理想
         - 设 $q subset q' in Spec(B)$，若 $q sect A = q' sect A := p$，则 $q = q'$
-      ]
+      ]<integral-prime-containing>
       #proof[
         - 先证明假设 $A$ 是域，则 $B$ 也是域\
           任取 $b in B$，存在多项式使得：
@@ -3002,3 +3083,186 @@
         $ 
         证毕
       ]
+      #theorem[going down][
+        设 $A subset B$ 都是整环，$B$ 在 $A$ 上整，$A$ 在其分式域中整闭。若在 $A$ 中有素理想降链：
+        $
+        p_1 > p_2 >... > p_n
+        $
+        其中前一部分在 $B$ 中有对应：
+        $
+        q_1 > q_2 > ... > q_m, m >= n
+        $
+        则存在 $q_(m+1) > ... > q_n$ 使得：
+        $
+        q_i sect A = p_i, forall i = 1, 2, ..., n
+        $
+      ]
+      #proof[
+        同样只需要证明 $n = 2, m = 1$ 情形\
+        经典的技巧是使用商环扩充素理想，使用分式环降低素理想。这里使用分式环。\
+        利用 @integral-prime-containing
+        任取一个元素 $x in p_2 B_(q_1) sect A, x$ 将形如：
+        $
+        x = y / s, y in p_2 B, s in B - q_1
+        $
+        断言 $y in B$ 在 $p_2 subset A$ 中整，进而它的极小多项式系数落在 $sqrt(p_2) = p_2$ 中，也即其最小多项式形如：
+        $
+        t^r + a_1 t^(r-1) + ... + a_r, a_i in p_2
+        $
+        将 $y = s x$ 代入，得：
+        $
+        s^r + b_1 s^(r-1) + ... + b_r = 0, b_i = v_i/x^r
+        $
+        然而再次利用上面的引理，将有 $b_i in A$，进而：
+        $
+        x^r b_i = v_i in p_2, x^r, b_i in A
+        $
+        由 $p_2$ 是素理想，如果 $x in.not p_2$，则 $b_i in p_2$，进而：
+        $
+        s^r = -b_1 s^(r-1) - ... - b_r in p_2
+        $
+        故 $s in p_2$，然而之前假设 $s in B - q_1$，矛盾！
+        #TODO
+      ]
+      #theorem[][
+        设 $A subset B$ 都是整环，$B$ 在 $A$ 上整，$A$ 在其分式域 $k$ 中整闭，则：
+        - 若存在正规扩张 $L quo k$ 使得 $B$ 是 $A$ 在 $L$ 中的整闭包，则任何两个 lying over 同一个素理想 $p$ 的 $B$ 中素理想 $q_1, q_2$ 都在 $Aut(L quo k)$ 中某个自同构下共轭
+        - going down 性质成立
+      ]
+      #proof[
+        - 先不证明
+        - 设 $p_1 > p_2$，先通过 going up 产生 $q_1' > q_2'$ 使得 $q_1
+         sect A = q_1 sect A = p_1$，由前面的命题得它们共轭，也即：
+         $
+         sigma(q'_1) = q_1 
+         $
+         如此可以证明 $sigma(q'_2) sect A = p_2$ #TODO
+      ]
+= 赋值环|Valuation ring
+  == 全序阿贝尔群
+    #definition[][
+      称一个阿贝尔群全序，如果其上有全序且满足：
+      $
+      r <= r' => a r <= a r'
+      $
+      两个全序阿贝尔群之间的同态是保持序关系的群同态
+    ]
+    #example[][
+      - $RR^+$ 在乘法和通常的序下当然是全序的
+      - $RR$ 在加法和通常的序下当然是全序的。事实上通过取指数/对数，它与上面的群同构
+    ]
+    #definition[][
+      设 $P$ 是全序阿贝尔群，$Q subset P$ 是子群，称 $Q$ 是凸的，如果以下等价条件成立对所有 $delta, delta', gamma in P$ 成立：
+      - $delta <= gamma <= 1 and delta in Q => gamma in Q$
+      - $delta, gamma <= 1, delta gamma in Q => delta, gamma in Q$
+      - $delta <= gamma <= delta', delta, delta' in Q => gamma in Q$
+    ]
+    #proof[
+      - 1 $=>$ 2 注意到 $delta gamma <= delta, gamma <= 1$，由 1 结论成立
+      - 2 $=>$ 1 注意到 $gamma <=1, delta <= gamma => delta Inv(gamma) <= 1$，由 2 结论成立
+      - 3 $=>$ 1 显然
+      - 1 $=>$ 3 将有：
+        $
+        delta Inv(delta') <= gamma Inv(delta') <= 1 => gamma Inv(delta') in Q => gamma in Q
+        $
+    ]
+    #definition[][
+      设 $P$ 是全序阿贝尔群，定义 $ht(P)$ 为 $P$ 的除 ${1}$ 外的凸子集的个数，显然 $ht(P) >= 0$ 可能为 $infinity$
+    ]
+    #example[][
+      - $ht(RR^+) = ht(RR) = 1$
+      - 任取 $H subset P$，存在一个最小的包含 $H$ 中的凸子集：
+        $
+        {gamma in P| exists x, y in H, x <= gamma <= y}
+        $
+    ]
+    #proposition[][
+      - 设 $H_1, H_2$ 是两个凸子群，则必有 $H_1 subset H_2$ 或 $H_2 subset H_1$
+      - 设 $phi: P -> Q$ 是全序阿贝尔群之间的同态，则 $ker phi$ 是凸子集
+      - 设 $H$ 是凸子群，则商群 $P quo H$ 上也有全序结构，定义为 #TODO，并有 $ht(P) = ht(P quo H) + ht(H)$
+      - $ht(P) = 0 <=> P = {1}$
+    ]
+    #proof[
+      - 否则，设 $x in H_1 - H_2, y in H_2 - H_1$，不妨设 $x, y < 1$（否则取逆）以及 $x < y < 1$\
+        然而第二式已经给出 $x, 1 in H_1$ 进而 $y in H_1$，矛盾！
+    ]
+    #proposition[][
+      设 $P != [1]$ 是全序阿贝尔群，以下条件等价：
+      - $ht(P) = 1$
+      - $P$ 可以嵌入 $RR^+$（或 $RR$ 加法群）
+      - $P$ 是阿基米德的，也即 $forall x < 1, y < 1 in P$ 均存在 $m$ 使得 $x^m < y$
+    ]
+    #proof[
+      本门课程不会用到这些事实，不作证明
+    ]
+  == 赋值环
+    #definition[][
+      设 $A$ 是环，$P$ 是全序阿贝尔群，称一个赋值是映射：
+      $
+      abs(dot): A -> P union {0}
+      $
+      并且满足：
+      - $abs(a + b) <= max(abs(a), abs(b))$
+      - $abs(a b) = abs(a) abs(b)$
+      - $abs(0) = 0, abs(1) = 1$
+      若 $A$ 是拓扑环（加法和乘法都连续且兼容），则称赋值是连续赋值，如果任意 $x in P$，都有：
+      $
+      {abs(a) < x} "是开集"
+      $
+    ]
+    #definition[][
+      称两个赋值等价，如果存在交换图表：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $A$, 1),
+      node((0, 1), $P$, 2),
+      node((1, 0), $P'$, 3),
+      arr(1, 2, $$),
+      arr(3, 2, $$, bij_str),
+      arr(1, 3, $$),)]
+    ]
+    #proposition[][
+      设 $k$ 是域，则其上的赋值等价于一个群同态 $k^times -> P$ 结合 $v(0) = infinity$
+    ]
+    #example[平凡赋值][
+      对于任意环 $A$ 和其中素理想 $p$ ，给出一个平凡赋值：
+        $
+        abs(a) = cases(
+          0 quad a in p,
+          1 quad a in.not p
+        )
+        $
+    ]
+    #definition[赋值谱|valuation spectrum][
+      设 $A$ 是环，定义其赋值谱 $Spv(A)$ 为所有赋值的等价类的集合。进一步，可以定义其上的闭集族为：
+      $
+      Spv(A)(f/s) := {v i Spv(A) | abs(f)_v <= abs(s)_v != 0}
+      $
+      构成拓扑空间
+    ]
+    #proposition[][
+      任给环同态 $phi: A -> B$，诱导映射 $abs(dot): Spv(B) -> abs(dot) compose phi: Spv(A)$，它是连续映射
+    ]
+    #remark[][
+      平凡赋值给出 $Spec(A) -> Spv(A)$ 的映射，而 $ker$ 给出 $Spv(A) -> Spec(A)$ 的映射，满足：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $Spec(A)$, 1),
+      node((0, 1), $Spv(A)$, 2),
+      node((1, 0), $Spec(A)$, 3),
+      arr(1, 2, $$, inj_str),
+      arr(2, 3, $$),
+      arr(1, 3, $$),)]
+    ]
+    #example[p-adic][
+      - $QQ$ 上的赋值一定是某个素数 $p$ 产生的平坦赋值，称为 $p-$进赋值，换言之：
+        $
+        Spv(QQ) = Spec(ZZ)
+        $
+      - $QQ$ 上的赋值可以限制到 $ZZ$ 上，更进一步：
+        $
+        Spv(ZZ) = Spv(QQ) union {abs(dot)_(0, p), p "is prime"}
+        $
+        其中后者是 $F_p$ 上的平凡赋值
+    ]
+    #definition[dominate][
+      设 $A subset B$ 是局部环，极大理想分别为 $m, n$，若 $n sect A = m$ 则称 $B$ 支配 $A$
+    ]

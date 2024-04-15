@@ -1760,7 +1760,7 @@
         y(x_0) = y_0
       )
       $
-      其中 $f$ 连续，对 $y, lambda$ 是 $C^k$ 的（$k$ 可能为无穷），且对于任意 $x_0, y_0, lambda$ 的解都存在唯一，则设 $phi(x, x_0, y_0, lambda)$ 是上述方程的解，它将是关于 $y_0, lambda$ 是 $C^k$ 的
+      其中 $f$ 连续，对 $y, lambda$ 是 $C^k$ 的（$k$ 可能为无穷），且对于任意 $x_0, y_0, lambda$ 的解都存在唯一，则设 $phi(x, x_0, y_0, lambda)$ 是上述方程的解，它将是关于 $y_0, lambda$ 是 $C^k$ 的，关于 $x, x_0$ 是 $C^1$ 的
     ]
     #proof[
       $C^1$ 刚刚已经证明，同时也可以将 $y_0$ 吸收，化为：
@@ -1786,4 +1786,160 @@
     ]
     #remark[][
       上面的定理换成关于 $y, lambda$ 解析也对，既然 Picard 序列中每一项的解析，而解析函数的一致收敛极限也是解析的
+    ]
+    #corollary[][
+      在上面的定理中将条件换成 $f$ 对所有参数都 $C^k$，则 $phi$ 就是 $C^k$ 的
+    ]
+    #proof[
+      此时不妨将所有系数吸收进参数，只需研究方程：
+      $
+      cases(
+        der(y, x) = f(x, y, x_0, y_0, lambda),
+        y(0) = 0
+      )
+      $
+      前面已经证明关于 $x_0, y_0, lambda$ 都是 $C^k$ 的，只需考虑关于 $x$ 的，然而：
+      $
+      partialDer(phi, x) = f(x, phi, x_0, y_0, lambda) 
+      $
+      前面已经证明 $phi$ 是 $C^1$ 的，上式表明 $phi$ 将是 $C^2$ 的，继而归纳可得 $phi$ 是 $C^k$ 的
+    ]
+    #corollary[解对初值和参数的光滑依赖性 最终版本][
+      在上面的定理中将条件换成 $f$ 对所有参数都 $C^(k-1)$，且对 $y, lambda$ 是 $C^k$ 的，则 $phi$ 就是 $C^k$ 的
+    ]
+    #proof[
+      已经证明了 $k = 1$ 时情景，同时 $phi in C^(k-1)$ 也已经成立，同样可以直接看到关于 $x$ 是 $C^k$ 的，并且注意到：
+      $
+      partialDer(phi, x) = f(x, phi, lambda)\
+      partialDer(partialDer(phi, x), x_0) = partialDer(f, y) partialDer(phi, x_0) 
+      $
+      令 $Y = partialDer(phi, x_0)$ ，将有微分方程：
+      $
+      Y' = partialDer(f, y) Y 
+      $
+      上式右端关于所有参数都是 $C^(k-1)$ 的，因此 $Y$ 关于 $x_0$ 也是 $C^(k-1)$，这就证明了对 $x_0$ 的可微性\
+    ]
+    #example[][
+      $
+      cases(
+        y' = y + mu (x^2 + y^2),
+        y(0) = 1
+      )
+      $
+      试求 $partialDer(phi, mu)|_(mu = 0)$
+
+      事实上，容易看出 $f$ 是解析函数，继而它的解都解析，我们直接求偏导并交换顺序：
+      $
+      partialDer(partialDer(phi, x), mu) = partialDer(phi, mu) + (x^2 + phi^2) + 2 mu phi partialDer(phi, mu)
+      $
+      设 $u = partialDer(phi, mu)$，它满足微分方程：
+      $
+      u' = u + (x^2 + phi^2) + 2 phi u mu = (1 + 2 phi mu) u+ x^2 + phi^2
+      $
+      这是关于 $u$ 的一阶线性微分方程\
+      同时，注意到 $mu = 0$ 时方程是好解的，因此：
+      $
+      phi(x, 0) = e^x
+      $
+      代入得：
+      $
+      u' = u + x^2 + e^(2 x)
+      $
+      解出 $u(x, 0) = e^(2 x) - x - 1$
+    ]
+= 自治系统
+  本章的内容是从理论上研究微分方程。
+  == 局部变换
+    #definition[自治系统][
+      自治系统是指形如：
+      $
+      cases(
+        der(x, t) = f(x),
+        x(t_0) = x_0 
+      )
+      $
+    ]
+    局部变换是希望将一个自治系统的解在局部变换为另一个常微分方程的解。
+    #definition[][
+      - 称 $x_0$ 是常点，如果 $f(x_0) != 0$
+      - 称 $x_0$ 是奇点/平衡点，如果 $f(x_0) = 0$
+    ]
+    #theorem[][
+      设 $U$ 是微分同胚，$x = U(y)$，将微分方程：
+      $
+      der(x, t) = f(x)
+      $
+      变成
+      $
+      der(y, t) = g(y)
+      $
+      则：
+      $
+      g(y) = Inv((U')) f(x)
+      $<local-transform>
+      这里 $U$ 指微分同胚的雅可比矩阵
+    ]
+    #proof[
+      $
+      der(U y, t) = f(x)\
+      U' der(y, t) = f(x)\
+      U'  g(y) = f(x)
+      $
+    ]
+    #definition[][
+      设两个微分方程：
+      $
+      der(x, t) = f(x)\
+      der(y, t) = g(y)
+      $
+      之间，存在 $C^k$ 的微分同胚使得满足@local-transform ，则称两个方程 $C^k$ 等价。\
+      类似的，若在 $x_0$ 处的某个邻域存在 $C^k$ 的微分同胚使得满足@local-transform ，则称两个方程在 $x_0$ 处局部 $C^k$ 等价。
+    ]
+    #theorem[常点的 $C^k$ 分类/拉直定理][
+      设微分方程 $der(x, t) = f(x)$ 满足 $f(0) != 0$，则方程在 $0$ 处局部 $C^k$ 等价于：
+      $
+      der(y, t) = Y(y), Y(y) = vec(1, 0, dots.v, 0)
+      $
+    ]
+    #proof[
+      #let vc = $vec(1, 0, dots.v, 0)$
+      设 $f_i (x)$ 是分量，不妨设 $f_1 (0) != 0$\
+      显然第二个方程的解就是：
+      $
+      psi = y_0 + t vc
+      $
+      设 $phi(t, x_0)$ 是原方程的解，令:
+      $
+      U(0) = 0\
+      U(y) = phi(y_1, 0, y_2, dots, y_(n))
+      $
+      为了验证微分同胚，计算：
+      $
+      abs(der(U, y)) = abs(partialDer(phi, t) der(y_1, y) + partialDer(phi, x_0) der((0, y_2, ..., y_n)^T, y))\
+      = abs(f(phi) der(y_1, y) + partialDer(phi, x_0) der((0, y_2, ..., y_n)^T, y))
+      $
+      此外，将有：
+      $
+      U(psi(t, y)) = U(t+y_1, y_2, ..., y_n) = phi(t+y_1, 0, y_2, ..., y_n) 
+      $
+      求导再令 $t = 0$ 可得：
+      $
+      U'(y) Y(y) = f(phi(y_1, 0, y_2, ... y_n)) = f(U(y))
+      $
+      证毕
+    ]
+    说明常点的局部等价分类是非常简单的，接下来我们考虑奇点处的局部等价分类
+    #theorem[][
+      线性微分方程 $x' = A x, x' = B x$ 在 $0$ 处局部 $C^k$ 等价当且仅当 $A, B$ 相似
+    ]
+    #proof[
+      任取微分同胚 $U$ 在 $0$ 处泰勒展开计算即可
+    ]
+    对于一般的方程，我们当然希望通过泰勒展开将其化为线性方程。然而方程 $x' = A x + o(x)$ 当然不总是与 $x' = A x$ 等价，至少我们需要 $A$ 非退化。在什么条件下可以将其化为线性方程是上个世纪常微分方程研究的重要课题之一
+    #theorem[][
+      设 $f(x) = A x + o(x)$ 是 $C^infinity$ 的，而 $A$ 的特征根满足非共振条件：
+      $
+      sum_(i = 1)^n m_i lambda_i != 0, (m_i) in ZZ^n - {0} 
+      $
+      则方程 $x' = f(x)$ 在 $0$ 处局部 $C^infinity$ 等价于 $x' = A x$
     ]
