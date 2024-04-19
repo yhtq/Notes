@@ -1385,7 +1385,7 @@
       $
       f(z) = g(z)/(z - a)^n, space forall z in G - {a}
       $
-      $G$ 是某个开邻域使得 $f$ 在其中除了 $a$ 点处外都解析]
+      $G$ 是某个开邻域使得 $f$ 在其中除了 $a$ 点处外都解析]<pole>
 
     #proof[选取某个开邻域使得 $f != 0$，令 $h = 1/(f(z))$，$a$ 成为可去奇点，将其去掉后找零点的阶，有：
     $
@@ -1553,7 +1553,188 @@
     #proof[
       如果有无穷多个奇点，则将有聚点。由连续性极点的聚点还是极点，这与极点的孤立性矛盾！
     ]
+    #theorem[Mitting-Leffler][
+      设有离散的点列 $z_i -> infinity$ 以及 $m_n in NN, forall n in NN$，令：
+      $
+      L_n (z) = (a_(n, 1))/(z-z_n) + (a_(n, 2))/(z-z_n)^2 + ... + (a_(n, m_n))/(z-z_n)^(m_n)
+      $      
+      则存在 $f$ 使得在任意一个 $z_n$ 处的 Laurent 展开的负项恰为 $L_n (z)$，且这样的 $f$ 在差一个解析函数的意义下唯一
+    ]
+    #proof[
+      我们不证明
+    ]
+    #theorem[][
+      黎曼球面 $hat(CC)$ 上的亚纯函数就是有理函数 $(P(z))/(Q(z))$ 
+    ]
+    #proof[
+      不妨设 $z_1, z_2, ..., z_n, infinity$ 是所有极点，令：
+      $
+      L_k (z) = (a_(k, 1))/(z-z_k) + (a_(k, 2))/(z-z_k)^2 + ... + (a_(k, m_k))/(z-z_k)^(m_k)\
+      L_infinity (z) = b_1 + b_2 z + ... + b_n z^n + ...
+      $
+      是在所有极点处的 Laurent 展开\
+      则 $f - sum_k L_k - L_infinity$ 就是 $hat(CC) -> CC$ 解析函数，然而 $hat(CC)$ 是紧集，函数的模将有最大值，由 @Liouville 可得函数是常数\
+      由此，计算得 $f$ 当然就是有理函数
+    ]
+    #corollary[][
+      双全纯函数 $f: hat(CC) -> hat(CC)$ 一定是莫比乌斯变换
+    ]
+    #proof[
+      莫比乌斯变换当然是双全纯的。而假设 $f$ 是双全纯的，由上面的定理 $f$ 一定是有理函数。另一方面，$f$ 只能有唯一的零点和极点，自然分母分子都只能至多一次，意味着 $f$ 就是分式线性的。\
+      另一方面，显然 $f$ 不恒为常数，当然不能是退化的情形
+    ]
+    #theorem[Cousin question][
+      设有离散的点列 $z_i -> infinity$ 以及 $m_n in NN, forall n in NN$，令 $m_n$ 是一列整数，则存在解析函数 $f: CC -> CC$ 使得恰以 $z_i$ 为 $m_i$ 阶零点
+    ]
+    #proof[
+      同样的证明过于繁琐我们不证明
+    ]
+    #corollary[][
+      设 $f: CC -> CC$ 是亚纯函数，则存在解析函数 $g, h : CC -> CC$ 使得 $f = g/h$
+    ]
+    #proof[
+      设 $f$ 的极点为 ${z_n}_(n in A)$ 以及各自的阶 ${m_n}_(n in A)$，易知 $A$ 一定可数。\
+      由上面的定理，存在解析函数 $h$ 使得恰以 $z_n$ 为 $m_n$ 阶零点，由 @pole 一定有 $f h$ 没有任何极点也即解析，证毕
+    ]
+  == 留数
+    #let Res = math.op("Res")
+    #definition[留数|residue][
+      设 $a$ 是 $f$ 的孤立零点，其 Laurent 展开为：
+      $
+      sum_(n = -infinity)^(+infinity) a_n (z-a)^n
+      $
+      则称 $f$ 于 $a$ 处的留数为 
+      $
+      Res(f, a) := a_(-1) = 1/(2 pi i) integral_(partial B(0, epsilon)) f(z) dif z
+      $
+      其中 $epsilon$ 任意充分小
 
+      类似的，称 $f$ 在无穷远处的留数为：
+      $
+      Res(f, infinity) := - 1/(2 pi i) integral_(partial B(0, X)) f dif z
+      $
+      其中 $X$ 充分大
+    ]
+    #theorem[][
+      设 $f$ 在区域 $Omega subset hat(CC)$ 上除去有限个孤立奇点 $a_1, ..., a_n$ 上解析，设 $gamma_i$ 是有限条 $Omega$ 上的可求长曲线，且对任意 $z in CC - Omega$ 均有：
+      $
+      sum_i n(gamma_i, z) = 0
+      $ 
+      且 $gamma_i$ 不经过任意一个奇点 $a_k$，则：
+      $
+      sum_j 1/(2 pi i) integral_gamma_j f dif z = sum_(k)(sum_j n(gamma_j, a_k)) Res(f, a_k)
+      $
+    ]<residue>
+    #proof[
+      #let tg = $tilde(gamma)$
+      证明颇为复杂，我们需要分情况讨论：
+      + 假设 $infinity$ 不是奇点，令：
+        $
+        tg_k (t) = a_k + r_k e^(-2 pi i t sum_j n(gamma_j, a_k)), t in [0, 1]
+        $
+        其中 $r_k$ 足够小\
+        检验：
+        $
+        sum_j n(gamma_j, z) + sum_k n(tg_k, z) = 0, forall z in CC - (Omega - union_k B(a_k, r_k))
+        $
+        因此可以使用柯西定理得：
+        $
+        sum_j 1/(2 pi i) integral_(gamma_j) f dif z = - sum_k 1/(2 pi i) integral_(tg_k) f dif z
+        $
+        这里的柯西定理是在 $G$ 中除去每个奇点附近的小邻域中使用的\
+        同时，不难计算得到：
+        $
+        1/(2pi i) integral_tg_k f  dif z = - sum_j n(gamma_j, a_k) Res(f, a_k) 
+        $
+        代入上式即得定理
+      + 若 $infinity$ 是奇点，证明是类似的
+    ]
+    #corollary[][
+      设 $z_k$ 是 $f: CC -> CC$ 的有限多个奇点，且 $infinity$ 也是奇点，将有：
+      $
+      sum_k Res(f, z_k) + Res(f, infinity) = 0
+      $
+    ]
+    #proof[
+      在 @residue 中取曲线族为空集，区域为 $hat(CC)$ 即可
+    ]
+    #proposition[][
+      设 $a$ 是 $f$ 的 $m$ 阶极点，且 $g(z) = (z-a)^m f(z)$，则 $Res(f, a) = 1/((m-1)!) g^((m-1)) (a)$
+    ]
+    #proof[
+      写下 Laurent 级数并计算即可
+    ]
+    #example[][
+      留数在实际计算中非常有效，试举几例：
+      - $integral_0^(+infinity) (sin x)/x = pi/2$\
+        令 $f(z) = e^(i z)/z$，则被积函数是它的虚部。此外，$f$ 仅在 $0$ 处有一个奇点\
+        取 $0 < r < R$ 并考虑轨迹 $-R -> -r ->^(circle) r -> R ->^(circle) -R$，可以利用柯西定理有：
+        $
+        integral_(- R -> -r + r -> R) f dif z + integral_(-r ->^(circle) r + R ->^(circle) -R) f dif z\
+        = (integral_(-R)^(-r) + integral_r^R) (cos x + i sin x)/x dif z + integral_(-r ->^(circle) r + R ->^(circle) -R) f dif z\
+        = 2 i integral_r^R (sin x)/x dif z + integral_(-r ->^(circle) r + R ->^(circle) -R) f dif z\
+        $
+        此外：
+        - $
+          integral_(-r ->^(circle) r) e^(i z)/z dif z = integral_(-pi)^0 e^(i r e^(i theta))/(r e^(i theta)) i r e^(i theta) dif theta\
+          = i integral_(-pi)^0 e^(i r e^(i theta)) dif theta
+          $
+          当 $r -> 0$ 时被积函数 $-> 1$，因此上式 $-> - i pi$
+        - $
+          integral_(R ->^(circle) -R) e^(i z)/z dif z\
+          = integral_(0)^pi e^(i R e^(i theta)) dif theta\
+          $<int1>
+          #lemma1[
+            设 $norm(f(z)) <= 1, forall z in gamma$ 且仅在有限个点上取等，则：
+            $
+            lim_(R -> +infinity) integral_gamma norm(f(z))^R dif z = 0
+            $
+          ]
+          #proof[
+            令：
+            $
+            f_n (z) = f(z) + epsilon_n
+            $
+            其中 $epsilon_n -> 0$ 足够小使得 $norm(f_n) < 1$，由于 $norm(f(z)) = 1$ 的点仅有有限个，这是可以实现的\
+            不难验证 $f_n (x)$ 一致收敛于 $f(x)$ 且对每个 $f_n$ ，$norm(f_n (gamma))$ 有正上界 $M_n < 1$（注意到连续函数于紧集上有最大值），由此：
+            $
+            norm(integral_gamma f(z)^R dif z) <= integral_gamma norm(f(z))^R dif z <= integral_gamma M^R dif z
+            $
+            因此：
+            $
+            lim_(R -> +infinity) integral_gamma norm(f_n (z))^R dif z &= 0\
+            lim_(R -> +infinity) integral_gamma norm(f (z))^R dif z &= lim_(R -> +infinity) lim_(n->+infinity) integral_gamma norm(f_n (z))^R dif z = 0\
+            &= lim_(n->+infinity) lim_(R -> +infinity) integral_gamma norm(f_n (z))^R dif z = 0\
+            &= 0
+            $ 
+            证毕
+          ]
+          由引理，立得@int1 趋于零
+    ]
+    #theorem[幅角原理|The Argument Principle][
+      设 $f$ 是 $G subset CC$ 上的亚纯函数，以 $p_1, ..., p_m$ 为极点（多重重复记）和 $z_1, z_2, ..., z_n$ 为零点（多重重复记），$gamma$ 是 $G$ 上与这些零点，极点不交的可求长曲线，并且：
+      $
+      n(gamma, z) = 0, forall z in CC - G
+      $
+      此时：
+      $
+      1/(2 pi i) integral_gamma (f'(z))/(f(z)) dif z = sum_(k=1)^n n(gamma, z_k) - sum_(k=1)^m n(gamma, p_k)
+      $
+    ]
+    #proof[
+      令：
+      $
+      g(z) = f(z) (product_(k=1)^n (z - p_k))/ (product_(k=1)^m (z - z_k))
+      $
+      它是解析函数，计算并利用柯西定理即得结论
+    ]
+    #remark[][
+      某种意义上，有：
+      $
+      integral_gamma (f'(z))/(f(z)) dif z = integral_gamma dif ("Ln"(f(z)))
+      $
+      几何意义上，就是 $gamma$ 绕 $z$ 一圈时对幅角的积分
+    ]
 
 
 
