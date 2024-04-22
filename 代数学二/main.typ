@@ -2957,7 +2957,7 @@
     ]
     #proposition[][
       设 $A subset B$ 且 $B$ 在 $A$ 上整，则
-      - 任取 $B$ 的理想 $J, B sect J$ 在 $A quo (J sect A)$ 上整
+      - 任取 $B$ 的理想 $J, B quo J$ 在 $A quo (J sect A)$ 上整
       - 任取 $A$ 的乘性子集 $S, Inv(S) B$ 在 $Inv(S) A$ 上整 
     ]
     #proposition[][
@@ -3195,7 +3195,7 @@
     #proof[
       本门课程不会用到这些事实，不作证明
     ]
-  == 赋值环
+  == 赋值、赋值谱
     #definition[][
       设 $A$ 是环，$P$ 是全序阿贝尔群，称一个赋值是映射：
       $
@@ -3263,6 +3263,157 @@
         $
         其中后者是 $F_p$ 上的平凡赋值
     ]
+  == 赋值环
     #definition[dominate][
       设 $A subset B$ 是局部环，极大理想分别为 $m, n$，若 $n sect A = m$ 则称 $B$ 支配 $A$
+    ]
+    #definition[valuation ring][
+      设 $A$ 是整环，$k$ 是分式域，称 $A$ 是 $k$ 的赋值环，如果以下等价条件成立：
+      + $forall x in k, x in B or Inv(x) in B$
+      + 存在全序阿贝尔群 $(Gamma, +)$ 和满同态 $nu: k^* -> Gamma$，并且满足：
+        $
+        nu(x + y) >= min(nu(x), nu(y))\
+        nu(x y) = nu(x) + nu(y)
+        $
+        并且 $B = {x in k | nu(x) >= 0}$
+        此时，称 $v$ 是 $B$ 的一个（加性）赋值
+      + $A$ 的主理想在包含关系下构成全序集
+      + $A$ 的所有理想在包含关系下构成全序集
+      + $A$ 是局部环并且每个有限生成理想是主理想
+      + $A$ 是局部环且不存在 $k$ 中的局部环支配 $B$
+      + 存在代数闭域 $L$ 以及同态 $theta: A -> L$（一般不是单射），并且 $A, theta$ 是极大的，也就是若 $A subset A' subset k, theta': A' -> L$ 是 $theta$ 的延拓，则 $A = A'$
+    ]<valuation-ring-cond>
+    #proof[
+      - 1 $=>$ 2 取 $Gamma = k^* quo B^*$，$nu$ 是自然映射，只需给出序结构。对于 $gamma, gamma' in Gamma$，有：
+        $
+        gamma <= gamma' <=> gamma - gamma' in im(B - {0} -> Gamma)
+        $
+        #TODO
+      - 2 $=>$ 1 显然
+      - 1 $=>$ 3\
+        断言 $A$ 的主理想与 $(B - {0}) quo B^*$ 有一一对应\
+        #TODO
+        2 的结论就给出其上的全序关系
+      - 4 $=>$ 3 显然
+      - 3 $=>$ 4 任取两个理想 $I_1, I_2$ ，设 $I_1 subset.not I_2$ ，往证 $I_2 subset I_1$\
+        任取 $a in I - J, b in J$，$a in.not J => (a) subset.not (b) subset J$，而由主理想的全序性必有 $(b) subset (a) subset I => b in I$，证毕
+      - 4 $=>$ 5 由理想的全序性，两个极大理想必然可比，当然只能有唯一一个极大理想。同时，设 $I = (x_1, x_2, ..., x_n)$ ，此时 $(x_1)$ 与 $(x_2, x_3, ..., x_n)$ 相互包含，因此可以去掉一个生成元，以此类推可以只剩下一个生成元，进而是主理想
+      - 5 $=>$ 1 设 $a, b in k != 0$, 往证 $a / b in A or b / a in A$\
+        设 $I = (a, b)$ 由条件它是主理想，因此 $I quo m I$ 是一维的线性空间，进而：
+        $
+        exists u, v in A, (u + m I) a + (v + m I) b = m I => u a + v b in m I
+        $
+        其中 $u, v$ 不全在 $m I$ 之中，继而可设：
+        $
+        exists x, y in m, u a + v b = x a + y b=> (u - x) a = (y - v) b
+        $
+        无妨设 $u in.not m$ ，然而局部环表明 $u$ 是单位。同时 $x in m$，因此 $u - x$ 不在 $m$ 中，也是单位，进而 $a = k b, k in A$ ，证毕
+      - 1 $=>$ 6 假设 $A'$ 是局部环，且 $A subset.neq A'$，往证 $A'$ 不支配 $A$，也就是存在 $A$ 中极大理想中的元素，在 $A'$ 中是单位（进而 $m_A subset.not m_(A') sect A$） \
+        取 $x in A' - A$，由条件 $Inv(x) in A subset A'$ ，因此 $x$ 在 $A'$ 中一定是单位\
+        此时，$Inv(x)$ 当然不是 $A$ 中的单位，但在 $A'$ 中是单位，证毕。
+      - 6 $=>$ 7 设 $K = A quo m$ 是留域，取 $L$ 是 $K$ 的代数闭包，$theta: A -> A quo m -> L$\
+        假设存在延拓 $A subset A' subset k, theta': A' -> L, theta'|_A = theta$\
+        显然，$ker theta = m$，设 $m' = ker(theta')$，则 $A'$ 可以嵌入 $A'_m'$ （注意到 $A'$ 是域的子环，当然是整环），此时只需证明 $A = A'_(m')$ 因此不妨设 $A'$ 是局部环，$m'$ 是极大理想\
+        显然，此时 $m = ker theta = ker theta' sect A = m' sect A$，利用条件 6 知结论成立
+      - 7 $=>$ 1 这步较为困难，需要建立若干个引理，之后会证明
+    ]
+    #example[][
+      - 满足 $dim = 1$ 的赋值环只有两种：离散赋值环（赋值在 $ZZ$ 上的赋值，一定是 Noether 的）和非离散的
+      - 设 $v: k(x, y) -> ZZ^2$ 并使用 $ZZ^2$ 上字典序，也即 $v(x) = (1, 0), v(y) = (0, 1)$\
+        此时 ${x | v(x) >= 0}$ 是赋值环
+      - 设 $k[x] subset k[x^(1/2)] subset ... subset k[x^(1/n)] subset ..$\
+        $
+        O_n = k[x^(1/2^n)]_(p_n) where p_n = (x^(1/2^n))
+        $
+        可以验证：
+        $
+        O_n subset O_(n+1), p_(n+1) sect O_n = p_n
+        $
+        设 $O = union_n O_n$ ，此时 $O$ 是非 Noether 的赋值环，赋值群是
+        $
+        {z/(2^n) | z in NN, n in NN}
+        $
+        的子群
+    ]
+    #proposition[][
+      设 $B$ 是赋值环，$k$ 是分式域，则：
+      - $B$ 是局部环
+      - 设 $B'$ 是环使得 $B subset B' subset k$，则 $B'$ 也是赋值环
+      - $B$ （在 $k$ 中）整闭
+      - 设 $p$ 是 $B$ 的素理想，则 $B quo p, B_p$ 在各自的分式域都是赋值环
+    ]
+    #proof[
+      - 之前已经证明，但是我们换一种方法再次证明。设 $m$ 是 $B$ 中所有非单位元，显然只需证明 $m$ 是理想。\
+        - 假设 $a in B, x in m$，若 $a x in.not m$，则 $Inv((a x)) in B => Inv(x) = a Inv((a x)) in B$ 矛盾！
+        - 假设 $x, y != 0 in m$ ，由定义 $x Inv(y) in B$ 或 $y Inv(x) in B$ ，不妨设前者成立，则：
+          $
+          x + y = y (1 + Inv(y) x) 
+          $
+          显然若 $x + y$ 可逆，则 $y$ 也可逆，矛盾！
+      - 设 $x in k$，显然：
+        $
+        x in B => x in B'\
+        Inv(x) in B => Inv(x) in B'\
+        $
+        至少有一个成立，因此 $B'$ 当然也是赋值环
+      - 设 $x in k$ 在 $B$ 上整，设 $f(x) = 0$，也即：
+        $
+        x^(n) + a_1 x^(n-1) + ... + a_n = 0\
+        x + a_1 + ... + a_n x^(-(n-1)) = 0\
+        x = -a_1 - ... - a_n x^(-(n-1))\
+        $
+        注意到若 $x in.not B$ 必有 $Inv(x) in B$，然而上式右侧全部是 $B$ 中元素，进而 $x$ 也是，矛盾！
+      - 简单验证即可 #TODO
+    ]
+    #theorem[赋值环的构造][
+      设 $k$ 是任意一个域，$Omega$ 是代数闭域，令：
+      $
+      Sigma = {(A, f) | A subset k "是子环", f in Hom(A, Omega)}
+      $
+      定义偏序关系：
+      $
+      (A, f) <= (A', f') <=> "存在交换图表："
+      $
+      #align(center)[#commutative-diagram(
+      node((0, 0), $A$, 1),
+      node((0, 1), $A'$, 2),
+      node((1, 0), $Omega$, 3),
+      arr(1, 2, $$, inj_str),
+      arr(2, 3, $f'$),
+      arr(1, 3, $f$),)]
+      则 $Sigma$ 非空且有极大元，且其极大元是赋值环 
+    ]
+    #proof[
+      首先，$Sigma$ 非空（可以取 $(0, 0)$），且满足 Zoun 引理条件，进而存在极大元\
+      设 $B$ 是一个极大元
+      #lemma1[
+         $B$ 是局部环，且 $m = ker(f)$ 是极大理想
+      ]
+      #proof[
+        设 $m =  ker(f)$，可以局部化得到 $B_m$，同时注意到：
+        $
+        f(B - m) subset U(Omega)
+        $
+        当然 $f$ 可以延拓到 $B_m$ 上，而由极大性得 $B_m = B$，证毕
+      ]
+      #lemma1[
+        任取 $x in k - {0}, B[x] subset k, m[x] := m B[x]$ ，则以下两者至少有一个成立：
+        - $m[x] subset.not B[x]$
+        - $m[Inv(x)] subset.not B[Inv(x)]$
+      ]
+      #proof[
+        如若不然，则两者同时成立，则由 $1 in B[x], B[Inv(x)]$ 得：
+        $
+        1 = sum_(i=0)^n u_i x^i, u_i in m\
+        1 = sum_(i=0)^m v_i x^(-i), v_i in m
+        $
+        不妨设 $m, n$ 各自最小且 $m >= n$，此时二式给出：
+        $
+        (1 - v_n) x^n = v_1 x^(n-1) +... + v_(n-1) x + v_n
+        $
+        注意到 $1-v_n$ 是单位，上式可以化成首一的多项式，进而和一式做带余除法将降低次数，与 $m, n$ 的极小性矛盾！
+      ]
+      回到定理的证明，往证 $x in B or Inv(x) in B$，由上面的引理不妨设 $m[x] != B[x] := B'$，则存在 $B'$ 的极大理想 $m'$ 使得 $m[x] subset m'$\
+      另一方面，我们证明 $f: B -> Omega$ 可以延拓到 $B' = B[x]$ 上即可\
+      首先，显然有 $m' sect B = m$（既然 $m subset m' sect B$ 而 $m$ 是极大理想），这表明 $B quo m$ 可以嵌入 $B' quo m'$，且 $B' quo m'$ 在 $B quo m$ 上代数
     ]

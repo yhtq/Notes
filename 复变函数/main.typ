@@ -912,19 +912,24 @@
     注意到 $delta$ 可以任意小，因此上式右侧可以任意小，进而得证
   ]
   #theorem[Cauthy 3][
-    设 $G$ 是有界区域，其边界是有限多条光滑曲线。$f$ 在区域的闭包上解析，则 $f$ 可在 $G$ 上可以表示为级数，且该级数的收敛半径至少为 $G$ 的最大半径\
-    特别的，$f$ 无穷阶可导
+    设 $G$ 是开球 $B(a, r)$ ，$f$ 在 $G$ 上解析，则 $f$ 有级数表达：
+    $
+    f(z) = sum_(n=0)^(+infinity) a_n (z - a)^n
+    $ 
+    且级数的收敛半径至少为 $r$
   ]
   #proof[
-    不妨设将 $f$ 延拓到更大的区域上，我们有：
+    无妨设 $a = 0$ 我们有：
     $
     f(z) = 1/(2 pi i)integral_(diff G)^() f(w)/(w - z) dif w\
     = 1/(2 pi i)integral_(diff G)^() - 1/w f(w)(sum_(k=0)^infinity (z/w)^k ) dif w\ 
-    = z^k sum_(k=0)^infinity 1/(2 pi i)integral_(diff G)^() - 1/w f(w) 1/w^k dif w\
+    = sum_(k=0)^infinity (1/(2 pi i)integral_(diff G)^() - 1/w f(w) 1/w^k dif w) z^k\
     $
     不难看出上式右侧恰为幂级数，得证
   ]
-
+  #corollary[][
+    开集上的解析函数无穷阶可导
+  ]
 = 整函数与解析函数的基本定理
   == 基本定理
     #definition[整函数][
@@ -1167,7 +1172,13 @@
       $
       注意到 $alpha in.not sigma$，故存在 $alpha$ 的开邻域 $B_alpha$ 与 $gamma$ 不交，这个邻域当然属于 $sigma$ 分割出的同一个连通分支，进而缠绕数是常数。事实上，有：
       $
-      forall beta in B_a,  m = n(sigma, alpha) = n(sigma, beta)
+      n(sigma, alpha) = n(sigma, beta)
+      $
+      然而：
+      $
+      n(sigma, alpha) &= integral_(f compose gamma)^() 1/(z - alpha)  dif z \
+      &= 1/(2 pi i) integral_(gamma)^() 1/(f(z) - alpha) f'(z) dif z\
+      &= m
       $
       取 $G = B(a, 2 epsilon)$，应用之前的定理得：
       $
@@ -1485,7 +1496,7 @@
       - 由前两者可得
     ]
     #theorem[][
-      设 $a$ 是 $f$ 的孤立本性奇点，则对任意 $epsilon > 0$，只要 $f$ 在 $B(0, epsilon)$ 解析，都有 $f(B(a, epsilon))$ 在 $CC$  中稠密
+      设 $a$ 是 $f$ 的孤立本性奇点，则对任意 $epsilon > 0$，只要 $f$ 在 $B(a, epsilon) - {a}$ 解析，都有 $f(B(a, epsilon) - {a})$ 在 $CC$  中稠密
     ]<C-W>
     #proof[
       如若不然，设 $b in CC$ 不是 $Inv(f)(B(a, epsilon))$ 的极限点，继而存在邻域 $B'$ 与 $B$ 不交\
@@ -1501,7 +1512,7 @@
       不难发现 $a$ 要么是 $f$ 的可去奇点，要么是极点，矛盾！
     ]
     #theorem[Picard 大定理][
-      设 $a$ 是 $f$ 的孤立本性奇点，则对任意 $epsilon > 0$，只要 $f$ 在 $B(0, epsilon)$ 解析，都有 $CC - f(B(a, epsilon))$ 中至多只有一个点
+      设 $a$ 是 $f$ 的孤立本性奇点，则对任意 $epsilon > 0$，只要 $f$ 在 $B(a, epsilon) - {a}$ 解析，都有 $CC - f(B(a, epsilon) - {a})$ 中至多只有一个点
     ]
     #proof[
       它的证明颇为复杂，这里不证明
@@ -1539,7 +1550,7 @@
     ]
     #theorem[][
       设 $f, g$ 是 $Omega$ 上的亚纯函数，若存在集合 $S$ 使得：
-      - $f|S = g|S$
+      - $f|_S = g|_S$
       - $S$ 在 $Omega$ 上有聚点
       则 $f = g$
     ]
@@ -1548,7 +1559,7 @@
       显然 $h(x) = 0$，由连续性知存在一个邻域使得其中没有 $h$ 的奇点，$h$ 成为一般的解析函数，而这样的函数零点集有聚点除非恒零，故 $h = 0$，由 $Omega$ 的连通性知结论成立
     ]
     #theorem[][
-      $f: Omega -> C union infinity$ 在 $Omega$ 内部的紧集上仅有有限多个奇点
+      亚纯函数 $f: Omega -> C union infinity$ 在 $Omega$ 内部的紧集上仅有有限多个奇点
     ]
     #proof[
       如果有无穷多个奇点，则将有聚点。由连续性极点的聚点还是极点，这与极点的孤立性矛盾！

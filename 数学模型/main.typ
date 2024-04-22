@@ -1403,7 +1403,7 @@
     #let SG = $"SG"$
     上面的两个目标当然无法轻易实现，需要很多的设计和取舍。例如一个经典的方法是所谓的*双曲截断*，考虑到系数在每个维度上衰减都十分迅速，因此应该取那些合适的格点使得每个维度都不要取过高项的系数。具体来说，取格点：
     $
-    SG_N = {kv | product_(j=1)^n max(kv_j, 1) := absMix(kv) <= N}
+    SG_N = {kv | product_(j=1)^n max(abs(kv_j), 1) := absMix(kv) <= N}
     $
     此时，近似函数所在的函数空间为：
     $
@@ -1441,4 +1441,124 @@
         &< 1/N^(2 m - 2mu) absKpm2(u)
         $
         证毕
+      ]
+      #remark[][
+        上面的定理说明了投影可以保持精度，理论上还要证明插值也保持投影的精度，这里不再赘述。
+
+        这里函数空间的限制（也即 $absKpm(u) < infinity$ ）是非常重要的，不难看出一旦失去了这个条件精度便会失去估计。从形式上看，这需要 $tu_k$ 衰减地非常之快，谱方法中它确实往往有较好的收敛速度，但在一般的数值方法中未必。
+
+        然而有趣的是，双曲截断方法的提出在历史上并非最早为了谱逼近方法提出，而是为了在谱方法之前更加常用的分片常数/多项式逼近设计的。
+        
+      ]<approx-remark>
+
+    - 使用该方法需要取多少格点，也即稀疏性如何。为此，希望计算 $abs(SG_N)$
+      #theorem[][
+        $d$ 维的稀疏网格满足：
+        $
+        abs(SG_N) = O(N (log N)^(d-1))
+        $
+      ]
+      #proof[
+        利用数学归纳法
+        - $d = 1$ 是容易的
+        - 一般的：
+          $
+          {kv | product_(j=1)^n max(abs(kv_j), 1) := absMix(kv) <= N} \
+          = union_(s =0)^N {kv | product_(j=1)^n max(abs(kv_j), 1) <= N, abs(kv_1) = s}\
+          = (union.big_(s =1)^N {kv | product_(j=2)^n max(abs(kv_j), 1) <= N/s, abs(kv_1) = s}) union {kv | product_(j=2)^n max(abs(kv_j), 1) <= N,  abs(kv_1) = 0}\
+          $
+          上式中均为不交并，因此对其计数并利用归纳假设，有：
+          $
+          abs(SG_N^d) = 2 sum_(s=1)^N abs(SG_(N/s)^(d-1)) + abs(SG_N^(d-1))\
+          = sum_(s=1)^N O(N/s (log (N/s))^(d-2)) + O(N (log N)^(d-2))\
+          = N sum_(s=1)^N O(1/s (log N - log s)^(d-2) )+ O(N (log N)^(d-2))
+          $
+          只需要估计 $sum_(s=1)^N O(1/s (log N - log s)^(d-2) )$，利用积分有：
+          $
+          sum_(s=1)^N O(1/s (log N - log s)^(d-2) )&<= integral_(1)^(N) 1/x (log N - log x)^(d-2) dif s\
+          &=^(t = log s) k integral_(0)^(log N) (log N - t)^(d-2) dif t\ 
+          &=^(u = log N - t) k integral_(0)^(log N) u^(d-2) dif u\ 
+          &= O((log N)^(d-1))
+          $
+          故原式约为 $O(N (log N)^(d-1)) + O(N (log N)^(d-2)) = O(N (log N)^(d-1))$，证毕
+      ]
+      这个结果当然比之前的全网格好得多，我们只需要稍微劣于线性的复杂度就可以取得足够多的项。
+    == 分片线性逼近中的稀疏网格
+      #let oddl = $odd_l$
+      @approx-remark 中提到了稀疏网格方法的历史问题，为了完善起见我们论述如何在更加简单的分片线性逼近中实现稀疏网格方法。核心而言，我们要：
+      - 找到合适的正交基。在谱方法中我们采用了三角函数的振荡正交，而在这里我们索性简单地将不同基的非零部分（称为*支集*）分开。
+      - 找到指数级别的衰减性。一般的分片逼近并无如此强的衰减性，我们必须迅速增加分点个数以保证高速衰减。
+      #definition[分片线性逼近][
+        令：
+        $
+        Phi(x) = cases(
+          1 - abs(x) quad abs(x) <= 1,
+          0 quad "else"
+        )
+        $
+        对 $[0, 1]$ 做均匀划分，网格步长为 $h_l = 2^(-l)$，分点为：
+        $
+        0 = x^l_0 < x^l_1 < ... < x^l_(2^l) = 1
+        $
+        以这些分点构造分片线性基函数：
+        $
+        Phi_(l i) = Phi((x - x^l_(i))/h_l)
+        $
+        其紧支集为 $[x^l_i - h_l, x^l_i + h_l]$\
+        记 $V_l = "span" {Phi_(l i) | i = 0, 1, ..., 2^l}$，称为分片线性函数逼近空间。\
+        方便起见，不妨设函数在边界为零，因此不需要再考虑 $Phi_(l 0), Phi_(l 2^l)$
+
+        考虑如下的嵌套基组：
+        $
+        W_l = "span" {Phi_(l i) | i in {1, 3, 5, ..., 2^l - 1} := oddl}\
+        $
+        不难发现 $W_l$ 中每两个函数之间的紧支集至多交于一点，且 $W_l$ 中任何一个基函数在 $W_(l+1)$ 中恰好分成两个函数（所谓的嵌套关系）
+      ]
+      #proposition[][
+        在不考虑边界的情况下，有：
+        $
+        V_L = plus.circle_(1 <= l <= k) w_l 
+        $
+        继而任取 $u in V_L$ 将有：
+        $
+        u(x) = sum_(l=1)^L sum_(i in oddl) hu_(l i) Phi_(l i)(x) 
+        $<linear-approx>
+      ]
+      #let diffI(y, h) = $I_((#y, #h))$
+      #theorem[][
+        在上面的命题中，有：
+        $
+        hu_(l i) = diffI(x_(l i), h_l) u(x) \
+        where diffI(y, h) u(x) = u(y) - 1/2(u(y-h) + u(y+h))
+        $
+      ]
+      #proof[
+        注意到 $I$ 具有线性，以 $I$ 作用于 @linear-approx 将有：
+        $
+        diffI(x_(l i), h_l) u(x) = sum_(l'=1)^L sum_(i' in oddl) hu_(l' i') diffI(x_(l i), h_l) (Phi_(l' i')(x) )
+        $
+        只需计算：
+        $
+        diffI(x_(l i), h_l) (Phi_(l' i')(x) ) = Phi_(l' i')(x_(l i)) - 1/2(Phi_(l' i')(x_(l i) - h_l) + Phi_(l' i')(x_(l i) + h_l))\
+        $
+        - $l' < l$ 时，$x_(l i) plus.minus h_l$ 一定落在 $Phi_(l' i')$ 中的同一个线性分支上（线性增加/减少/支集之外），观察 $I$ 的表达式可得一定为零
+        - $l' > l$ 时，观察发现 $x_(l i) plus.minus h_l$ 在高层基函数的取值均为零，当然也是零
+        - $l = l'$ 时，由不重叠性非零除非 $i = i'$，此时 $Phi_(l' i')(x_(l i) + h_l) = 1$
+        综上，$Phi_(l' i')(x_(l i) + h_l) = delta_(i, i') delta_(l, l')$，代回即可得到所证式子
+      ]
+      #corollary[][
+        在上面的命题中，有：
+        $
+        hu_(l i) = integral_(0)^(1) (-1/2) 2^(-l) Phi_(l, i) (x) u''(x) dif x
+        $
+      ]
+      #proof[
+        $
+        integral_(0)^(1) (-1/2) 2^(-l) Phi_(l, i) (x) u''(x) dif x
+        &= - 2^(-l-1) integral_(x_l^i - h_l)^(x_l^i + h_l) Phi_(l, i) (x) u''(x) dif x\
+        &"（利用分部积分计算并展开）"\
+        &=  - 2^(-l-1)  (integral_(x_l^i - h_l)^(x_l^i ) (u'(x))/(h_l) dif x - integral_(x_l^i )^(x_l^i + h_l ) (u'(x))/(h_l) dif x)\
+        &= - 1/2 (integral_(x_l^i - h_l)^(x_l^i ) u'(x) dif x - integral_(x_l^i )^(x_l^i + h_l ) u'(x) dif x)\
+        &= diffI(x_(l i), h_l) u(x)
+        $
       ]

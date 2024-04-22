@@ -147,7 +147,7 @@
       $
       p(x, y) f(x, y) dif x + q(x, y) f(x, y) dif y = 0
       $
-      则称 $f(x, y)$ 为@proper 的积分因子
+      是恰当形式，则称 $f(x, y)$ 为@proper 的积分因子
     ]
     #example[][
       $
@@ -1132,14 +1132,14 @@
       所有的解都可以延拓到 $(a, b)$
     ]
     #proof[
-      #lemma1[
+      #lemma[][
         两个微分方程：
         $
         der(y, x) = A(x) abs(y) + B(x)\
         der(y, x) = - A(x) abs(y) - B(x)
         $
         过任意点的解存在唯一，且解的存在区间都是 $(a, b)$ 
-      ]
+      ]<linear_all_range>
       #proof[
         存在唯一性是容易的。对于存在区间，只证明第一个方程\
         显然它的解单调递增，若解的存在区间不是 $(a, b)$ ，则必然在某点 $x_0 in (a, b)$ 处的左/右极限为 $+\/minus infinity$，不妨设为左极限为正无穷\
@@ -1397,7 +1397,7 @@
       $
       cases(
         F(x, phi(x), phi'(x)) = 0,
-        partialDer(F, y) (x, phi(x), phi'(x)) = 0
+        partialDer(F, y') (x, phi(x), phi'(x)) = 0
       ) <=> y = psi(x)
       $
       （事实上，也就是 $Delta(x, y)$ 是原方程的解）\
@@ -1479,12 +1479,13 @@
       $
       cases(
         F(x, phi(x), phi'(x)) = 0,
-        partialDer(F, y) (x, phi(x), phi'(x)) = 0
+        partialDer(F, y') (x, phi(x), phi'(x)) = 0
       ) <=> y = psi(x)
       $
       若：
       $
-      (diff^2 F)/(diff p^2) (x, psi(x), psi'(x)) != 0
+      (diff^2 F)/(diff p^2) (x, psi(x), psi'(x)) != 0\
+      partialDer(F, y) (x, phi(x), phi'(x)) != 0
       $
       则 $psi$ 是奇解
     ]
@@ -1847,9 +1848,8 @@
       $
       解出 $u(x, 0) = e^(2 x) - x - 1$
     ]
-= 自治系统
-  本章的内容是从理论上研究微分方程。
   == 局部变换
+    本章的内容是从理论上研究微分方程。
     #definition[自治系统][
       自治系统是指形如：
       $
@@ -1943,3 +1943,129 @@
       $
       则方程 $x' = f(x)$ 在 $0$ 处局部 $C^infinity$ 等价于 $x' = A x$
     ]
+= 线性微分方程
+  == 一般线性微分方程
+    方便起见，这里约定对向量/矩阵的求导/积分都是逐元素进行的
+    #definition[][
+      设 $x in RR^n, t in RR$\
+      称微分方程：
+      $
+      der(x, t) = A(t) x + B(t)
+      $<linear-equation>
+      为一般线性微分方程，如果 $A, B$ 都关于 $t$ 连续
+    ]
+    #proposition[][
+      - 一般线性微分方程在任何点处的解都存在唯一
+      - 每个解总是在大范围存在
+    ]
+    #proof[
+      - 就是 @peano 
+      - 就是 @linear_all_range
+    ]
+    一般而言，当 $A(t)$ 不是常数时，方程是无法写出解的。我们的目标是研究解空间的性质。
+  == 齐次线性微分方程
+    #definition[][
+      在 @linear-equation 中，若 $B(t) = 0$，则称之为齐次微分方程
+    ]
+    #proposition[][
+      - 齐次线性方程的解构成线性空间
+      - 齐次线性方程的解要么恒为零，要么恒不为零
+      - 齐次线性方程的若干解线性相关当且仅当在存在某点，它们在该点线性相关
+    ]<homogeneous-linear>
+    #proof[
+      - 简单验证即可
+      - 注意到 $x = 0$ 是平凡解，结合解的唯一性立得
+      - 注意到若干解的线性组合还是解，利用上一条性质立得
+    ]
+    #theorem[][
+      $n$ 维齐次线性微分方程的解空间恰为 $n$ 维线性空间。换言之，若可以找到 $n$ 个线性无关的解，则它们生成的线性空间恰为解空间，这称为方程的通解
+    ]
+    #proof[
+      令 $e_i$ 是 $RR^n$ 中一组标准基，令 $x_i (t)$ 是方程：
+      $
+      cases(
+        der(x, t) = A(t) x,
+        x(t_0) = e_i
+      )
+      $
+      的一个解，断言它们就是原方程解的基
+      - 首先，它们线性无关，既然它们在 $t_0$ 处线性无关，利用 @homogeneous-linear 即可
+      - 其次，任取原方程的初值为 $x(t_0) = x_0$，令：
+        $
+        x(t) = sum_i x_0^i x_i (t)
+        $
+        容易看出 $x(t)$ 也是符合该初值的解，由唯一性这就是唯一一个解
+      证毕
+    ]
+    #definition[][
+      若矩阵 $X$ 是齐次线性微分方程的解，也即：
+      $
+      der(X, t) = A(t) X
+      $
+      则称之为矩阵解。显然矩阵是解当且仅当每一列都是原方程的一个解，继而该矩阵的列秩至多为 $n$，恰为 $n$ 时称之为基本解矩阵或者基解阵
+    ]
+    #proposition[][
+      矩阵解 $X$ 是基础解矩阵当且仅当在某个点上有 $det(X) != 0$
+    ]
+    #proof[
+      就是 @homogeneous-linear
+    ]
+    #theorem()[][
+      设 $Phi(t)$ 是基解阵，则 $X(t)$ 是基解阵当且仅当存在可逆矩阵 $C$ 使得：
+      $
+      Phi(t) C = X(t)
+      $
+    ]
+    #proof[
+      注意到求导是线性的，因此：
+      $
+      der(Phi(t) C, t) = der(Phi(t), t) C = A(t) Phi(t) C
+      $
+      因此 $Phi(t) C$ 确实是解，计算行列式可得它是基础解矩阵
+
+      另一方面，设 $X(t)$ 是基础解矩阵，任取 $t_0$ 并设有：
+      $
+      Phi(t_0) C = X(t_0)
+      $
+      注意到 $ Phi(t_0), X(t_0)$ 都是可逆矩阵，$C$ 当然存在\
+      此时 $X(t) - Phi(t) C$ 是原方程有零点的解，就是零
+    ]
+    #proposition()[Liouville][
+      设 $x_i$ 是 $n$ 个解，设 $det(x_1, x_2, ..., x_n) := W(t)$，则：
+      $
+      W'(t) = tr(A(t)) W(t)
+      $
+    ]
+    #proof[
+      容易发现：
+      $
+      W'(t) = sum_i det(x_1, x_2, ..., x'_i, ..., x_n) = sum_i det(x_1, x_2, ..., A x_i, ..., x_n)
+      $
+      #lemma1[
+        $
+        sum_i det(x_1, x_2, ..., A x_i, ..., x_n) = tr(A) det(x_1, x_2, ..., x_n)
+        $
+      ]
+    ]
+  == 非齐次线性微分方程
+    #proposition[][
+      设线性微分方程：
+      $
+      x' = A(t) x + B(t)
+      $
+      则：
+      - 任意两个解的差是对应齐次线性微分方程 $x' = A(t) x$ 的解
+      - 设 $gamma(t)$ 是一个特解（任意一个解），$X$ 是对应齐次微分方程的解空间，则原方程的所有解为 $gamma(t) + X$
+    ]
+    #proposition[常数变易法][
+      设 $Phi(t)$ 是 $x' = A(t) x$ 的基本解矩阵，则 $x' = A(t) x + f(t)$ 的解可以通过常数变易：
+      $
+      x = Phi(t) C(t)\
+      Phi'(t) C(t) + Phi(t) C'(t) = A(t) Phi(t) C(t) + f(t)\
+      Phi(t) C'(t) = f(t)\
+      C'(t) = Inv(phi(t)) f(t)\
+      C(t) = integral_(t_0)^(t) Inv(phi(s)) f(s) dif s
+      $
+      这给出了可行的 $C$
+    ]
+    上述命题表明，解一般线性微分方程的困难根本上来源于求齐次线性微分方程基础解矩阵的困难
