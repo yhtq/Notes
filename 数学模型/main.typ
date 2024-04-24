@@ -1562,3 +1562,129 @@
         &= diffI(x_(l i), h_l) u(x)
         $
       ]
+
+      #let lv = $bold(l)$
+      类似的，对于高维的情形我们也希望做类似处理。此时，我们用一个向量 $lv$ 表示在每个方向的划分层数（例如 $(2, 3)$ 表示 $x$ 方向划分两层，$y$ 方向划分三层）。高维情形下，有结论：
+      #lemma[][
+        $
+        hu_(lv, xv) = integral_(Omega) (-1/2)^(d) 2^(- norm(lv)_1) Phi_(lv, xv) (x) D^(bold(2)) u(x) dif x
+        $
+        其中：
+        - $D^(bold(alpha)) u(x) = (partial^(norm(alpha)_1) u)/(partial x_1^(alpha_1) ... partial x_n^(alpha_n))$
+      ]<int_approx>
+      #proof[
+        它可以化归到一维情形，这里不做详细证明
+      ]
+
+      #let nv = $bold(n)$
+      #let iv = $bold(i)$
+      #let onev = $bold(1)$
+      #let twov = $bold(2)$
+      #let vninf = $V_n^((infinity))$
+      #let vn1 = $V_n^((1))$
+      接下来，讨论全网格和稀疏网格。记：  
+      $
+      vninf &:= V_nv = plus.circle_(1 <= lv <= nv) w_lv = plus.circle_(norm(l)_infinity <= n) w_lv\
+      where nv &= vec(n, n, dots.v, n)\
+      1& = vec(1, 1, dots.v, 1)\
+      alpha <= beta &<=> alpha_i <= beta_i, forall i
+      $
+      这是全网格，而*稀疏网格*是：
+      $
+      vninf = plus.circle_(norm(l)_1 <= d + (n-1)) w_lv
+      $
+      意指每个维度所分层数总和不超过一定的上界。
+
+      仍然要回答网格是否稀疏，精度是否保持两个问题。稀疏性看起来比较简单，有如下结论：
+      #theorem[两种网格的稀疏性][
+        $
+        abs(vninf) = O(N^d)\
+        abs(w_lv) = 2^(norm(lv)_1 - d)\
+        abs(vn1) = O(N (log N)^(d-1))\
+        where N = 2^n
+        $
+      ]
+      #proof[
+        - $vninf$ 的结论是容易的，既然在每个维度上都做 $2^n$ 等分
+        - $w_lv$ 中，每个维度的基个数恰为 $2^(l_i)$ 的一半，计算可得就是 $2^(norm(lv)_1 - d)$
+        - 最后来讨论 $vn1$，有：
+          $
+          abs(vn1) = sum_(i <= d + (n-1)) 2^(i - d) C_(i - 1)^(d-1)
+          $
+          这个组合数来自于将 $norm(l)_1$ 的层数总和任意分给 $d$ 个维度的分球问题。大致估计有：
+          $
+          sum_(i <= d + (n-1)) 2^(i - d) C_(i - 1)^(d-1) &<= sum_(i <= d + (n-1)) 2^(i - d) C_(d-1+n-1)^(d-1)\
+          &= 2^n C_(d-1+n-1)^(d-1)\
+          &= 2^n (n(n-1)...(n+d-2))/(d-1)! \
+          &= O(2^n n^(d-1))\
+          &= O(N (log N)^(d-1))
+          $
+      ]
+      #theorem[两种网格的精度][
+        给定性质足够好的函数 $u$ ，令：
+        $
+        u_n^((infinity)) := sum_(norm(lv)_infinity <= n) u_(lv) (xv)\
+        u_n^((1)) := sum_(norm(lv)_1 <= d+ n-1) u_(lv) (xv)\
+        where u_lv (xv) = sum_(iv in oddl) hu_(lv iv) Phi_(lv iv) (xv)
+        $
+        则有：
+        $
+        norm(u-u_n^((infinity)))_infinity <= d/6^d 2^(-2n) norm(u)_(twov, infinity)\
+        norm(u-u_n^((1)))_infinity <= d/8^d 2^(-2n) A(d, n) norm(u)_(twov, infinity)\
+        $
+        其中： 
+        - $A(d, n)$ 的量级约为 $n^(d-1)$
+        - $u$ 可以被展开为：
+          $
+          u = sum_(lv in NN^d) u_(lv)
+          $
+        - $norm(u)_(alpha, infinity) := norm(D^alpha u)_infinity$
+      ]
+      #proof[
+        #lemma1[
+          $
+          norm(u_lv)_infinity <= (-1/2)^(d) 2^(- 2norm(lv)_1) norm(u)_(twov, infinity)
+          $
+        ]
+        #proof[
+          $
+          norm(u_lv)_infinity &= norm(sum_(iv in oddl) hu_(lv iv) Phi_(lv iv) (xv))_infinity\
+          &<= max_(iv in odd l){abs(hu_(lv iv))} norm(sum_(iv in oddl) Phi_(lv iv) (xv))_infinity
+          $
+          回忆 $Phi_(lv iv)$ 的定义和嵌套分层方式，上式的求和不会大于 $1$，并且代入 @int_approx 将有：
+          $
+          norm(u_lv)_infinity <= max_(iv in odd l){abs(hu_(lv iv))}\
+          <= max_(iv in odd l){abs(integral_(Omega) (-1/2)^(d) 2^(- norm(lv)_1) Phi_(lv, xv) (x) D^(bold(twov)) u(x) dif x)}\
+          <= (-1/2)^(d) 2^(- norm(lv)_1) max_(iv in odd l){abs(integral_(Omega)  Phi_(lv, xv) (x) D^(bold(twov)) u(x) dif x)}\
+          <= (-1/2)^(d) 2^(- norm(lv)_1) max_(iv in odd l){integral_(Omega)  abs(Phi_(lv, xv) (x) D^(bold(twov)) u(x) dif x)}\
+          <= (-1/2)^(d) 2^(- norm(lv)_1) norm(u)_(twov, infinity) max_(iv in odd l){integral_(Omega)  abs(Phi_(lv, xv) (x) dif x)}\
+          <= (-1/2)^(d) 2^(- norm(lv)_1) norm(u)_(twov, infinity) 2^(- norm(lv)_1)\
+          <= (-1/2)^(d) 2^(- 2norm(lv)_1) norm(u)_(twov, infinity) \
+          $
+          这里积分的计算是观察每一个维度上三角形的面积得到的。
+        ]
+        - 回到定理，先证明全网格的形式。有：
+          $
+          norm(u-u_n^((infinity)))_infinity &= norm(sum_(norm(lv) >= n) u_lv)_infinity\
+          &<= sum_(norm(lv) >= n) norm(u_lv)_infinity\
+          &<= sum_(norm(lv) >= n)(-1/2)^(d) 2^(- 2norm(lv)_1) norm(u)_(twov, infinity)\
+          &<= (-1/2)^(d) norm(u)_(twov, infinity) sum_(norm(lv) >= n)  2^(- 2norm(lv)_1) \
+          $
+          其中 $sum_(norm(lv) > n)  2^(- 2norm(lv)_1)$ 的多维的等比级数，交换顺序计算可得上式：
+          $
+          <= 6^(-d) norm(u)_(twov, infinity) (1-(1-4^(-n))^d) <= 1/6^d 4^(-n) norm(u)_(twov, infinity)
+          $
+          上面利用了伯努利不等式，这就是结论
+        - 再处理稀疏网格的形式，完全类似的过程有：
+          $
+          norm(u-u_n^((1)))_infinity <= (-1/2)^(d) norm(u)_(twov, infinity) sum_(norm(lv)_1 >= d+(n-1))  2^(- 2norm(lv)_1)
+          $
+          这里我们再次利用分球的组合技巧，有：
+          $
+          sum_(norm(lv)_1 >= d+(n-1))  2^(- 2norm(lv)_1) &= sum_(i >= d+(n-1))  2^(- 2i) C_(i - 1)^(d-1)\
+          &<= 4^(-n-d) dot 2 A(d, n)
+          $
+          这里 $A(d, n)$ 是与组合相关的函数，这里不再详细叙述。代回计算可得结论成立
+      ]
+      从上面的定理可以看出，稀疏网格理所应当的用精度的降低换来了效率的提升。
+  
