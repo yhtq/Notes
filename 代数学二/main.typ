@@ -2645,7 +2645,7 @@
     ]
     #theorem[Hilbert's base theorem][
       设 $A$ 是 Noether 环，则 $A[x]$ 也是 Noether 环。特别的，有限生成的 $A-$代数是 Noether 环
-    ]
+    ]<Hilbert-base>
     #proof[
       由 @noether-finite，只要证明所有的理想都有限生成即可。任取 $I$ 是 $A[x]$ 的理想，定义：
       - $I_0 = {I "中多项式的首项系数"}$，它是 $A$ 的理想，进而有限生成，可设 $I_0 = (a_1, a_2, ..., a_n)$
@@ -2743,7 +2743,7 @@
         设 $A$ 是 Noether local 环，则下面两者有且只有一个成立：
         - $m^n != m^(n+1), forall n$ 进而 $A$ 不是 Artin 环
         - $exists n, m^n = 0$ 进而 $A$ 是 Artin 环，此时它也只有一个素理想
-    ]
+    ]<noether-local-classification>
     #proof[
         假设 $m^n = m^(n+1)$，由 Nakayama 得 $m^n = 0$，进而由 @artin-noether 知它是 Artin 环
     ]
@@ -2777,10 +2777,10 @@
     ]
     #proposition[][
       设 $A$ 是 Artin local 环，以下事实等价：
-      - $A$ 是主理想环
+      - $A$ 是主理想环且所有理想都是主理想的幂次
       - 极大理想 $m$ 是主理想
       - $dim_k m quo m^2 <= 1$
-    ]
+    ]<artin-local-prop>
     #proof[
       前两项显然，只证明 $3 => 1$
       - 假设 $dim_k m quo m^2 = 0$，则 $m = m^2$，由 Nakayama 得 $m = 0$，进而 $A$ 是域，结论当然正确
@@ -3341,7 +3341,7 @@
       - 设 $B'$ 是环使得 $B subset B' subset k$，则 $B'$ 也是赋值环
       - $B$ （在 $k$ 中）整闭
       - 设 $p$ 是 $B$ 的素理想，则 $B quo p, B_p$ 在各自的分式域都是赋值环
-    ]
+    ]<valuation-ring-prop>
     #proof[
       - 之前已经证明，但是我们换一种方法再次证明。设 $m$ 是 $B$ 中所有非单位元，显然只需证明 $m$ 是理想。\
         - 假设 $a in B, x in m$，若 $a x in.not m$，则 $Inv((a x)) in B => Inv(x) = a Inv((a x)) in B$ 矛盾！
@@ -3381,8 +3381,8 @@
       arr(1, 2, $$, inj_str),
       arr(2, 3, $f'$),
       arr(1, 3, $f$),)]
-      则 $Sigma$ 非空且有极大元，且其极大元是赋值环 
-    ]
+      则 $Sigma$ 非空且有极大元 $(A, f)$，且其极大元是赋值环，$ker f$ 是唯一的极大理想
+    ]<extension-of-valuation>
     #proof[
       首先，$Sigma$ 非空（可以取 $(0, 0)$），且满足 Zoun 引理条件，进而存在极大元\
       设 $B$ 是一个极大元
@@ -3417,3 +3417,338 @@
       另一方面，我们证明 $f: B -> Omega$ 可以延拓到 $B' = B[x]$ 上即可\
       首先，显然有 $m' sect B = m$（既然 $m subset m' sect B$ 而 $m$ 是极大理想），这表明 $B quo m$ 可以嵌入 $B' quo m'$，且 $B' quo m'$ 在 $B quo m$ 上代数
     ]
+    #theorem[][
+      设 $A subset k$  其中 $A$ 是整环，$k$ 是域，则 $A$ 的整闭包恰为 $k$ 中包含 $A$ 的所有赋值环的交 
+    ]
+    #proof[
+      - 一方面，设 $B$ 是赋值环且 $A subset B subset k$，注意到 $B$ 是整闭的，因此 $A$ 的整闭包当然只能含于 $B$
+      - 另一方面，我们要证明若 $x$ 含于所有这样的赋值环，则含于 $A$ 的整闭包\
+        反之，设 $x$ 在 $A$ 上不是整元，只需构造一个赋值环 $B supset A$ 使得 $x$ 不在 $B$ 中\
+        令 $A' = A[Inv(x)]$ 它不是有限生成 $A-$模，也不包含 $x$，设 $Inv(x) in A'$ （注意到它不是单位）包含于极大理想 $m'$，考虑：
+        $
+        f: A -> A' -> A quo m' -> overline(A quo m')
+        $
+        最后一项是指代数闭包。\
+        在 @extension-of-valuation 中，注意到 $(A, f)$ 是符合定义的二元组，因此存在一个比它更大的元素 $(B, g)$ 使得 $A subset B subset k$ 且有交换图表：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $A$, 1),
+        node((0, 1), $A'$, 2),
+        node((0, 2), $A quo m'$, 4),
+        node((0, 3), $overline(A quo m')$, 5),
+        node((1, 0), $B$, 3),
+        arr(1, 2, $$, inj_str),
+        arr(2, 3, $$, inj_str),
+        arr(3, 5, $g$),
+        arr(2, 4, $$),
+        arr(4, 5, $$),
+        )]
+        断言 $x in.not B$，否则又注意到 $(A' -> overline(A quo m')) (Inv(x)) = 0$，若 $x in B$
+        则 $Inv(x) in ker g$ 是可逆元导致 $g$ 平凡，这是荒谬的 
+    ]
+  == 离散赋值环|Discrete valuation ring
+    #definition[Discrete valuation ring, DVR][
+      设 $k$ 是域，$k$ 上的离散赋值是指映射:
+      $
+      v: k^* -> ZZ, 
+      $
+      满足：
+      + $v$ 是满射
+      + $v(x y) = v(x) + v(y)$
+      + $v(x + y) >= min{v(x), v(y)}$
+      （有时也将 $v$ 视作 $k -> ZZ union {infinity}$）\
+      此时：
+      - 称 $k$ 是*离散赋值域*|discrete valuation field, dvf
+      - 若 $v(pi) = 1$，则称 $pi$ 是一个一致化子|uniformizer
+      - 记 $O_v = {x in k | v(x) >= 0}$ （特别的令 $0 in O_v$），则 $O_v$ 是赋值环且 $ht(O_v) = 1$
+      - 记 $m_v = {x in k | v(x) >= 1}$ 它是 $O_v$ 的理想，稍后证明它是极大的
+      一般的，若一个整环是上面方法所产生的赋值环，则称之为*离散赋值环*
+    ]
+    #example[][
+      - 设 $k = QQ, p$ 是素数，对任意非零 $x in k$ ，可设 $x = p^a y$ 且 $y$ 的分子分母都与 $p$ 互素，此时定义 $v_p (x) = a$，这给出 $QQ$ 上的一个离散赋值，它的赋值环 $O_v_p = {r/s | (s, p) = 1} = ZZ_((p))$
+      - 令 $K = k(x), f in k[x]$ 是不可约多项式，类似的可以做唯一因子分解将 $K$ 中任意一个元素写作 $x = f^a y$ 以及赋值 $v_f$
+    ]
+    #proposition[][
+      设 $A$ 是离散赋值环，以分式域 $k$ 上的离散赋值 $v$ 产生，则 $A$ 是整闭的局部环且：
+      - 其中的单位就是赋值为零的那些元素
+      - 极大理想就是 $m_v = {x in k|v(x) >= 1}$
+      - $v(x) = v(y)$  当且仅当 $x, y$ 只差一个可逆元，也即 $(x) = (y)$
+      - 任取 $A$ 中理想 $I$，选出其中赋值最小的元素 $x$ ，则 $I = (x) = {y in A|v(y) >= v(x)}$
+      - 设 $pi$ 是一致化子，则 $v(pi^k) = k$，由上一个命题所有理想 $I$ 都是由某个 $pi^k$ 生成的主理想，表明 $A$ 中所有非零理想构成链：
+        $
+        m_v = (pi) =  {x in k|v(x) >= 1} >= m_v^2 = (pi^2) >= ...
+        $
+        $m_v$ 是唯一的非零素理想，特别的，$A$ 是 $dim A = 1$ 的 Noether 环
+    ]
+    #proof[
+      由 @valuation-ring-prop 可知 $A$ 是局部环且整闭
+      - 注意到 $v(x) = 0 => v(Inv(x)) = 0 => Inv(x) in A$ 表明 $A$ 中赋值为零的元素都是单位。同时不难验证赋值为正的元素不是单位
+      - 由赋值的定义不难验证它是理想，上一条给出它当然就是极大理想
+      - 注意到 $v(x) = v(y) => v(Inv(x) y) = 0 => Inv(x) y in U(A)$，因此 $x, y$ 只差可逆元
+      - 设 $v(y) >= v(x)$ 则 $v(y Inv(x)) >= 0 => y Inv(x) in A => y in (x)$\
+        如此，赋值不小于 $x$ 的元素都在 $I$ 中，而由假设 $I$ 中没有赋值小于 $x$  的元素，因此 $I = (x) = {y in A|v(y) >= v(x)}$
+      - 显然
+    ]
+    #theorem[][
+      设 $A$ 是 Noether 的局部整环，且 $dim A = 1$，$m$ 为极大理想，$k$ 为留域，则以下条件等价：
+      + $A$ 是离散赋值环
+      + $A$ 整闭
+      + $m$ 是主理想
+      + $dim_k m quo m^2 = 1$
+      + $A$ 中每个非零理想都是 $m$ 的幂
+      + $exists x in A$ 使得每个非零理想都形如 $(x^k), k >= 0$
+    ]
+    #proof[
+      #lemma1[
+        设 $I$ 是非平凡理想，则存在 $n > 0, m^n subset I$
+      ]
+      #proof[
+        注意到 $sqrt(I)$ 是包含 $I$ 的所有素理想的交，由 $dim A = 1$ 知它就是 $m$，再由 Noether 知 $m$ 有限生成，考虑生成元不难发现结论成立
+      ]
+      #lemma1[
+        $m^k != m^(k+1)$
+      ]
+      #proof[
+        如若不然由 @noether-local-classification 可得环是 Artin 环，这与 $dim A = 1$ 矛盾
+      ]
+      - 1 $=>$ 2 显然
+      - 2 $=>$ 3 任取 $0 != a in m$，由引理，设 $n$ 满足：
+        $
+        m^n subset (a), m^(n-1) subset.not (a)
+        $
+        取 $b in m^(n-1) - (a)$，令 $x = a /b in k$，往证：
+        - $x$ 不是 $A$ 中单位，否则 $(a) = (b)$ 与取法矛盾
+        - $Inv(x) m subset.not m$  ，否则利用 Hamiton-Cayley 可以证明 $Inv(x)$ 是整元
+      - 3 $=>$ 4 显然主理想的生成元就是向量空间 $m quo m^2$ 的生成元，同时 $m quo m^2 != 0$ 否则由 Nakayama 知 $m = 0$，导致 $dim A = 0$
+      - 4 $=>$ 5 继续利用引理，设 $I$ 是非平凡理想，且 $m^n subset I, m^(n-1) subset.not I$，，注意到 $A quo m^n$ 是 Artin 局部环，由 @artin-local-prop 结合条件立得结论正确
+      - 5 $=>$ 6 取 $x in m - m^2$，由结论 $(x) = m^r$ 再根据假设只能有 $r = 1 => (x) = m$ ，由于所有理想都是 $m$ 的幂次当然结论成立
+      - 6 $=>$ 1 有条件，当然有 $m = (x)$，且 $(x^k) != (x^(k+1))$\
+        对任意 $A$ 中非零元素 $a$，定义 $v(a) = r$ 若 $(a) = (x^r)$
+        - 由条件，这个 $r$ 是唯一的
+        - 将赋值延拓到分式环上，可以验证它是一个离散赋值
+    ]
+    #theorem[][
+      设 $A$ 是 Noether 的整环，且 $dim A = 1$，则以下条件等价：
+      + $A$ 整闭
+      + $A$ 在所有素理想/极大理想处的局部化都整闭
+      + $A$ 在所有素理想/极大理想处的局部化都是离散赋值环
+    ]<dedekind-the>
+    #proof[
+      注意到整闭是局部性质，由上面的定理不难推出该定理
+    ]
+  == 戴德金整环|Dedekind domains
+    这部分在数论课程中更加重要，本门课程不会要求太高
+    #definition[戴德金整环|Dedekind domains][
+      满足 @dedekind-the 条件的环成为戴德金整环
+    ]
+    #proposition[][
+      戴德金整环中，所有理想都可以唯一分解为素理想的乘积
+    ]
+    #proof[
+      这个结论是唯一分解性质的进一步推广，我们不证明这个结论
+    ]
+    #proposition[][
+      - 主理想整环都是戴德金整环，既然主理想整环都诺特，且主理想整环作为唯一分解整环满足非零素理想都极大进而 $dim = 1$，同时它的局部化也是主理想环，故满足 @dedekind-the 条件
+      - 设 $k quo Q$ 是有限代数扩张，$A$ 是 $ZZ$ 在 $k$ 中的整闭包，也就是 $k$ 中的代数整数，则 $A$ 是戴德金整环
+        #proof[
+          - $A$ 当然整闭
+          - $A$ 是诺特的，证明略
+          - 下证 $dim A = 1$，也即所有非零素理想都极大。这是因为任取 $p in Spec(A)$，一定有 $p sect ZZ$ 是素理想
+            - 若 $p sect ZZ = 0$，然而 $0 subset p$ 同样有 $0 sect ZZ = 0$，由整扩张性质 @integral-prime-containing 立得 $p = 0$  矛盾！
+            - 否则，$p sect ZZ$ 是极大理想，由 @integral-prime-containing 知 $p$ 也是极大理想
+        ]
+    ]
+  == 分式理想
+    #definition[分式理想/可逆理想][
+      设 $A$ 是整环，$K$ 是分式域：
+      - 称 $K$ 的子 $A-$模 $M$ 是分式理想，如果：
+        $
+        exists x != 0 in A, x M subset A
+        $
+        若 $M$ 是分式理想，定义：
+        $
+        (A:M) = {x in K | x M subset A}
+        $
+      - 称 $K$ 的子 $A-$模 $M$ 是可逆理想，如果存在 $K$ 的子 $A-$模 $N$ 使得 $M N = A$\
+      - 所有的可逆理想构成群（单位元是 $A$）
+
+    ]
+    #example[][
+      - $A$ 的理想当然是分式理想，取 $x = 1$ 即可。
+      - 若 $M$ 是有限生成的 $K$ 子 $A-$模，取 $x$ 为生成元分母的乘积，它也是分式理想。
+      - 任取 $u in K^*$ ，则 $(u)$ 是分式理想，也是可逆理想，它的逆就是 $(1/u)$
+    ]
+    #proposition[][
+      设 $A$ 是诺特环，则所有分式理想都是有限生成的
+    ]<noether-fractional-ideal-finite>
+    #proof[
+      设 $M$ 是分式理想，$x M$ 是 $A$ 的理想，进而有限生成，当然 $M$ 也是有限生成的 $AModule(A)$
+    ]
+    #proposition[][
+      - 可逆理想都是分式理想
+      - $M$ 是可逆理想时，它的逆就是 $(A:M)$
+      - 可逆理想都是有限生成理想
+    ]
+    #proof[
+      - 设 $N$ 是一个逆，任取 $n in N$ 当然有 $n M subset A$
+      - 由上条的证明过程知 $N subset (A:M)$，同时 $(A:M) = (A:M) M N subset A N subset N$
+      - 由 $M N = A$ 可得：
+        $
+        1 = sum_i m_i n_i
+        $
+        上式右侧是有限和。任取 $z in M$ 都有：
+        $
+        z = z sum_i m_i n_i = sum_i (z n_i) m_i in sum_i A m_i
+        $
+        表明 $m_i$ 就是一组生成元
+    ]
+    #theorem[可逆性是局部性质][
+      以下条件等价：
+      - $M$ 是可逆理想
+      - $M$ 有限生成，且对任意素理想 $p$，$M_p$ 是可逆理想
+      - $M$ 有限生成，且对任意极大理想 $m$，$M_m$ 是可逆理想
+
+    ]
+    #proof[
+      - 1 $=>$ 2 之前证明了 $A = M (A:M)$，我们希望做局部化。注意到 $M$ 是有限生成的，因此局部化可以和 $Ann$ 交换，自然可以和 $(A:M)$ 交换，故结论成立
+      - 2 $=>$ 3 显然
+      - 3 $=>$ 1 设 $I = M (A:M)$ 由条件它不含于任何的极大理想中（否则可以做局部化），因此就是 $A$
+    ]
+    #theorem[][
+      设 $A$ 是局部环，则 $A$ 是离散赋值环当且仅当每个非零分式理想都可逆
+    ]
+    #proof[
+      - 设 $A$ 是离散赋值环，设 $m = (pi)$ 是极大理想，若 $M$ 是分式理想，则存在 $y$ 使得：
+        $
+        y = (pi^s)\
+        y M = (pi^r)\
+        M = (pi^(r-s))
+        $
+        这当然是可逆的
+      - 首先，可逆理想都有限生成，因此 $A$ 当然是诺特环。往证所有理想都是极大理想的幂次。\
+        令 $Sigma$ 为 $A$ 中所有不是 $m$ 幂次的理想，若其非空，由诺特条件找到一个极大元 $I$\
+        由条件，将有：
+        $
+        Inv(m) I subset.not Inv(m) m = A
+        $
+        同时，$Inv(m) I != m$ 否则 $I = m^2$，类似的它也不是 $m$ 的幂次\
+        然而 $I subset Inv(m) I$，由极大性 $I = Inv(m) I$ 除非 $I = 0$ 否则这是荒谬的
+    ]
+    #corollary[][
+      设 $A$ 是整环，则 $A$ 是戴德金整环当且仅当所有的非零分式理想都可逆
+    ]
+    #proof[
+      利用局部化，显然（注意到左推右需要利用诺特性和 @noether-fractional-ideal-finite，右推左需要利用分式理想都有限生成表明环是诺特的）
+    ]
+= Kahler-differentials
+  这部分是补充内容，讨论代数的导数和切空间等内容
+  #definition[derivation][
+    设 $A$ 是环，$B$ 是 $A-$代数，$M$ 是 $B-$模，一个 $M$ 中 $B$ 的 $A-$导数（A-derivation of B into M）是一个 $A-$线性映射 $dif: B -> M$ 满足莱布尼茨法则：
+    $
+    dif(x y) = x dif(y) + y dif(x), forall x, y in B
+    $
+    显然这里的 $B$ 的定位类似于 $A$ 上的函数，$M$ 类似于切空间\
+    定义所有这样的导数构成集合：
+    $
+    Der_A (B, M)
+    $
+  ]
+  #proposition[][
+    - $dif(1) = dif(1 dot 1) = dif(1) + dif(1) => dif(1) = 0, dif(a) = a dif(1) = 0$，这就是在说常值函数的导数为零
+  ]
+  #definition[][
+    设 $B$ 是 $A-$代数，则存在 $B-$模 $Omega'_(B quo A)$，和相应的 $A-$导数 $dif$ 并且满足泛性质：对任意 $B-$模 $M$ 和 $A-$导数 $dif': B -> M$，有交换图表：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $B$, 1),
+    node((0, 1), $M$, 2),
+    node((1, 0), $Omega'_(B quo A)$, 3),
+    arr(1, 2, $dif'$),
+    arr(3, 2, $exists ! phi$),
+    arr(1, 3, $dif$),)]
+    这个泛性质等价于同构：
+    $
+    Der_A (B, M) tilde.eq Hom_B (Omega'_(B quo A), M)
+    $
+    称 $Omega'_(B quo A)$ 为 the module of relative differential forms of B over A\
+  ]
+  #proof[
+    和张量积类似，唯一性由范畴的始对象给出，存在性也用类似张量积的构造方法，用自由模商掉我们需要的关系即可\
+    具体来说，令 $F$ 是由符号 ${dif b | b in B}$ 生成的自由 $B-$模，令：
+    $
+    N = generatedBy({dif a | a in A} union {dif (b_1 + b_2) - dif b_1 - dif b_2 | b_1, b_2 in B} union {dif (b_1 b_2) - b_1 dif b_2 - b_2 dif b_1 | b_1, b_2 in B})\
+    Omega_(B quo A) = F quo N
+    $
+    并且 $dif$ 就是自然的同态，很容易验证它满足莱布尼茨法则
+
+    为了证明泛性质，给出交换图表：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $B$, 1),
+    node((0, 1), $M$, 2),
+    node((1, 0), $F$, 3),
+    node((2, 0), $Omega_(B quo A)$, 4),
+    arr(1, 2, $dif'$),
+    arr(3, 2, $exists phi$),
+    arr(1, 3, $dif$),
+    arr(3, 4, $$),
+    arr(4, 2, $exists phi'$)
+    )]
+    其中：
+    - $phi$ 来自于自由模的泛性质
+    - 不难验证 $N subset ker phi$，因此 $phi'$ 产生于商模的泛性质
+  ]
+  #example[][
+    设 $B = A[t_1, ..., t_n]$ 是多项式环，则 $Omega'_(B quo A)$ 就是自由模 $directSum_i B dif t_i$, 其中：
+    $
+    dif F = sum_i partialDer(F, t_i) dif t_i
+    $
+    这是因为任取 $dif'$ 不难计算一定有：
+    $
+    dif' F = sum_i partialDer(F, t_i) dif' t_i
+    $
+    因此 $dif t_i -> dif' t_i$ 给出典范的同态，这就证明了泛性质
+  ]
+  #example[][
+    若 $B = A quo I$ 或 $B = Inv(S) A$ 则 $Omega'_(B quo A) = 0$\
+    只需说明任何导数都为零即可：
+    - 若 $B = A quo I$，任取 $x in B$，则 $x = a + I$，有 $dif (a + I) = a dif(1 + I) = 0$
+    - 若 $B = Inv(S) A$ ，任取 $s/t in B$，有 $t dif (s/t) = dif (s) = 0$ 而 $t$ 是 $B$ 中可逆元，当然就有 $dif(s /t) = 0$
+  ]
+  #definition[][
+    设 $B ->^f C$ 是 $A-$代数同态以及两个导数：
+    $
+    C ->^(dif_C) Omega'_(C quo A)\
+    B ->^(dif_B) Omega'_(B quo A)
+    $
+    可以定义映射：
+    $
+    Omega_(B quo A) &-> Omega_(C quo A)\
+    dif b &-> dif f(b)\
+    Omega_(B quo A) tensorProduct C &-> Omega_(C quo A)\
+    dif b tensorProduct c &-> c dif f(b)
+    $
+  ]
+  #proposition[][
+    设 $B$ 是 $A-$代数
+    - 换基性质：任取环同态 $A -> A'， B' = A' tensorProduct_A B$，则有：
+      $
+      Omega_(B' quo A') tilde.eq Omega_(B quo A) tensorProduct_A B'
+      $
+    - 任取 $B ->^f C$ 是 $A-$代数同态，有正合列：
+      $
+      Omega_(B quo A) tensorProduct_B C -> Omega_(C quo A) -> Omega_(C quo B) -> 0
+      $
+    - 任取 $B$ 的乘性子集 $S$，有：
+      $
+      Inv(S) Omega_(B quo A) = Omega_(B quo A) tensorProduct_B Inv(S) B tilde.eq Omega_(Inv(S) B quo A)
+      $
+    - 设 $C = B quo I$ 有正合列：
+      $
+      I quo I^2 -> Omega_(B quo A) tensorProduct_B C -> Omega_(C quo A) -> 0
+      $
+  ]
+  #example[][
+    设 $B = A[T_1, ..., T_n], C = B quo (F)$，由上面的命题有正合列：
+    $
+    (F) quo (F^2) -> Omega_(B quo A) tensorProduct_B C -> Omega_(C quo A) -> 0\
+    
+    $
+  ]

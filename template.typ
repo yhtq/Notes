@@ -53,6 +53,7 @@ $1 + 1$
 #let ord = math.op("ord")
 #let sgn = math.op("sgn")
 #let lcm = math.op("lcm")
+#let Der = math.op("Der")
 #let Arg = math.op("Arg")
 #let End = math.op("End")
 #let ReT = math.op("Re")
