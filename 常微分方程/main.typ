@@ -2069,3 +2069,70 @@
       这给出了可行的 $C$
     ]
     上述命题表明，解一般线性微分方程的困难根本上来源于求齐次线性微分方程基础解矩阵的困难
+  == 常系数线性微分方程
+    为了叙述方便，我们先给出矩阵幂级数，指数等定义
+    #definition[][
+      - 本节中定义矩阵的模为 $sum_(i, j) abs(a_(i j))$ 或 $max_(abs(x) = 1) abs(A x)$，它们都满足 $abs(A B) <= abs(A) abs(B)$
+      - 形式定义：
+        $
+        e^A = sum_(n = 0)^infinity A^n/n!
+        $
+        注意到矩阵绝对收敛只需要每个分量绝对收敛，同时
+        $
+        sum_(n = 0)^infinity abs(A^n/n!) <= sum_(n = 0)^infinity abs(A)^n/n! = e^(abs(A)) < +infinity
+        $
+        满足性质：
+        - 若 $A B = B A$ 则 $e^(A + B) = e^A e^B$
+        - $det(e^A) = e^(tr(A)) > 0$（证明需要若当标准型）
+    ]
+    #theorem[][
+      给定常系数微分方程 $y' = A y + f(x)$ ，则 $e^(A x)$ 是方程的基础解矩阵 
+    ]
+    以上结论非常漂亮，结合之前的理论我们可以求解出方程的通解。唯一的问题是按照定义求出 $e^(A x)$ 并不容易。
+
+    #example[][
+      由约当标准型，可设：
+      $
+      A = P D P^(-1)\
+      D = sum_(d=1)^(d_max) sum_(lambda in Lambda)  sum_s lambda I +  J_(d s)
+      $
+      其中 $d$ 是约当块维度，$s$ 代表不同的块。这些块都在不同的位置上，乘积为零，因此：
+      $
+      D^n = (sum_(d) sum_(lambda in Lambda)  sum_s lambda I +  J_(d s))^n\
+        = sum_(d) sum_(lambda in Lambda)  sum_s (lambda I +  J_(d s))^n\
+        = sum_(d) sum_(lambda in Lambda)  sum_s sum_(i=0)^n C_n^i lambda^(n-i) J_(d s)^i\
+        = sum_(d) sum_(lambda in Lambda)  sum_s sum_(i=0)^(min {d, n}) C_n^i lambda^(n-i) J_(d s)^i\
+      $
+      注意到 $n > d$ 时上式的求和项数已与 $n$ 无关，$n < d$ 仅有有限个，因此可以求出 $D^n$ 的通式，利用：
+      $
+      e^(A x) = sum_(k=0)^infinity A^k/k! x^k = P (sum_(k=0)^infinity D^k/k! x^k) Inv(P)\
+      = P (sum_(k=0)^infinity 1/k! (sum_(d) sum_(lambda in Lambda)  sum_s sum_(i=0)^(min {d, k}) C_k^i lambda^(k-i) J_(d s)^i x^k)) Inv(P)\
+      = P (sum_(k=0)^infinity 1/k! (sum_(d) sum_(lambda in Lambda)  sum_s sum_(i=0)^(min {d_max, k}) C_k^i lambda^(k-i) J_(d s)^i x^k)) Inv(P)\
+      = P (sum_(k=0)^d_max 1/k! (sum_(d) sum_(lambda in Lambda)  sum_s sum_(i=0)^(n) C_k^i lambda^(k-i) J_(d s)^i x^k) + sum_(k=d_max + 1)^infinity 1/k! (sum_(d) sum_(lambda in Lambda)  sum_s sum_(i=0)^(d_max) C_k^i lambda^(k-i) J_(d s)^i x^k)) Inv(P)\
+      = P (sum_(k=0)^d_max 1/k! (sum_(d) sum_(lambda in Lambda)  sum_s sum_(i=0)^(k) C_k^i lambda^(k-i) J_(d s)^i x^k) +  sum_(d) sum_(lambda in Lambda)  sum_s   sum_(i=0)^(d_max) J_(d s)^i  sum_(k=d_max + 1)^infinity 1/k! C_k^i lambda^(k-i) x^k ) Inv(P)\
+      $
+      上式第二项可以求得，第一项仅有有限项
+
+      当然，这里的计算是极其麻烦的。有些时候，我们可以用技巧大大简化，例如：
+      - 若 $A$ 可对角化，则 $d_(max) = 0$ 上式简化为：
+        $
+        P (sum_(lambda in Lambda)  sum_s sum_(k=0)^infinity 1/k! lambda^(k) x^k J_(0 s) ) Inv(P) = P e^(D x) Inv(P) 
+        $
+      - 若可求得 $A$ 的零化多项式，可以尝试降次
+      - 若 $A$ 仅有一个特征值 $lambda$ 则有：
+        $
+        e^(A x) = e^(lambda x) e^((A - lambda) x)
+        $
+        后者第二项是幂零矩阵，可以直接求出
+    ]
+    #example[][
+      有些形式较好的方程并不用使用上面的一般方法求解，例如：
+      $
+      cases(
+        x' = y + z,
+        y' = x + y,
+        z' = x + z
+      )
+      $
+      三式相加，立得 $(x + y + z)' = x' + y' + z' = 2 (x + y + z), x+ y + z = C_1 e^(2t)$，代回得 $x' = e^(2 t) - x$ 解出即可
+    ]

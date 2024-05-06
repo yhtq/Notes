@@ -40,7 +40,7 @@ $1 + 1$
 #let Ass = math.op("Ass")
 #let Sylow(p) = $"Sylow"-#p$
 #let Isom = math.op("Isom")
-#let directLimit = $limits(lim)_(arrow.long)$
+
 #let GL = math.op("GL")
 #let char = math.op("char")
 #let Frac = math.op("Frac")
@@ -76,7 +76,8 @@ $1 + 1$
 #let Ad = math.op("Ad")
 #let Aut = math.op("Aut")
 #let algClosure(F) = $#F^"alg"$
-#let inverseLimit(n) = $lim_(arrow.l.long_#n)$
+#let inverseLimit = $limits(lim)_(arrow.l.long)$
+#let directLimit = $limits(lim)_(arrow.long)$
 #let AModule(A) = [$#A -$模]
 #let GEquiv(G) = {
   $#G -$ 

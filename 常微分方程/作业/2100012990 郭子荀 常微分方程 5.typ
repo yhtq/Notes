@@ -10,7 +10,7 @@
   withOutlined : false,
   withTitle :false,
 )
-应交时间为 5月8日
+应交时间为 5月6日
 #set heading(numbering: none)
 = 162
   == 3
@@ -97,3 +97,42 @@
       )
       $
       解得 $u = (x^3-1)/(3 x)$
+= 172
+  == 1
+    设 $y(x)$ 满足题中等式，有：
+    $
+    y = Phi(x)(Inv(Phi)(x_0) y_0+ integral_(x_0)^(x) Inv(Phi)(s) f(s, y(s)) dif s)\
+    y' = Phi'(x) (Inv(Phi)(x_0) y_0+ integral_(x_0)^(x) Inv(Phi)(s) f(s, y(s)) dif s) + Phi(x) Inv(Phi)(x) f(x, y(x))\
+    = Phi'(x) (Inv(Phi)(x_0) y_0+ integral_(x_0)^(x) Inv(Phi)(s) f(s, y(s)) dif s) +  f(x, y(x))\
+    = Phi'(x) Inv(Phi)(x) y + f(x, y(x))\
+    = A(x) Phi(x) Inv(Phi)(x) y + f(x, y(x))\
+    = A(x) y + f(x, y(x))
+    $
+    因此积分方程的解也是微分方程的解，另一方面设 $y$ 是微分方程的解，则有：
+    $
+    (Inv(Phi)(x) y)' = Inv(Phi)'(x) y + Inv(Phi)(x) y' = Inv(Phi)'(x) y + Inv(Phi)(x) (A(x) y + f(x, y))\
+    = Inv(Phi)'(x) y + Inv(Phi)(x) (Phi'(x) Inv(Phi)(x) y + f(x, y))\
+    = Inv(Phi)(x) + f(x, y)
+    $
+    两边积分即可
+  == 3
+    注意到齐次线性微分方程的解应当两两不交，因此当然不能同时为解
+  == 4
+    先解 $x$ 将有：
+    $
+    x' = 2/t x + 1
+    $
+    这是一阶线性微分方程，其解为：
+    $
+    x = C_1 t^2 - t
+    $
+    因此：
+    $
+    y' = 1/t (C_1 t^2 - t) + y\
+    y' = C_1 t + y - 1
+    $
+    其解为：
+    $
+    y = C_2 e^t + C_1 (-1-t) e^(-t) + e^(-t)
+    $
+

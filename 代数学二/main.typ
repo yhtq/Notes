@@ -3748,7 +3748,223 @@
   #example[][
     设 $B = A[T_1, ..., T_n], C = B quo (F)$，由上面的命题有正合列：
     $
-    (F) quo (F^2) -> Omega_(B quo A) tensorProduct_B C -> Omega_(C quo A) -> 0\
-    
+    (F) quo (F^2) -> Omega_(B quo A) tensorProduct_B C -> Omega_(C quo A) -> 0
     $
   ]
+= 完备化
+  == 拓扑阿贝尔群
+    #definition[拓扑阿贝尔群][
+      设 $G$ 是阿贝尔群，$G$ 上的拓扑是说 $G$ 是拓扑空间，且群运算是连续的
+    ]
+    #lemma[][
+      $G$ 是拓扑阿贝尔群，则 $G$ 是 Hausdorff 空间当且仅当 ${0}$ 是闭集
+    ]
+    #proof[
+      - 若 $G$ 是 Hausdorff 空间，则 ${0}$ 当然是闭集
+      - 注意到：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $G$, 1),
+        node((0, 1), $G times G$, 2),
+        node((1, 0), ${0}$, 3),
+        node((1, 1), $G$, 4),
+        arr(1, 2, $"diag"$),
+        arr(1, 3, $$),
+        arr(2, 4, $\"-\"$),
+        arr(3, 4, $$),)]
+    ]
+    #lemma[][
+      设 $H$ 为所有 $0$ 的邻域的交，则：
+      - $H$ 是子群
+      - $H = overline({0})$
+      - $G quo H$ 是 Hausdorff 空间
+      - $G$ 是 Hausdorff 空间当且仅当 $H = {0}$
+    ]
+    #proof[
+      - 设 $x, y in H$ ，任取 $0$ 的开邻域 $O$，注意到 $T_x: G -> G$ 连续，则 $Inv(T_x)(O)$ 是开集。同时 $x in O => 0 in Inv(T_x)(O) => y in Inv(T_x)(O) => x + y in O$
+      - #TODO
+      - 不难发现 ${0} subset G quo H$ 当然是闭集，因此结论成立
+      - 就是上面的引理
+    ]
+  == 拓扑完备化
+    #definition[拓扑完备化][
+      设 $G$ 是拓扑阿贝尔群，且 $0$ 处有可数邻域基，则可以定义完备化 $hat(G)$ 为所有柯西序列的等价类，其中：
+      - ${x_n}$  是柯西序列当且仅当任取 $0$ 的开邻域 $U$ 均有对于充分大的 $n, m$ 有 $x_n - x_m in U$
+      - 两个柯西序列 $x_n, y_n$ 等价当且仅当 $x_n - y_n -> 0$，也即任取 $0$ 的开邻域 $U$ 均有对于充分大的 $n$ 有 $x_n - y_n in U$
+      在其上定义：
+      - ${x_n} + {y_n} = {x_n + y_n}$
+      - 
+        $
+        funcDef(phi, G, hat(G), a, {a})
+        $
+        一般来说 $phi$ 不是单射。事实上，$ker phi$ 就是 $0$ 的所有开邻域的交，因此 $phi$ 是单射当且仅当 $G$ 是 Hausdorff 空间
+      - 函子性：设 $f: G -> H$ 是连续同态，则柯西序列的像还是柯西序列，从而 $f$ 可以诱导 $hat(f)$ ，也即完备化具有函子性
+    ]
+    #example[][
+      假设 $0$ 处具有一族子群构成的邻域基，且满足：
+      $
+      G = G_0 >= G_1 >= ... >= G_n >= ...
+      $
+      并且 $U$ 是 $0$ 的邻域当且仅当存在 $G_n subset U$，此时断言：
+      - $G_n$ 既开由闭
+        - 先证明开集，设 $g in G_n$ 则 $g + G_n subset G_n$ 是 $g$ 的一个 $G_n$ 中的开邻域，继而 $G_n$ 一定是开集
+        - 再证明闭集，既然 $G - G_n = union_(h in.not G_n) （h + G_n）$ 是开集，因此 $G_n$ 是闭集
+      此时，完备化可以有纯代数的定义：
+      $
+      hat(G) tilde.eq inverseLimit G quo G_n
+      $
+      同构如下给出：
+      - 任取 $(xi_n) in inverseLimit G quo G_n$，给出对应的柯西序列为：
+        $
+        x_n in G\
+        x_n = xi_n mod G_n\
+        $
+        此时将有 $x_(n+1) - x_n in G_n$，不难验证它是柯西序列
+      - 任取柯西序列 $(x_n)$，既然只要 $m, m'$ 充分大即有：
+        $
+        overline(x_m) = overline(x_m') in G quo G_n
+        $
+        因此对充分大的 $m$ 定义 $xi_m = overline(x_m) in G quo n$ 
+    ]<alg-top-completion>
+    #lemma[][
+      若:
+      $
+      0 -> {A_n} -> {B_n} -> {C_n} -> 0 
+      $
+      是逆向系统的正合列，则：
+      $
+      0 -> inverseLimit A_n -> inverseLimit B_n -> inverseLimit C_n 
+      $
+      正合（逆向极限是左正合的）
+
+      进一步，若 $A_n$ 是满射系统（也即每个 $A_(n+1) -> A_n$ 是满射），则：
+      $
+      0 -> inverseLimit A_n -> inverseLimit B_n -> inverseLimit C_n -> 0
+      $
+      正合
+    ]
+    #proof[
+      设 $A = product A_n$，定义：
+      $
+      funcDef(d_A, A, A, (a_n), (a_n - overline(a_(n+1))))
+      $
+      则 $ker d_A = inverseLimit A_n$\
+      将有交换图表：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $0$, 1),
+      node((0, 1), $A$, 2),
+      node((0, 2), $B$, 3),
+      node((0, 3), $C$, 4),
+      node((1, 0), $0$, 5),
+      node((1, 1), $A$, 6),
+      node((1, 2), $B$, 7),
+      node((1, 3), $C$, 8),
+      node((0, 4), $0$, 9), 
+      node((1, 4), $0$, 10),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(5, 6, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(2, 6, $d_A$),
+      arr(3, 7, $d_B$),
+      arr(4, 8, $d_C$),
+      arr(4, 9, $$),
+      arr(8, 10, $$),
+      
+      )]
+      蛇形引理给出正合列：
+      $
+      0 -> ker d_A -> ker d_B -> ker d_C -> coker d_A -> coker d_B -> coker d_C -> 0
+      $
+      进一步，若 ${A_n}$ 是满系统，只需证明 $d_A$ 满继而 $coker d_A = 0$. 事实上，任给 $(a_n) in A$，只需找到 $(x_n)$ 使得 $x_n - overline(x_(n+1)) = a_n$，递归定义即可
+    ]
+    #corollary[][
+      设 $G$ 满足 @alg-top-completion 的条件，且有正合列：
+      $
+      0 -> G' -> G -> G'' -> 0
+      $
+      其中 $G', G''$ 分别用 ${G_n sect G'}$ 和 ${(G -> G'') (G_n)}$ 定义拓扑，将有：
+      $
+      0 -> hat(G') -> hat(G) -> hat(G'') -> 0
+      $
+      正合。
+    ]
+    #proof[
+      注意到有正合列：
+      $
+      0 -> {G quo G' sect G_n} -> {G quo G_n} -> {G quo ((G -> G'') (G_n))} -> 0
+      $
+      取逆向极限利用之前的结论立得结论成立
+    ]
+    #corollary[][
+      取正合列:
+      $
+      0 -> G_n -> G -> G quo G_n -> 0
+      $
+      若设 $G quo G_n$ 有离散拓扑，完备化就是本身，即可得正合列：
+      $
+      0 -> hat(G_n) -> hat(G) -> G quo G_n -> 0
+      $
+      因此：
+      $
+      hat(G) quo hat(G_n) tilde.eq G quo G_n
+      $
+      特别的，$hat(hat(G)) = hat(G)$（取逆向极限即可）
+    ]<completion-of-completion>
+    #proof[
+      利用之前的结论即可
+    ]
+    #definition[完备][
+      设 $phi: G -> hat(G)$ 是同构，则称 $G$ 是完备空间。
+    ]
+    #proposition[][
+      - 既然 $ker phi = {0}$ 故完备空间一定 Hausdorff
+      - 在 @completion-of-completion 的条件中，$hat(G)$ 当然一定是完备空间
+    ]
+    #example[环/模的完备化][
+      - 设 $A$ 是环，$I$ 是理想，取 $G = A, G_n = I^n$，由 $G_n$ 定义的拓扑称为 $I$-adic 拓扑，如此可以产生完备化：
+        $
+        hat(A) = inverseLimit A quo I^n, phi: A -> hat(A), ker phi = sect I_n
+        $ 
+      - 设 $M$ 是 $AModule(A)$，取 $G = M, G_n = I^n M$ 类似可以定义 $M$ 上的 $I$-adic 拓扑，以及 $hat(M)$ 称为连续 $AModule(A)$（$A$ 在其上的作用是连续的）
+      - 特别的：
+        - 取 $A = k[x], I = (x)$，则 $hat(A) = k[[x]]$ 就是形式幂级数环
+        - 取 $A = ZZ, I = (p)$，则 $hat(A) = ZZ_p$ 就是 $p$-进整数环
+    ]
+    #definition[][
+      设 $M$ 是$AModule(A)$，$I$ 是理想，称一个 $M$ 的 $A$ filtration 是一个子模的无穷序列：
+      $
+      M = M_0 >= M_(1) >= ... 
+      $
+      - 称之为 $I-$filtration ，如果 $I M_n subset M_(n+1)$
+      - 称之为稳定 $I-$filtration ，如果满足上条的条件且对于充分大的 $n$ 有 $I M_n = M_(n+1)$
+    ]
+    #example[][
+      $(I^n M)$ 当然是稳定 $I-$filtration
+    ]
+    #lemma[稳定 $I-$filtration给出相同的拓扑][
+      若 $(M_n), (M'_n)$ 都是稳定 $I-$filtration，则它们有有界差距（bounded diffrence）也即：
+      $
+      forall n > 0, exists n_0, M_(n+n_0) subset M'_n, M'_(n+n_0) subset M_n
+      $
+      因此，$(M_n), (M'_n)$ 定义相同的 $I-$adic 拓扑
+    ]
+    #proof[
+      不妨设 $M' = I^n M$，此时当然有：
+      - $I M_n subset M_(n+1) => M'_n subset M_n$
+      #TODO
+    ]
+  == 分次环
+    #definition[分次环|graded ring][
+      设 $A$ 是环，$A = directSum A_n$，称 $A$ 是分次环，若 $A_i A_j subset A_(i+j)$
+
+      此时，称 $A_i$ 为 $i$ 次齐次部分。设 $I$ 是 $A$ 的理想，则称 $I$ 是齐次的，若 $I = directSum (I sect A_i)$，也即它被齐次元素生成
+    ]
+    #lemma[][
+      设 $I$ 是齐次理想，则 $I$  是素理想当且仅当任取齐次元素 $x, y, x y in I$ 均有 $x in I or y in I$
+    ]
+    #example[][
+      - 最典型的，多项式环当然是分次环
+      - 
+    ]
