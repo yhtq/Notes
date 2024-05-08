@@ -3785,6 +3785,15 @@
       - 不难发现 ${0} subset G quo H$ 当然是闭集，因此结论成立
       - 就是上面的引理
     ]
+  == 分次环
+    #definition[分次环|graded ring][
+      设 $A$ 是环，$A = directSum A_n$，称 $A$ 是分次环，若 $A_i A_j subset A_(i+j)$
+
+      此时，称 $A_i$ 为 $i$ 次齐次部分。设 $I$ 是 $A$ 的理想，则称 $I$ 是齐次的，若 $I = directSum (I sect A_i)$，也即它被齐次元素生成
+    ]
+    #lemma[][
+      设 $I$ 是齐次理想，则 $I$  是素理想当且仅当任取齐次元素 $x, y, x y in I$ 均有 $x in I or y in I$
+    ]
   == 拓扑完备化
     #definition[拓扑完备化][
       设 $G$ 是拓扑阿贝尔群，且 $0$ 处有可数邻域基，则可以定义完备化 $hat(G)$ 为所有柯西序列的等价类，其中：
@@ -3800,11 +3809,11 @@
       - 函子性：设 $f: G -> H$ 是连续同态，则柯西序列的像还是柯西序列，从而 $f$ 可以诱导 $hat(f)$ ，也即完备化具有函子性
     ]
     #example[][
-      假设 $0$ 处具有一族子群构成的邻域基，且满足：
+      假设 $G_n$ 是 $0$ 的开邻域，且满足：
       $
       G = G_0 >= G_1 >= ... >= G_n >= ...
       $
-      并且 $U$ 是 $0$ 的邻域当且仅当存在 $G_n subset U$，此时断言：
+      并且， $U$ 是 $0$ 的邻域当且仅当存在 $G_n subset U$，此时断言：
       - $G_n$ 既开由闭
         - 先证明开集，设 $g in G_n$ 则 $g + G_n subset G_n$ 是 $g$ 的一个 $G_n$ 中的开邻域，继而 $G_n$ 一定是开集
         - 再证明闭集，既然 $G - G_n = union_(h in.not G_n) （h + G_n）$ 是开集，因此 $G_n$ 是闭集
@@ -3889,7 +3898,7 @@
       0 -> hat(G') -> hat(G) -> hat(G'') -> 0
       $
       正合。
-    ]
+    ]<exact-completion>
     #proof[
       注意到有正合列：
       $
@@ -3902,7 +3911,7 @@
       $
       0 -> G_n -> G -> G quo G_n -> 0
       $
-      若设 $G quo G_n$ 有离散拓扑，完备化就是本身，即可得正合列：
+      注意到 $G quo G_n$ 有离散拓扑（所有子集都是开集），完备化就是本身，即可得正合列：
       $
       0 -> hat(G_n) -> hat(G) -> G quo G_n -> 0
       $
@@ -3922,6 +3931,7 @@
       - 既然 $ker phi = {0}$ 故完备空间一定 Hausdorff
       - 在 @completion-of-completion 的条件中，$hat(G)$ 当然一定是完备空间
     ]
+  == $I-$adic 拓扑
     #example[环/模的完备化][
       - 设 $A$ 是环，$I$ 是理想，取 $G = A, G_n = I^n$，由 $G_n$ 定义的拓扑称为 $I$-adic 拓扑，如此可以产生完备化：
         $
@@ -3955,16 +3965,233 @@
       - $I M_n subset M_(n+1) => M'_n subset M_n$
       #TODO
     ]
-  == 分次环
-    #definition[分次环|graded ring][
-      设 $A$ 是环，$A = directSum A_n$，称 $A$ 是分次环，若 $A_i A_j subset A_(i+j)$
-
-      此时，称 $A_i$ 为 $i$ 次齐次部分。设 $I$ 是 $A$ 的理想，则称 $I$ 是齐次的，若 $I = directSum (I sect A_i)$，也即它被齐次元素生成
-    ]
+    设 $A^* = directSum_(n = 0)^infinity I^n$ 是分次环，则 $M^* = directSum_(n = 0)^infinity M^n$ 将是分次 $A^*$ 模。若 $A$ 是诺特的，可设 $I = (x_1, x_2, ..., x_n)$，此时 $A^* = A[x_1, x_2, ..., x_n]$ 当然也是诺特的
     #lemma[][
-      设 $I$ 是齐次理想，则 $I$  是素理想当且仅当任取齐次元素 $x, y, x y in I$ 均有 $x in I or y in I$
+      设 $A$ 诺特，$I$ 是理想，$M$ 是有限生成模以及 $I-$filtration $(M_n)$，则以下条件等价：
+      + $M^*$ 是有限生成模
+      + $(M_n)$ 是稳定 $I-$filtration
     ]
-    #example[][
-      - 最典型的，多项式环当然是分次环
-      - 
+    #proof[
+      - 1 $=>$ 2 设：
+        $
+        Q_n = directSum_(i = 0)^n M_i subset M^*
+        $ 
+        （未必是 $A^*$模），令 $M_n^*$ 是由其生成的模。由于 $M$ 有限生成，显然 $M_n^*$ 也是有限生成的。
+
+        显然 $M_n^*$ 构成升链，且 $union M_n^* = M^*$，可以验证：
+        $
+        M^* "有限生成" <=> M^* = M^*_(n), n "充分大"
+        $
+        而后者 #TODO 等价于 $M_(n + r) = I^r M_n, n, r$ 都充分大，证毕
+    ]
+    #proposition[Artin-Rees Lemma][
+      设 $A$ 诺特，$I$ 是理想，$M$ 是有限生成模以及 稳定 $I-$filtration $(M_n)$，$N$ 是 $M$ 的子模，则 $M' sect M_n$ 是稳定 $I-$filtration\
+      特别的，若 $M_n = I^n M$，则存在充分大的 $k$ 使得：
+      $
+      I^n M sect N = I^(n-k) (I^k M sect N)
+      $
+
+      换言之，$I-$adic 拓扑的限制还是 $I-$adic 拓扑
+    ]<Artin-Rees>
+    #proof[
+      - 首先，$I(M' sect M_n) subset I M' sect I M_n subset M' sect M_(n+1)$，表明这是 $I-$filtration
+      - 其次，上面的引理给出 $M^*$ 有限生成，而 $directSum (M' sect M_n)$ 当然是它的子模。诺特环上有限生成模是诺特的，其子模仍然有限生成，因此 $directSum (M' sect M_n)$ 是子模，进而再次利用引理即可得到结论
+    ]
+    #corollary[][
+      设 $A$ 诺特，$I$ 是理想，则：
+      $
+      0 -> hat(M') -> hat(M) -> hat(M'') -> 0
+      $
+      也正合
+    ]
+    #proof[
+      @Artin-Rees 结合 @exact-completion 立得
+    ]
+    #proposition[][
+      设 $M$ 是有限生成 $A-$模，则 $M tensorProduct_A hat(A) -> hat(M)$ 是满射。进一步若 $A$ 是诺特的，则它是同构。
+    ]
+    #proof[
+      - $I-$adic 完备化和有限直和是交换的（既然它们都是逆向极限）
+      - $F$ 是有限自由模时，$hat(F) = (hat(A))^n$ 继而 $F tensorProduct hat(A) = hat(F)$
+      由 $M$ 有限生成，有正合列：
+      $
+      0 -> N -> F -> M -> 0
+      $
+      其中 $F$ 是有限自由模，由张量积右正合：
+      $
+      N tensorProduct hat(A) -> F tensorProduct hat(A) -> M tensorProduct hat(A) -> 0
+      $
+      有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $N tensorProduct hat(A)$, 1),
+      node((0, 1), $F tensorProduct hat(A)$, 2),
+      node((0, 2), $M tensorProduct hat(A)$, 3),
+      node((0, 3), $0$, 4),
+      node((1, 0), $hat(N)$, 5),
+      node((1, 1), $hat(F)$, 6),
+      node((1, 2), $hat(M)$, 7),
+      node((1, 3), $0$, 8),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(5, 6, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(1, 5, $$),
+      arr(2, 6, $$, bij_str),
+      arr(3, 7, $$),
+      arr(4, 8, $$),)]
+      其中上下（下是因为满射系统的逆向极限是正合函子）都正合，继而 $M tensorProduct hat(A) -> hat(M)$ 是满射。若 $A$ 是诺特的，$N$ 作为有限生成模的子模也是有限生成模，$N tensorProduct hat(A) -> hat(N)$  也满射，同时 $hat(N) -> hat(F)$ 由完备化的正合性（上面的推论）将成为单射，运用蛇形引理即得 $ker (M tensorProduct hat(A) -> hat(M)) = 0 $，证毕
+    ]
+    #let hA = $hat(A)$
+    #let hI = $hat(I)$
+    #corollary[][
+      设 $A$ 诺特，$I$ 是任意理想，则：
+      - 完备化是正合函子
+      - $hat(A)$ 是平坦 $A$-模
+      - $hat(I) = I tensorProduct hat(A) = I hat(A)$
+      - $hat(I^n) = (hat(I))^n$
+      - $hat(A) quo hat(I) tilde.eq A quo I$（之前已经证明，这条不需要诺特）
+      - $I^n quo I^(n+1) tilde.eq hat(I^n) quo hat(I^(n+1))$
+      - $hat(I)$ 落在 $hat(A)$ 的 Jacobson 根中
+
+    ]
+    #proof[
+      只证明最后一条，任取 $x in hat(I), y in hat(A)$，有：
+      $
+      Inv((1- y x))  = 1 + y x + ... 
+      $
+      由完备性，上式右侧是有意义的，表明 $1 -y  x$ 是单位，证毕
+    ]
+    #proposition[][
+      设 $A$ 是诺特局部环，$m$ 是极大理想，则 $hat(A)$ 仍是局部环，极大理想是 $hat(m)$
+    ]
+    #proof[
+      首先 $hat(A) quo hat(m) tilde.eq A quo m$ 保证 $hat(m)$ 是极大理想\
+      其次，前面已经证明 $hat(m)$ 落在 Jacobson 根中，因此 $hat(m)$ 是唯一极大理想
+    ]
+    #theorem[Krull][
+      设 $A$ 诺特， $M$ 有限生成，则：
+      $
+      ker (M -> hat(M)) = sect I^n M = {x in M | exists y in I, (1 + y) x = 0}
+      $
+      特别的，若 $A$ 是整环且 $I != (1)$，则 $sect I^n M = {0}$
+    ]
+    #proof[
+      设 $E = ker(M -> hat(M))$，它也是 $0$ 的所有开邻域的交。
+      - 一方面，$E$ 的限制拓扑是平凡的
+      - 另一方面，$E$ 的限制拓扑还是 $I-$adic 拓扑
+      #TODO
+      上面两条给出 $I E = E$，由 Nakayama 引理的一个版本可得存在 $alpha in I$ 使得 $(1 - alpha) E = 0$
+
+      另一方面，设 $(1 - alpha) x = 0$，则 $x = alpha x = ... alpha^n x = ...$，当然 $x in sect I^n M$
+    ]
+    #corollary[][
+      在前面的条件中，若 $I$ 落在 Jacobson 根中，必有 $sect I^n M = 0$，继而 $M$ 上的 $I-$adic 拓扑是 Hausdorff 的。
+
+      特别的，若 $A$ 是诺特的局部环，则其上所有有限生成模的 $I-$adic 拓扑都是 Hausdorff 的，包括 $A$ 本身
+    ]
+    #theorem[][
+      设 $A$ 的诺特环，则 $hat(A)$ 还是诺特的。特别的，诺特环上有限个变元的形式幂级数环（作为多项式环的完备化）还是诺特的
+    ]
+    #proof[
+      它的证明需要一些铺垫
+      #let Gn(n) = $M_(#n) quo M_(#n +1)$
+      #definition[][
+        定义：
+        $
+        G(A) = directSum_(n = 0)^infinity I^n quo I^(n+1)
+        $
+        它是分次环
+
+        若 $M$ 有 $I-$filtration，可以类似定义：
+        $
+        G(M) = directSum_(n = 0)^infinity Gn(n)
+        $
+        它是分次 $G(A)$ 模
+      ]
+      #proposition[][
+        设 $A$ 诺特，则：
+        - $G(A)$ 是诺特的
+        - $G_I (A) tilde.eq G_(hI) (hA)$
+        - 设 $M$ 是有限生成的，且其上的 $I-$filtration 是稳定的，则 $G(M)$ 有限生成
+      ]
+      #proof[
+        - 显然 $I$ 有限生成，不妨设 $I = (x_1, x_2, ..., x_n)$，显然：
+          $
+          G(A) = A quo I [overline(x_1), ..., overline(x_n) ]
+          $
+          它当然是诺特的
+        - 前面已经证明
+        - $n$ 充分大时，有 $Gn(n) tilde.eq M_n quo I M_n = A quo I tensorProduct M$，因此 $G(M)$ 本质上仅有前面有限项生成（后面的只是 $I$ 在其上的作用）#TODO，当然是有限生成的 
+      ]
+      #proposition[][
+        设 $M$ 是有限生成，且其上的 $I-$filtration 是稳定的，假设 $A$ 完备且 $M$ 是 Hausdoff 的，也即 $sect M_n = 0$，则：
+        - 若 $G(M)$ 有限生成，则 $M$ 有限生成
+        - 若 $G(M)$ 诺特，则 $M$ 诺特
+      ]
+      #proof[
+        #lemma1[
+          设 $phi: A -> B$ 是 filtered 群间的同态，诱导 $hat(phi): hat(A) -> hat(B), G(phi) : G(A)  -> G(B)$，则：
+          - $G(phi)$ 是单射给出 $hat(phi)$ 是单射
+          - $G(phi)$ 是满射给出 $hat(phi)$ 是满射
+        ]
+        #proof[
+          有交换图：
+          #align(center)[#commutative-diagram(
+          node((0, -1), $0$, -1),
+          node((1, -1), $0$, -2), 
+          node((0, 0), $A quo A_(n+1)$, 1),
+          node((0, 1), $A quo A_(n+1)$, 2),
+          node((0, 2), $A quo A_n$, 3),
+          node((0, 3), $0$, 4),
+          node((1, 0), $B_n quo B_(n+1)$, 5),
+          node((1, 1), $B quo B_(n+1)$, 6),
+          node((1, 2), $B quo B_(n)$, 7),
+          node((1, 3), $0$, 8),
+          arr(-1, 1, $$),
+          arr(-2, 5, $$),
+          arr(-1, -2, $$),
+          arr(1, 2, $$),
+          arr(2, 3, $$),
+          arr(3, 4, $$),
+          arr(5, 6, $$),
+          arr(6, 7, $$),
+          arr(7, 8, $$),
+          arr(1, 5, $$),
+          arr(2, 6, $$),
+          arr(3, 7, $$),
+          arr(4, 8, $$),)]
+          对 $n$ 做归纳，利用蛇形引理可以验证结论成立
+        ]
+        取 $G(M)$ 的齐次生成元 $xi_i = overline(x_i), x_i in M_(n_i)$，希望证明 $x_i$ 就是 $M$ 的生成元
+
+        取：
+        $
+        F = directSum_i F^i where F^i = A, F^i_k = I^(k + n_i)
+        $
+        定义 $phi: F -> M, phi(1_i) = xi_i$，则 $G(phi)$ 是满射，由引理 $hat(phi)$ 是满射，有交换图：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $F$, 1),
+        node((0, 1), $M$, 2),
+        node((1, 0), $hat(F)$, 3),
+        node((1, 1), $hat(M)$, 4),
+        arr(1, 2, $$),
+        arr(1, 3, $$),
+        arr(2, 4, $$),
+        arr(3, 4, $$),)]
+        注意到 $A$ 完备，$M$ Hausdoff，则 $M -> hat(M)$ 是单射。同时由于 $F$ 是有限自由模，可以验证：
+        $
+        F tilde.eq inverseLimit F quo I^n F tilde.eq hat(F)
+        $
+        （将 $F$ 拆成 $A$ 的直和结合 $A$ 的完备性）\
+        再结合 $hat(phi)$ 的满射性，追图即得 $phi$ 也是满射。
+
+        对于第二个结论，证明 $M$ 的任意子模 $M'$ 是有限生成即可。令：
+        $
+        M'_n = M' sect M_n
+        $
+        可以验证 $M'_n quo M'_(n+1)$ 可以嵌入 $M_n quo M_(n+1)$，而后者是诺特模，前者也是，利用第一个结论即可
+      ]
+      有了上面的命题，原结论是容易的。事实上，$G(A) tilde.eq G(hat(A))$ 根据上面的命题是诺特的，而 $hat(A)$ 是完备的 Hausdoff 空间，因此由上面的命题 $hat(A)$ 是诺特的。
     ]

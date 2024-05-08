@@ -1688,6 +1688,10 @@
       ]
       从上面的定理可以看出，稀疏网格理所应当的用精度的降低换来了效率的提升。
   == Gauss 积分公式
+    #let xspace(x) = $#x space$
+    #let Is = $xspace(I)$
+    #let Rs = $xspace(R)$
+    #let Qs = $xspace(Q)$ 
     在许多数学分支中，高维积分的计算都是很重要的问题。例如函数的分解往往涉及在若干基上的投影，而投影往往需要设计内积也就是高维函数的积分进行表示。\
     通常的积分问题可以表示为：
     $
@@ -1695,7 +1699,7 @@
     $
     其中 $Omega$ 是积分区域，$w$ 是给定权函数。方便起见，记：
     $
-    I u = integral_(Omega)^() u(x) w(x) dif x 
+    Is u = integral_(Omega)^() u(x) w(x) dif x 
     $<N-integral>
     === 一维情形
       我们先考虑如何计算一维的积分
@@ -1712,7 +1716,7 @@
           h(x) = sum_(i=0)^N u(x_i) h_i (x)\
           where h_i (x) = product_(0 <= j <= N, j!= i) (x - x_j)/(x_i - x_j)
           $
-          且有 $h(x_i) = u(x_i)$
+          为 Lagrange 插值，且有 $h(x_i) = u(x_i)$，其中 $h_i (x)$ 也被称为基函数或者形函数
         ]
         #theorem[][
           若 $u(x) in C^(N+1) ([a, b])$，则对任意 $x in [a, b]$，存在 $xi in [a, b]$ 使得：
@@ -1744,11 +1748,11 @@
       
         为了衡量数值积分公式的好坏，一种方式是所谓的*代数精度*，它利用了试验函数的方法，利用公式在某种具体函数上的表现来衡量精度
         #definition[代数精度][
-          对于一般的数值积分公式，设其逼近函数 $u$ 产生残量为 $Q u$，若自然数 $m$ 使得：
-          - 任意不高于 $m$ 次的多项式 $f(x)$ 都有 $Q f = 0$
-          - 存在 $m+1$ 次多项式使得 $Q f != 0$
+          对于一般的数值积分公式，设其逼近函数 $u$ 产生残量为 $R u$，若自然数 $m$ 使得：
+          - 任意不高于 $m$ 次的多项式 $f(x)$ 都有 $R f = 0$
+          - 存在 $m+1$ 次多项式使得 $R f != 0$
           则称该数值积分公式有 $m$ 阶代数精度
-        ]
+        ]<algebra-precision>
         #proposition[][
           @Lang-integral 具有至少 $N$ 阶代数精度，且精度不超过 $2 N + 1$
         ]
@@ -1757,10 +1761,10 @@
           - 另一方面，考虑 $u := product_(0 <= i <= N) (x-x_i)^2$，显然 $I u > 0, Q u = 0 => R u != 0$，这是 $2 N +2 $ 次代数精度，因此代数精度不超过 $2 N + 1$
         ]
         注意到在 @Lang-integral 中，$w_i$ 事实上只与 $x_i$ 有关，因此自然的想法是选取更加合适的 $x_i$ 以获得更好的代数精度。
-      === 高斯积分
+      ==== 高斯积分
         #theorem[][
-          设 $P_(N+1)$ 是 $N+1$ 次（在给定的区间和权函数下的）正交多项式，也即 $generatedBy(1\, x\, ... \, x^n)$ 的正交基，取 $x_i$ 是 $P_(N+1)$ 的某个零点，则这样的零点恰有 $N+1$ 个，且 @Lang-integral 的数值精度恰为 $2N + 1$
-        ]
+          设 $P_(N+1)$ 是 $N+1$ 次（在给定的区间和权函数下的）正交多项式，取 $x_i$ 是 $P_(N+1)$ 的某个零点，则这样的零点恰有 $N+1$ 个，且 @Lang-integral 的数值精度恰为 $2N + 1$
+        ]<Gauss-integral>
         #proof[
           任取不高于 $2N + 1$ 次多项式 $p$，利用辗转相除法有：
           $
@@ -1778,6 +1782,12 @@
             &= sum_i (p(x_i) - a(x_i) P_(N+1) (x_i)) w_i\
             &= Q p
           $
+
+          至于零点个数，设 $x_1, x_2, ..., x_m$ 是所有不同的奇数次零点，则：
+          $
+          integral p_(N+1) (x) (x-x_1) (x-x_2) ... (x - x_m) dif x > 0
+          $
+          表明 $(x-x_1) (x-x_2) ... (x - x_m)$ 至少 $N+1$ 次，进而 $m = N + 1$，当然这些零点只能是一重零点并且没有其他的偶次零点
         ]
         从实用性角度，我们希望正交多项式是便于计算的，之后无论利用何者方法，只需求出该多项式的零点，对于任何函数在给定区间上的加权积分都可以直接计算。
         #lemma[][
@@ -1788,35 +1798,144 @@
             
             这里我们也可以采用与一般的施密特正交化在形式上略微不同的三项递推形式。事实上，假设 $p_(n), p_(n-1)$ 已经求得，由带余除法我们希望有如下的形式：
             $
-            p_(n+1) = (x + a) p_n + r_n (x)
+            p_(n+1) = (x + a_n) p_n + r_n (x)
             $
-            不难看出 $r_n (x)$ 将与 $1, x, ..., x^(n-1)$ 都正交，继而不妨取 $r_n = b p_(n-1) (x)$，有：
+            不难看出 $r_n (x)$ 将与 $1, x, ..., x^(n-1)$ 都正交，继而不妨取 $r_n = b_n p_(n-1) (x)$，有：
             $
             p_(n+1) = (x + a_n) p_n +  b_n p_(n-1) (x)
-            $
+            $<recurrence>
             为了求出待定的 $a, b$，直接做内积可得：
             $
-            inner(p_(n+1), p_n) = 0 = inner(x p_n, p_n) + a inner(p_n, p_n) \
-            inner(p_(n+1), p_(n-1)) = 0 = inner(x p_n, p_(n-1))  + b inner(p_(n-1), p_(n-1))
+            inner(p_(n+1), p_n) = 0 = inner(x p_n, p_n) + a_n inner(p_n, p_n) \
+            inner(p_(n+1), p_(n-1)) = 0 = inner(x p_n, p_(n-1))  + b_n inner(p_(n-1), p_(n-1))
             $
             反解出对应的 $a_n, b_n$ 即可
           - 对于唯一性，注意到 $p_n$ 落在 $generatedBy(1\, x\, ...\, x^n)$，且与 $1, x, ..., x^(n-1)$ 都正交，继而落在 $generatedBy(1\, x\, ...\, x^(n-1))$ 的正交补空间之中，这个正交补空间仅有一维，因此两两之间只差常数，继而其中首一的多项式唯一
         ]
         #lemma[][
-          正交多项式 $p_n$ 的根恰好是对称三对角矩阵：
+          正交多项式 $p_(n+1)$ 的根恰好是对称三对角矩阵：
           $
-          mat(alpha_1, beta_1, 0, ..., 0;
-              beta_1, alpha_2, beta_2, ..., 0;
+          mat(alpha_0, beta_1, 0, ..., 0;
+              beta_1, alpha_1, beta_2, ..., 0;
               0, beta_2, alpha_3, ..., 0;
               dots.v, dots.v, dots.v, ..., dots.v;
-              0, ..., 0, beta_(n-1), alpha_n) 
+              0, ..., 0, beta_(n), alpha_n) 
           
           
           $
           的所有特征值，其中：
           $
-          alpha_i = b_i / a_i, beta_j = 1/a_(j-1) sqrt(inner(p_j, p_j)/inner(p_(j-1), p_(j-1)))
+          alpha_i = - a_i, beta_j = sqrt(inner(p_j, p_j)/inner(p_(j-1), p_(j-1)))
           $
+          （$a_i, b_i$ 是上面证明中定义的对应系数，也即@recurrence 中的相应系数）
         ]
+        #proof[
+          #let tp = $tilde(p)$
+          #lemma1[
+            $
+            -b_j norm(p_(j-1))/norm(p_j) = beta_j
+            $
+          ]
+          #proof[
+            即是证明：
+            $
+            b_j = - inner(p_j, p_j)/inner(p_(j-1), p_(j-1))
+            $
+            事实上，在@recurrence 两边做内积立得：
+            $
+            inner(p_(n+1), p_(n+1)) = inner(p_(n+1), x p_n), forall n
+            $
+            因此：
+            $
+            b_j &= - inner(x p_j, p_(j-1)) / inner(p_(j-1), p_(j-1)) \
+            &= - inner(p_j, x p_(j-1)) / inner(p_(j-1), p_(j-1))\
+            &= - inner(p_j, p_j) / inner(p_(j-1), p_(j-1))\
+            $
+            证毕
+          ]
+          设 $tp_j = 1/sqrt(inner(p_j, p_j)) p_j$，显有 $norm(tp_j) = 1$，上面证明中的递推式变成：
+          $
+          norm(p_(j+1)) tp_(j+1) &= x norm(p_j) tp_j  + a_j norm(p_j) tp_j +  b_j norm(p_(j-1)) tp_(j-1) \
+          x tp_j &= norm(p_(j+1))/norm(p_j) tp_(j+1) - a_j tp_j - b_j norm(p_(j-1))/norm(p_j) tp_(j-1)\
+          &= beta_(j+1) tp_(j+1) + alpha_j tp_j - b_j norm(p_(j-1))/norm(p_j) tp_(j-1)\
+          &= beta_(j+1) tp_(j+1) + alpha_j tp_j + beta_j tp_(j-1)
+          $
+          将上式排成向量，（再检查 $p_0$ 的特殊情形）即得：
+          $
+          x vec(tp_0, tp_1, tp_2, dots.v, tp_n) = mat(alpha_0, beta_1, 0, ..., 0;
+              beta_1, alpha_1, beta_2, ..., 0;
+              0, beta_2, alpha_3, ..., 0;
+              dots.v, dots.v, dots.v, ..., dots.v;
+              0, ..., 0, beta_(n), alpha_n) vec(tp_0, tp_1, tp_2, dots.v, tp_n) + beta_(n+1) tp_(n+1) vec(0, dots.v, 0, 1)
+          $
+          任取 $p_(n+1)$ 的根 $x_j$ 将有:
+          $
+          x_j vec(tp_0 (x_j), tp_1 (x_j), tp_2 (x_j), dots.v, tp_n (x_j)) = mat(alpha_0, beta_1, 0, ..., 0;
+              beta_1, alpha_1, beta_2, ..., 0;
+              0, beta_2, alpha_3, ..., 0;
+              dots.v, dots.v, dots.v, ..., dots.v;
+              0, ..., 0, beta_(n), alpha_n) vec(tp_0 (x_j), tp_1 (x_j), tp_2 (x_j), dots.v, tp_n (x_j)) 
+          $
+          表明对所有 $N + 1$ 个 $j$，$x_j$ 都是特征值，证毕
+        ]
+        使用 @Gauss-integral 的方法计算积分便称为 *Gauss 积分公式* 
+    === 高维情形
+      Gauss 积分公式已经能很好地解决一维积分的问题，然而更高维的数值积分至今仍是比较困难的问题。高维积分的方式大致可以分为两种方案：
+      + 仍然基于多项式（仍是通过巧妙选择格点获得好的代数精度，它类似于谱方法利用正交性获得方便的全局逼近）
+      + 基于数论的方法，如 Monte Carlo, Quasi-Monte Carlo （类似于网格点方法）
+      ==== 多项式方法
+        #let pnd(n) = $PP_(#n)^d$
+        在这节，我们约定序号从 $1$ 开始，并记 $pnd(n)$ 为所有不超过 $n$ 次的 $d$ 维多项式全体。类似 @algebra-precision 定义：
+        #definition[代数精度，高维][
+          对于一般的数值积分公式，设其逼近函数 $u$ 产生残量为 $R u$，若自然数 $m$ 使得：
+          - $Rs pnd(m) = {0}$
+          - $Rs pnd(m+1) != {0}$
+          则称该数值积分公式有 $m$ 阶代数精度
+        ]
+        我们希望获得类似 Gauss 公式的结果，令 $Q f$ 具有 $2 n - 1$ 阶代数精度，需要解决：
+        - 此时需要多少个积分点
+        - 积分点如何选取
+        下设积分点个数为 $N$，分别为 $x_1, x_2, ..., x_N$
+        #proposition[][
+          若 $Q f$ 有 $2n-1$ 阶代数精度，则 $N >= dim pnd(n-1)$
+        ] 
+        #let dm = $dim pnd(n-1)$
+        #proof[
+          #let sumi = $sum_(i=1)^dm$
+          如若不然，设 $N < dm$，取 $pnd(n-1)$ 的一组基 $p_1, p_2, ..., p_dm$\
+          我们希望 $p in pnd(n-1)$ 使得 $x_1, x_2, ..., x_N$ 都是它的零点，先设：
+          $
+          p(x) = sumi c_i p_i (x)
+          $
+          代入得：
+          $
+          sumi c_i p_i (x_j) = 0\
+          $
+          将其看成 $c_i$ 的线性方程，由于 $N < dm$，未知数的个数小于方程的个数，因此一定有非零解 $c_i$，这组解便产生了 $p$ 使得 $x_1, x_2, ..., x_N$ 都是零点。类似之前的操作，有：
+          $
+          I p^2 > 0\
+          Q p^2 = 0 
+          $
+          表明代数精度将小于 $2 deg p = 2 n - 2$ ，矛盾！
+        ]
+        然而，利用组合方法可以计算得到 $dim pnd(n-1) = C_(n-1+d)^d = O(n^d)$ ，这已经是非常巨大的数字。
+        #definition[Gauss 公式，高维][
+          称 $Q f$ 是 $d$ 维 Gauss 公式，如果取 $N = dim pnd(n-1)$ 时有 $2 n -1$ 阶代数精度。
+        ]
+        #let tpnd(n) = $tilde(pnd(n))$
+        #definition[正交多项式，高维][
+          设：
+          $
+          tpnd(n) = {f in pnd(n) | forall g in pnd(n-1), inner(f, g) = 0}
+          $
+          为 $n$ 次 $d$ 维正交多项式的全体，也即与所有次数不超过 $n-1$ 的多项式都正交的多项式。显然 $tpnd(n)$ 中所有多项式都是 $n$ 次（否则与自己正交）
+        ]
+        #proposition[][
+          $d$ 维 Gauss 公式存在当且仅当所有的 $n$ 次 $d$ 维正交多项式拥有 $dim pnd(n-1)$ 个共同零点
+        ]
+        #proof[
+          - 假设共同零点条件成立，对 $pnd(n-1)$ 中所有单项式做 Schmidt 正交化和归一化，可以得到 $N = dm$ 个标准正交的多项式
+        ]
+
 
   

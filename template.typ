@@ -51,13 +51,23 @@ $1 + 1$
 #let lift = math.arrow.t
 #let quo = math.class("relation", $\/$)
 #let ord = math.op("ord")
+#let ei(x) = $e^(i #x)$
+#let eiB(x) = $e^(#x i)$ // i Behind
 #let sgn = math.op("sgn")
+#let Res = math.op("Res")
 #let lcm = math.op("lcm")
 #let Der = math.op("Der")
 #let Arg = math.op("Arg")
 #let End = math.op("End")
 #let ReT = math.op("Re")
 #let ImT = math.op("Im")
+#let ignoreOne(x) = {
+  if x == [1] {
+    []
+  } else {
+    [#x] 
+  }
+}
 #let argmax = math.op("argmax")
 #let argmin = math.op("argmin")
 #let incrementSign(x, i, k) = {
@@ -94,6 +104,7 @@ $1 + 1$
 //#let quot = math.class("relation", $\/$)
 #let Stab = math.op("Stab")
 #let Orb = math.op("Orb")
+#let arrowCir = $limits(arrow)^(circle)$
 #let existsST(var, condition) = $exists #var space s.t. space #condition$
 #let forallSa(var, condition) = $forall #var space , space #condition$
 #let funcDef(f, A, B, x, fx) = $#f: space #A &-> #B \ #x &|-> #fx$
@@ -275,7 +286,7 @@ $1 + 1$
 #let (answer, rules:ans-rules) = new-theorems("thm-ans", ("answer": "Answer"), ..my-styling)
 
 #let note(title: "Note title", author: "Name", logo: none, date: none,
-          preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, body) = {
+          preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, withHeadingNumbering: true, body) = {
   // Set the document's basic properties.
   set document(author: (author, ), title: title)
   set page(
@@ -298,6 +309,20 @@ $1 + 1$
   show: ans-rules
   show math.equation: set text(font: ("Noto Serif CJK SC", "New Computer Modern Math"))
   set math.equation(numbering: "(1)")
+
+  if withHeadingNumbering == false {
+    set math.equation(numbering: "(1)")
+  }
+  else {
+    show heading: it => {
+        counter(math.equation).update(0)
+        it
+    }
+    set math.equation(numbering: "1.")
+    set math.equation(numbering: num =>
+      "(" + (counter(heading).get() + (num,)).map(str).join(".") + ")")
+    set math.equation(numbering: "(1)")
+  }
   // set ref(supplement: it => {
   // let eq = math.equation
   // let el = it
