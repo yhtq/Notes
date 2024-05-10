@@ -1,4 +1,4 @@
-#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemma1
+#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemmaLinear[]
 #import "../../template.typ": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 
@@ -247,7 +247,7 @@
   P = union.big_i im(z_i)
   $
   \
-  #lemma1[
+  #lemmaLinear[][
     $
     ker g = union_i y_i (ker g_i)
     $

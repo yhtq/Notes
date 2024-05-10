@@ -821,7 +821,7 @@
       有界区间上等度连续的一致有界的函数列有一致收敛的子列
     ]
     #proof[ 
-      #lemma1[
+      #lemmaLinear[][
         设 $f_n: I -> RR$ 对于每个 $x in I, f_n (x)$ 都有界 $M_x$，$I$ 是有限区间，则任取 $I$ 的一个可数子集 $E$，存在 $f_n$ 的子列使得这个子列在 $E$ 上收敛
       ]
       #proof[
@@ -834,7 +834,7 @@
         $
         在每个 $x_k$ 上都收敛，证毕
       ]
-      #lemma1[
+      #lemmaLinear[][
         设 $I$ 是有限区间，$f_n : I -> RR$ 等度连续，且在 $I$ 的稠密子集上收敛，那么它在 $I$ 上一致收敛
       ]
       #proof[
@@ -1220,7 +1220,7 @@
       在 $I$ 上的最大/最小解，则任取 $x_1 in I, y_1 in [g(x_1), f(x_1)]$，存在方程的解 $h$ 使得 $h(x_1) = y_1$
     ]
     #proof[
-      #lemma1[
+      #lemmaLinear[][
         设 $g_1, g_2$ 在区间 $I$ 上均满足 $g'_i (x) = f(x, g_i (x))$，则 $max(g_1, g_2), min(g_1, g_2)$ 也满足
       ]
       #proof[
@@ -2041,7 +2041,7 @@
       $
       W'(t) = sum_i det(x_1, x_2, ..., x'_i, ..., x_n) = sum_i det(x_1, x_2, ..., A x_i, ..., x_n)
       $
-      #lemma1[
+      #lemmaLinear[][
         $
         sum_i det(x_1, x_2, ..., A x_i, ..., x_n) = tr(A) det(x_1, x_2, ..., x_n)
         $

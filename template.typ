@@ -4,12 +4,6 @@
 
 #import "@preview/lemmify:0.1.4": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
-#let (
-  theorem, lemma, corollary,
-  remark, proposition, example, definition,
-  proof, rules: thm-rules
-) = default-theorems("thm-group", lang: "en")
-#let (answer) = default-theorems("thm-group-a", lang: "en")
 $1 + 1$
 #let TODO = [#text("TODO", fill: red)]
 #let der(y, x) = $(d #y) / (d #x)$
@@ -29,7 +23,7 @@ $1 + 1$
 #let Gal = math.op("Gal")
 #let HomoCoor = math.vec.with(delim: "[")
 #let autoHomoCoor3 = autoVec3.with(delim: "[")
-#let Det(arr) = mat(delim: "|", ..arr)
+#let Det = math.mat.with(delim: "|")
 #let Hom = math.op("Hom")
 #let Proj = math.op("Proj")
 #let Spec = math.op("Spec")
@@ -54,7 +48,7 @@ $1 + 1$
 #let ei(x) = $e^(i #x)$
 #let eiB(x) = $e^(#x i)$ // i Behind
 #let sgn = math.op("sgn")
-#let Res = math.op("Res")
+#let Res(f, i) = $op("Res") (#f \; #i)$
 #let lcm = math.op("lcm")
 #let Der = math.op("Der")
 #let Arg = math.op("Arg")
@@ -176,6 +170,8 @@ $1 + 1$
       parbreak()
     }
   )
+
+
 #let noneNameChecker(name) = {
   if name == [] {
     none
@@ -184,14 +180,31 @@ $1 + 1$
     name
 }
 }
-#let theo = theorem
-#let lem = lemma
-#let cor = corollary
-#let prop = proposition
-#let def = definition
-#let ex = example
-#let rem = remark
-#let pr = proof
+#let (
+  theorem: theo, lemma: lem, corollary: cor,
+  remark: rem, proposition: prop, example:ex , definition:def,
+  proof: pr, rules: thm-rules
+) = default-theorems("thm-group", lang: "en")
+#let (
+  theorem: theo1, lemma: lem1, corollary: cor1,
+  remark: rem1, proposition: prop1, example:ex1 , definition:def1,
+  proof: pr1, rules: thm-rules1
+) = default-theorems("thm-group-linear", lang: "en", thm-numbering: thm-numbering-linear)
+#let my-ans-style(
+  thm-type, name, number, body
+) = block(spacing: 11.5pt, {
+  set enum(numbering: "Step 1.1.")
+  body
+  linebreak()
+  h(1fr)
+  box(scale(160%, origin: bottom + right, sym.square.stroked))
+})
+#let my-styling = (
+  thm-styling: my-ans-style,
+  thm-numbering: thm-numbering-linear
+)
+#let (answer, rules:ans-rules) = new-theorems("thm-ans", ("answer": "Answer"), ..my-styling)
+
 #let _convert(f, name, body) = f(name: noneNameChecker(name))[
   #body
   #parbreak()
@@ -209,9 +222,23 @@ $1 + 1$
 ]
   #linebreak()
 ]
-#let lemma1 = lem.with(
-  numbering: none
-)
+
+
+
+#let theoremLinear(name, body) = _convert(theo1, name, body)
+#let lemmaLinear(name, body) = _convert(lem1, name, body)
+#let corollaryLinear(name, body) = _convert(cor1, name, body)
+#let propositionLinear(name, body) = _convert(prop1, name, body)
+#let exampleLinear(name, body) = _convert(ex1, name, body)
+#let remarkLinear(name, body) = _convert(rem1, name, body)
+#let definitionLinear(name, body) = _convert(def1, name, body)
+#let proofLinear(body) = [#pr1[
+  #set text(size: 10pt)
+  #body
+]
+  #linebreak()
+]
+
 //#let theorem = base_env.with(
 //  type: "Theorem",
 //  fg: blue,
@@ -271,19 +298,6 @@ $1 + 1$
 //  h(1fr)
 //  box(scale(160%, origin: bottom + right, sym.square.stroked))
 //})
-#let my-ans-style(
-  thm-type, name, number, body
-) = block(spacing: 11.5pt, {
-  set enum(numbering: "Step 1.1.")
-  body
-  linebreak()
-  h(1fr)
-  box(scale(160%, origin: bottom + right, sym.square.stroked))
-})
-#let my-styling = (
-  thm-styling: my-ans-style
-)
-#let (answer, rules:ans-rules) = new-theorems("thm-ans", ("answer": "Answer"), ..my-styling)
 
 #let note(title: "Note title", author: "Name", logo: none, date: none,
           preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, withHeadingNumbering: true, body) = {
@@ -307,22 +321,22 @@ $1 + 1$
   }
   show: thm-rules
   show: ans-rules
+  show: thm-rules1
   show math.equation: set text(font: ("Noto Serif CJK SC", "New Computer Modern Math"))
   set math.equation(numbering: "(1)")
-
+  set math.equation(numbering: num =>
+      "(" + (counter(heading).get() + (num,)).map(str).join(".") + ")") if withHeadingNumbering == true
+  let headingfunc = (it => it)
   if withHeadingNumbering == false {
     set math.equation(numbering: "(1)")
   }
   else {
-    show heading: it => {
+    headingfunc = (it => {
         counter(math.equation).update(0)
         it
-    }
-    set math.equation(numbering: "1.")
-    set math.equation(numbering: num =>
-      "(" + (counter(heading).get() + (num,)).map(str).join(".") + ")")
-    set math.equation(numbering: "(1)")
+    })
   }
+  show heading: headingfunc
   // set ref(supplement: it => {
   // let eq = math.equation
   // let el = it
@@ -386,6 +400,7 @@ $1 + 1$
   set par(justify: true, first-line-indent: 22pt)
 
   set heading(numbering: "1.")
+  set heading(numbering: none) if withHeadingNumbering == false
 
   // Code
   show raw.where(block: false): box.with(

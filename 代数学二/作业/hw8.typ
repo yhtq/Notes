@@ -1,4 +1,4 @@
-#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemma1, tensorProduct, directSum, directLimit
+#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemmaLinear[], tensorProduct, directSum, directLimit
 #import "../../template.typ": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 
@@ -99,7 +99,7 @@
       A quo (p sect A) subset C quo (p sect C) subset B quo p
       $
       且都是整环，由上题结论得 $overline(f), overline(g)$ 的所有系数落在 $A quo (p sect A)$ 的整闭包中，进而在其上整。\
-      #lemma1[
+      #lemmaLinear[][
         设 $x in B$ 且任取素理想 $p in Spec(B)$ 均有 $overline(x) in B quo p$ 在 $A quo (p sect A)$ 上整，则 $x$ 在 $A$ 上整
       ]
       #proof[

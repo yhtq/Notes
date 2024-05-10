@@ -9,6 +9,7 @@
   logo: none,
   withOutlined : false,
   withTitle :false,
+  withHeadingNumbering: false
 )
 #set heading(numbering: none)
 （应交时间为5月9日）
@@ -183,7 +184,7 @@
     分别计算：
     - 
       $
-      Res(f, 0) = Res(1/z^2 (z^4 + 1)/((z - a)(a z - 1))) = ((z^4 + 1)/((z - a)(a z - 1)))'|_(z = 0)\
+      Res(f, 0) = Res(1/z^2 (z^4 + 1)/((z - a)(a z - 1)), 0) = ((z^4 + 1)/((z - a)(a z - 1)))'|_(z = 0)\
       = (- (-1 - a^2))/a^2 = ( a^2 + 1)/a^2
       $
     -
@@ -198,3 +199,130 @@
     &= - 1/2 pi  (2 a^2 )/ (a^2 - 1)\
     &= ( a^2 )/ (1 - a^2) pi \
     $
+  == 2
+    === (a)
+      只需验证 $integral_(-infinity)^(infinity) 1/(x^2 + a^2)^2 dif x = pi/(2 a^3)$\
+      为此，设 $f(z) = 1/(z^2 + a^2)^2$，考虑路径 $-R -> R arrowCir -R$ （圆弧经过上半逆时针）并设 $R$ 足够大使得 $ a i$ 在区域内部，将有：
+      #let fi = $1/(z^2 + a^2)^2$
+      $
+      2pi i(Res(f , a i) ) =\
+      integral_(-R -> R arrowCir -R)^() fi dif z\
+      = integral_(-R)^(R) fi dif z + integral_(R arrowCir -R)^() fi dif z\ 
+      $
+      分别计算：
+      - 
+        $
+        Res(f, a i) = Res(1/(z - a i)^2 1/(z + a i)^2 , a i) = (1/(z + a i)^2)' |_(z = a i) \
+        = -2/(z + a i)^3 |_(z = a i) = -2/(2 a i)^3 = 1/(4 a^3 i)
+        $
+      - 
+        $
+        integral_(R arrowCir -R)^() fi dif z\
+        = integral_(0)^(pi) fi dif R eiBt(1)\
+        = integral_(0)^(pi) 1/(R^2 eiBt(2) + a^2)^2 dif R eiBt(1)\
+        = i integral_(0)^(pi) R/(R^2 eiBt(2) + a^2)^2 dif theta\
+        $
+        而：
+        $
+        norm(R/(R^2 eiBt(2) + a^2)^2) = 1/norm(R^(3/2) eiBt(2) + a^2 R^(-1/2)) <= 1/(R^(3/2) - a^2 R^(-1/2))
+        $
+        当 $R$ 充分大时上式为零
+      综上有：
+      $
+      integral_(-infinity)^(infinity) 1/(x^2 + a^2)^2 dif x = 2pi i dot (- 1/(4 a^3 i)) =  pi/(2 a^3)
+      $
+    === (c)
+      #let eiBx(a) = $eiB(ignoreOne(#a) x)$
+      #let fx = $(eiBx(a))/(1+x^2)^2$
+      积分化为：
+      $
+      1/2 integral_(-infinity)^(infinity) fx dif x
+      $
+      设 $f(x) = fx$，考虑路径 $-R -> R arrowCir -R$ （圆弧经过上半逆时针）并设 $R$ 足够大使得 $i$ 在区域内部，将有：
+      $
+      2 pi i Res(f, i) = integral_(-R -> R arrowCir -R)^() fx dif z\
+      = integral_(-R)^(R) fx dif z + integral_(R arrowCir -R)^() fx dif z
+      $
+      分别计算：
+      - 
+        $
+        Res(f, i) = Res(1/(x - i)^2 (eiBx(a))/(x + i)^2, i)\
+        = ((eiBx(a))/(x + i)^2)'|_(x = i)\
+        = (a i eiBx(a) (x+i)^2 - 2 (x + i)eiBx(a))/(x+i)^4 |_(x = i)\
+        = -i/4 e^(-a) (a + 1) 
+        $
+      - 
+        $
+        integral_(R arrowCir -R)^() fx dif z = integral_(0)^(pi) (eiBx(a) )/(1 + x^2)^2 dif R eiBt(1)\
+        = integral_(0)^(pi) (eiB(a R eiBt(1)) )/(1 + (R eiBt(1))^2)^2 dif R eiBt(1)\
+        = integral_(0)^(pi) R e^(i theta) (e^(a R (cos theta i - sin theta)) )/(1 + (R eiBt(1))^2)^2 dif theta\
+        $
+        而：
+        $
+        abs(R e^(i theta) (e^(a R (cos theta i - sin theta)))/(1 + (R eiBt(1))^2)^2)\
+        <= R (e^( - a R sin theta))/(R^2 - 1)^2\
+        <= 2 R (e^( - a R sin theta))/R^4 (R "充分大时")\
+        = 2 (e^( - a R sin theta))/R^3
+        $
+        之前计算 $(sin x) /x$ 证明了 $integral_(0)^(pi) e^( - a R sin theta)  dif theta$ 当 $R$ 充分大时趋于零，继而该项趋于零
+      === (h)
+        $
+        integral_(0)^(2pi) log sin^2 2 theta dif theta = 2 integral_(0)^(2 pi) log abs(sin 2 theta) dif theta = 8 integral_(0)^(pi/2) log abs(sin 2 theta) dif theta = 4 integral_(0)^(pi) log sin x dif x
+        $
+        为了计算上面的积分，做代换：
+        $
+        integral_(0)^(pi) log sin x dif x = integral_(0)^(pi) log abs((eiB(x) - eiB(-x))/i) dif x - pi ln 2 \
+        = integral_(0)^(pi) log abs(eiB(2 x) - 1) dif x  - pi ln 2\
+        = Re integral_(0)^(pi) log (eiB(2 x) - 1) dif x - pi ln 2
+        $
+        注意到：
+        $
+        integral_(0)^(pi) log (eiB(2 x) - 1) dif x = 1/(2 i) integral_(0)^(pi) (log (eiB(2 x) - 1))/(eiB(2 x)) dif eiB(2 x)\
+        = 1/(2 i) integral_(diff B(0, 1))^() (log (z - 1))/(z) dif z
+        $
+        注意到被积函数实际上无极点，$0$ 是可去奇点，因此上面的积分为零，表明 $integral_(0)^(pi) log sin x dif x =  - pi ln 2$ 证毕
+  == 3
+    显然 $e^(1/z)$ 在除 $0$ 外的点都解析，因此取得充分大的开区域将 $gamma$ 包含在内，留数定理给出：
+    $
+     n(gamma\; 0) Res(e^(1/z), 0)  =1/(2 pi i) integral_(gamma)^() e^(1/z) dif z
+    $
+    显然有：
+    $
+    e^(1/z) = sum_(n = 0)^(infinity) 1/(n!) z^(-n)\
+    $
+    因此由留数定义知 $Res(e^(1/z), 0) = 1$，从而上面的积分的所有可能值为 $2 k pi i, forall k in ZZ$
+= 126
+  == 2
+    设 $g(z) = (f(z))/z^n - 1$，则 $0 < abs(f(z)) < 2, forall abs(z) = 1$ 且 $g$ 仅有一个 $n$ 阶极点 $0$，由幅角原理：
+    $
+    1/(2 pi i) integral_(diff B(0, 1))^() g'/g dif z = k - n 
+    $
+    其中 $k$ 是记重数的 $B(0, 1)$ 内 $g$ 的零点个数
+  == 4
+    在 $f$ 的通常点结论是显然的，设 $z$ 是极点，有 $tilde(f) = infinity$。任取 $infinity$ 在 $C_infinity$ 上的一个开邻域 $A_infinity$，设其在 $CC$ 上的投影为 $A = CC - B$，其中 $B$ 是有界闭集。
+
+    为了证明在 $z$ 处的连续性，只需找到 $z$ 的一个邻域 $Z$ 使得 $tilde(f)(Z) subset A_infinity$，由于 $z$ 是孤立奇点，不妨在某个小邻域内讨论，这个小邻域内无其他奇点。如此，上式事实上等价于：
+    $
+    f(Z - {z}) subset A = CC - B
+    $
+    由 $B$ 有界及 $lim_(x -> z) f(x) = infinity$ 上式当然是成立的
+  == 9
+    设 $f(z) = e^(-z) + z - lambda$
+    - 先设 $z$ 是实数，求导得：
+      $
+      f' = - e^(-z) + 1
+      $
+      因此 $f$ 在 $(-infinity, 0)$ 上递减，在 $(0, +infinity)$ 上递增，在 $0$ 处取得最小值 $1 - lambda < 0$，因此在 $RR$ 右半粥当然恰有一解，并且是一重根
+    - 其次，只需证明只有这一个根。事实上，设 $z$ 是根，则：
+      $
+      lambda = z + e^(-z)\
+      abs(z - lambda) = abs(e^(-z)) = e^(-Re z) < 1\
+      $
+      取 $gamma = diff B(lambda, 1)$，将有：
+      $
+      abs(f(z) - (z - lambda)) = e^(-Re z) < 1\
+      abs(f(z)) + abs(z - lambda) = 1 + abs(f(z)) > 1
+      $
+      由 Rouche's theorem 得 $f$ 与 $z - lambda$ 有相同的零点个数，后者只有一个根，因此 $f$ 也只有一个根
+
+    由于 $f$ 在 $RR$ 上最小值为 $1- lambda$ 在 $0$ 处取得，因此 $lambda -> 0$ 时（只是曲线的上下平移）当然有这个根也趋于 $0$

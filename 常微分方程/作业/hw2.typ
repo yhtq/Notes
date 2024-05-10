@@ -536,7 +536,7 @@
     u' = e^x/(x+1) integral_0^x u e^(-x) dif x\
     $
     可得 $u'(0) = 0$\
-    #lemma1[
+    #lemmaLinear[][
       $u(x) >=1, u'(x) >=0, forall x > 0$
     ]
     #proof[

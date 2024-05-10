@@ -1,4 +1,4 @@
-#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemma1
+#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemmaLinear[]
 #import "../../template.typ": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 
@@ -146,7 +146,7 @@
   证毕
 
   对于第二个事实，先证明：
-  #lemma1[
+  #lemmaLinear[][
     $S$ 是极大元当且仅当 $Inv(S) A$ 的幂零根是唯一的素理想
   ]
   #proof[

@@ -7,6 +7,7 @@
   author: "YHTQ",
   date: none,
   logo: none,
+  withHeadingNumbering: true
 )
 = 前言
   - 教师：李智强
@@ -844,7 +845,7 @@
       $
       目标相当于构造相同起点的终点的分段线性曲线使得 $f$ 在两者上积分的差足够小。取分段线性曲线一致收敛于原曲线是容易的，但一致收敛不能保证曲线积分收敛（这就是楼梯悖论），因此需要更精细的估计。\
       先给出如下引理：
-      #lemma1[
+      #lemmaLinear[][
         设 $T_n subset G$：
         $
         forall t in [0, 1]
@@ -1380,7 +1381,7 @@
       g(z) = (z-a)f(z)
       $
       容易验证 $g$ 是连续函数\
-      #lemma1[
+      #lemmaLinear[][
         $g(z)$ 在 $a$ 处解析
       ] 
       #proof[我们希望利用 Morera，设某个去心邻域上 $f$ 解析，进而 $g$ 解析。任取三角形
@@ -1695,7 +1696,7 @@
           integral_(R ->^(circle) -R) e^(i z)/z dif z\
           = integral_(0)^pi e^(i R e^(i theta)) dif theta\
           $<int1>
-          #lemma1[
+          #lemmaLinear[][
             设 $norm(f(z)) <= 1, forall z in gamma$ 且仅在有限个点上取等，则：
             $
             lim_(R -> +infinity) integral_gamma norm(f(z))^R dif z = 0

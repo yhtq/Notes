@@ -1,4 +1,4 @@
-#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemma1, tensorProduct, directSum, directLimit
+#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemmaLinear[], tensorProduct, directSum, directLimit
 #import "../../template.typ": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 

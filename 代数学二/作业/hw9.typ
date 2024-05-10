@@ -1,4 +1,4 @@
-#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemma1, tensorProduct, directSum, directLimit
+#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemmaLinear[], tensorProduct, directSum, directLimit
 #import "../../template.typ": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 
@@ -68,7 +68,7 @@
     若这个事实成立，则极大理想 $alpha$ 对应的 $Z(alpha)$ 非空，结合极大性知只能是单点集，如此立得 $alpha = m_x$ 也即结论成立。\
     然而看起来上面的事实并不容易从上题结论推出（何况上题第二个结论已经利用了希尔伯特零点定理的结果）
   == 18
-    #lemma1[
+    #lemmaLinear[][
       设 $A$ 是唯一分解整环，则 $A$ 是整闭的
     ]
     #proof[

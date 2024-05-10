@@ -284,7 +284,7 @@
 = 3.25
   == p120
     === 1
-      #lemma1[
+      #lemmaLinear[][
         设 $g_1, g_2$ 在区间 $I$ 上均满足 $g'_i (x) = f(x, g_i (x))$，则 $max(g_1, g_2), min(g_1, g_2)$ 也满足
       ]
       #proof[

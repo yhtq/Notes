@@ -1,4 +1,4 @@
-#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemma1, tensorProduct, directSum
+#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark, proposition,der, partialDer, Spec, AModule, lemmaLinear[], tensorProduct, directSum
 #import "../../template.typ": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 
@@ -269,7 +269,7 @@
   id compose (X -> M') = pi compose sigma compose (X -> M') = pi compose  sigma' compose (X -> M') 
   $
   而 $pi compose sigma', id$ 都是模自同态，自由模的唯一性将给出 $pi compose  sigma' = id$\
-  #lemma1[
+  #lemmaLinear[][
     设 $g: M' -> M, f : M -> M'$，则有：
     $
     f compose g = id => M tilde.eq ker f directSum im g

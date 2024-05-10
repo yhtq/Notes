@@ -998,7 +998,7 @@
           &= 1/2 sum_(i < j) w_(i j) (0 P(x_i x_j = 1) + 2 P(x_i x_j = -1 ))\
           &= sum_(i < j) w_(i j) P(x_i x_j = -1 )\
       $
-      #lemma1[
+      #lemmaLinear[][
         $P(x_i x_j = -1 ) = theta/pi$，其中 $theta$ 是 $u_i, u_j$ 夹角中的锐角
       ]
       #proof[
@@ -1641,7 +1641,7 @@
         - $norm(u)_(alpha, infinity) := norm(D^alpha u)_infinity$
       ]
       #proof[
-        #lemma1[
+        #lemmaLinear[][
           $
           norm(u_lv)_infinity <= (-1/2)^(d) 2^(- 2norm(lv)_1) norm(u)_(twov, infinity)
           $
@@ -1831,7 +1831,7 @@
         ]
         #proof[
           #let tp = $tilde(p)$
-          #lemma1[
+          #lemmaLinear[][
             $
             -b_j norm(p_(j-1))/norm(p_j) = beta_j
             $
