@@ -302,7 +302,7 @@
       $
       sigma(E) = E
       $
-     ]<lemmaLinear[]>
+     ]<lemma1>
   == 正规扩张
     #definition[正规扩张][
       一个代数域扩张 $quotient(K, F)$ 称为正规扩张，如果：
@@ -323,7 +323,7 @@
       $
       F(alpha) tilde.eq F(beta)
       $ 
-      并且诱导出 $L$ 上非平凡自同构 $eta$, $eta(F(alpha)) = eta(F(beta)). eta|_F = id$。但由 @lemmaLinear[]，这意味着：
+      并且诱导出 $L$ 上非平凡自同构 $eta$, $eta(F(alpha)) = eta(F(beta)). eta|_F = id$。但由 @lemma1，这意味着：
       $
       eta(K) = K
       $
@@ -699,7 +699,7 @@
         x in K^(conjugateRight(g, H)) <=> conjugateRight(g, H)x = x \
         <=> H Inv(g) x = Inv(g) x <=>Inv(g) x in K^H <=> x in g(K^H)
         $
-      + 回忆 @lemmaLinear[]，我们要做的事情很类似。事实上，@lemmaLinear[] 告诉我们正规扩张一定对应正规子群，反过来只需证明正规子群对应正规扩张。\
+      + 回忆 @lemma1，我们要做的事情很类似。事实上，@lemma1 告诉我们正规扩张一定对应正规子群，反过来只需证明正规子群对应正规扩张。\
         为此，取 $f(x) in F[x]$，它在 $K^H$ 中有零点，只需证明它分裂。先证明一个引理：
         #lemma[][
           若 $quotient(K, F)$ 是伽罗华扩张，且 $F[x]$ 中不可约多项式 $f(x)$ 在 $K$ 中分裂。设其一个根为 $alpha$，则它的所有根恰为 $Gal(quotient(K, F)) alpha$
@@ -713,7 +713,7 @@
         sigma(alpha) in K^(conjugateRight(sigma, H)) = K^H
         $
         这就证明了 $K^H$ 已经包含 $f(x)$ 的所有根。\
-        最后，再次由 @lemmaLinear[]，任何 $Gal(quotient(K, F))$ 都会保持 $K^H$ 稳定，因此有自然的同态：
+        最后，再次由 @lemma1，任何 $Gal(quotient(K, F))$ 都会保持 $K^H$ 稳定，因此有自然的同态：
         $
         eta: Gal(quotient(K, F)) -> Gal(quotient(K^H, F))
         $

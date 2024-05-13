@@ -751,8 +751,12 @@
             (
               sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i)))
                - 
-              (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(C, D))/(g(C, D)))
-               /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i))))
+              (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(C, D))/(g(C, D))
+            )
+            /
+            (
+              sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))
+            )
               \
               &>= (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i))) 
               - 
@@ -1918,7 +1922,7 @@
           $
           表明代数精度将小于 $2 deg p = 2 n - 2$ ，矛盾！
         ]
-        然而，利用组合方法可以计算得到 $dim pnd(n-1) = C_(n-1+d)^d = O(n^d)$ ，这已经是非常巨大的数字。
+        然而，利用组合方法可以计算得到 $dim pnd(n-1) = C_(n-1+d)^d = O(n^d)$ ，这已经是非常巨大的数字。即便如此，下面也将证明这样的的下界也难以取得。
         #definition[Gauss 公式，高维][
           称 $Q f$ 是 $d$ 维 Gauss 公式，如果取 $N = dim pnd(n-1)$ 时有 $2 n -1$ 阶代数精度。
         ]
@@ -1935,7 +1939,121 @@
         ]
         #proof[
           - 假设共同零点条件成立，对 $pnd(n-1)$ 中所有单项式做 Schmidt 正交化和归一化，可以得到 $N = dm$ 个标准正交的多项式
+          
+          证明在稍后下一节结束后完善
         ]
+        
+        上面命题表明扩展一维构造高斯积分公式的方式是非常困难的。当然，构造 $m$ 阶代数精度的数值逼近公式也可以通过直接列方程的方式。设 $D$ 是所有不超过 $m$ 阶单项式构成的集合，考虑：
+        $
+        sum_(d in D) c_d d (x_i) = integral_()^() d , i = 1, 2, ..., N
+        $
+        假设可以找到 $x_i$ 和 $c_d$ 使得上式成立，对应便给出具有 $m$ 阶代数精度的数值积分公式。上面的方程的未知量包括 $N$ 个 $d$ 维向量和 $N$ 个一维系数，总计 $N(d + 1)$ 维未知量，$m$ 个（多项式）方程，这当然是不好解决的。
+      ==== 基于数论方法的高维积分公式
+        #let sumn0(i) = $sum_(#i = 0)^(n-1)$
+        上一节的内容表明对于高维积分强求精确的代数精度（对于多项式精确求解）是困难的，我们希望退一步舍弃一些精度。本节讨论的内容都默认积分是不带权函数的，同时设积分区域为：
+        $
+        Omega = [0, 1]^d
+        $
+        也就是只考虑标准的积分：
+        $
+        I f = integral_(Omega = [0, 1]^d)^() f(x) dif x
+        $
+        一般的积分可以通过各种变换得到，在此略去。
+
+        我们的数值积分公式仍然形如：
+        $
+        Q f = sumn0(i) c_i f(x_i)
+        $
+        由于积分是均匀的，不妨设 $c_i = 1/n$，进而公式形如：
+        $
+        Q f = 1/n sumn0(i) f(x_i)
+        $<Qf2>
+        #theorem[Monte Carlo 的均方根误差][
+          设 $x_i$ 独立服从 $[0, 1]^d$ 上的均匀分布，则对所有平方可积函数 $f(x)$ 有：
+          $
+          sigma(R f) := sqrt(E (I f - Q f)^2) = (sigma(f))/sqrt(n) where sigma(f) = sqrt(I f^2 - (I f)^2)  
+          $
+        ]
+        定理表明这确实可以逼近，并且这里与 $d$ 是无关的，没有维度灾难的问题。然而，$sqrt(n)$ 的收敛阶有些过于糟糕，并且已经证明收敛阶对于平方可积函数、连续函数不能够再改进了。因此，优化 Monte Carlo 公式的方向是：
+        - 减小 $f$ 的方差以降低误差的系数。
+        - 提高 $f$ 的光滑性要求，并利用之前确定性网格方法的思想给出更好的随机取点方法。
+        #example[Quasi-Monte Carlo，一维情形][
+          先在一维情形下找到思路，我们先假设 $f in C^r$，之后视需要决定 $r$\
+          注意到：
+          $
+          f(x) = f(1) - integral_(x)^(1) f'(y) dif y\
+          = f(1) - integral_(0)^(1) i_(y > x) f'(y) dif y 
+          $
+          从而：
+          $
+          I f - Q f =  f(1) - integral_0^1 dif x integral_(0)^(1) i_(y > x) f'(y) dif y  - 1/n sumn0(i) f(x_i)\
+          = f(1) - integral_0^1 dif x integral_(0)^(1)   i_(y > x) f'(y) dif y  - 1/n sumn0(i) f(x_i)\
+          = f(1) - integral_0^1 dif x  integral_(0)^(1)  i_(y > x) f'(y) dif y  - 1/n sumn0(i) f(1) - integral_(0)^(1) i_(y > x_i) dif y\
+          = integral_(0)^(1) (1/n sumn0(i) 1_(y > x_i) - integral_(0)^(1) 1_(y > x) dif x) f'(y) dif y
+          $
+          设 $P = {t_0, ..., t_(n-1)}$ 是一个取点方案，记：
+          $
+          (1/n sumn0(i) 1_(y > x_i) - integral_(0)^(1) 1_(y > x) dif x) := Delta_p (y)
+          $
+          则有：
+          $
+          abs(I f - Q f)  &<= integral_0^1 abs(Delta_p (y)) abs(f'(y)) dif y\
+                          &<= sup_y abs(Delta_p (y)) integral_0^1 abs(f'(y)) dif y\
+                          &= sup_y abs(Delta_p (y)) V(f)
+          $
+        ]
+        #theorem[Koksma-Hlawka 不等式][
+          设 $f(x)$ 满足：
+          $
+          (diff^d)/(diff x_1 diff x_2 ... diff x_n) f in C(Omega)
+          $
+          则对任意取点方案 $P$ 均有：
+          $
+          abs(I f - Q f) <= sup_y abs(Delta_p (y)) V(f) := D_n^* (P) V(f)
+          $
+          其中 $V(f)$ 是 Koksma-Hlawka 变差
+        ]
+        #proof[
+          思路与上面的例子类似，证明略
+        ]
+        接下来的任务是尽可能改进 $D_n^* (P)$，回顾定义：
+        $
+        1/n sumn0(i) 1_(y > x_i) - integral_(0)^(1) 1_(y > x) dif x
+        $
+        后者是 $[0, y]$ 的长度，前者是在某种取点方法下 $x_i$ 落在 $[0, y]$ 中的个数的比例。显然假如 $x_i$ 是任取的，则前者的期望就是后者。高维情形这些长度都换成体积，但是道理是类似的。\
+        #let j0inf = $sum_(j = 0)^infinity$
+        #definition[低偏差序列，Halton 序列][
+          $d = 1$ 时，任取正整数 $b >= 2$，令：
+          $
+          z_b = {0, 1, ..., b-1}
+          $
+          是模 $b$ 剩余类，对于任意正整数 $n$，定义 $n$ 的 $b$ 进制表示为：
+          $
+          n = j0inf a_j (n) b^j
+          $
+          （本质是有限和，只是写成了无限的形式）\
+          令：
+          $
+          Phi_b (n) = j0inf a_j (n) b^(- j - 1)
+          $
+          也就是将 $b$ 进制关于小数点取对称\
+          令：
+          $
+          (x_0, x_1, ..., x_n) := (Phi_b (0), Phi_b (1), ..., Phi_b (n - 1)) in [0, 1]^n
+          $
+          称为一维 Halton 序列
+
+          对 $d >= 2$，取 $b_1, b_2, ..., b_d >= 2$，令：
+          $
+          x_i = (Phi_(b_1) (i), Phi_(b_2) (i), ..., Phi_(b_d) (i)) in [0, 1]^d, forall i = 0, 1, 2, ..., n-1 
+          $
+          为 $d$ 维 Halton 序列
+        ]
+        作业题将证明，如果 $x_i$ 就取 Halton 序列，可以保证：
+        $
+        D_n^* (P) = O((log n)^d/n)
+        $
+        收敛阶比之前的 $sqrt(n)$ 好不少
 
 
   

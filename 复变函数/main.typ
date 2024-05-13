@@ -493,7 +493,7 @@
       - $f(D)$ 是开集
       - $f$ 在 $D$ 上是双全纯的
       - $(Inv(f))' (f(z)) = 1/(f'(z))$
-    ]
+    ]<inverse-theorem>
     #proof[
       利用实函数的反函数定理，可以得到反函数 $Inv(f)$，且满足：
       $
@@ -1203,7 +1203,7 @@
       $
       (Inv(f))'(f(z)) = 1/(f'(z))
       $
-    ]
+    ]<univalent-is-homeomorphism>
     #proof[
       - 先证明导数非零，假设 $f'(a) = 0$，则 $f(z) - f(a)$ 有二重零点，由上面的定理知道存在 $beta$，$f - beta$ 至少有两个零点，矛盾！
       - 既然是双射，当然有逆映射。注意到 $f$ 是开映射，因此逆映射当然也连续。
@@ -1354,7 +1354,7 @@
     ]
     #theorem[Morera][
       设 $f: G -> CC$ 连续，$G$ 是区域。若 $f$ 在任何三角形边界上的积分为零，则它是解析的
-    ]
+    ]<Morera>
     #proof[
 
       不妨假设 $G$ 是开圆盘，圆心为 $a$ 。为了证明它是解析的，我们试图找到一个解析的原函数。定义：
@@ -1747,7 +1747,205 @@
       $
       几何意义上，就是 $gamma$ 绕 $z$ 一圈时对幅角的积分
     ]
+= 解析延拓 Continuation 
+  == 沿曲线的解析延拓
+    今晚调课：6:40 - 8:40 理教 103
+    #definition[][
+      - 称一个解析元素是二元组 $(f, G)$ 其中 $G$ 是区域，$f: G -> CC$ 是解析函数。
+      - 称 $(f', G'), (f, G)$ 互相是直接延拓|direct continuation，如果 $G' sect G != emptyset andC f|_(G' sect G) = f_(G' sect G)$
+      - 设有一列（有限个）解析元素 $C_n = (f_n, G_n), n = 0, 1, ..., N$ 其中 $G_n$ 都是开圆盘。若 $C_n$ 总与 $C_(n-1)$ 是直接延拓，则称 $C_N$ 是沿着链 ${D_i}$ 的 $D_0$ 的解析延拓。
+      - 给定曲线 $gamma: [0, 1] -> CC$，称有限长圆盘链 $l = {D_i}$ 覆盖 $gamma$，如果：
+        - $D_0$ 的圆心是 $gamma(0)$
+        - $D_N$ 的圆心是 $gamma(1)$
+        - 存在 $0 = s_0 < s_1 < ... < s_N = 1$ 使得对每个 $i$ 均有：
+          $
+          gamma([s_(i), s_(i+1)]) subset D_i, forall i = 0, 1, ..., N-1
+          $
+        - 若圆盘链 $D_i$ 覆盖 $gamma$, 则沿着 $D_i$ 的解析延拓被称为沿着 $gamma$ 的解析延拓。注意这个定义中曲线上的圆盘链当然不唯一，最终的解析元素也不唯一。
+    ]
+    #proposition[][
+      - 设 $(f', G'), (f, G), (g, G)$ 互相是直接延拓，则 $f = g$
+      - 固定起点 $(f_0, G_0)$ 和圆盘链 $l$，则沿着 $l$ 的解析延拓（若存在）是唯一的
+    ]
+    #proof[
+      - $f, g$ 在 $G' sect G$ 上相等，这是 $G$ 中非空开集，当然就有 $f = g$
+      - 利用归纳法和上一问立得
+    ]
+    #proposition[][
+      任给曲线 $gamma$ ，存在圆盘链覆盖 $gamma$
+    ]
+    #proof[
+      注意到 $gamma$ 是紧集，利用有限覆盖原理即可
+    ]
+    #theorem[Thm 16.11 Rudin][
+      设曲线 $gamma$ 上有两个覆盖它的圆盘链 $A_i, B_i$ 和对应的解析元素链 $(f_i, A_i), (g_i, B_i)$，若 $(f_0, A_0), (g_0, B_0)$ 互为直接延拓，那么之后的解析元素都互为直接延拓
+    ]
+    #theorem[单值性定理][
+      设 $D$ 是单连通区域，$Delta = B(a, r) subset D$. 设 $(f, Delta)$ 是解析元素，若该元素沿着 $D$ 内每一条以 $a$ 为起点的曲线都有解析延拓，则 $f$ 可以被解析延拓到 $D$ 上
+    ]
+    #proof[
+      -
+        若设 $D = B(0, 1), Delta = B(0, r)$，设 $f$ 在 $Delta$ 上泰勒展开式的收敛半径为 $R >= r$，往证 $R >= 1$ 继而结论成立。如若不然则 $R < 1$，先将 $f$ 延拓到 $B(0, R)$ 上，由假设 $diff B(0, R)$ 上有一点 $z_0$ 使得：
+        $
+        lim_(z -> z_0) f(z) "不存在"
+        $
+        （这里利用了之前习题证明的幂级数的性质，若极限存在则幂级数在该点收敛，但由假设不可能在 $diff B(0, R)$ 上每个点都收敛）\
+        此时，取 $gamma = 0 -> z_0$ 线段，这条线段上当然不可能有 $f$ 的解析延拓。
+      - 若 $D = CC$ 证明是类似的
+      - 一般的，假设 $D != CC$ ，利用之后的 @Riemann-mapping 和开映射原理的推论 @univalent-is-homeomorphism，@Riemann-mapping 给出的 $g$ 是 $D -> g(D)$ 的解析同胚。注意到 $g(Delta)$ 当然是开集，取 $B(0, r) subset g(Delta)$，令：
+        $
+        h = f Inv(g): B(0, r) -> CC
+        $
+        注意到条件当然被解析延拓保持，利用情形 1 的结论知存在 $h': B(0, 1) -> CC$ 是 $h$ 的解析延拓，并且：
+        $
+        h' g = h g = f, forall z in B(0, r) 
+        $
+        同时 $h' g$ 的定义域为 $D$，继而它就是 $f$ 的一个解析延拓，证毕
 
+    ]
+  ==  施瓦兹反射定理|Schwarz Reflection Principle
+    #definition[][
+      - 对任何开区域 $Omega$，记：
+        - $Omega_+$ 是 $Omega$ 为与上半平面 ${z | Im z > 0}$ 的部分
+        - $Omega_-$ 是 $Omega$ 为与下半平面 ${z | Im z < 0}$ 的部分
+        - $Omega_0 = Omega sect RR$ 
+        - $Omega^* = overline(Omega)$
+    ]
+    #theorem[Schwarz Reflection Principle][
+      设 $Omega$ 是区域并且满足 $Omega^* = Omega$，设 $f: Omega_+ union Omega_0$ 是连续函数且在 $Omega_+$ 上解析，并且：
+      $
+      f(Omega_0) subset RR
+      $
+      则 $f$ 可被解析延拓到 $Omega$ 上
+    ]
+    #proof[
+      令：
+      $
+      F(z) = cases(
+        f(z) quad z in Omega_+ union Omega_0,
+        overline(f(overline(z))) quad z in Omega_-
+      )
+      $
+      - 先证明 $F$ 在下半平面解析，设 $z_0$ 在下半平面，进而可设 $z$ 也是，从而：
+        $
+        lim_(z -> z_0) (F(z) - F(z_0))/(z - z_0)\
+        = lim_(z -> z_0) (overline(f(overline(z))) - overline(f(overline(z_0))))/(z - z_0)\
+        = lim_(z -> z_0) overline((f(overline(z)) - f(overline(z_0)))/(overline(z) - overline(z_0)))\
+        $
+        利用上半平面的解析性上面的极限当然存在
+      - 再证明 $F$ 在实轴连续，由 $f$ 的连续性及 $f(Omega_0) subset RR$ 结论是显然的
+      - 最后，之前 @Morera 的习题告诉我们这样的函数在 $Omega$ 上一定是解析的
+      
+    ]
+    #corollary[一般球上的推广][
+      设 $D = B(a, r),D' = (b, R), Omega$ 是区域，令：
+      $
+      Omega_D = Omega sect D\
+      Omega_(D^c) = Omega sect D^c\
+      Omega_(diff D) = Omega sect (diff D)
+      Omega^*_D "是关于圆周" D "的对称点"
+      $
+      若 $Omega = Omega^*_D$，并且：
+      $
+      f: Omega_D union Omega_(diff D)\
+      g: Omega_(D^c) union Omega_(diff D)
+      $
+      连续
+      #TODO
+    ]
+= 黎曼映射定理  
+  本章的目的是证明黎曼映射定理。它的目的是分类所有的单连通的区域。最终的结果是单连通区域只可能是整个复平面或者单位圆盘中某个区域的双全纯等价。
+  == 双全纯函数
+    #remark[][
+      $CC$ 当然不可能与任何有界区域双全纯等价，否则与整函数无界矛盾。
+    ]
+    @univalent-is-homeomorphism 与 @inverse-theorem 表明任何解析函数在导数不为零的局部都是双全纯的，这个事实非常重要。
+    #lemma[][
+      设 $f: Omega -> CC$ 是单叶解析函数，$Omega$ 单连通，则 $f(Omega)$ 也单连通
+    ]
+    #proof[
+      运用一个非常简单的事实，对于任何可求长曲线 $gamma$ 都有：
+      $
+      n(gamma, a) = cases(
+        1 quad a in gamma "内部",
+        0 quad a in gamma "外部"
+      )
+      $
+      这个事实需要 Jordan 曲线定理，这里不再说明。
+
+      我们证明的思路是先对 $f(Omega)$ 内部较为光滑的曲线做证明。对于一般的曲线，找一个略大的可求长曲线将其包含，由可求长曲线的情形，其内部都在集合中，当然小曲线的内部也在集合中。
+      #lemmaLinear[][
+        设 $G$ 是区域，$gamma$ 是简单闭曲线，则存在可求长简单闭曲线 $gamma'$ 使得 $gamma'$ 的内部包含 $gamma$ 的内部
+      ]
+      #proof[
+        对 $gamma$ 做有限覆盖，这些圆盘组成的区域的边界一部分在曲线的外部，另一部分在曲线的内部，取所有外部部分可以证明这写部分构成可求长的简单闭曲线。
+      ]
+      根据引理和上面的陈述，我们只需要考虑可求长曲线足以。对于这样的曲线我们可以用缠绕数和幅角原理来转换，两者的形式是积分，它当然在双全纯变换下不变，因此经过来回变换不难证明 $f$ 把曲线的内部映到内部，外部映到外部，进而结论成立。
+    ]
+  == 拓扑和实分析工具
+    #lemma[][
+      设 $G$ 是开集，则存在递增的紧集链 $A <= A <= ... <= A <= ...$ 使得：
+      - $union A_i = G$
+      - $A_n subset A_(n+1)$ 的内部
+      - 若 $K subset G$ 是紧集，则存在 $i$ 使得 $K subset A_i$
+      - $hat(CC) - A_n$ 都有一个连通分支包含 $hat(CC) - G$
+    ]
+    #proof[
+      $
+      A_n = {z in CC | norm(z) <= n andC d(z, CC - G) >= 1/n}
+      $
+      检验性质是容易的
+    ]
+    #lemma[][
+      设 $G$ 是开集，$X$ 是完备度量空间，$f, g: C(G, X)$，令：
+      $
+      d_n (f, g) = sup {d(f(z), g(z)) | z in A_n}
+      $
+      其中 $A_n$ 上面引理给出的紧集链。最终令：
+      $
+      d (f, g) = sum_(n=1)^infinity (1/2)^n (d_n (f, g))/(1 + d_n (f, g))
+      $
+      则上面的级数收敛，且 $d$ 是一个度量。进一步，$C(G, X)$ 是完备的，且其拓扑与 $A_n$ 的选择无关。
+    ]
+    #proof[
+      这个证明有些繁琐且更多利用实分析和拓扑的技巧，在此略过。
+    ]
+    #proposition[][
+      在上面的度量空间中，$f_n -> f$ 当且仅当 $f_n$ 在每个 $A_i$ 上一致收敛于 $f$，换言之，在 $G$ 上内闭一致收敛。
+    ]
+    #definition[][
+      称 $A subset C(G, X)$ 是正规的，如果其中任何序列都有收敛子列。
+    ]
+    #theorem[][
+      $A$ 是正规的当且仅当 $A$ 是预紧的（也即它的闭包是紧的）
+    ]
+    #proof[
+      利用闭集列紧当且仅当是紧集即可。
+    ]
+    #definition[][
+      - 称 $A subset C(G, X)$ 在 $z_0$ 等度连续|equicontinous的，如果：
+        $
+        forall epsilon > 0, exists delta > 0, forall z in B(z_0, delta), forall f in A, d(f(z), f(z_0)) < epsilon
+        $
+      - 称 $A$ 在 $E subset G$ 上等度连续，如果：
+        $
+        forall epsilon > 0, exists delta > 0, forall norm(z - z') < delta, forall f in A, d(f(z), f(z')) < epsilon
+        $
+    ] 
+    #proposition[][
+      设 $A$ 在 $G$ 中每一个点上等度连续，则 $A$ 在 $G$ 的每一个紧子集上等度连续（也称为内闭等度连续）
+    ]
+    #proof[
+      在紧集上利用有限覆盖将逐点的等度连续性转化为整体的等度连续性，需要 @Lebesgue_Lemma。
+    ]
+    #theorem[Arzela-Ascds][
+      $A subset C(G, X)$ 正规当且仅当以下条件成立：
+      - $forall z in G, A z = {f(z) | f in A}$ 预紧
+      - $A$ 在 $G$ 的每一个紧子集上等度连续，等价于在 $G$ 中每一个点上等度连续
+    ]
+  #theorem[黎曼映射定理|Riemann mapping][
+    设 $D$ 是单连通区域且不为 $CC$ ，$a in D$，则存在单叶解析函数 $g: D -> B(0, 1)$ 使得 $g(a) = 0$
+  ]<Riemann-mapping>
 
 
     

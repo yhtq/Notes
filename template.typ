@@ -4,7 +4,7 @@
 
 #import "@preview/lemmify:0.1.4": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
-$1 + 1$
+
 #let TODO = [#text("TODO", fill: red)]
 #let der(y, x) = $(d #y) / (d #x)$
 #let partialDer(y, x) = $(diff #y) / (diff #x)$
@@ -19,11 +19,15 @@ $1 + 1$
 }
 #let where = "where"
 #let with = "with"
-#let inner(x, y) = $<#x, #y>$
-#let Gal = math.op("Gal")
+#let andC = $" 且 "$
+#let orC = $" 或 "$
+
+#let inner(x, y) = $〈#x, #y〉$
 #let HomoCoor = math.vec.with(delim: "[")
 #let autoHomoCoor3 = autoVec3.with(delim: "[")
 #let Det = math.mat.with(delim: "|")
+
+#let Gal = math.op("Gal")
 #let Hom = math.op("Hom")
 #let Proj = math.op("Proj")
 #let Spec = math.op("Spec")
