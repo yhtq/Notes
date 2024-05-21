@@ -1691,7 +1691,7 @@
           这里 $A(d, n)$ 是与组合相关的函数，这里不再详细叙述。代回计算可得结论成立
       ]
       从上面的定理可以看出，稀疏网格理所应当的用精度的降低换来了效率的提升。
-  == Gauss 积分公式
+  == 数值积分、Gauss 积分公式
     #let xspace(x) = $#x space$
     #let Is = $xspace(I)$
     #let Rs = $xspace(R)$
@@ -1938,11 +1938,54 @@
           $d$ 维 Gauss 公式存在当且仅当所有的 $n$ 次 $d$ 维正交多项式拥有 $dim pnd(n-1)$ 个共同零点
         ]
         #proof[
-          - 假设共同零点条件成立，对 $pnd(n-1)$ 中所有单项式做 Schmidt 正交化和归一化，可以得到 $N = dm$ 个标准正交的多项式
-          
-          证明在稍后下一节结束后完善
+          #let pndo(n, d) = $tilde(PP)_(#n)^(#d)$
+          记所有的 $n$ 次 $d$ 维正交多项式为 $pndo(n, d)$
+          - 假设高斯公式存在，对 $pnd(n-1)$ 中所有（不超过 $n-1$ 次的单项式）做 Schmidt 正交化和归一化，可以得到 $N = dm$ 个标准正交的多项式。此时当然有 $inner(q_i, q_j) = delta_(i, j)$\
+            注意到：
+            $
+            inner(q_i, q_j) = integral q_i q_j w 
+            $
+            被积函数至多 $2 n - 2$ 次，因此不超过高斯公式的代数精度，进而：
+            $
+            sum_(k=1)^N w_k q_i (x_k) q_j (x_k) = Q q_i q_j = delta_(i, j)
+            $
+            将其写成矩阵的形式，将有：
+            $
+            A^T W A = I, where A_(i, j) = q_j (x_i)\ W = "diag"(w_1, ..., w_dm)
+            $
+            立得 $A$ 可逆。设：
+            $
+            Inv(A) = (c_1, ..., c_dm)
+            $
+            设 $p_i (x_k) = A(x_k) c_i = delta_(i, k)$，它是 $n-1$ 次多项式，因此任取 $f in pndo(n, d)$：
+            $
+            0 = integral p_i f
+            $
+            同时，上式不超过高斯公式的代数精度，继而：
+            $
+            0 = Q p_i f = sum_(k=1)^dm w_k p_i (x_k) f(x_k) = w_i f(x_i)
+            $
+            当然 $w_i != 0$，故 $f(x_i) = 0$，取遍 $i$ 即得结论成立
+          - 假设有共同零点 $x_1, ..., x_(dm)$,同样考虑类似上面的矩阵 $A$,任取非零向量 $c$ 并令：
+            $
+            g(x) = (q_1 (x), ..., q_(dm) (x)) c
+            $
+            注意到 $g$ 是 $n-1$ 次多项式，由假设 $x_1, ..., x_dm$ 不全为其零点，这就表明 $A c != 0$，进而 $A$ 是满秩矩阵，下面的线性方程：
+            $
+            A^T vec(w_1, dots.v, w_dm) = vec(integral q_1 w, dots.v, integral q_dm w) 
+            $
+            有唯一解。这个解对应的积分公式至少 $n - 1$ 阶代数精度，而任取不超过 $2 n - 1$ 阶的 $d$ 维多项式 $f$，可将 $f(x)$ 分解为：
+            $
+            sum_(i = 1)^K h_i (x) g_i (x) + r(x)
+            $
+            其中 $g_i (x) in pndo(n, d), h_i (x) in pnd(n)$，类似一维情形简单计算可得具有积分公式在 $f$ 上准确，因此具有 $2 n - 1$ 阶代数精度
         ]
-        
+        #corollary[][
+          若上述高斯公式存在，则系数 $w_i > 0$
+        ]
+        #proof[
+          证明过程给出 $A^T "diag"(w_1, ..., w_dm) A = I$，由矩阵合同的惯性定理立得
+        ]
         上面命题表明扩展一维构造高斯积分公式的方式是非常困难的。当然，构造 $m$ 阶代数精度的数值逼近公式也可以通过直接列方程的方式。设 $D$ 是所有不超过 $m$ 阶单项式构成的集合，考虑：
         $
         sum_(d in D) c_d d (x_i) = integral_()^() d , i = 1, 2, ..., N
@@ -1971,8 +2014,41 @@
         #theorem[Monte Carlo 的均方根误差][
           设 $x_i$ 独立服从 $[0, 1]^d$ 上的均匀分布，则对所有平方可积函数 $f(x)$ 有：
           $
+          E (Q f) = I f\
+
           sigma(R f) := sqrt(E (I f - Q f)^2) = (sigma(f))/sqrt(n) where sigma(f) = sqrt(I f^2 - (I f)^2)  
           $
+        ]
+        #proof[
+          $
+          E (I f - Q f)^2 = E (Q f)^2 - 2 I f E (Q f) + (I f)^2
+          $
+          有：
+          - 
+            $
+            E (Q f) 
+            &= integral Q f dif t\
+            &= 1/n sumn0(i) integral f(t_i) dif t\
+            &= 1/n sumn0(i) integral f(t_i) dif t_i\
+            &= I f\
+            $
+          -
+            $
+            E (Q f)^2 
+            &= integral (Q f)^2 dif t\
+            &= 1/n^2 sumn0(i) sumn0(j) integral f(t_i)f(t_j) dif t\
+            &= 1/n^2 (sumn0(i) integral f(t_i)^2 dif t + sumn0(i) sum_(j != i) integral f(t_i)f(t_j) dif t)\
+            &= 1/n^2 (n I f^2 + (n(n-1)) (I f)^2)\
+            &= (I f^2)/n + (n-1)/n (I f)^2
+            $
+            代入得：
+            $
+            E (I f - Q f)^2 
+            &= E (Q f)^2 -  2 (I f)^2 + (I f)^2 \
+            &= (I f^2)/n + (n-1)/n (I f)^2 - (I f)^2 \
+            &= (I f^2 - (I f)^2)/n
+            $
+            证毕
         ]
         定理表明这确实可以逼近，并且这里与 $d$ 是无关的，没有维度灾难的问题。然而，$sqrt(n)$ 的收敛阶有些过于糟糕，并且已经证明收敛阶对于平方可积函数、连续函数不能够再改进了。因此，优化 Monte Carlo 公式的方向是：
         - 减小 $f$ 的方差以降低误差的系数。
@@ -2020,7 +2096,10 @@
         $
         1/n sumn0(i) 1_(y > x_i) - integral_(0)^(1) 1_(y > x) dif x
         $
-        后者是 $[0, y]$ 的长度，前者是在某种取点方法下 $x_i$ 落在 $[0, y]$ 中的个数的比例。显然假如 $x_i$ 是任取的，则前者的期望就是后者。高维情形这些长度都换成体积，但是道理是类似的。\
+        后者是 $[0, y]$ 的长度，前者是在某种取点方法下 $x_i$ 落在 $[0, y]$ 中的个数的比例。显然假如 $x_i$ 是任取的，则前者的期望就是后者。高维情形这些长度都换成体积，定义为：
+        $
+        1/n sumn0(i) 1_(y > x_i) - product_(j=1)^d y_j
+        $
         #let j0inf = $sum_(j = 0)^infinity$
         #definition[低偏差序列，Halton 序列][
           $d = 1$ 时，任取正整数 $b >= 2$，令：
@@ -2053,7 +2132,8 @@
         $
         D_n^* (P) = O((log n)^d/n)
         $
-        收敛阶比之前的 $sqrt(n)$ 好不少
+        收敛阶比之前的 $1/sqrt(n)$ 好不少
+  == 有效维数
 
 
   
