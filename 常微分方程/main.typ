@@ -2240,3 +2240,133 @@
       $
       可以直接解出 $W$，此时假设 $x_1$ 已知，方程变成了关于 $x_2$ 的一阶线性微分方程，是可解的。这表明对于二阶齐次线性微分方程，若已知一个解，另一个解可以通过一阶线性微分方程求出。
     ]
+    #theorem[][
+      对于二阶常系数齐次线性微分方程：
+      $
+      x^((n)) + a_(n-1)(t) x^((n-1)) + dots + a_1(t) x' + a_0(t) x = 0
+      $
+      设：
+      $
+      p(lambda) = lambda^n + a_(n-1) lambda^(n-1) + dots + a_1 lambda + a_0
+      $
+      有 $s$ 个不同根 $lambda_i$ ，重数分别为 $m_1, m_2, ..., m_s$，则：
+      $
+      x^k e^(lambda_i x) forall k <= m_i, forall i = 1, 2, ..., s
+      $
+      恰构成一组基础解
+    ]
+    #proof[
+      设 $L(x) = x^((n)) + a_(n-1)(t) x^((n-1)) + dots + a_1(t) x' + a_0(t) x$，则有：
+      $
+      L(e^(lambda x)) = p(lambda) e^(lambda x)
+      $
+      因此当然 $p(lambda) = 0$ 时 $e^(lambda x)$ 是解。进一步，两边对 $lambda$ 求导得：
+      $
+      L(x e^(lambda x)) = (lambda p(lambda) + p'(lambda)) e^(lambda x)
+      $
+      若 $lambda$ 是至少二重根，上式也是零，反复进行即得结论。
+
+      它们的线性无关性是显然的
+    ]
+= 幂级数解法
+  == 一般幂级数
+    本章中 $y$ 允许多元函数
+    #lemma[][
+      设微分方程：
+      $
+      cases(
+        der(y, x) = f(x, y),
+        y(x_0) = y_0
+      )
+      $
+      其中 $f$ 在 $x_0$ 附近解析，则它的解存在唯一，且是解析函数。
+    ]
+    #proof[
+      前面 Picard 序列的证明中给出了这个推论
+    ]
+    理论上来说，幂级数展开并比对系数可以将一般的微分方程化为代数方程。然而一般的情形仍然难以计算，最常见的情形是对线性方程做展开。
+    #example[][
+      - $der(y, x) = y - x$，令 $y = sum_i a_i x^i$，计算得：
+        $
+        sum_(i >= 1) i a_i x^(i-1) = sum_i a_i x^i - x
+        $
+        有：
+        $
+        a_1 = a_0\
+        2 a_2 = a_1 - 1\
+        (i+1) a_(i+1) = a_i\
+        $
+        可以递推解得 $a_i$
+      - $y'' - 2 x y' + 4 y = 0$，令 $y = sum_i a_i x^i$，计算得：
+        $
+        sum_i (i+1)(i+2)a_(i+2)x^i - 2 sum_i i a_(i) x^i - 4 sum_i a_i x^i = 0 
+        $
+        得到一般的递推关系：
+        $
+        (i+1)(i+2)a_(i+2) = 2 i a_i + 4 a_i\
+        (i+1) a_(i+2) = 2 a_i
+        $
+      - $y'' = x y$，计算得：
+        $
+        sum_i (i+1)(i+2)a_(i+2)x^i = sum_i a_(i-1) x^i
+        $
+        有：
+        $
+        a_2 = 0\
+        (i+1)(i+2)a_(i+2) = a_(i-1)
+        $
+        可以解得：
+        $
+        a_(3 k + 2) = 0\
+        a_(3 k) = ((3k - 3)!!!)/((3k) !) a_0
+        $
+    ]
+    #remark[][
+      对于形如：
+      $
+      u(x) der(y, x) = v(x, y)
+      $
+      的微分方程，如果 $u(x) > 0$，将其除掉即可得到解的解析性。但若 $u(x)$  有零点情形未必。例如：
+      $
+      cases(
+        x^2 der(y, x) = y - x,
+        y(0) = 0
+      )
+      $
+      若其有解析解，比对系数发现一定有 $a_n = n!$，但是这个幂级数不收敛，因此是荒谬的。下节的目标便是处理这种方程。
+    ]
+  == 广义幂级数 
+    #definition[广义幂级数][
+      称：
+      $
+      sum_(n=0)^(+infinity) a_n x^(n + alpha), alpha in RR
+      $
+      为广义幂级数。
+    ]
+    #theorem[][
+      设二阶微分方程：
+      $
+      y'' + p(x) y' + q(x) y = 0
+      $
+      其中 $p, q$ 可能以 $0$ 为奇点，但 $x p, x q^2$ 都在 $0$ 处解析，则它在 $0$ 附近有广义幂级数解
+    ]
+    #proof[
+      方程等价于：
+      $
+      x^2 y'' + x (sum_i a_i x^i) y' +  (sum_i b_i x^i) y = 0
+      $
+      设 $y = sum_(n=0)^(+infinity) c_n x^(n + alpha)$，代入得：
+      $
+      x^(alpha)(sum_(n=2)^(+infinity) c_n (n+alpha)(n+alpha-1) x^(n) \
+      + (sum_(n=1)^(+infinity) c_n (n+alpha) x^(n))(sum_(i=0)^infinity a_i x^i) \
+      + (sum_(n=0)^(+infinity) c_n  x^(n))(sum_(i=0)^infinity a_i x^i)) = 0
+      $
+    ]
+    #example[贝塞尔方程][
+      方程：
+      $
+      y'' + 1/x y' + (x^2 - n^2) / x^2 y = 0
+      $
+      称为贝塞尔方程，由上面的定理它在 $0$  附近有广义幂级数解，并且计算可得 $n$ 是正整数时解是整函数。
+    ]
+

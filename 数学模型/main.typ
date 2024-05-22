@@ -2134,6 +2134,164 @@
         $
         收敛阶比之前的 $1/sqrt(n)$ 好不少
   == 有效维数
-
+    看似 QMC 对高维积分的效果也并不理想，然而历史上人们发现它对某个特定的 360 维积分有着出乎意料的表现，引发了人们对于高维积分是否可以某种意义上降低维度的有效维度问题。
+    === 方差分析|Analysis Of Variants
+      本节中：
+      - 记 $ZZ_d = {1, 2, ..., d}$
+      - 设 $u subset ZZ_d$，$abs(u)$ 表示 $u$ 中个数
+      - $xv_u := (x_j)_(j in u)$
+      - $ZZ_d - u := -u$
+      #theorem[ANOVA][
+        给定 $Omega = [0, 1]^d, Omega$ 上的函数有 ANOVA 分解：
+        $
+        f(xv) = sum_(u subset ZZ_d) f_u (xv)
+        $
+        其中 $f_u$ 仅依赖于 $xv_u$
+      ]
+      #proof[
+        递归定义：
+        - $abs(u) = 0$ 时，令 $f_(emptyset) (xv) = integral_(Omega)^() f(xv) dif xv := mu$
+        - $abs(u) = 1$ 时，设 $u = {j}$，令：
+          $
+          f_{j} (xv) = integral_([0,1]^(d-1)) (f(xv) - mu) dif xv_(-u)
+          $
+          也就是把除了 $j$ 之外的维度全部积分掉，这样便只依赖于 $j$ 分量
+        - 一般的，令：
+          $
+          f_u (xv) = integral_([0,1]^(d - abs(u))) (f(xv) - sum_(v subset.neq u) f_v (xv)) dif xv_(-u)
+          $
+          观察到它事实上等于：
+          $
+          integral_([0,1]^(d - abs(u))) f(xv)  dif xv_(-u) - sum_(v subset.neq u) f_v (xv)
+          $
+          这是因为积分变元和后者无关，因此可以直接积分出来。这便给出了：
+          $
+          f_(ZZ_d) (xv) &= 0 - sum_(v subset.neq ZZ_d) f_v (xv) = f(xv)\
+          f(xv) &= f_(ZZ_d) (xv) + sum_(u subset.not ZZ_d) f_u (xv)\
+          &= sum_(u subset ZZ_d) f_u (xv)
+          $
+      ]
+      #proposition[正交性][
+        + $j in u => integral_0^1 f_u (xv) dif x_j = 0$
+        + $u != v => integral_(Omega)^() f_u (xv) g_u (xv) dif xv = 0 $
+      ]
+      #proof[
+        + 
+          - $abs(u) = 1$ 时，有：
+            $
+            integral_0^1 f_{j} (xv) dif x_j &=  integral_0^1 integral_([0, 1]^(d-1))^() (f(xv) - mu) dif xv_(-{j})  dif x_j\
+            &= integral_(Omega)^() f(xv) dif xv - mu\
+            &= 0
+            $
+          - 对一般情形递归验证：
+            $
+            integral_0^1 f_u (xv) dif x_j &= integral_0^1 (integral_([0,1]^(d - abs(u))) f(xv)  dif xv_(-u) - sum_(v subset.neq u) f_v (xv)) dif x_j\
+            &= integral_([0,1]^(d - abs(u) + 1)) f(xv)  dif xv_(-u union {j}) - sum_(v subset.neq u) integral_0^1 f_v (xv) dif x_j
+            $
+            注意到，若 $j in v$ 则由归纳假设后项积分为零，上式化简为：
+            $
+            &integral_([0,1]^(d - abs(u) + 1)) f(xv)  dif xv_(-u union {j}) - sum_(v subset.neq u, j in.not v) integral_0^1 f_v (xv) dif x_j\
+            =&integral_([0,1]^(d - abs(u) + 1)) f(xv)  dif xv_(-u union {j}) - sum_(v subset.neq u, j in.not v)  f_v (xv) \
+            =&integral_([0,1]^(d - abs(u) + 1)) f(xv)  dif xv_(-(u - {j})) - sum_(v subset (u - {j}))  f_v (xv) \
+            =&integral_([0,1]^(d - abs(u) + 1)) f(xv)  dif xv_(-(u - {j})) - sum_(v subset.neq (u - {j}))  f_v (xv) + f_(u - {j}) (xv) \
+            =&f_(u - {j}) (xv)  - f_(u - {j}) (xv) \
+            =&0
+            $
+            这里是代入了 $f_(u - {j}) (xv)$ 的定义，进而结论成立。
+        +
+          由 $u != v$ 不妨设 $j in u - v$，将有：
+          $
+          integral_(Omega)^() f_u (xv) f_v (xv) dif xv &= integral_([0, 1]^(d-1))^() integral_(0)^(1) f_u (xv) f_v (xv) dif xv_j dif xv_(-j)\
+          &= integral_([0, 1]^(d-1))^() f_v (xv) (integral_(0)^(1) f_u (xv)  dif xv_j) dif xv_(-j)\
+          &= 0
+          $
+          最后一步利用了之前的命题
+      ]
+      #definition[方差][
+        定义函数 $f$ 的方差：
+        $
+        sigma^2 (f) = integral_(Omega)^() (f(xv) - mu)^2 dif xv where mu = integral_(Omega)^() f(xv) dif xv  
+        $
+        同时在上面的方差分解中，定义：
+        $
+        sigma^2_u (f) = cases(
+          integral_([0, 1]^d)^() f^2_u (xv) dif xv quad u != emptyset,
+          0 quad u = emptyset 
+        )
+        $
+      ]
+      #theorem[][
+        $
+        sigma^2 (f) = sum_(u subset.neq ZZ_d) sigma^2_u (f)
+        $
+      ]
+      #proof[
+        $
+        integral_(Omega)^() (f(xv) - mu)^2 dif xv = integral_(Omega)^() (sum_(u subset.neq ZZ_d, u != emptyset) f_u (xv) )^2 dif xv
+        $
+        由前面命题的正交性，上式就是：
+        $
+        sum_(u subset.neq ZZ_d, u != emptyset) integral_(Omega)^() f_u^2 (xv) dif xv = sum_(u subset.neq ZZ_d) sigma^2_u (f)
+        $
+      ]
+    === 有效维数
+      #definition[有效维数][
+        称 $d_0$ 是函数 $f(xv)$ 的有效维数，如果 $d_0$ 是使：
+        $
+        sum_(abs(u) <= d_0) sigma^2_u (f) >= p sigma^2 (f)
+        $
+        最小正整数，其中 $p in [0, 1]$ 是给定的精度
+      ]
+      #let err = math.op("err")
+      #theorem[][
+        给定 $p in [0, 1], f(xv)$ 的有效维数为 $d_p$，记：
+        $
+        h(xv) = sum_(abs(u) < d_p) f_u (xv)
+        $
+        则：
+        $
+        err(f, h) &< 1- p \
+        where err(f, h) &= 1/(sigma^2 (f)) integral_(Omega)^() (f - h)^2 dif xv
+        $
+      ]
+      #proof[
+        $
+        f(xv) - h(xv) &= sum_(abs(u) > d_p) f_u (xv)\
+        integral_(Omega)^() (f - h)^2 dif xv &= sum_(abs(u) > d_p) integral_(Omega)^() f_u^2 (xv) dif xv\
+        &= sum_(abs(u) > d_p) sigma^2_u (f) > (1 - p) sigma^2 (f)
+        $
+        证毕
+      ]
+      #theorem[][
+        在 QMC(Quasi Monte-Carlo) 中，有：
+        $
+        abs(I f - Q f) &<= sum_(u subset ZZ_d, u != emptyset) alpha_u norm(f_u)\
+        where &norm(f_u)^2 = integral_([0, 1]^(abs(u)))^() abs((diff^(abs(u)) f_u) / (diff xv_u) ) dif xv_u\
+        &alpha_u "是只依赖于积分点投影的正常数"
+        $
+      ]
+      #proof[
+        略
+      ]
+      #remark[][
+        上面的定理表明，当有效维度较小时，我们可以期待 QMC 有较小的误差。既然：
+        $
+        f &= h + (f - h)\
+        abs(I f - Q f) &<= abs(I h - Q h) + abs(I (f - h) - Q (f - h))
+        $
+        前项维数较低，而后项能够很好地被有效维数所控制。更深入的，对于任意的 $u in ZZ_d$，可以设置一个 $gamma_u$ 称为该方向的重要性并对 $gamma_u$ 进行排序 $gamma_1 >= gamma_2 >= ... $，可以证明 QMC 的误差不依赖于维度的充分必要条件是：
+        $
+        sum_(j=1)^(+infinity) gamma_j < +infinity
+        $
+        假如该条件能成立，QMC 就一定程度上避免了维度灾难。
+      ]
+  == 序列函数逼近
+    在实际工程上，往往遇到大量高维函数，此时对效率的需求超过对精度的需求。我们需要一些可能精度不佳但更加高效的方式。
+    #proposition[随机 Kazmart 算法][
+      对于线性方程组 $A x = b$，可以用以下的迭代方法求解：
+      - 任取 $x_0$
+      - 随机取 $A$ 的一行，设为 $i$ 行，更新 $x_k$ 为 $x_(k+1)$，仅用该行更新 $x_(k+1)$ 其余分量不变
+      可以证明，算法的结果逼近于某个参考解（未必是真解）。该算法用于当 $A$ 非常大以致超过（内存）存储能力时，以时间换空间的策略。
+    ]
 
   

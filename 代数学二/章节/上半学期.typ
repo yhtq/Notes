@@ -672,7 +672,7 @@
       M quo m M 是 A quo m "上的有限维向量空间"
       $
       同时，设 $x_i in M$ 在 $M quo m M$ 中的像生成构成线性空间的基，则它们也是 $M$ 的生成元
-    ]
+    ]<basis-is-generator-Nakayama>
     #proof[
 
       设 $x_i$ 是这样一组基，取 $N = sum_i A x_i subset M$，取满同态 $phi: N -> M -> (M quo m) M$
@@ -2426,7 +2426,7 @@
         $
         证毕
     ]
-= 链条件|Chain conditions, Artin 与 Noether
+= 链条件|Chain conditions, Artin 与 Noether <chain-cond>
   本章的内容是关于代数结构的经典有限性条件
   == 链条件
     #theorem[acc / maximal condition for a partially ordered set][
@@ -2568,6 +2568,9 @@
         $
         因此这些商模要么是 $0$，要么是单模。去掉所有的 $0$ 之后便成为长度为 $l' <= l(M)$ 的合成列\
         同时，假设 $l=  l(M)$，表明上面的 $N_(i-1) quo N_i tilde.eq M_(i-1) quo M_i$，可以递归证明 $M_i = N_i$，这是荒谬的
+      ]
+      #theorem[][
+        模是有限长度模当且仅当它是 Artin 并且 Noether 的
       ]
       #lemmaLinear[][
         $M$ 中任何一个子模链的长度不超过 $l(M)$

@@ -47,11 +47,12 @@
 #let conjugateRight(g, a) = $#g #a #g^(-1)$
 #let quotient(G, H) = $#G\\#H$
 #let lift = math.arrow.t
-#let quo = math.class("relation", $\/$)
+#let quo = math.class("relation", $slash$)
 #let ord = math.op("ord")
 #let ei(x) = $e^(i #x)$
 #let eiB(x) = $e^(#x i)$ // i Behind
 #let sgn = math.op("sgn")
+#let arctanh = math.op("arctanh")
 #let Res(f, i) = $op("Res") (#f \; #i)$
 #let lcm = math.op("lcm")
 #let Der = math.op("Der")
@@ -77,6 +78,30 @@
       $#x_#(i + k)$
   }
 }
+#let linearCombination(name: $C$, start: 1, ..args) = {
+    let fun(list) = list.enumerate().map(
+      l => {
+        let (i, x) = l
+        $#name _(#(i + start)) #x $
+        })
+        .join(" + ")
+      // 不能这么写
+    // let fun_error(list) =  list.enumerate().map(
+    //   (i, x) => {
+    //     $C_(#(i + 1)) #x $
+    //     })
+    //     .join(" + ")
+          
+      
+    fun(args.pos())
+}
+#let linearCombinationC = linearCombination.with(name: $C$)
+#let linearCombinationA = linearCombination.with(name: $A$)
+#let linearCombinationa = linearCombination.with(name: $a$)
+#let linearCombinationb = linearCombination.with(name: $b$)
+#let linearCombinationlambda = linearCombination.with(name: $lambda$)
+#let linearCombinationmu = linearCombination.with(name: $mu$)
+
 #let emptyArrow(s, e) = arr(str(s), str(e), $$)
 #let coker = math.op("coker")
 #let coim = math.op("coim")
@@ -319,13 +344,13 @@
       if calc.odd(i) { align(end, title) } else { align(start, title) }
     }),
   )
+  show: thm-rules
+  show: ans-rules
+  show: thm-rules1
   set text(font: "Noto Serif CJK SC", lang: "zh")
   show emph: it => {
     text(it, weight: "bold")
   }
-  show: thm-rules
-  show: ans-rules
-  show: thm-rules1
   show math.equation: set text(font: ("Noto Serif CJK SC", "New Computer Modern Math"))
   set math.equation(numbering: "(1)")
   set math.equation(numbering: num =>

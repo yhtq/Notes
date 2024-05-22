@@ -940,7 +940,7 @@
       ker (M -> hat(M)) = sect I^n M = {x in M | exists y in I, (1 + y) x = 0}
       $
       特别的，若 $A$ 是整环且 $I != (1)$，则 $sect I^n M = {0}$
-    ]
+    ]<Krull>
     #proof[
       设 $E = ker(M -> hat(M))$，它也是 $0$ 的所有开邻域的交。
       - 一方面，$E$ 的限制拓扑是平凡的
@@ -1059,3 +1059,379 @@
       ]
       有了上面的命题，原结论是容易的。事实上，$G(A) tilde.eq G(hat(A))$ 根据上面的命题是诺特的，而 $hat(A)$ 是完备的 Hausdoff 空间，因此由上面的命题 $hat(A)$ 是诺特的。
     ]
+= 维数理论 | Dimension theory
+  == 维数
+    #definition[height, dimension][
+      设 $A != 0$ 是环
+      - 设 $p$ 是素理想，定义 $ht(p)$ 为最大的 $n$ 可以构成一个素理想升链 $p_0 = p < p_1 < ... <p_n$，它也就是 $dim A_p$
+      - 设 $I$ 是理想，定义 $ht(I) = inf(ht(V(I)))$
+      - 定义 $dim A = sup_(p in Spec(A)) ht(p)$
+      - 设 $M$ 是 $AModule(A)$，定义 $dim M := dim A quo Ann(M)$
+    ]
+    #proposition[][
+      $dim A quo I + ht(I) <= dim A$
+    ]
+    #proof[
+      由定义显然
+    ]
+    #theorem[][
+      设 $A$ 是诺特环，$M$ 是有限生成模，则以下条件等价：
+      - $M$ 是有限长度的
+      - $A quo Ann(M)$ 是 Artin 环
+      - $dim M = 0$
+    ]
+    #proof[
+      在@chain-cond 已经证明了
+    ]
+  == 整值多项式
+    接下来的主要目标是，设 $(A, m)$ 是诺特的局部环，我们将找到一个多项式 $x_m^A (n)$ 使得：
+    - $dim A = deg x_m^A (n)$
+    - $n$ 充分大时，有 $x_m^A (n)$ 就是 $A quo m^n$ 的长度
+    这部分内容也可参考 Serre, local Algebra
+    #lemma[][
+      设:
+      - $Q_k (x) = C_x^k = (x (x-1) ... (x - k + 1))/(k!)$
+      - $Delta f(n) = f(n + 1) - f(n)$
+      则可以证明 $Delta Q_(k+1) = Q_k$，且设 $f$ 是有理系数多项式，则以下条件等价：
+      + $f(x) = sum_i a_i Q_(i) (x)$
+      + $f(ZZ) subset ZZ$
+      + $f(n) subset ZZ, n in ZZ$ 充分大
+      + $Delta f (ZZ) subset ZZ andC exists n_0, f(n_0) in ZZ$
+      成立时，称 $f$ 是取整值的多项式|integer-valued polynomial，并称 $e_i (f) := a_i$ 是展开系数，并有容易的等式：
+      $
+      Delta f = sum_i a_i Q_(i-1) => e_(i-1) (Delta f) = e_i (f)
+      $
+    ]
+    #proof[
+      - $2 => 1$ 由于 $Q_i$ 次数逐渐上升，自然构成 $QQ-$线性空间的基，因此先可设：
+        $
+        f = sum_i e_i Q_i
+        $
+        再不断差分可以证明 $e_i$ 都是整数
+      - $4 => 2$ 显然
+      - $3 => 1$ 利用归纳法，差分和 4 即可 
+    ]
+    #definition[][
+      设 $f: NN -> ZZ$ ，称 $f$ 是类多项式|polynomial like 的，如果存在多项式 $p(x)$ 使得 $n$ 充分大时有：
+      $
+      f(n) = p(n)
+      $
+    ]
+    #lemma[][
+      以下条件等价：
+      - $f$ 是类多项式
+      - $Delta f$ 是类多项式
+      - 存在 $l > 0$ 使得 $Delta^l f(n) = 0, forall n$ 充分大 
+    ]
+  == 庞卡莱序列
+    #definition[庞卡莱序列][
+      设 $A = directSum_i A_i$ 是诺特的分次环，每个 $A_n$ 都诺特。$M$ 是分次的有限生成 $A-$模，$lambda$ 是有限 $A_n-$模 $-> ZZ$ 的加性函数，定义 $M$ 的庞卡莱序列为：
+      $
+      P(M, t) = sum_(n >= 0) (-1)^n  lambda (M_n) t^n
+      $
+    ]
+    #theorem[][
+      $P(M, t)$ 是有理函数，且：
+      $
+      P(M, t) = (f(t))/(product_(i = 1)^s (1 - t^(k_i))), f(t) in ZZ[x]
+      $
+      定义 $d(M)$ 为这个函数 $P(M, t)$ 在 $t = 1$ 处极点的阶数\
+      其中 $s$ 是 $A$ 作为 $A_0$ 代数的齐次生成元的个数，$k_s$  在证明中给出
+    ]
+    #proof[
+      对 $s$ 进行归纳
+      - $s = 0$ 时结论显然成立（既然形式幂级数 $P(M, t)$ 仅有有限项）
+      - 一般的，考虑：
+        $
+        M_n ->^(x_s) M_(n + k_s)
+        $
+        当然 $k = deg x_s$，产生正合列：
+        $
+        0 -> K_n -> M_n -> M_(n + k) -> L_(n+k) -> 0
+        $
+        其中 $K_n, L_n$ 分别是 $ker, coker$\
+        令 $K = directSum K_n, L = directSum L_n$，则 $K, L$ 被 $x_s$ 零化，进而成为 $A_0 [x_1, ..., x_s]$ 上的模。由归纳假设 $P(K, t), P(L, t)$ 都是定理形式的有理函数。\
+        对正合列取庞卡莱序列，有：
+        $
+        
+        sum_n lambda(K_n) t^(n + k_s) - sum_n lambda(M_n) t^n + sum_n lambda(M_(n + k_s)) t^n - sum_n lambda(L_(n + k_s)) t^(n + k_s) = 0
+        
+        $
+        化简即得结论。
+    ]
+    #corollary[希尔伯特多项式][
+      若证明过程中 $k_1 = k_2 = ... = k_s = 1$，则 $P(M, t) = (f(t))/(1-t)^s$，进而 $n -> lambda(M_n)$ 是 $d(M) - 1$ 次的类多项式。这个多项式称为 $M$ 的希尔伯特多项式
+    ]
+    #proof[
+      第一条是直接推论。对于第二条注意到根据定义 $lambda(M_n)$ 就是 $P(M, t) = f(t)/(1-t)^s$ 的 $n$ 次项系数。无妨设 $f(t), 1 - t$ 互素，否则约去令 $s$ 更小即可。作展开：
+      $
+      f(t)/(1-t)^s = f(t) (1 + t + ...)^s := (sum_(k=0)^N a_k t^k)(1 + t + ...)^s
+      $
+      可以计算得当 $ n> N$ 时，将有：
+      $
+      
+      lambda(M_n) = sum_(k = 0)^N a_k C_(s + n - k + 1)^(s - i)
+      
+      $
+      确实是关于 $n$ 的多项式，且次数是 $d - 1$，证毕
+    ]
+    #proposition[][
+      设 $x in A_k$ 不是 $M$ 的零因子（$m in M, x m = 0 => m = 0$），则：
+      $
+      d(M quo x M) = d(M) - 1
+      $
+    ]
+    #proof[
+      根据 $M_n ->^x M_(n+k)$ 构造正合列：
+      $
+      0 -> K_n -> M_n ->^x M_(n+k) -> L_(n+k) -> 0
+      $
+      将有：
+      $
+      P(M quo x M, t) = P(M, t) -t^k P(M, t) + r(t)
+      $
+      显然极点的阶刚好降低一，证毕
+    ]
+    #example[][
+      设 $A_0$ 是 Artin 环，$A = A_0 [x_1, ..., x_s]$，则恰有 $d(A) = s$\
+      这是因为：
+      - $A_n$ 是自由 $A_0$模，生成元集为所有 $n$ 次单项式，作为自由模的维数是 $C_(n + s -1)^(s - 1)$
+      - 可以计算得：
+        $
+        P(A, t) = lambda(A_0) + lambda(A_1) t + ... = 1/(1 -t)^s
+        $
+    ] 
+    #proposition[][
+      假设 $(A, m)$ 是诺特的局部环，$q$ 是理想且 $sqrt(q) = m$（往往就取 $q = m$）, $M$ 是有限生成 $A-$模，$M_n$ 是稳定 $q-$filtration，则：
+      - $M quo M_n$ 有限长度
+      - $n -> "length"(M quo M_n)$ 是不超过 $s$ 次类多项式，其中 $s$ 是 $q$ 最少的生成元个数
+      - 上面多项式的次数和首项系数与 $q$ 无关，只与 $M$ 有关
+      该多项式称为特征多项式
+    ]
+    #proof[
+      - 令 $G(A) = directSum_n q^n quo q^(n+1)$，则由极大理想幂零 $G_n$ 是 Artinian Noetherian 局部环，$G(M)$ 是有限生成 $G(A)$ 模，且每一项都是 Artinian Noethenian 模，因此 $M_n$ 有限长度，$M quo M_n$ 也有限长度。
+      - 由上题结论，$n -> l(M_(n - 1) quo M_n)$ 是类多项式函数，次数不超过 $s - 1$，求和得 $n -> l(M quo M_n)$ 也是类多项式，次数不超过 $s$，表明结论正确
+      - 之前证明了两个稳定 $q-$filtration 互相控制，因此 $n$ 充分大时对应多项式也相互控制，进而首项应该都是一样的
+    ]
+  #corollary[][
+    $deg kai_q (n) = deg kai_m (n)$ 且首项相等
+  ]
+  #proof[
+    注意到：
+    $
+    m subset q subset m^r\
+    m^n subset q^n subset m^(r n)
+    $
+    由长度的定义可得：
+    $
+    kai_m (n) <= kai_q (n) <= kai_m (r n)
+    $
+    令 $n -> infinity$ 可得结论
+  ]
+  #definition[][
+    设 $A$  是诺特的局部环，则令：
+    $
+    d(A) = deg kai_q (n) = deg kai_m (n) = deg( n -> "length"(A quo m^n)) = d(G_m (A))\
+    where G_m (A) = directSum (m^i quo m^(i+1))
+    $
+
+  ]
+  == 诺特局部环的维度
+    #definition[][
+      设 $A$  是诺特的局部环，令 $delta(A)$  为 $A$  中 $m-$ primary 理想的最小生成元数量。
+    ]
+    本节的目标是：
+    $
+    delta(A) = d(A) = dim (A)
+    $
+    为此，我们证明：
+    $
+    delta(A) >= d(A) >= dim (A) >= delta(A)
+    $
+    #proposition[][
+       设 $M$  是有限生成 $A-$ 模，$x$ 不是零因子，则：
+       $
+       deg kai_q^(M quo x M) <= deg kai_q (M) - 1
+       $
+    ]
+    #proof[
+      令 $N := x M$，作为 $AModule(A)$  同构于 $M$\
+      再令 $M' = M quo x M$\
+      由 @Artin-Rees 可知 $N_n = N sect q^n M$  是稳定 $q-$filtration\
+      由正合列：
+      $
+      0 -> N quo N_n -> M quo q^n M -> M' quo q^n M' -> 0
+      $
+      由长度的加性，$n$ 充分大时有：
+      $
+      l(N quo N_m) - kai_q^M (n) + kai_q^M' (n) = 0
+      $
+      既然 $N$  与 $M$  同构且 $q-$filtration 兼容，$l(N quo N_m), kai_q^M (n)$  有相同的次数和首项，因此 $kai_q^M' (n)$  必然比其至少低一次
+    ]
+    #proposition[][
+      $d(A) >= dim(A)$
+    ]
+    #proof[
+      做归纳：
+      - 若 $d(A) = 0$，则 $n$ 充分大时 $A quo m^n$ 的长度的常值，继而：
+        $
+        l(m^n quo m^(n+1)) = 0
+        $
+        注意到它是 $A quo m$ 上的向量空间，因此 $m^n = m^(n+1)$,这是标准的 Artin 条件，故 $A$ 是 Artin 的，$dim A = 0$
+      - 一般的，任取素理想升链：
+        $
+        p_0  < ... < p_l
+        $
+        取 $x in p_1 - p_0, A' = A quo p_0$ 是整环，继而由之前的命题：
+        $
+        d(A' quo x) <= d(A') - 1
+        $
+        注意到 $A quo m^n$ 到 $A' quo m'^n$ 存在满射，因此：
+        $
+        l(A quo m^n) >= l(A' quo m'^n)\
+        d(A) >= d(A') >= d(A' quo x) + 1
+        $
+        由归纳假设，有：
+        $
+        d(A' quo x)>= dim (A' quo x)
+        $
+        然而由最开始的素理想升链可得 $dim(A' quo x')$ 不小于 $dim A - 1$，结合上式即得结论
+    ]
+    #corollary[][
+      - $dim(A)$ 有限
+      - 对于一般的诺特环 $A$，每个素理想的降链都有限长
+    ]
+    #proposition[][
+      设 $A$ 是诺特的局部环，$dim A = d$，则存在 $m-$primary 理想恰有 $d$ 个生成元。换言之，$delta(A) <= d$
+    ]
+    #proof[
+      归纳构造 $x_i$ 使得每个包含 $(x_1, x_2, ..., x_i)$ 的素理想的 height 都至少为 $i$\
+      假设 $x_1, ..., x_(i-1)$ 已经构造，令 $p_j$ 是包含 $(x_1, ..., x_(i-1))$ 的极小素理想且高度恰为 $i -1$，也就是 $Ass(A quo (x_1, ..., x_(i-1)))$ 中极小元（仅有有限个）\
+      既然 $i - 1< d = dim A$ 而 $m$ 的高度就是 $d$，因此 $p_j$ 不是 $m$，取 $x_i in m - union p_j$\
+      设 $q$ 是任意包含 $(x_1, ..., x_i)$ 的素理想，则 $q$ 包含某个包含 $(x_1, ..., x_(i-1))$ 的极小素理想 $p$
+      - 若 $p = p_j$，则 $x_i in q - p$ 表明 $p subset.neq q$，表明 $q$ 的高度至少是 $p$ 的高度加一，结论成立
+      - 否则，由于刚才取得了所有高度为 $i - 1$ 的极小素理想，$p$ 的高度至少为 $i$，继而 $q$ 也至少有高度 $i$
+    ]
+    #theorem[Dimension][
+      对于诺特的局部环 $A$，以下三个整数相等：
+      - 最大素理想升链的长度
+      - 特征多项式 $l(A quo m^n)$ 的次数
+      - $m-$primary 理想的最少生成元个数
+    ]
+    #proof[
+      $delta(A) >= d(A)$ 是上节的主要结论，其余便是本节的结论。
+    ]
+    #example[][
+      之前证明了多项式环的幂级数是 $1 / (1-t)^n$ ，因此它的维度也是 $n$
+    ]
+    #corollary[][
+      设 $A$ 是诺特的局部环，$k$ 是留域，则 $dim A <= dim_k m quo m^2$
+    ] 
+    #proof[
+      取 ${x_i} subset m$ 使得它们的像构成 $m quo m^2$ 的一组基，此时 $x_i$ 必然生成 $m$（利用 Nakayama 引理的推论 @basis-is-generator-Nakayama），因此有：
+      $
+      dim A = delta(A) <= dim_k m quo m^2
+      $
+    ]
+    #corollary[][
+      设 $A$ 是不一定局部的诺特环，$x_1, ..., x_r in A$，则每个包含 $x_1, ..., x_r$ 的极小素理想的高度都不大于 $r$
+    ]
+    #proof[
+      设 $p$ 是包含这些元素的极小素理想，在 $A_p$ 中当然有：
+      $
+      sqrt((x_1, ..., x_r)) = p A_p
+      $
+      表明：
+      $
+      r >= delta(A_p) = dim A_p = "height"(p)
+      $
+    ]
+    #theorem[Krull's principal ideal theorem][
+      设 $A$ 诺特，$x$ 不是单位或零因子，$p$ 是包含 $x$ 的极小素理想，则 $p$ 的高度就是 $1$
+    ]
+    #proof[
+      由上面的引理，$p$ 的高度只能为零或一
+      - $"height" (p) = 0$，书上的 primary decomposition 章节证明了这样的素理想（也就是环上的极小素理想）其中每个元素都是零因子，与 $x in p$ 是矛盾的
+      因此只能为 $1$
+    ]
+    #corollary[][
+      $dim A = dim hat(A)$
+    ]
+    #proof[
+      注意到：
+      $
+      A quo m^n tilde.eq hat(A) quo hat(m)^n
+      $
+      当然特征多项式是一致的
+    ]
+    #definition[][
+      设 $A$ 是诺特局部环，$d = dim A$， 若 $sqrt((x_1, ..., x_d)) = m$，则称 $x_1, ..., x_d$ 是一个参数系统|system of parameters
+    ]
+    #proposition[][
+      设 $q = (x_1, ... x_d)$ 是参数系统，$f(t_1, ..., t_d)$ 是 $s$ 次齐次多项式，且系数落在 $q^(s + 1)$ 中，则这些系数也落在 $m$ 中
+    ]
+    #proof[
+      考察：
+      $
+      funcDef(phi, A quo q [t_1, ..., t_d], G_q (A),t_i, x_i)
+      $
+      容易验证它是满射\
+      假设 $f$ 有系数不在 $m$ 中，由前面的习题有 $phi(f)$ 不是零因子，将有：
+      $
+      d(A) = d(G_m (A)) <= d( (A quo q [t_1, ..., t_d]) quo (phi(f))) <= d (A quo q [t_1, ..., t_d]) - 1 = d - 1
+      $
+      矛盾！
+
+    ]
+    #corollary[][
+      设 $k = A quo m subset A, x_1, ..., x_d$ 是参数系统，则 $x_1, ..., x_d$ 代数独立
+    ]
+    #proof[
+      假设有这样的多项式 $f$，取出其中最低非零次 $s$ 齐次部分 $f_s$，断言：
+      $
+      f_s (x_1, ..., x_d) = 0 in q^s quo q^(s+1), q = (x_2, ..., x_d)\
+      $
+      由上面的引理，$f_s$ 的系数全在 $m$ 中，与假设矛盾！ 
+      
+    ]
+    #definition[Regular Local Ring][
+      设 $A$ 是诺特的局部环，$dim A = d, m$ 是极大理想，$k = A quo m $，若以下等价条件成立：
+      - $G_m (A) tilde.eq k[t_1, ..., t_d]$
+      - $dim_k m quo m^2 = d$
+      - $m$ 可被 $d$ 个元素生成
+    ]
+    #proof[
+      - 1 $=>$ 2 容易验证
+      - 2 $=>$ 3 @basis-is-generator-Nakayama
+      - 3 $=>$ 1 前面定义了典范的满射 $k[x_1, ..., x_n] -> G_m (A)$，由上一个命题的代数独立性这里 $ker$ 为零，继而是同构
+    ]
+    #lemma[][
+      设 $A$ 是环，$I$ 是理想且 $sect I^n = 0$，假设 $G_I (A)$ 是整环，则 $A$ 是整环
+    ]
+    #proof[
+      任取 $x, y != 0$，取最大的 $r, s$  使得：
+      $
+      x in I^r\
+      y in I^s
+      $
+      则 $x y$ 在 $G_I (A)$ 中的像非零，当然就有 $x y != 0$
+    ]
+    #corollary[][
+      - Regular Local Ring 是整的
+      - Regular Local Ring 是整闭的
+    ]
+    #proof[
+      - $k[t_1, .., t_d]$ 当然是整环，由 @Krull 知必有 $sect m^n = 0$，因此由上面的引理知结论成立。
+      - $dim = 1$ 时，由于离散赋值环等价于切空间 $m quo m^2$ 恰为一维，故结论成立。一般的证明略。
+    ]
+    #proposition[][
+      $A$ regular $<=> hat(A)$ regular
+    ]
+    #proof[
+      注意到 $G_m (A) = G_(hat(m)) (hat(A))$，结论显然
+    ]
+    #corollary[][
+      设 $A$ 是 regular local ring ,$k = A quo m subset A$ ，则 $hat(A)$ 同构于 $k[[t_1, ..., t_d]]$
+    ]
+
+
