@@ -1929,23 +1929,96 @@
         $
       - 称 $A$ 在 $E subset G$ 上等度连续，如果：
         $
-        forall epsilon > 0, exists delta > 0, forall norm(z - z') < delta, forall f in A, d(f(z), f(z')) < epsilon
+        forall epsilon > 0, exists delta > 0, forall z, z' in E, norm(z - z') < delta => forall f in A, d(f(z), f(z')) < epsilon
         $
     ] 
     #proposition[][
       设 $A$ 在 $G$ 中每一个点上等度连续，则 $A$ 在 $G$ 的每一个紧子集上等度连续（也称为内闭等度连续）
     ]
     #proof[
-      在紧集上利用有限覆盖将逐点的等度连续性转化为整体的等度连续性，需要 @Lebesgue_Lemma。
+      首先在每一个点处由条件构造一个邻域球，再在每个紧集中使用 @Lebesgue_Lemma，即可得到结论。
+
+      
     ]
     #theorem[Arzela-Ascds][
       $A subset C(G, X)$ 正规当且仅当以下条件成立：
       - $forall z in G, A z = {f(z) | f in A}$ 预紧
-      - $A$ 在 $G$ 的每一个紧子集上等度连续，等价于在 $G$ 中每一个点上等度连续
+      - $A$ 在 $G$ 的每一个紧子集上等度连续（等价于在 $G$ 中每一个点上等度连续）
+    ]<A-A-theorem>
+    #definition[][
+      记：
+      - $H(G)$ 是 $C(G, CC)$ 中解析函数
+      - $A(G) = {f in C(overline(G), CC) | f_G in H(G)}$ 
     ]
-  #theorem[黎曼映射定理|Riemann mapping][
-    设 $D$ 是单连通区域且不为 $CC$ ，$a in D$，则存在单叶解析函数 $g: D -> B(0, 1)$ 使得 $g(a) = 0$
-  ]<Riemann-mapping>
+  == 复分析的预备工作
+    #definition[][
+      - 称 $FF subset H(G)$ 局部有界（locally bounded）如果：
+        $
+        forall a in G, exists M > 0, exists r > 0, forall z in B(a, r) sect G, forall f in FF, norm(f(z)) < M
+        $
+      - 称 $FF$ 内闭一致有界，如果在每个 $G$ 的紧子集上都一致有界
+    ]
+    #proposition[][
+      $FF subset H(G)$ 局部有界当且仅当 $FF$ 内闭一致有界
+    ]
+    #theorem[Montel][
+      $FF subset H(G)$ 是正规的当且仅当 $FF$ 局部有界
+    ]
+    #proof[
+      设正规性成立，假设不局部有界，则可得到点 $z_0$ 使得 $FF$ 中有一列函数使得：
+      $
+      exists z_n in B(z_0, 1/n), norm(f_n (z_n)) > n
+      $
+      然而由正规性，不妨设 $f_n$ 收敛于 $f$，进而在 $z_0$ 某个闭有界邻域一致收敛，上式将导致 $f(z_0)$ 无法定义，这是荒谬的。
 
+      另一方面，设局部有界成立，@A-A-theorem 的条件 1 显然满足，往证条件 2 也即任取 $z_0$ 都有在该点处等度连续即可。\
+      注意到由局部有界条件，不妨设：
+      $
+      forall z in overline(B(z_0, delta)), forall f in FF: norm(f(z)) < M      
+      $
+      如此，利用柯西定理：
+      $
+      norm(f(z) - f(z_0)) = 1/(2 pi) norm(integral_(diff overline(B(z_0, delta/2)))^() (f(w))/(w - z_0) dif w - integral_(diff overline(B(z_0, delta/2)))^() (f(w))/(w - z) dif w)\
+      = 1/(2 pi) norm(integral_(diff overline(B(z_0, delta/2)))^() (f(w) (z_0 - z))/((w - z_0)(w - z)) dif w)\
+      <= 1/(2 pi) integral_(diff overline(B(z_0, delta/2)))^() norm(f(w) (z_0 - z)/((w - z_0)(w - z))) dif w\
+      <= 1/(2 pi) integral_(diff overline(B(z_0, delta/2)))^() M norm( (z_0 - z)/((w - z_0)(w - z))) dif w\
+      $
+      其余部分分母有界，因此可以控制到分子的线性式，当然就蕴含着等度连续
+    ]
+    #theorem[][
+      设 ${f_n} subset C(G, CC)$ 在 $G$ 上内闭一致收敛于 $f in C(G, CC)$，且 $f_n in H(G)$，则 $f in H(G)$，且 $f$ 的 $k$ 阶导数就是 $f_n$ 的 $k$ 阶导数的极限
+    ]
+    #proof[
+      $f$ 的连续性是显然的。至于解析性，利用 @Morera 定理，只需证明内部某个三角形边界上的积分为零即可。可以找到一个略大的紧集，函数列一致收敛，进而由积分极限的换序性质，积分为零。
+
+      至于积分值，由一致收敛的结论和归纳法证明 $f'_n$ 在任意闭球 $B(a, r)$ 上收敛即可。注意到由柯西积分公式的推论：
+      $
+      norm(f'_n (z) - f'(z)) <= norm(1/(2 pi) integral_(diff B(a, R))^() (f_n (w))/(w-z)^2 - (f'(w))/(w - z)^2 dif w) \
+      <= 1/(2 pi (R - r)^2) integral_(diff B(a, R))^() norm(f_n (w)- f'(w))  dif w\
+      $
+      利用积分极限换序即可得到结论。
+
+    ]
+    #theorem[Harwitz][
+      设 ${f_n} subset C(G, CC)$ 在 $G$ 上内闭一致收敛于 $f in H(G)$，设 $f$ 不恒为零，$closedBall(a, r) subset G$，$f(z) !=0, forall z in diff closedBall(a, r)$，则：
+      $
+      exists N in NN, forall n > N, f, f_n "在 " B(a, r) "内有相同的零点个数"
+      $
+    ]
+    #proof[
+      设 $m = inf_(diff closedBall(a, r)) norm(f(z)) > 0$，由一致收敛性，当 $n$ 充分大时有：
+      $
+      norm(f_n (z) - f(z)) < m/2 <= norm(f(z)), forall z in diff closedBall(a, r)
+      $
+      根据 Roache's Theorem，结论成立
+    ]
+    Bonus: 利用上面定理导出小黄书定理 8.1.4
+    #corollary[][
+      设 ${f_n} subset C(G, CC)$ 在 $G$ 上内闭一致收敛于 $f in H(G)$，且 $f_n$ 在 $G$ 上无零点，则要么 $f$ 恒为零，要么恒不为零。
+    ]
+  == 黎曼映射定理
+    #theorem[黎曼映射定理|Riemann mapping][
+      设 $D$ 是单连通区域且不为 $CC$ ，$a in D$，则存在唯一的双全纯同胚 $f: D -> B(0, 1)$ 使得 $f(a) = 0, f'(a) > 0 in RR$
+    ]<Riemann-mapping>
 
     

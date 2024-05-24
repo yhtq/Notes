@@ -112,6 +112,7 @@
 #let inverseLimit = $limits(lim)_(arrow.l.long)$
 #let directLimit = $limits(lim)_(arrow.long)$
 #let AModule(A) = [$#A -$模]
+#let closedBall(a, r) = $overline(B(#a, #r))$
 #let GEquiv(G) = {
   $#G -$ 
   "等变"
@@ -327,7 +328,6 @@
 //  h(1fr)
 //  box(scale(160%, origin: bottom + right, sym.square.stroked))
 //})
-
 #let note(title: "Note title", author: "Name", logo: none, date: none,
           preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, withHeadingNumbering: true, body) = {
   // Set the document's basic properties.
@@ -344,10 +344,10 @@
       if calc.odd(i) { align(end, title) } else { align(start, title) }
     }),
   )
+  set text(font: "Noto Serif CJK SC", lang: "zh")
   show: thm-rules
   show: ans-rules
   show: thm-rules1
-  set text(font: "Noto Serif CJK SC", lang: "zh")
   show emph: it => {
     text(it, weight: "bold")
   }

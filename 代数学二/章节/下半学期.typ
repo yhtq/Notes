@@ -1433,5 +1433,186 @@
     #corollary[][
       设 $A$ 是 regular local ring ,$k = A quo m subset A$ ，则 $hat(A)$ 同构于 $k[[t_1, ..., t_d]]$
     ]
+= 同调代数
+  本学期由于时间原因，不能详细讲解 Abel 范畴，但所幸有下面的定理：
+  #theorem[Frey-Miichell embedding][
+    设 $CC$ 是 Abel 范畴，则存在全忠实的正合函子将 $CC$ 嵌入某个环上的模范畴
+  ]
+  == 回顾
+    #definition[][
+      设 $CC$ 是 Abel 范畴，则令：
+      - $C(CC)$ 是其中所有（链）复形|(cochain) Complex 构成的范畴，也即对象是所有复形，态射是复形间的同态。这个范畴也是 Abel 范畴，同时 $CC$ 可以嵌入其中。
+      - 可以定义函子 $H(*): C(CC) -> CC$
+        $
+        H(... ->^(d^(k-1)) X^(k-1) ->^(d^k) X^k ->^(d^(k+1)) -> ...)
+        $
+    ]
+    #remark[homology index][
+    有时链复形也用下降的下标，此时成为 chain complex，一个复形形如：
+    $
+    ... -> X_(k + 1) ->^(d_(k+1)) X_k ->^(d_k) X_(k-1) -> ...
+    $
+    ]
+    #remark[Singular Complex functor][
+      可以定义从拓扑空间的范畴 $"Top"$ 到 $Mod_ZZ$  上链复形的函子：
+      $
+      "ZSing"_n (X) = ZZ[Hom (abs(Delta^n), X)]
+      $
+      其中：
+      - $abs(Delta^0) = $ 单点
+      - $abs(Delta^1) = 0, 1$ 线段
+      - $abs(Delta^2) = $ 三角形
+      - ...
+      下降的态射是对边界求和 
+    ]
+    #definition[同伦|homotopic][
+      - $f, g : X -> Y$ 是两个链复形之间的同态。称 $f, g$ 同伦，记作 $f tilde g$，如果存在 $s^n: X^n -> Y^(n-1)$ 使得以下交换图表成立：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $X^n$, 1),
+        node((0, 1), $X^(n+1)$, 2),
+        node((1, -1), $Y^(n-1)$, 3),
+        node((1, 0), $Y^n$, 4),
+        arr(1, 2, $$),
+        arr(1, 3, $s^n$),
+        arr(2, 4, $s^(n+1)$),
+        arr(3, 4, $$),
+        arr(1, 4, $f^n - g^n$)
+        )]
+      - 称 $X ->^f Y$ 是同伦等价的，如果存在 $h: Y -> X$ 使得 $h compose f tilde id, f compose h tilde id$，此时也称 $X$ 与 $Y$ 同伦等价或 $X tilde Y$
+    ]
+    #lemma[][
+      - 设 $f tilde g$，则 $H^k (f) = H^k (g)$
+      - 设 $X tilde Y$，则 $H^k (X) = H^k (Y)$
+    ]
+    #proof[
+      - 等价于 $H^k (f - g) = 0$，注意到：
+        $
+        f tilde g <=> f - g tilde 0
+        $
+        因此不妨就设 $g = 0, f tilde 0$，往证 $H^k (f)= 0$\
+        由定义，有：
+        $
+        f^n = s^(n+1) d_X^n + d_Y^(n-1) s^n
+        $
+    ]
+    $
+    f^n (ker d_X^n) = d_Y^(n-1)(s^n (ker d_X^n)) subset im d_Y^(n-1)\
+    $
+    由定义：
+    $
+    H^n (f) : ker (d_X^n) quo im(d_X^(n-1)) -> ker (d_Y^n) quo im(d_Y^(n-1))
+    $
+    由上面的计算，这意味着 $H^n (f) = 0$，证毕
 
+    #definition[][
+      设 $F$  是两个 Abel 范畴间的函子，它自然诱导了 Abel 范畴上复形的函子。
+      - 若 $F$  将短正合列映到短正合列，则称 $F$  是正合函子。这也等价于保持 $ker, im, coker, coim$  或者等价于保持有限极限/余极限。当然由保持 $ker, im$ 可以推出它保持同调群。
+    ]
+    #proposition[][
+      - $Hom(X, *)$ 是左正合函子。它正合时称 $X$  为投射对象，等价于将任何满同态|eqimorphism $Y -> Z$ 作用得到满同态 $Hom(X, Y) -> Hom(X, Z)$
+      - $Hom(*, Y)$ 是反变左正合函子。它正合时称 $Y$  为内射对象，等价于将任何单同态|monomorphism $Y -> Z$ 作用得到满同态 $Hom(Z, Y) -> Hom(Y, Y)$
+    ]
+    #example[][
+      - $QQ quo ZZ$ 是 Abel 群范畴中的内射对象
+      - 设 $R$ 是环，则$Hom_("abel")(R, Q quo ZZ)$  是内射 $R-$ 模
+      - $M$ 是平坦模当且仅当 $Hom_("abel") (M, QQ quo ZZ)$  是内射 $R-$ 模（利用伴随关系）
+    ]
+    #proposition[短正合列诱导长正合列][
+      设有复形间正合列：
+      $
+      0 -> X -> Y -> Z -> 0
+      $
+      则有长正合列：
+      $
+      ... &-> H^(n-1) (X) -> H^(n-1) (Y) -> H^(n-1) (Z) \
+          &-> H^n (X) -> H^n (Y) -> H^n (Z)\
+          &->^delta H^(n+1) (X) -> H^(n+1) (Y) -> H^(n+1) (Z) -> ...
+      $
+      进一步，这个长正合列是典范的（具有函子性），也即若两个复形正合列之间有同态，则它们诱导的长正合列之间也有诱导的同态。
+    ]
+    #proof[
+      我们希望利用蛇形引理。对：
+      $
+      0 -> X^n -> Y^n -> Z^n -> 0\
+      0 -> X^(n+1) -> Y^(n+1) -> Z^(n+1) -> 0
+      $
+      之间利用蛇形引理，得到正合列：
+      $
+      0 -> ker d_X^n -> ker d_Y^n -> ker d_Z^n -> coker d_X^n -> coker d_Y^n -> coker d_Z^n -> 0
+      $
+      以及两个正合列间同态：
+      $
+      coker d_X^n -> coker d_Y^n -> coker d_Z^n -> 0\
+      0 -> ker d_X^n -> ker d_Y^n -> ker d_Z^n
+      $
+      再次利用蛇形引理，#TODO 得到的结果便是:
+      $
+      H^n (X) -> H^n (Y) -> H^n (Z) -> H^(n+1) (X) -> H^(n+1) (Y) -> H^(n+1) (Z)
+      $
+    ]
+  == 解消
+    #definition[Resulution][
+      设 $A in CC$  是一个对象
+      - 一个 $A$  的内射解消是指复形：
+        $
+        I^* := 0 -> I^0 -> I^1 -> I^2 -> ...
+        $
+        其中 $I^i$ 都是内射对象，且：
+        $
+        0 -> X -> I^0 -> I^1 -> I^2 -> ...
+        $
+        是正合列，等价于 $H^0 (I^*) = X, H^i (I^*) = X, forall i > 0$\
+      - 一个 $A$  的投射解消是指复形：
+        $
+        P^* := ... -> P^(-2) -> P^(-1) -> P^0 -> 0
+        $
+        其中 $P^i$ 都是投射对象，且：
+        $
+        ... -> P^(-2) -> P^(-1) -> P^0 -> A -> 0
+        $
+        是正合列，等价于 $H^0 (P^*) = A, H^i (P^*) = 0, forall i < 0$
+
+
+      - 若 $CC$  中每个对象可以嵌入一个内射对象，则称 $CC$  有足够多的内射对象
+      - 若 $CC$  中每个对象都存在投射对象映满到它，则称 $CC$  有足够多的投射对象
+    ]
+    #lemma[][
+      - 假设 $CC$ 有足够多的内射对象，则任意对象 $X in CC$  都有一个内射解消
+      - 假设 $CC$ 有足够多的投射对象，则任意对象 $X in CC$  都有一个投射解消
+    ]
+    #lemma[][
+      - $Mod_R$ 有足够多的内射对象
+    ]
+    #proof[
+      - 利用 $Hom (R, QQ quo ZZ)$ 的内射性
+    ]
+  == 余调 $delta-$函子，导出函子
+    #definition[余调 $delta-$函子][
+      一个  Cohomological $delta-$ functor 是一族函子 $T_i, i in NN$ 以及连接同态 $delta^i: T^i (C) -> T^(i+1) (A)$，使得：
+      - 对于任何短正合列 $0 -> A -> B -> C -> 0$ 有长正合列：
+        $
+        ... -> T^i A -> T^i B -> T^i C ->^(delta^i) T^(i+1) A -> T^(i+1) B -> T^(i+1) C -> ...
+        $
+      - 这个长正合列是典范的，也即短正合列间的同态诱导对应长正合列的同态
+    ]
+    我们的目标是对于一般的函子/加性函子/左正合/右正合函子，能否构造出以其为开始的余调 $delta-$函子，这些函子就是前面提到过的导出函子。
+    #lemma[][
+      设有两个关于 $A, B$ 的内射解消：
+      $
+      0 -> A -> I^0 -> I^1 -> I^2 -> ...\
+      0 -> B -> J^0 -> J^1 -> J^2 -> ...
+      $
+      只要存在 $A -> B$ 的同态，便可以延拓成正合列的同态。若该同态是同构，则两个正合列同伦等价。
+    ]
+    #definition[（右）导出函子][
+      设 $CC$ 有足够多的内射对象， $F$ 是左正合函子， $X in CC$，找到一个 $X$  的内射解消，也就是正合列：
+      $
+      0 -> X -> I^0 -> I^1 -> I^2 -> ...
+      $
+      定义：
+      $
+      R^n F(X) = H^n (F(I^*))\
+      $
+      给出一个与内射解消的选取无关的函子，称为 $F$ 的右导出函子。
+    ]
 
