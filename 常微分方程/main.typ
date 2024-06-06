@@ -2369,4 +2369,584 @@
       $
       称为贝塞尔方程，由上面的定理它在 $0$  附近有广义幂级数解，并且计算可得 $n$ 是正整数时解是整函数。
     ]
+= 微分方程定性理论：边值问题
+  == Sturm 比较定理
+    本节我们的研究的是形如：
+    $
+    y'' + p(x) y' + q(x) y = 0
+    $<obj-def>
+    其中 $p, q$ 是某个区间 $J$ 上的连续函数
+    #lemma[][
+      @obj-def 的非零解都是简单零点（导数非零），进一步都是孤立零点
+    ]
+    #proof[
+      如若不然，设 $x_0$ 处函数值和导数值均为零，由存在唯一性这将导致解恒为零，矛盾！
+    ]
+    #lemma[][
+      设 $f, g$ 是 @obj-def 的两个非零解，且都有零点：
+      - $f, g$ 线性相关当且仅当有相同的零点集
+      - $f, g$ 线性无关当且仅当零点相间，也即每两个相邻零点构成的开区间内有对方的零点
+    ]
+    #proof[
+      - 
+        - 若 $f, g$ 相关则 $lambda f + mu g = 0$，不难发现 $lambda, mu$ 非零，因此零点集相同
+        - 若零点集相同，考虑 Wronskian 行列式：
+          $
+          W(x) = Det(f, g; f', g') 
+          $
+          由条件可知存在一个共同零点，则在该点处 $W(x) = 0$，之前的结论表明 $f, g$ 线性相关
+      - 设 $x_1, x_2$ 是 $f$ 的相邻零点，不妨假设在 $(x_1, x_2)$ 上有 $f > 0$
+        - 设 $f, g$ 无关，则：
+          $
+          W(x) = Det(f, g; f', g') 
+          $
+          定号，进而 $W(x_1) W(x_2) > 0$，而：
+          $
+          W(x_1) = -g(x_1) f'(x_1)\
+          W(x_2) = -g(x_2) f'(x_2)
+          $
+          之前证明了 $f'(x_1), f'(x_2) != 0$，不难发现一定有 $f'(x_1) > 0, f'(x_1) < 0$，上式表明 $g(x_1), g(x_2)$ 异号，当然就有介质定理。同时其间只能有一个零点，否则若有两个可以反过来找到 $f$ 的零点，与 $x_1, x_2$ 相邻矛盾！
+        - 反之，若零点相间结论由前一条结论知零点集不同，当然无关
+    ]
+    #remark[][
+      上面的引理中需要留意零点的存在性，例如 $f, g$ 无关而 $f$ 仅有一个零点，此时 $g$ 的零点个数可能是 $0, 1, 2$，与定理都不矛盾 
+    ]
+    #theorem[比较定理][
+      设有两个微分方程：
+      $
+      y'' + p(x) y' + q(x) y = 0
+      $<eq-1>
+      $
+      y'' + p(x) y' + r(x) y = 0
+      $<eq-2>
+      且满足：
+      $
+      r(x) >= q(x)
+      $
+      设 $f, g$ 分别是@eq-1 和@eq-2 的两个非零解，$x_1, x_2$ 是 $f$ 的两个相邻零点，则 $g$ 在 $[x_1, x_2]$  上有零点。
+    ]<compare-two>
+    #proof[
+      不妨假设 $f$ 在 $(x_1, x_2)$ 上恒正，有：
+      $
+      f'(x_1) > 0, f'(x_2) < 0
+      $
+      假设 $g(x)$ 在 $[x_1, x_2]$ 上无零点，不妨设其恒正。令：
+      $
+      W(x) = Det(f, g;f', g') = f g' - f' g\
+      W'(x) = Det(f, g;f'', g'') = Det(f, g;-p(x)f' - q(x) f, -p(x) g' - r(x) g)\
+      =Det(f, g;-p(x)f', -p(x) g' - (r(x) - p(x)) g)\
+      = - p(x) W(x) - f g (r(x) - p(x))
+      $
+      注意到一定有：
+      $
+      f g(r(x) - p(x)) >= 0
+      $
+      由一阶方程的比较定理，有：
+      $
+      B e^(-p(x))<= W(x) <= A e^(-p(x))
+      $
+      其中 $A e^(-p(x))$ 是：
+      $
+      cases(
+        W'(x) = -p(x) W(x),
+        W(x_1) = - g(x_1) f'(x_1)
+      )
+      $
+      的解，而 $B e^(-p(x))$ 是：
+      $
+      cases(
+        W'(x) = -p(x) W(x),
+        W(x_1) = - g(x_2) f'(x_2)
+      )
+      $
+      的解，然而不难发现 $- g(x_1) f'(x_1) < 0, - g(x_2) f'(x_2) > 0$ 导致 $A < 0, B > 0$，这是荒谬的！
+    ]
+    #remark[][
+      上面的定理实际上是说 $y$ 前面的系数表示解振荡的频率，系数越大振荡越快。因此有如下对于振动的研究：
+    ]
+    #definition[][
+      设@obj-def 的有至少两个零点的非零解为振动解，有无穷多个零点的非零解为无穷解
+    ]
+    #example[][
+      - 考虑方程：
+        $
+        y'' + p(x) y' + r(x) = 0
+        $<eq-3>
+        其中 $r(x) <= 0$，注意到它可以对：
+        $
+        y'' + p(x) y' = 0
+        $<eq-4>
+        利用比较定理。假如@eq-3 有振动解，则由 @compare-two 可知@eq-4 的任意一个解都有零点，然而@eq-4 有解 $y = 1$ 无零点，矛盾！因此@eq-3 不可能有振动解
+      - 考虑方程：
+        $
+        y'' + q(x) y = 0
+        $
+        其中 $q(x) >= m > 0$，则它任意非零解无限振动，且相邻零点间距离不超过 $pi / sqrt(m)$\
+        首先证明对于任何 $a$, $[a, a + pi / sqrt(m)]$ 的区间都有方程的解即可。考虑方程：
+        $
+        y'' + m y = 0
+        $
+        后面的方程有解：
+        $
+        y = sin (sqrt(m) (x - a))
+        $
+        以 $a, a + pi / sqrt(m)$ 为零点，利用 @compare-two 立得结论。当然这样的区间有无穷多，因此方程的解有无穷多个零点。\
+        注意这个结论不能加强到 $q(x) > 0$，例如：
+        $
+        y'' + 1/(4 x^2) y = 0, x in [1, +infinity]
+        $
+        这是欧拉方程，可以解得：
+        $
+        y = sqrt(x) (c_1 + c_2 ln x)
+        $
+        当然至多只有一个零点
+      - 考虑微分方程：
+        $
+        y'' + q(x) y = 0
+        $
+        且存在非负整数 $n$ 使得：
+        $
+        n^2 < q(x) < (n+1)^2
+        $
+        则方程的任意非零解不是 $2 pi$ 周期的。\
+        如若不然，设 $f$ 是非零的 $2 pi$ 周期解，代入方程不难发现 $q(x) f$ 也是以 $2 pi$ 周期的，而 $f$ 的零点孤立，由 $q$ 的连续性知它应该以 $2 pi$ 为周期，因此有最大最小值。设：
+        $
+        m^2 <= q(x) <= M^2
+        $
+        仿照上面的例子，利用 @compare-two 可以导出 $f$ 的两个相邻零点间的距离在 $pi/M, pi/m$ 之间\
+        设 $f$ 在一个周期上有 $2n$ 个零点，零点分别为：
+        $
+        t_0 < t_1 < ... < t_(2 n) = t_0 + 2 pi
+        $
+        对距离求和，可得：
+        $
+        2n/M pi <= 2 pi <= 2n/m pi\
+        m <= n <= M
+        $
+        然而由条件 $m, M$ 夹在两个连续整数之间，与 $n$ 是整数矛盾！
+      - 考虑微分方程：
+        $
+        y'' + q(y) = f(x)
+        $
+        且存在非负整数 $n$ 使得：
+        $
+        n^2 < q'(y) < (n+1)^2
+        $
+        则方程至多有一个 $2 pi$ 周期解，否则设 $y_1, y_2$ 是两个 $2 pi$ 周期解，容易得到：
+        $
+        (y_1 - y_2)' + q(y_1) - q(y_2) = 0
+        $
+        令 $p(x) = (q(y_1) - q(y_2))/(y_1 - y_2)$，则 $y_1 - y_2$ 成为微分方程：
+        $
+        y'' + p(x) y = 0
+        $
+        的 $2 pi$ 周期解，然而上面的结论表明这样的方程没有 $2 pi$ 周期解，矛盾！
+    ]
+  == 边值问题
+    #definition[][
+      设有微分方程：
+      $
+      cases(
+        (p(x) y')' + (lambda r(x) + q(x)) y = 0,
+        k y(a) + l y'(a) = M y(b) + N y'(b) = 0  
+      )
+      $
+      其中 $p, q, r in C[a, b], p, r > 0, (K, L) != 0, (M, N) != 0$
 
+      该微分方程非平凡解的存在性称为二阶微分方程的边值问题。若对 $lambda = lambda_0$ 方程有非零解 $phi$，则称 $lambda_0$ 为一个特征值，$phi$ 为对应的特征函数。
+    ]<boundary-value>
+    #remark[][
+      这个叫法是因为若设：
+      $
+      A y = ((p y')' + q y)/(-r)
+      $
+      则它是线性算子，而边值问题实际上是求解 $A y = lambda y$ 的问题
+    ]
+    #example[][
+      - 考虑方程：
+        $
+        cases(
+          y'' + lambda y = 0,
+          y'(0) = y'(l) = 0
+        )
+        $
+        - 当 $lambda = -a^2 < 0$ 时，方程的通解为：
+          $
+          y = linearCombinationC(e^(a x), e^(-a x))
+          $
+          计算发现若要符合边值，将有：
+          $
+          cases(
+            C_1 = C_2,
+            C_1 = -C_2
+          )
+          $
+          导出零解
+        - 当 $lambda = 0$ 时方程的解是线性函数，因此每个常函数都是特征函数
+        - 当 $lambda = a^2 > 0$，通解为：
+          $
+          linearCombinationC(cos a x, sin a x)
+          $
+          计算得：
+          $
+          cases(
+            C_2 = 0,
+            - C_1 sin a l + C_2 cos a l = 0
+          )
+          $
+          当且仅当 $a$ 为 $(n pi)/l$ 时有非零解
+        综上，特征值为 $(n^2 pi^2)/l^2, forall n in NN$
+    ]<sin-cos-example>
+    @boundary-value 中的形式当然可以再简化，通过一些简单的线性变换，可设 $a = 0, b = 1$，进一步由 $p > 0$，设：
+    $
+    t = 1/(c_0) integral_(0)^(x) 1/(p(s)) dif s \
+    tilde(y) (t) = y(x(t))
+    $
+    $x(t)$ 存在是因为 $t$ 关于 $x$ 单调上升，有反函数。不难计算得：
+    $
+    p(x) der(y, x) = 1/(c_0) der(tilde(y), t)\
+    der(p(x) der(y, x) , x) = 1/(c_0^2 p(x)) tilde(y)'' 
+    $
+    总之，方程化为了
+    $
+    cases(
+      y'' + (lambda c_0^2 p(x(t))r(x(t)) + c_0^2 p(x(t)) q(x(t))) y = 0,
+      K y(0) + L /(c_0 p(a)) y'(0) = M y(1) + N /(c_0 p(b)) y'(1) = 0)
+    $
+    #lemma[][
+      @boundary-value 中的问题可以化归为以下标准形式：
+      $
+      cases(
+        y'' + (lambda r(x) + q(x)) y = 0,
+        y(0) cos alpha - y'(0) sin alpha = y(1) cos beta - y'(1) sin beta = 0
+      )
+      $<standard-form-boundary-value>
+      其中 $r, q$ 连续，$r > 0, alpha, beta in [0, pi)$
+    ]
+    #theorem[Sturm-Liouville][
+      @standard-form-boundary-value 给出的边值问题有可数多个特征值，且所有特征值形成链：
+      $
+      lambda_0 < lambda_1 < ... < lambda_n < ...
+      $
+      其中 $lambda_n -> +infinity$\
+      设 $phi_n (x)$ 是 $lambda_n$ 对应的特征函数，则 $phi_n$ 恰有 $n$ 个零点
+    ]<sturm-liouville-theorem>
+    #proof[
+      令 $y = phi(x, lambda)$ 是满足：
+      $
+      y(0) = sin alpha, y'(0) = cos alpha
+      $
+      的解。@standard-form-boundary-value 中第一个边值条件已经满足，只需找到 $lambda$ 满足第二个方程。显然 $y$ 不是零解，$y, y'$ 不同时为零，因此可做极坐标变换：
+      $
+      cases(
+        phi = rho cos theta,
+        phi' = rho sin theta
+      )
+      $
+      此时，第二个边值条件等价于 $theta(1) = beta + 2 k pi$
+      计算：
+      $
+      
+      der(theta, x) = der(arctan phi/phi', x) = (phi'^2  - phi phi'' )/(phi^2 + phi'^2) = (phi'^2  + (lambda r + q) phi^2 )/(phi^2 + phi'^2)\
+      = cos^2 theta + (lambda r + q) sin^2 theta
+      $<eq-order1>
+      结合 $theta(0, lambda) = 0$，这是关于 $theta$ 的一阶微分方程，接下来的讨论都是关于这个方程的。
+      - 上式对 $lambda$ 求偏导得到的是关于 $lambda$ 的一阶线性微分方程，可以解得：
+        $
+        partialDer(theta, lambda)  = integral_(0)^(x) e^(integral_(t)^(x) E(s, lambda) dif x) r(t) sin^2 theta  dif t 
+        $
+        （其中 $E(s, lambda) = (lambda r(s) + q(x) - 1) sin(2 theta)$）
+        由条件知被积函数恒正，从而 $theta$ 关于 $lambda$ 严格递增
+      - 观察方程可以发现 $theta = 0$ 时 $theta' = 1$，且当 $lambda$ 充分小时，只要 $theta$ 不太小，就有 $theta' < 0$，我们猜测并证明以下结论：
+        - $theta(x) > 0$\
+          如若不然，假设 $x_0$ 是最小的零点，之前的论述表明 $theta'(x) = 1 > 0$，而 $theta(0) = alpha > 0$，利用介质定理将可构造出更小的零点，矛盾！
+        - 
+          $
+          lim_(lambda -> +infinity) theta(x) = +infinity, forall x_0
+          $
+          设 $h = min r > 0$，将有：
+          $
+          theta' >= (lambda h + q) sin^2 theta + cos^2 theta 
+          $
+          取 $lambda$ 充分大，可设 $lambda h + q > n + 1$，将有：
+          $
+          theta' >= 1 + n sin^2 theta
+          $
+          由比较定理，只需证明 $theta' = 1 + n sin^2 theta$ 的解充分大即可。事实上 #TODO
+        - 
+          $
+          lim_(lambda -> -infinity) theta(x) = 0, forall x_0
+          $
+          任取 $epsilon > 0$，当 $lambda$ 充分小时可以证明，$theta$ 落在线段 $(0, alpha) -> (1, epsilon)$ 时，一定有 $theta' < 0$，因此 $theta$ 被限制在该折线和 $y = 0$ 之间，当然意味着 $theta(1) < epsilon$，证毕
+      以上论断表明，$theta(1, lambda) = beta + 2 k pi$ 对于每个 $k in NN$ 都恰有一解，且每个解都逐个增大。此外，特征函数为：
+        $
+        phi(x) = rho(x) sin (theta_(lambda_k) (x))
+        $
+        由介质定理，至少：
+        $
+        theta_(lambda_k) (x) = j pi
+        $
+        对于 $j = 1, 2, ..., k$ 都有一个解 $x_k$，并且注意到 $forall x with theta(x) = i pi, i in ZZ$，都有：
+        $
+        phi'(x) = cos^2 theta(x) + (lambda r(x) + q(x)) sin^2 theta(x) = 1
+        $
+        换言之：
+        $
+        theta_(lambda_k) (x) = j pi
+        $
+        只能有一个解（否则两个相邻解的导数值必然反号）\
+        同时，对于 $j > k$， $theta_(lambda_k) (x) = j pi$ 将无零点，否则由于 $theta(0), theta(1) < j pi$，至少产生两个零点，与上面的论述矛盾！
+        
+    ]
+  == 特征函数系的正交性
+    #lemma[][
+      在 @sturm-liouville-theorem 中，每个特征值对应的特征函数彼此相关（特征空间只有一维）
+    ]
+    #proof[
+      假设 $phi, psi$ 是 $lambda_n$ 的特征函数，将有：
+        $
+        Det(phi(0), phi'(0);psi(0), psi'(0)) = 0
+        $
+        由 Wronskian 行列式的结论，这意味着 $phi, psi$ 线性相关
+    ]
+    #theorem[][
+      在 @sturm-liouville-theorem 中，每个特征值对应的特征函数彼此正交，也即：
+      $
+      integral_(0)^(1) r(x) phi_m phi_n dif x = 0, m != n 
+      $
+    ]
+    #proof[
+      有两个方程：
+      $
+      cases(
+        phi''_n + (lambda_n r + q)phi_n = 0,
+        phi''_m + (lambda_m r + q)phi_m = 0
+      )
+      $
+      两式分别乘以 $phi_m, phi_n$ 并相减，得到：
+      $
+      phi''_n phi_m - phi''_m phi_n + (lambda_n - lambda_m) r phi_m phi_n = 0
+      $
+      只需计算：
+      $
+      &integral_(0)^(1) phi''_n phi_m - phi''_m phi_n dif x \
+      &= integral_(0)^(1) (phi'_n phi_m - phi_n phi'_m)' dif x\
+      &=  (phi'_n phi_m - phi_n phi'_m)|_0^1\
+      &= 0 
+      $
+      证毕
+    ]
+    #remark[][
+      有了正交性，对于任意的以上形式的二阶线性微分方程，我们都可以考虑在特征函数系上做傅里叶展开。事实上，@sin-cos-example 说明了通常 $sin, cos$ 产生的傅里叶展开是本章定理的一种特殊情况。
+    ]
+= 一阶偏微分方程
+  == 首次积分
+    #let yv = $bold(y)$
+    #let xv = $bold(x)$
+    #definition[][
+      在微分方程：
+      $
+      der(yv, x) = f(x, yv), f in C^1
+      $
+
+      中，称 $H(xv, yv)$ 为首次积分，若 $H$ 不是常数且在方程的任意解曲线上取常值
+    ]
+    #example[][
+      - 考虑方程：
+        $
+        cases(
+          der(x,t) = -y,
+          der(y, t) = x
+        )
+        $
+        则 $x^2 + y^2$ 就是一个首次积分，既然设 $x, y$ 是一族解，将有：
+        $
+        (x^2 + y^2)' = 2 x x' + 2 y y' = 0
+        $
+      - 一般的，方程：
+        $
+        cases(
+          der(x,t) = f(y),
+          der(y, t) = g(x)
+        )
+        $
+        则 $integral f(y) - integral g(x)$ 就是一个首次积分，既然：
+        $
+        (integral f(y) - integral g(x))' = f(y)y' - g(x)x' = 0
+        $
+      - 考虑方程：
+        $
+        cases(
+          der(x,t) = y - x(x^2 + y^2 - 1),
+          der(y, t) = -x - y(x^2 + y^2 - 1)
+        )
+        $
+        注意到：
+        $
+        (x^2 + y^2)' = 2 x' x + 2 y' y = -x^2 (x^2 + y^2 - 1) - y^2 (x^2 + y^2 - 1) \
+        = (x^2 + y^2) - (x^2 + y^2)^2
+        $
+        可以解出 $x^2 + y^2$ 进而产生一个首次积分\
+        同时：
+        $
+        x y' - y x' = -x^2 - y^2\
+        (y/x)' = -1 - (y/x)^2
+        $
+        也可以解出 $y/x$ 产生一个首次积分。事实上，可以发现方程有唯一的平衡点 $(0, 0)$ 和孤立的有界闭解曲线（称为极限环）。对于形如：
+        $
+        cases(
+          x' = f(x, y),
+          y' = g(x, y)
+        )
+        $
+        其中 $f, g$ 是不超过 $n$ 次的多项式，这个系统称为 $n$ 次系统。$n$ 次系统极限环个数的上界及极限环的分布情况是希尔伯特第十六问题的重要部分，至今二次系统的情况都仍未解决，目前最多举出了四个极限环的例子，并且证明了每个二次系统的极限环个数都是有限的。
+    ]
+    #lemma[][
+      $H(x, yv)$ 是 $yv' = f(x, yv)$ 的首次积分当且仅当：
+      $
+      partialDer(H, x) + partialDer(H, yv) dot der(yv, x) =  partialDer(H, x) + partialDer(H, yv) dot  f(x, yv) = 0
+      $
+    ]
+    #proof[
+      由定义显然可得
+    ]
+    验证首次积分是非常简单的，然而找到一个首次积分是极其困难的。
+    #theorem[][
+      首次积分可以将原方程降维。具体而言，假设首次积分形如：
+      $
+      phi(yv)
+      $
+      由于 $phi(yv) !=0$，若还有 $der(phi(yv), yv) != 0$，便可在局部找到隐函数消去若干变量 
+    ]
+    #definition[][
+      设 $phi_i$ 是 $n$ 个首次积分，如果：
+      $
+      abs(partialDer((phi_1, phi_2, ..., phi_n), (yv_1, yv_2, ..., yv_n))) != 0
+      $
+      则称 $phi_1, phi_2, ..., phi_n$ 为相互独立的首次积分
+    ]
+    #theorem[][
+      $n$ 维自治系统至多 $n$ 个独立的首次积分，且在局部恰有 $n$ 个独立的首次积分。设 $phi_i$ 是 $n$ 个独立的首次积分，则任何首次积分在局部都形如 $h(phi_1, ..., phi_n), H in C^1$
+    ]<first-integral>
+    #proof[
+      第一部分我们不证明，可以参考教材
+
+      对于第二个结论，设 $c = vec(c_1, dots.v, c_n)$，在任何一个点 $(x_0, c)$ 由存在唯一性可以找到解 $y = phi(x, c)$，显然有：
+      $
+      partialDer(phi, c)|_(x = x_0) = id
+      $
+      因此由隐函数定理，可以反解出：
+      $
+      c = psi(x, y)
+      $
+      并有：
+      $
+      der(y, c) = partialDer(phi, c)\
+      der(c, y) = Inv((partialDer(phi, c)))
+      $
+      这个 $psi$ 当然就是局部的首次积分，恰有 $n$ 个独立的分量（既然在 $x_0$ 处上式表明偏导是 $id$）也即 $n$ 个首次积分。
+
+      第三部分是类似的，也不证明。
+    ]
+  == 一阶线性齐次偏微分方程
+    #definition[一阶线性齐次偏微分方程][
+      称：
+      $
+      A(xv) der(u, xv) = f(xv)
+      $
+      是一阶线性齐次偏微分方程
+    ]
+    #definition[特征方程][
+      称：
+      $
+      der(x_i, A_i (xv)) = der(x_j, A_j (xv))
+      $
+      为齐次一阶线性偏微分方程的特征方程，它可以看成关于某个分量的 $n-1$ 阶常微分方程
+    ]
+    #theorem[][
+      设特征方程有 $n-1$ 个独立的首次积分 $phi_i$ ，则原偏微分方程的通解恰为：
+      $
+      Phi(phi_1, phi_2, ..., phi_(n-1))
+      $
+      其中 $Phi$ 是任何 $C^1$ 函数
+    ]
+    #proof[
+      设 $A_1 (xv) != 0$，特征方程实际上形如：
+      $
+      der(x_i, x_1) = (A_i (x))/(A_1 (x))
+      $
+      不难发现 $u$ 是偏微分方程的解当且仅当 $u$ 是常数或者是特征方程的一个首次积分，由 @first-integral 立得结论。
+    ]
+    #example[][
+      - 考虑方程：
+        $
+        (x + y) partialDer(u, x) - (x  - y) partialDer(u, y) = 0
+        $
+        其特征方程为：
+        $
+        der(y, x) = (y  - x)/(y + x)
+        $
+        可以解出一个首次积分：
+        $
+        (x^2 + y^2)e^(2 arctan y/x) 
+        $
+        因此原方程的通解为：
+        $
+        phi((x^2 + y^2)e^(2 arctan y/x) )
+        $
+      - 
+        $
+        sqrt(x) partialDer(f, x) + sqrt(y) partialDer(f, y) + z partialDer(f, z) = 0
+        $
+        且 $f(x, y, 1) = x y$，求 $f$\
+        类似的可以解出：
+        $
+        f = phi(sqrt(x) - sqrt(y), sqrt(y) - ln z)\
+        $
+        代入可得：
+        $
+        x y = f(x, y, 1) = phi(sqrt(x) - sqrt(y), sqrt(y) )
+        $
+        做变量替换：
+        $
+        cases(
+          u = sqrt(x) - sqrt(y),
+          v = sqrt(y)
+        )
+        $
+        可反解出 $phi$
+    ]
+  == 一阶拟线性偏微分方程
+    #definition[一阶拟线性偏微分方程][
+      称：
+      $
+      A(xv, u) der(u, xv) = B(xv, u)
+      $
+      是一阶拟线性偏微分方程
+    ]
+    #theorem[][
+      #let sumf = sumf.with(lower: $1$, upper: $n$)
+      对于一阶拟线性偏微分方程，考虑微分方程：
+      $
+      sumf() A_i (xv, u) der(Phi, x_i) + B(xv, u) der(Phi, u) = 0
+      $<eq-t>
+      这是关于 $xv, u$ 的一阶线性齐次偏微分方程，设其解为：
+      $
+      Phi(xv, u)
+      $
+      则 $Phi(xv, u) = 0$ 对应的 $u$ 就是原方程的解。反之，任意原方程的解 $u = phi(xv)$ 都有：
+      $
+      Phi = phi(xv) - u
+      $
+      是@eq-t 的解
+    ]
+    #theorem[][
+      若称：
+      $
+      der(x_i, A_i (xv)) = der(x_j, A_j (xv)) = der(u, B (xv, u))
+      $
+      为拟线性方程的特征方程，且有 $n$ 个独立的首次积分，则原方程的通解恰为：
+      $
+      Phi(phi_1, phi_2, ..., phi_n) = 0
+      $
+    ]

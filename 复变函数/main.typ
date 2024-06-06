@@ -373,7 +373,7 @@
     ]
     #theorem[][
       在单连通区域上，每个调和函数都有共轭调和函数
-    ]
+    ]<harmonic_conjugate>
     #proof[
       注意到复平面的连通区域一定分段路径连通，取定 $P = (x_0, y_0)$，对于任意一点 $z$，找到分段线性的道路 $gamma_1, gamma_2 : P -> z$\
       取 $v(z) = integral_(gamma_1) partialDer(u, x) dif y - partialDer(u, y) dif x$，为了验证良定义性，需要计算 $gamma_1, gamma_2$ 给出相同的函数值\
@@ -903,7 +903,7 @@
     $
     f(z) = 1/(2 pi i) integral_(diff omega) f(w)/(w - z) dif w
     $
-  ]
+  ]<Cauthy-value>
   #proof[
     由之前的 Cauthy 定理，只需要考虑 $omega$ 是某个任意小的球形开邻域，则：
     $
@@ -1254,7 +1254,7 @@
         - 存在 $z_0 != 0$，使得 $norm(f(z_0)) = norm(z_0)$
         - $f'(0) = 1$
         - 存在 $theta$ 使得 $f(z) = z e^(i theta)$
-    ]
+    ]<Schwarz>
     #proof[
       - 对它做级数展开得到：
         $
@@ -1963,7 +1963,7 @@
     ]
     #theorem[Montel][
       $FF subset H(G)$ 是正规的当且仅当 $FF$ 局部有界
-    ]
+    ]<Montel>
     #proof[
       设正规性成立，假设不局部有界，则可得到点 $z_0$ 使得 $FF$ 中有一列函数使得：
       $
@@ -1987,7 +1987,7 @@
     ]
     #theorem[][
       设 ${f_n} subset C(G, CC)$ 在 $G$ 上内闭一致收敛于 $f in C(G, CC)$，且 $f_n in H(G)$，则 $f in H(G)$，且 $f$ 的 $k$ 阶导数就是 $f_n$ 的 $k$ 阶导数的极限
-    ]
+    ]<analytic-continuity>
     #proof[
       $f$ 的连续性是显然的。至于解析性，利用 @Morera 定理，只需证明内部某个三角形边界上的积分为零即可。可以找到一个略大的紧集，函数列一致收敛，进而由积分极限的换序性质，积分为零。
 
@@ -2004,7 +2004,7 @@
       $
       exists N in NN, forall n > N, f, f_n "在 " B(a, r) "内有相同的零点个数"
       $
-    ]
+    ]<Harwitz>
     #proof[
       设 $m = inf_(diff closedBall(a, r)) norm(f(z)) > 0$，由一致收敛性，当 $n$ 充分大时有：
       $
@@ -2018,7 +2018,344 @@
     ]
   == 黎曼映射定理
     #theorem[黎曼映射定理|Riemann mapping][
-      设 $D$ 是单连通区域且不为 $CC$ ，$a in D$，则存在唯一的双全纯同胚 $f: D -> B(0, 1)$ 使得 $f(a) = 0, f'(a) > 0 in RR$
+      设 $D$ 是单连通区域且不为 $CC$ ，$a in D$，则存在唯一的双全纯同胚 $f: D -> B(0, 1)$ 使得 $f(a) = 0, f'(a) > 0 in RR$，这个 $f$ 也被称为黎曼映射
     ]<Riemann-mapping>
+    #proof[
+      先证明比较简单的唯一性，假设有两个函数 $f, g$ 满足条件，则 $h := g Inv(f) : B(0, 1) -> B(0, 1)$ 也是双全纯的，且：
+      $
+      h(0) = 0\
+      h'(0) = g'(a) 1/(f'(a)) > 0
+      $
+      由对称性，不妨设 $norm(h'(0)) >= 1$，由 @Schwarz 可得 $norm(h'(0)) = 1$，继而：
+      $
+      exists c, norm(c) = 1 , h(z) = c z\
+      h'(0) = c > 0
+      $
+      从而 $c = 1$ ，证毕
 
-    
+      再证明比较复杂的存在性：
+      定义：
+      $
+      FF = {f in H(G) | f: G -> B(0, 1) "是单叶解析的且" f(a) = 0, f'(a) > 0}
+      $
+      显然 $FF$ 是（局部）有界的，根据 @Montel 它是正规族\
+      #lemmaLinear[][
+        $FF != emptyset$
+      ]<lem-1>
+      #proof[
+        由于 $G != CC$，任取 $b in CC - G$，利用单连通性可以构造 $g: G -> CC$ 使得：
+        $
+        g^2 = z - b
+        $
+        （注意到 $z - b$ 在 $G$ 上不零化，结合单连通性即可找到平方根）\
+        同时上式右侧是单射，导出 $g$ 是单射。事实上，$g(z_1) + g(z_2) = 0$ 也能导出 $z_1 = z_2$，因此任意两个关于原点对称的点至多一个落在 $g(G)$ 中。我们接下来的目标便是证明 $g(G)$ 确实落在某个半平面之中。
+
+        由开映射原理，设 $B(g(a), r) subset g(G)$，上面结论表明 $B(-g(a), r) subset CC - g(G)$（同时也表明不可能 $g(a) = 0$）几何上来说，由于 $g(G)$ 也是单连通区域，当然会落在某个方向上的一半平面中，而半平面与 $B(0, 1)$ 的共形同胚是熟知的。
+      ]
+      #lemmaLinear[][
+        $overline(FF) = FF union {0}$
+      ]<lem-2>
+      #proof[
+        注意到 $FF$ 中函数的极限首先当然解析，且 $f(a) = 0, f'(a) >= 0$\
+        假设 $f != 0$，我们需要证明：
+        - $f(G) subset B(0, 1)$，既然 $f(G) subset diff(B(0, 1))$ 且是开集，当然应该 $f(G) subset B(0, 1)$
+        - $f$ 是单射，既然任取 $z_1, z_2$ 假设 $f(z_1) = f(z_2)$，总可找到 $r$ 使得：
+          $
+          z_2 in.not B(z_1, r)
+          $
+          考虑 $f_n (z) - f_n (z_2)$，利用 @Harwitz 可得 $f$ 与 $f_n$ 在 $B(z_1, r)$ 上有相同的零点个数，进而它们都没有零点。进而就有：
+          $
+          f(z_1) != f(z_2)
+          $
+        - $f'(a) > 0$，既然 $f$ 是单射这就是 @univalent-is-homeomorphism
+      ]
+      考虑求导算子:
+      $
+      funcDef(D, H(G), CC, f, f'(a))
+      $
+      @analytic-continuity 给出了它的连续性。如此，在 $overline(FF)$ 中取得 $D(FF)$ 的最大值点（注意到 $D(overline(FF)) subset RR^+$，且连续函数在紧集上可以取得最大值）并有 $f != 0 => f in FF$，断言这个 $f$ 满足 $f(G) = B(0, 1)$ 进而就是我们要找的 $f$\
+      如若不然，则可设 $w in B(0, 1) - f(G)$，令：
+      $
+      h_2 (z) = (f(z) - w)/(1 - overline(w) f(z))
+      $
+      显然它是解析函数，且在 $G$ 上无零点。既然 $G$ 是单连通的，我们可以获得它的平方根，也即：
+      $
+      exists h(z), h^2 (z) = h_2 (z)
+      $<h-def>
+      注意到：
+      $
+      phi(z) := (z - h(a))/(1 - z overline(h(a)))
+      $
+      是 $B(0, 1)$ 到自身的共形同胚，定义：
+      $
+      g(z) = norm(h'(a))/(h'(a)) (h(z) - h(a))/(1 - overline(h(a)) h(z)) := norm(h'(a))/(h'(a)) phi(h(z))
+      $
+      可以验证：
+      - $g(G) subset B(0, 1)$
+      - $g(a) = 0$
+      - $g$ 是单射，既然莫比乌斯变换是双射，只需 $h$ 单 $arrow.l.double h_2$ 单，利用莫比乌斯变换和 $f$ 单可知结论成立
+      同时，计算得：
+      $
+      g'(a) = norm(h'(a))/(1 - norm(h(a))^2) 
+      $
+      在@h-def 中求导，得：
+      $
+      2 h(a) h'(a) = f'(a) (1 - norm(w)^2)
+      $
+      同时注意到 $norm(h'(a)) = norm(w)$，一番计算最终可得：
+      $
+      g'(a) = (f'(a) (1 + norm(w)))/(2 sqrt(norm(w))) >= f'(a)
+      $
+      上面利用了均值不等式，取等当且仅当 $norm(w) = 1$，这是不可能的，因此：
+      $
+      g'(a) > f'(a)
+      $
+      以上所有推理导出 $g in FF, D(g) > D(f)$，与 $f$ 的最大性矛盾！
+      
+    ]
+    #remark[][
+      一个可能的推广是所谓的 quasi-conformal mapping （类似于共形映射把圆映成圆，拟共形映射将圆映成椭圆），这是一种共形映射的推广，也可以对黎曼映射定理作出推广。另一个方向是考虑黎曼映射是否能连续延拓到边界上（当然，一般来说是不行的），但是在一些条件下确实可以：
+      #theorem[][
+        假设单连通区域 $G$ 的边界是一个简单闭曲线，则黎曼映射可以连续延拓到：
+        $
+        f: overline(G) -> overline(B(0, 1))
+        $
+      ]<Riemann-mapping-extension>
+      然而许多时候简单闭曲线的条件是过强的，例如上半平面中随便删去一条从 $RR$ 上出发的简单曲线，得到的区域仍是单连通区域，然而黎曼映射当然难以进行连续延拓。此时可以推广到 prime ends 的语言上进行解释
+    ]
+= 调和函数|Harmonic function
+  == 泊松核
+    #let suminf(n) = $sum_(#n = - infinity)^(+infinity)$
+    #definition[][
+      设 $G subset CC, f: G -> CC$ 称 $f$ 为调和函数，如果 $f$ 有连续偏导且：
+      $
+      Delta u = (diff^2 u) / (diff x^2) + (diff^2 u) / (diff y^2) = 0
+      $<Laplace-equation>
+    ]
+    #definition[泊松核][
+      定义：
+      $
+      P_(r) (theta) = suminf(n) r^(abs(n)) e^(i n theta), where r in [0, 1)
+      $
+      称为泊松核
+    ]
+    #lemma[][
+      $
+      Re (
+        (1 + r e^(i theta))
+        /
+        (1 - r e^(i theta))
+        )
+      = P_r (theta)\
+      = (1 - r^2)/(1 - 2 r cos theta + r^2)
+      $
+    ]
+    #proof[
+      对：
+      $
+      (1 + r e^(i theta))
+        /
+        (1 - r e^(i theta))
+      $
+      做级数展开，可以写成：
+      $
+      (1 + r e^(i theta))
+        /
+        (1 - r e^(i theta))
+        = (1 + r e^(i theta)) sum_(n=0)^(+infinity) r^n e^(i n theta)\
+        = 1 + 2 sum_(n=1)^(+infinity) r^n e^(i n theta)\
+      $
+      取实部，有：
+      $
+      Re (1 + r e^(i theta))
+        /
+        (1 - r e^(i theta))
+      = 1 + sum_(n=1)^(+infinity) r^n( e^(i n theta) + e^(-i n theta))\
+      = suminf(n) r^(abs(n)) e^(i n theta)
+      $
+      证毕
+    ]
+    #lemma[][
+      - $1/(2 pi) integral_(-pi)^(pi) P_r (theta) dif theta = 1$
+      - $P_r (theta) > 0, forall theta$
+      - $P_r (theta) < P_r (delta) where 0 < theta < abs(delta) <= pi$
+      - 对于 $theta in [delta, pi] union [-pi, -delta] where delta in (0, pi)$，有：
+        $
+        lim_(r -> 1^-) P_r (theta) = 0
+        $
+        且是一致收敛
+    ]
+  == Dirichlet Problem
+    #definition[][
+      设 $G$ 满足 $forall f in C(diff G, RR), exists u in C(overline(G), RR), u|_(diff G) = f$ 且 $u$ 在 $G$ 中调和，则称 $G$ 是 Dirichlet 区域
+    ]
+    在 Dirichlet 研究太阳系的稳定性时，提出了什么区域是 Dirichlet 区域的问题，这个问题在数学上被称为 Dirichlet Problem。一般的解决方法非常困难，我们只对单位圆盘解决，也已经十分困难了。
+    #lemma[Leibniz' s rule][
+      设 $gamma subset G$ 是可求长曲线，$G$ 是区域，$phi in C(gamma times G, C)$，令：
+      $
+      g(z) = integral_(gamma) phi(z, w) dif w
+      $
+      则 $g$ 在 $G$ 上连续。若 $partialDer(phi, z)$ 连续，则 $g$ 是解析函数且：
+       $
+      g(z) = integral_(gamma) partialDer(phi, z)(w, z) dif w
+       $
+    ]<Leibniz-rule>
+    #proof[
+      将实分析中同样的定理证明搬到复数域即可
+    ]
+    #theorem[][
+      单位圆盘 $D = B(0, 1)$ 是 Dirichlet 区域，更进一步，$u$ 是唯一存在的，且形如：
+      $
+      u(r e^(i theta)) = 1/(2 pi) integral_(-pi)^(pi) P_r (theta - t) f(e^(i t)) dif t, forall r in [0, 1), theta in [0, 2pi)
+      $
+    ]
+    #proof[
+      #let ze = $e^(i theta)$
+      令：
+      $
+      u(r e^(i theta)) = cases(
+        1/(2 pi) integral_(-pi)^(pi) P_r (theta - t) f(e^(i t)) dif t quad r in [0, 1),
+        f(e^(i theta)) quad r = 1
+      )
+      $
+      设 $z = ze$，将有：
+      $
+      u(z) = 1/(2 pi) Re (integral_(-pi)^(pi) (1 + r ei((theta - t))) / (1 - r ei((theta - t))) f(e^(i t)) dif t)\
+      = 1/(2 pi) Re (integral_(-pi)^(pi) (ei(t) + z) / (ei(t) - z) f(e^(i t)) dif t)\
+      $
+      - @Leibniz-rule 给出：
+        $
+        integral_(-pi)^(pi) (ei(t) + z) / (ei(t) - z) f(e^(i t)) dif t
+        $
+        关于 $z$ 解析，因此 $u(z)$ 作为解析函数的实部确实是调和函数。
+      - 接下来证明 $u$ 在边界上的连续性。不失一般性，只需计算在 $1$ 处的连续性即可，也即对于 $forall epsilon > 0$ 估计：
+        $
+        norm(u (ei(theta)) - f(1)) = norm(1/(2 pi) integral_(-pi)^(pi) P_r (theta - t) (f(e^(i t)) - f(1)) dif t)\
+        $
+        注意到泊松核在远离 $0$ 处一致收敛于零，只需对任意小的 $delta$ 估计：
+        $
+        norm(1/(2 pi) integral_(-epsilon)^(epsilon) P_r (theta - t) (f(e^(i t)) - f(1)) dif t)\
+        <= 1/(2 pi) integral_(-epsilon)^(epsilon) P_r (theta - t) norm(f(e^(i t)) - f(1)) dif t\
+        $
+        显然取得 $delta$ 足够小可以使得：
+        $
+        norm(f(e^(i t)) - f(1)) < epsilon
+        $
+        将有上式：
+        $
+        &<= ( 1/(2pi) integral_(-epsilon)^(epsilon) P_r (theta - t) dif t) epsilon\
+        &<= ( 1/(2pi) integral_(-pi)^(pi) P_r (theta - t) dif t) epsilon\
+        &= epsilon
+        $
+        边界上的连续性证毕
+      - 最后验证唯一性。来自于以下的引理：
+        #lemma[][
+          设 $u$ 在 $B(0, 1)$ 上调和，在边界处连续且为零，则 $u = 0$
+        ]<lemma-harmonic-zero>
+        #proof[
+          有许多种证明方法，例如 @harmonic_conjugate 给出 $u$ 可以补充为解析函数 $f$\
+          再利用 @Cauthy-value 可得 $u = 0$\
+          或者取 $u$ 在区域闭包上的最大值和最小值，利用下面的 @Maximum-Minimal-principle 即可
+        ]
+      
+    ]
+    #remark[][
+      黎曼映射定理告诉我们，单位圆盘的内部与任何非 $CC$ 的单连通区域都差不多。如果黎曼映射可以连续延拓到边界，容易想到单连通区域的 Dirichlet 性立刻化归到单位圆盘上。@Riemann-mapping-extension 给出至少边界是约当曲线时上面说的连续延拓是成立的。
+    ]
+    #corollary[][
+      设 $u$ 在 $B(a, R)$ 上调和，在边界处连续，则有 $forall r < R$：
+      $
+      u(a + r ei(theta)) = 1/(2 pi) integral_(-pi)^(pi) P_r (theta - t) u(a + R e^(i t)) dif t\
+      = 1/(2 pi) integral_(-pi)^(pi) (R^2 - r^2)/(R^2 - 2 r R cos theta + r^2) u(a + R e^(i t)) dif t\
+      $
+      更进一步，若 $u(x) >= 0$，则有：
+      $
+      (R - r)/(R + r) u(a) <= u(a + r ei(theta)) <= (R + r)/(R - r) u(a)
+      $
+    ]
+    #proof[
+      公式的成立性由上面定理立得。至于不等式，注意到：
+      $
+     (R - r)/(R + r)u(a + R e^(i t))  <=  (R^2 - r^2)/(R^2 - 2 r R cos theta + r^2) u(a + R e^(i t)) <= (R + r)/(R - r) u(a + R e^(i t))
+      $
+      两边积分并注意到：
+      $
+      1/(2 pi) integral_(-pi)^(pi)  u(a + R e^(i t)) dif t = u(a)
+      $
+      来自于在原来公式中取 $r = 0$ ，即可得到结论
+    ]
+  == 平均值定理与最大/最小值原理
+    #theorem[Mean Value][
+      设 $u: G -> RR$ 上调和，$closedBall(a, r) subset G$，则：
+      $
+      u(a) = 1/(2 pi) integral_(-pi)^(pi) u(a + r e^(i theta)) dif theta
+      $<mean-value-equation>
+    ]<mean-value-harmonic>
+    #proof[
+      类似 @lemma-harmonic-zero 的证明，化归到复解析情形即可
+    ]
+    #theorem[Maximum/Minimal Principle][
+      设 $u: G -> RR$ 是连续函数，且满足@mean-value-equation 给出的平均值条件。若 $exists a in G$ 使得 $u(a)$ 是区域上的最大值（或最小值），则 $u(a)$ 是常数
+    ]<Maximum-Minimal-principle>
+    #proof[
+      只证最大值情形，最小值取负即可。假设 $a$ 是最大值点，由 @mean-value-equation 有：
+      $
+      u(a) = 1/(2 pi) integral_(-pi)^(pi) u(a + r e^(i theta)) dif theta
+      $
+      借用下面的引理：
+      #lemma[][
+        设 $f: [0, 1] -> RR$ 是连续函数，且：
+        $
+        f(x) <= M\
+        integral_(0)^(1) f(x) dif x = M
+        $
+        则 $f(x) = M$
+      ]
+      #proof[
+        也就是证明若 $f(x) >= 0, integral_(0)^(1) f(x) dif x = 0$ 则 $f(x) = 0$，这是实分析的经典结论
+      ]
+      可得 $forall z in diff B(a, r), u(z) = u(a)$，进而 $f$ 在 $a$ 附近任何一个圆盘上是解析函数。\
+      对于区域内任意一点，找到一个路径并对路径做有限覆盖，不断利用上面的结论可得区域内任何一点处的函数值都是 $u(a)$
+    ]
+    #theorem[][
+      满足@mean-value-equation 的连续函数一定是调和函数
+    ]
+    #proof[
+      有些复杂，我们不证明，但是结论需要了解
+    ]
+    #definition[次/超调和函数|subharmonic/super harmonic function][
+      设 $u: G -> RR$ 上连续，且有：
+      $
+      u(a) <= 1/(2 pi) integral_(-pi)^(pi) u(a + r e^(i theta)) dif theta
+      $
+      则称 $u$ 是次调和函数。类似地，若不等号反向，则称 $u$ 是超调和函数
+    ]
+    考试内容到此为止
+= 黎曼 $zeta$ 函数
+  #definition[黎曼 $zeta$ 函数][
+    定义：
+    $
+    zeta(s) = sum_(n=1)^(+infinity) 1/n^s = product_(p "is prime" ) (1 - p^(-s))^(-1), Re s > 1 
+    $
+  ]
+  #theorem[素数定理][
+    设 $pi(T)$ 是不超过 $T$ 的素数个数，则有：
+    $
+    pi(T) tilde "Li"(T) = integral_(2)^(T) 1 / (ln u) dif u tilde T / (ln T)  
+    $
+    20世纪的工作表明：
+    $
+    pi(T) = "Li"(T) + O(sqrt(T) ln T)
+    $
+    等价于黎曼猜想
+  ]
+  #theorem[Hober][
+    设 $M$ 是有常曲率 $-1$ 的紧 Riemann 曲面，
+    $
+    pi(T) = {gamma "是素的闭测地线" | l(gamma) <= T}
+    $
+    则 $exists alpha in (0, 1)$，有：
+    $
+    pi(T) = "Li"(e^T) + O(e^(alpha T))
+    $
+  ]

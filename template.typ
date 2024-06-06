@@ -29,6 +29,9 @@
 
 #let Gal = math.op("Gal")
 #let Hom = math.op("Hom")
+#let Ext = math.op("Ext")
+#let Ob = math.op("Ob")
+#let cone = math.op("cone")
 #let Proj = math.op("Proj")
 #let Spec = math.op("Spec")
 #let Spv = math.op("Spv")
@@ -101,6 +104,15 @@
 #let linearCombinationb = linearCombination.with(name: $b$)
 #let linearCombinationlambda = linearCombination.with(name: $lambda$)
 #let linearCombinationmu = linearCombination.with(name: $mu$)
+
+#let defaultSum = (
+  Var: $n$,
+  Lower: $0$,
+  Upper: $+infinity$
+
+)
+#let sumf(var: defaultSum.Var, lower: defaultSum.Lower, upper: defaultSum.Upper) = $sum_(#var = #lower)^(#upper)$
+
 
 #let emptyArrow(s, e) = arr(str(s), str(e), $$)
 #let coker = math.op("coker")

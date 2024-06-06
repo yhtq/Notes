@@ -1155,8 +1155,8 @@
         $
         它们当然在 $coker(alpha)$ 中对应相同的等价类
       
-      我们将有结论：
-      - #align(center)[#commutative-diagram(
+      将有：
+      #align(center)[#commutative-diagram(
         node((1, 0), $ker alpha$, "3"),
         node((1, 1), $coker alpha$, "4"),
         node((2, 0), $ker beta$, "5"),
@@ -1172,7 +1172,52 @@
         
         ]
         给出正合列
-      - 若 $$
+      
+      此外，若：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $0$, "1"),
+      node((1, 0), $Y'$, "3"),
+      node((1, 1), $X'$, "4"),
+      node((2, 0), $Y$, "5"),
+      node((2, 1), $X$, "6"),
+      node((3, 0), $Y''$, "7"),
+      node((3, 1), $X''$, "8"),
+      node((4, 1), $0$, "9"),
+      node((4, 0), $0$, "10"),
+      node((0, 1), $0$, "11"),
+      arr("1", "3", $$),
+      arr("4", "3", $alpha$),
+      arr("3", "5", $mu$),
+      arr("4", "6", $f$),
+      arr("6", "5", $beta$),
+      arr("5", "7", $nu$),
+      arr("6", "8", $g$),
+      arr("8", "7", $gamma$),
+      arr("8", "9", $$),
+      arr("7", "10", $$),
+      arr("11", "4", $$),
+      )
+      ]
+      是两列正合列，则结论的正合列变成：
+      #align(center)[#commutative-diagram(
+        node((0, 0), $0$, "0"),
+        node((1, 0), $ker alpha$, "3"),
+        node((1, 1), $coker alpha$, "4"),
+        node((2, 0), $ker beta$, "5"),
+        node((2, 1), $coker beta$, "6"),
+        node((3, 0), $ker gamma$, "7"),
+        node((3, 1), $coker gamma$, "8"),
+        node((4, 1), $0$, "9"),
+        arr("3", "5", $f$),
+        arr("4", "6", $mu$),
+        arr("5", "7", $g$),
+        arr("6", "8", $nu$),
+        arr("7", "4", $delta$),
+        arr("0", "3", $$),
+        arr("8", "9", $$),
+        )
+        
+        ]
     ]
     #proof[
       - 除了 $delta$ 处之外的结论都是显然的，只证明 $delta$ 处。有：
@@ -1231,8 +1276,6 @@
         )
         
       ]
-      #TODO
-
       最终给出上同调群的长正合列：
       #align(center)[#commutative-diagram(
         node((0, 0), $dots.v$, "2"),
@@ -1253,6 +1296,9 @@
         emptyArrow(8, 9),      )
         
       ]
+    ]
+    #proof[
+      在下半学期给出
     ]
     #corollary[][
       - 若 $X^*, Y^*, Z^*$ 之中有两个已经正合，则第三个也正合

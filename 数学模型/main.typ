@@ -2293,5 +2293,204 @@
       - 随机取 $A$ 的一行，设为 $i$ 行，更新 $x_k$ 为 $x_(k+1)$，仅用该行更新 $x_(k+1)$ 其余分量不变
       可以证明，算法的结果逼近于某个参考解（未必是真解）。该算法用于当 $A$ 非常大以致超过（内存）存储能力时，以时间换空间的策略。
     ]
+= 电子模型和疾病模型
+  本节中涉及两个具体的模型，医学上的疾病模型采取的是典型的自上而下的建模方式，而电子模型是自下而上的建模方式。
+  == 白癜风的 ODE 模型
+    医学上可以假设白癜风的发生过程满足微分方程：
+    $
+    cases(
+      der(phi, t) = k_phi sigma(I, M) - lambda_phi phi,
+      der(I, t) = k_I phi - lambda_I I,
+      der(M, t) = - lambda_M sigma(I, M),
+      sigma(I, M) = M / (1 + e^(- beta(I - I_0)))
+    )
+    $
+    
+    其中 $phi$ 表示趋化因子浓度，$I$ 表示 T 细胞浓度，$M$ 表示黑色素浓度（都是某个点处的浓度），$k, lambda, I_0$ 是常数。\
+    为了找出其平衡点，先设 $M = 1$ 并令 $der(phi, t) = der(I, t) = 0$，可以求出其在相平面上的若干平衡点，再计算 Jacobi 矩阵的特征值来判断其稳定性。\
+    之后，再考虑 $M$ 的衰减，发现随着 $M$  降低稳态也会降低。 
+  == 扩散效应与 Laplace 算子
+    #let Jv = $bold(J)$
+    为了完整描述白癜风的的过程，还需要考虑每点处的浓度平衡破坏如何扩散到周围。可以用扩散模型描述。设区域 $V$ 内有物质，其浓度为 $c$，有以下几个方程：
+    - 守恒方程：
+      $
+      (diff)/(diff t) integral_(V)^() c dif v = - integral_(partial V)^() Jv dot dif S
+      $
+      其中 $Jv$ 是扩散通量，表示通过单位面积的粒子速率
+    - Gauss-Green 公式：
+      $
+      - integral_(partial V)^() Jv dot dif S = - integral_(V)^() nabla dot Jv dif v
+      $
+    - Fick's first law:
+      $
+      Jv = - D nabla c
+      $
+      其中 $D$ 为扩散系数，可能依赖于空间位置
+    最终得到：
+    $
+    (diff)/(diff t) integral_(V)^() c dif v = integral_(V)^() nabla (D nabla c)  dif v
+    $
+    由区域的任意性可得：
+    $
+    der(c, t)  = nabla (D nabla c)
+    $
+    若 $D$ 与位置无关，则上式变为：
+    $
+    der(c, t) = D Delta c
+    $
+    将扩散与 ODE 模型结合，可以得到更加完整的模型。
+    $
+    cases(
+      partialDer(phi, t) = D_I Delta +  phi k_phi sigma(I, M) - lambda_phi phi,
+      partialDer(I, t) = D_I Delta +  I k_I phi - lambda_I I,
+      partialDer(M, t) = - lambda_M sigma(I, M),
+      sigma(I, M) = M / (1 + e^(- beta(I - I_0)))
+    )
+    $
+  == 图灵斑与反应扩散
+    上面给出了模型与图灵提出的用反应扩散解释动物斑纹的模型。考虑一种简单情形，在一维有界区域中：
+    $
+    cases(
+      partialDer(u, t) = D Delta u + f(u),
+      u(0, t) = u(1, t) = 0,
+      u(x, 0) = u_0 (x)
+    )
+    $
+    考虑关于偏差 $hat(u)$ 的线性微分方程：
+    $
+    partialDer(hat(u), t) = D Delta hat(u) + hat(u) f'(u),
+    $
+    对于这个线性方程，可以利用傅里叶级数求解并分析。
+
+    对于一般的非线性模型，往往只能采用数值模拟的方式。实际发现图灵扩散模型对参数和初值非常敏感，由此可以引出很多深入的讨论。
+  == 电子模型
+    === 薛定谔方程
+      考虑 $N$ 个粒子构成的体系，假设函数 $phi(xv_1, xv_2, ..., xv_N) in C(RR^(3 N))$ 表示了它们的状态。定义交换算子：
+      $
+      P_(i j) phi(xv_1, xv_2, ..., xv_N) = phi(sigma(xv_1, xv_2, ..., xv_N)) where sigma = (xv_i. xv_j) in S_N
+      $
+      在微观世界，我们往往假设粒子难以分辨。换言之，态函数应该在 $P_(i j)$ 作用后至多与原来差一个常数 $c$，而交换算子是幂等的，这个常数当然需要满足 $c^2 = 1, c = plus.minus 1$\
+      物理上，$c = 1$ 表示玻色子，$c = -1$ 表示费米子。电子是一种费米子，研究表明费米子都具有自旋，电子可以进一步分为自旋向上和自旋向下（自旋的名词来自于在磁场下表现出向上偏或者向下偏，类比洛伦兹力将其称为两种自旋），同时有以下基本属性：
+      - 泡利不相容原理意味着两个电子不可能处于相同的态，也可以理解为既然态函数是反交换的，当然电子有相同的态意味着态为零。
+      - 电子当然带电，有库伦力：
+        $
+        1/(4 pi epsilon) (q_1 q_2)/r^2
+        $
+        在实践上，在出现上式的公式中令 $r = 0$ 往往是可行的且事实上不会发散（称为 cusp 条件）。同时，电子确实可以出现在相同的位置，只要自旋不同即可。
+      - 轨道性：电子只能出现在固定的轨道上
+      一个理想的模型应该能够演绎或者描述出上面几个属性和理论。薛定谔将电子分轨道分布对应着微分方程中 Sturm-Liouville 问题，也就是微分方程的特征值问题，具体而言：一个经典粒子应当满足色散关系：
+      $
+      E = 1/2 m norm(v)^2
+      $<E>
+      #let hb = $overline(h)$
+      #let vv = $bold(v)$
+      使用一次量子化，也即用 $i hb diff/(diff t)$ 代替 $E$，用 $-i hb gradient$ 替换动量 $m vv$：
+      $
+      i hb diff/(diff t) = (-i hb  gradient)^2/(2 m)
+      $
+      两边乘以 $psi(vv, t)$（称为波函数），有：
+      $
+      i hb diff/(diff t) psi(xv, t) = (-i hb gradient)^2/(2 m) psi(xv, t) = - hb/(2m) laplace psi(xv, t)
+      $
+      这就是薛定谔方程（Schrödinger equation）。假设考虑氢原子周围电子，补充势能项，也即：
+      $
+      E = p^2/(2 m) - 1/(4 pi epsilon_0) e^2/r
+      $
+      并无妨设中心为零，将有：
+      $
+      i hb diff/(diff t) psi(xv, t) =  - (hb/(2m) + 1/(4 pi epsilon_0) e^2/norm(x)) laplace psi(xv, t)
+      $
+      同时还可以得到不含时间的方程：
+      $
+      - (hb/(2m) + 1/(4 pi epsilon_0) e^2/norm(x)) phi(xv) = epsilon phi(xv)
+      $
+      对其使用微分方程的理论进行分析，确实可以得到特征向量与电子轨道的对应性。例如可以计算出，上面方程中最小的特征值就是 $-1/2$，进而可以得到与实验非常相符的结果。然而，这个方程暂时无法描述自旋，之后的内容是解释如何引入自旋，这在历史上由狄拉克完成。
+    === 狄拉克方程
+      之前提到过色散关系@E，这是没有引入相对论效应的结果。事实上，如果速度非常快，应该引入相对论效应，质能关系变成：
+      $
+      E^2 = c^2 p^2 +m_0^2 c^4
+      $
+      做与之前类似的操作，得到：
+      $
+      1/c^2 (diff^2)/(diff t^2) psi - gradient^2 psi + (m^2 c^2)/hb psi = 0
+      $
+      然而，这个方程可能导致 $psi^2$ 可能取负值，当时人们并不接受这个观点。狄拉克认为，应该使用：
+      $
+      E = sqrt(c^2 p^2 +m_0^2 c^4) =  c sqrt(p^2 + m_0^2 c^2)
+      $
+      然而微分算子如何开根号是一个模糊的问题。狄拉克认为应该可以写成：
+      $
+      c bold(alpha dot beta) + m c^2 beta
+      $
+      使得：
+      $
+      (c bold(alpha dot beta) + m c^2 beta)^2 = c^2 p^2 +m_0^2 c^4
+      $
+      先令 $p$ 是一维的，可以待定系数得到：
+      $
+      alpha^2 = beta^2 = 1, alpha beta + beta alpha = 0
+      $
+      取实数难以得到结论，但是可以取矩阵，也即：
+      $
+      sigma_1 = mat(0, 1;1, 0), sigma_2 = mat(0, -i;i, 0), sigma_3 = mat(1, 0;0, -1)
+      $
+      （这些矩阵称为泡利矩阵）\
+      其中 $alpha$ 取 $sigma_1$ 或 $sigma_2$，$beta$ 取 $sigma_3$ 即可\
+      对于三维情形，可以证明可取：
+      $
+      alpha = mat(0, (sigma_1, sigma_2, sigma_3); (sigma_1, sigma_2, sigma_3), 0), beta = mat(I, 0;0, -I)
+      $
+      最后得到方程：
+      $
+      i hb (diff)/(diff t) psi = (- i hb c alpha dot gradient + m c^2 beta) psi
+      $
+      同样分裂出空间部分，可以得到类似的特征值问题 $H phi = epsilon phi$，其中 $H in M_(4 times 4)(CC), phi in CC^4$，也即是一个矩阵方程。注意到 $phi$ 有四个分量，狄拉克认为，前两个分量对应自旋，后两个分量描述的是所谓“反电子”，而带正电的电子确实被实验证明存在。
+
+      狄拉克认为一般而言相对论效应应该是可以忽略的，然而后面的计算和实验表明，处理金、铅等重金属的电子时，电子必须速度非常快，相对论效应是不可忽略的。
+    === 多电子
+      之前考虑的都是单电子情形，下面讨论多电子。方便起见假设使用薛定谔方程 $H phi = epsilon phi$，有 $n$ 个电子，有：
+      #let sumf1 = (sumf.with(lower: $1$, upper: $N$, var: $i$))()
+      $
+      H = - sumf1 1/2 gradient^2_i - sumf1 sum_(A = 1)^N Z_A/(R_(i A)) + sum_(1 <= i < j <= N) 1/(r_(i j)) - sum_(A = 1)^N 1/(2 m_A) gradient_A^2 + sum_(1 = A < B <= M) (Z_A Z_B)/(R_(A, B))
+      $
+      //（其中 $r_i$ 代表电子的位置，$R_i$ 代表原子核）
+      上个世纪的数学家给出了这个方程的解存在或者存在唯一的条件，然而考虑狄拉克方程给出的类似方程，其解的存在性至今仍是一个开放问题。为了解决这个方程，总共有三种途径：
+      - 密度泛函理论
+      - 波函数方法
+      - 随机方法
+      这里主要介绍的是密度泛函理论。首先对方程中做玻恩-奥本海默近似，也即假设：
+      $
+      phi(r_1, .., r_N, R_1, ..., R_M) = psi(r_1, r_2, ..., r_N) psi'(R_1, ..., R_M)
+      $
+      其中 $r$ 是电子部分，$R$ 是原子核部分。这个分离来源于电子的运动远比原子核部分快，并且考虑方程：
+      $
+      H psi = epsilon psi
+      $
+      解这个方程时，假设 $R$ 已经固定，解出来之后再考虑 $R$ 的变化。这里有：
+      $
+      H = - sumf1 1/2 gradient^2_i - sumf1 v(r_i) + sum_(1 <= i < j <= N) 1/(r_(i j))
+      $
+      其中 $v(r_i)$ 是电子的势能，依赖于固定的 $R$
+      #theorem[Hohenberg-Kohn][
+        设 $rho(r)$ 是基态下单位体积内电子的个数:
+        $
+        rho(r) = integral_()^() phi^* (sumf1 delta(r - r_i)) phi dif r_i 
+        $   
+        则 $rho(r)$ 可以与 $v(r) = sumf1 v(r_i)$ 在差一个常数的意义下一一对应。
+      ]
+      上面的定理表明，$rho(r)$ 就可以确定该体系的性质。下面的目标是试图推导 $rho$ 满足的方程，这是一个相当困难的问题，常用的是所谓 Kohn-Sham 方法，大致思想是找一个人造体系，这个体系内无相互作用，且其中的 $rho$ 与所求的 $rho$ 一致。希望构造出方程：
+      $
+      H_(k s) psi_(k s) &= epsilon_(k s) psi_(k s)\
+      where H_(k s) &= sumf1 h_i^(k s)
+      $
+      其中 $h$ 是哈密顿量，以及满足：
+      $
+      E (rho) = T_(k s) (rho_(k s)) + W_(k s) (rho_(k s)) + integral rho(r) v(r) dif r \
+      + T(rho) -  T_(k s) (rho_(k s)) + W(rho) - W_(k s) (rho_(k s))
+      $
+      其中 $T, W$ 分别是动能和势能。经过一些假设和变分，可以得到 Kohn-Sham 方程：
+      $
+      h_i phi_i = epsilon_i phi_i
+      $
 
   

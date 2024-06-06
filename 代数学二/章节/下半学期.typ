@@ -1434,24 +1434,51 @@
       设 $A$ 是 regular local ring ,$k = A quo m subset A$ ，则 $hat(A)$ 同构于 $k[[t_1, ..., t_d]]$
     ]
 = 同调代数
-  本学期由于时间原因，不能详细讲解 Abel 范畴，但所幸有下面的定理：
-  #theorem[Frey-Miichell embedding][
-    设 $CC$ 是 Abel 范畴，则存在全忠实的正合函子将 $CC$ 嵌入某个环上的模范畴
-  ]
   == 回顾
-    #definition[][
-      设 $CC$ 是 Abel 范畴，则令：
-      - $C(CC)$ 是其中所有（链）复形|(cochain) Complex 构成的范畴，也即对象是所有复形，态射是复形间的同态。这个范畴也是 Abel 范畴，同时 $CC$ 可以嵌入其中。
-      - 可以定义函子 $H(*): C(CC) -> CC$
-        $
-        H(... ->^(d^(k-1)) X^(k-1) ->^(d^k) X^k ->^(d^(k+1)) -> ...)
-        $
+    #definition[Abel 范畴][
+      称范畴 $AA$ 是 Abel 范畴，如果 $Hom_AA (A, B) in Ob(AA)$ 且其上有 Abel 群结构，并满足分配律：
+      $
+      h(g + g') f = h g f + h g' f\
+      forall h in Hom_AA (B, \*), f in Hom_AA (\*, A)
+      $
     ]
-    #remark[homology index][
-    有时链复形也用下降的下标，此时成为 chain complex，一个复形形如：
-    $
-    ... -> X_(k + 1) ->^(d_(k+1)) X_k ->^(d_k) X_(k-1) -> ...
-    $
+    #definition[加性函子][
+      称 Abel 范畴 $AA, BB$ 间的函子 $F: AA -> BB$ 是加性函子，如果对于任意 $A, B in AA$，$F$ 保持 $Hom$ 的加法结构（是加法群同态）
+    ]
+    本学期由于时间原因，不能详细讲解 Abel 范畴，但所幸有下面的定理：
+    #theorem[Frey-Miichell embedding][
+      设 $CC$ 是 Abel 范畴，则存在全忠实的正合函子将 $CC$ 嵌入某个环上的模范畴
+    ]
+    #definition[chain complex][
+      设：
+      $
+      X = ... -> X_(k + 1) ->^(d_(k+1)) X_k ->^(d_k) X_(k-1) -> ...
+      $
+      并记：
+      - $Z_k (X) = ker d_k$
+      - $B_k (X)= im d_(k+1)$
+      若成立 $0 subset B_k subset Z_k subset X_k$，则称之为一个链复形，并记：
+      $
+      H_n (X) = Z_n quo B_n
+      $
+      称为第 $n$ 个同调模。可以证明，$H_n$ 具备函子性
+    ]
+    #definition[cochain complex][
+      设：
+      $
+      X = ... -> X^(k - 1) ->^(d^(k-1)) X^(k) ->^(d^(k)) X^(k+1) -> ...
+      $
+      并记：
+      - $Z^k (X) = ker d^(k)$
+      - $B^k (X)= im d^(k-1)$
+      若成立 $0 subset B^k subset Z^k subset X^k$，则称之为一个链复形，并记：
+      $
+      H^n (x) = Z^n quo B^n
+      $
+      称为第 $n$ 个同调模。可以证明，$H^n$ 具备函子性
+    ]
+    #definition[][
+      chain/cochain 之间可以定义同态，要求同态与 $d_n$（也被称为差分）可交换。进一步，构成 Abel 范畴，记作 $CC$
     ]
     #remark[Singular Complex functor][
       可以定义从拓扑空间的范畴 $"Top"$ 到 $Mod_ZZ$  上链复形的函子：
@@ -1464,6 +1491,17 @@
       - $abs(Delta^2) = $ 三角形
       - ...
       下降的态射是对边界求和 
+    ]
+    #definition[分裂][
+      设有链复形：
+      $
+      .. ->^d X^(k-1) ->^d X^k ->^d X^(k+1) ->^d ...
+      $
+      且存在态射 $s: X^(n) -> X^(n-1)$ 使得：
+      $
+      d = d s d
+      $
+      则称复形分裂。
     ]
     #definition[同伦|homotopic][
       - $f, g : X -> Y$ 是两个链复形之间的同态。称 $f, g$ 同伦，记作 $f tilde g$，如果存在 $s^n: X^n -> Y^(n-1)$ 使得以下交换图表成立：
@@ -1478,12 +1516,18 @@
         arr(3, 4, $$),
         arr(1, 4, $f^n - g^n$)
         )]
+        等价的，就是：
+        $
+        f - g = d_Y s + s d_X
+        $
       - 称 $X ->^f Y$ 是同伦等价的，如果存在 $h: Y -> X$ 使得 $h compose f tilde id, f compose h tilde id$，此时也称 $X$ 与 $Y$ 同伦等价或 $X tilde Y$
     ]
     #lemma[][
       - 设 $f tilde g$，则 $H^k (f) = H^k (g)$
       - 设 $X tilde Y$，则 $H^k (X) = H^k (Y)$
-    ]
+      - 加性函子保持同伦性
+      - 链复形分裂当且仅当 $id$ 与零同伦
+    ]<homotopic-equivalence>
     #proof[
       - 等价于 $H^k (f - g) = 0$，注意到：
         $
@@ -1494,15 +1538,19 @@
         $
         f^n = s^(n+1) d_X^n + d_Y^(n-1) s^n
         $
+        注意到:
+        $
+        f^n (ker d_X^n) = d_Y^(n-1)(s^n (ker d_X^n)) subset im d_Y^(n-1)\
+        $
+        由定义：
+        $
+        H^n (f) : ker (d_X^n) quo im(d_X^(n-1)) -> ker (d_Y^n) quo im(d_Y^(n-1))
+        $
+        由上面的计算，这意味着 $H^n (f) = 0$，证毕
+      - 同理
+      - 同伦无非是等式，当然被加性函子保持
+      - 定义验证即可
     ]
-    $
-    f^n (ker d_X^n) = d_Y^(n-1)(s^n (ker d_X^n)) subset im d_Y^(n-1)\
-    $
-    由定义：
-    $
-    H^n (f) : ker (d_X^n) quo im(d_X^(n-1)) -> ker (d_Y^n) quo im(d_Y^(n-1))
-    $
-    由上面的计算，这意味着 $H^n (f) = 0$，证毕
 
     #definition[][
       设 $F$  是两个 Abel 范畴间的函子，它自然诱导了 Abel 范畴上复形的函子。
@@ -1529,28 +1577,89 @@
           &->^delta H^(n+1) (X) -> H^(n+1) (Y) -> H^(n+1) (Z) -> ...
       $
       进一步，这个长正合列是典范的（具有函子性），也即若两个复形正合列之间有同态，则它们诱导的长正合列之间也有诱导的同态。
-    ]
+    ]<short-exact-sequence-induced-long-exact-sequence>
     #proof[
       我们希望利用蛇形引理。对：
       $
-      0 -> X^n -> Y^n -> Z^n -> 0\
-      0 -> X^(n+1) -> Y^(n+1) -> Z^(n+1) -> 0
+      0 -> &X^n -> &&Y^n -> &&Z^n -> 0\
+      0 -> &X^(n+1) -> &&Y^(n+1) -> &&Z^(n+1) -> 0
       $
       之间利用蛇形引理，得到正合列：
       $
-      0 -> ker d_X^n -> ker d_Y^n -> ker d_Z^n -> coker d_X^n -> coker d_Y^n -> coker d_Z^n -> 0
+      0 -> ker d_X^n -> ker d_Y^n -> ker d_Z^n -> coker d_X^n -> coker d_Y^n -> coker d_Z^n  -> 0
       $
-      以及两个正合列间同态：
+      进而得到两个正合列正合列：
       $
-      coker d_X^n -> coker d_Y^n -> coker d_Z^n -> 0\
-      0 -> ker d_X^n -> ker d_Y^n -> ker d_Z^n
+      coker d_X^(n-1) -> coker d_Y^(n-1) -> coker d_Z^(n-1) -> 0\
+      0 -> ker d_X^(n + 1) -> ker d_Y^(n + 1) -> ker d_Z^(n + 1) 
       $
-      再次利用蛇形引理，#TODO 得到的结果便是:
+      事实上，注意到：
+      $
+      im d_X^(n-1) subset ker d_X^(n)
+      $
+      因此 $d_X^(n)$ 自然诱导 $coker d_X^(n-1) = X^(n) quo im d_X^(n-1) -> im d_X^n subset ker d^(n+1)_X$ 的同态，且容易验证这些同态与蛇形引理诱导出的正合列交换，也即有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 1), $coker d_X^(n-1) $, 2),
+      node((0, 2), $coker d_Y^(n-1)$, 3),
+      node((0, 3), $coker d_Z^(n-1)$, 4),
+      node((0, 4), $0$, 5),
+      node((1, 0), $0$, 6),
+      node((1, 1), $ker d_X^(n + 1)$, 7),
+      node((1, 2), $ker d_Y^(n + 1)$, 8),
+      node((1, 3), $ker d_Z^(n + 1)$, 9),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(4, 5, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(8, 9, $$),
+      arr(2, 7, $$),
+      arr(3, 8, $$),
+      arr(4, 9, $$),
+      )]
+
+      再次利用蛇形引理，并注意到：
+      $
+      ker (coker d_X^(n-1) -> ker d_X^(n + 1)) \
+      = ker (d_X^n: coker d_X^(n-1) -> ker d_X^(n + 1)) = (ker d_X^n) quo im d_X^(n-1) = H^n (X)\
+      coker (coker d_X^(n-1) -> ker d_X^(n + 1)) \
+      = coker (d_X^n: coker d_X^(n-1) -> ker d_X^(n + 1)) = (ker d_X^(n+1)) quo im d_X^n = H^(n+1) (X)
+
+      $
+      
+      得到的结果便是:
       $
       H^n (X) -> H^n (Y) -> H^n (Z) -> H^(n+1) (X) -> H^(n+1) (Y) -> H^(n+1) (Z)
       $
+      对所有 $n$ 都成立，连接起来就是所求的长正合列，证毕
+    ]
+  == Mapping Cones and Cylinders（补充）
+    #definition[][
+      设 $f: X -> Y$ 是链复形之间的态射，定义新的复形：
+      $
+      ... -> X_(n-1) directSum Y_n ->^(d_n) X_(n-2) directSum Y_(n-1) -> ...
+      $
+      其中 $d_n$ 定义为：
+      $
+      vec(x_(n-1), y_n) -> mat(-d^X_(n - 1), 0;-f, d^Y_n) vec(x_(n-1), y_n)
+      $
+      称为 $f$ 的映射锥（mapping cone）$cone(f)$
+      对偶的，定义 cochain 上上的复形：
+      $
+      ... -> X^(n+1) directSum Y^n ->^(d^(n)) X^(n+1) directSum Y^(n) -> ...
+      $
     ]
   == 解消
+    #example[][
+      之前定义过投射对象/内射对象。在 $ZZ$ 和除环中，投射对象就是自由模，一般而言未必。在所有有限交换群构成的范畴中，没有投射对象。
+    ]
+    #lemma[][
+      - 投射对象是自由模的直和项。投射对象的直和仍然投射
+      - 内射对象的直积仍然是内射对象
+    ]
+    #lemma[][
+      在主理想整环 $R$ 上，$A$ 是内射模当且仅当可除，也即对于任意 $r !=0 in R, r A = A$ 
+    ]<injective-divisible>
     #definition[Resulution][
       设 $A in CC$  是一个对象
       - 一个 $A$  的内射解消是指复形：
@@ -1582,12 +1691,100 @@
     ]
     #lemma[][
       - $Mod_R$ 有足够多的内射对象
+      - $Mod_R$ 有足够多的投射对象
     ]
     #proof[
       - 利用 $Hom (R, QQ quo ZZ)$ 的内射性
+      - 在任意模上构造自由模即可
+    ]
+    #proposition[][
+      设 $CC$ 是 Abel 范畴，假设有正合列：
+      $
+      0 -> A -> A^0 -> A^1 -> ...
+      $
+      复形：
+      $
+      0 -> B -> I^0 -> I^1 -> ...
+      $
+      映射：
+      $
+      f: A -> B
+      $
+      则存在交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $0$, 1),
+      node((0, 1), $A$, 2),
+      node((0, 2), $A^0$, 3),
+      node((0, 3), $A^1$, 4),
+      node((1, 0), $0$, 5),
+      node((1, 1), $B$, 6),
+      node((1, 2), $I^0$, 7),
+      node((1, 3), $I^1$, 8),
+      node((0, 4), $...$, 9),
+      node((1, 4), $...$, 10),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(5, 6, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(1, 5, $$),
+      arr(2, 6, $f$),
+      arr(3, 7, $f^0$),
+      arr(4, 8, $f^1$),
+      arr(4, 9, $$),
+      arr(8, 10, $$),
+      )]
+      且所有这样的延拓都是同伦的
+    ]<morphism-extension>
+    #proof[
+      首先注意到 $A -> A^0$ 是单射，由内射对象的性质 $f^0$ 是存在的。\
+      归纳构造，假设 $f^i: A^i -> I^i, i = 0, 1, ..., n - 1$ 已经构造好，注意到由正合性，有单态射：
+      $
+      coker(A^(n-2) -> A^(n-1)) -> A^n
+      $
+      其次，注意到：
+      $
+      A^(n-2) -> A^(n-1) -> I^(n-1) -> I^n\
+      = A^(n-2) -> I^(n-2) -> I^(n-1) -> I^n = 0
+      $
+      因此有自然的态射：
+      $
+      coker(A^(n-2) -> A^(n-1)) -> I^n
+      $
+      由内射性质立得 $A^n -> I^n$ 态射，存在性证毕
+
+      假设还有另一种延拓 $g$，记 $I^(-1) = 0$，首先要构造下图中的 $h_0$ ：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $$, 1),
+      node((0, 1), $A^0$, 2),
+      node((0, 2), $A^1$, 3),
+      node((1, 0), $I^(-1)$, 4),
+      node((1, 1), $I^0$, 5),
+      node((1, 2), $I^1$, 6),
+      arr(2, 4, $0$),
+      arr(3, 5, $h_0$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(2, 5, $$),
+      arr(3, 6, $$),)]
+      注意到 $(f^0 - g^0) compose (A -> A^0) = A -> B -> I^0 - A -> B -> I^0 = 0$，因此可将 $f^0 - g^0$ 延拓到 $A^0 quo A -> I^0$，又由正合性，$A^0 quo A$ 嵌入 $A^1$，内射性产生我们需要的 $h_0$，之后的构造是类似的。
+    ]
+    #corollary[][
+      任意两个内射解消是同伦等价的
+    ]<injection-resolution-eqvi>
+    #proof[
+      假设有两个内射解消 $I, J$ 则有正合列间同态 $f: I -> J$ 和 $g: J -> I$ 都是 $id_A$ 的延拓。注意到 $g compose f$ 成为 $I -> I$ 的同态且是 $id_A$ 的延拓，而 $id$ 是 $I -> I$ 延拓 $id_A$ 的自然同态，唯一性给出 $g compose f tilde id$，另一个方向类似，因此有 $I tilde J$
     ]
   == 余调 $delta-$函子，导出函子
-    #definition[余调 $delta-$函子][
+    #definition[$delta-$函子][
+      一个  homological $delta-$ functor 是一族函子 $T_i, i in NN$ 以及连接同态 $delta_i: T_i (C) -> T_(i-1) (A)$，使得：
+      - 对于任何短正合列 $0 -> A -> B -> C -> 0$ 有长正合列：
+        $
+        ... -> T_i A -> T_i B -> T_i C ->^(delta_i) T_(i-1) A -> T_(i-1) B -> T_(i-1) C -> ...
+        $
+      - 这个长正合列是典范的，也即短正合列间的同态诱导对应长正合列的同态
       一个  Cohomological $delta-$ functor 是一族函子 $T_i, i in NN$ 以及连接同态 $delta^i: T^i (C) -> T^(i+1) (A)$，使得：
       - 对于任何短正合列 $0 -> A -> B -> C -> 0$ 有长正合列：
         $
@@ -1615,4 +1812,636 @@
       $
       给出一个与内射解消的选取无关的函子，称为 $F$ 的右导出函子。
     ]
+    #proof[
+      - 由 @injection-resolution-eqvi 和 @homotopic-equivalence 知，这个定义是良定义的。
+      - 我们还要验证 $R^n F$ 确实具有函子性。对于任意 $A ->^f B$，有交换图：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $A$, 1),
+        node((0, 1), $I_A$, 2),
+        node((1, 0), $B$, 3),
+        node((1, 1), $I_B$, 4),
+        arr(1, 2, $$),
+        arr(1, 3, $f$),
+        arr(2, 4, $f^*$),
+        arr(3, 4, $$),)]
+        其中 $f^*$ 来自于 @morphism-extension
+    ]
+    #lemma[Horse shoe][
+      设 $0 -> A -> B -> C -> 0$ 是短正合列，并有内射解消：
+      $
+      A -> I\
+      C -> J
+      $
+      则存在正合序列：
+      $
+      0 -> B -> I directSum J
+      $
+      使得下图交换：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $0$, 1),
+      node((0, 1), $A$, 2),
+      node((0, 2), $B$, 3),
+      node((0, 3), $C$, 4),
+      node((1, 0), $0$, 5),
+      node((1, 1), $I$, 6),
+      node((1, 2), $I directSum J$, 7),
+      node((1, 3), $J$, 8),
+      node((0, 4), $0$, 9),
+      node((1, 4), $0$, 10),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(5, 6, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(2, 6, $$),
+      arr(3, 7, $$),
+      arr(4, 8, $$),
+      arr(4, 9, $$),
+      arr(8, 10, $$),
+      
+      )]
+      注意这里不是简单的直和，对象确实是直和但态射不是自然的态射
+    ]<Horse-shoe>
+    #proposition[][
+      - $R^0 F tilde.eq F$
+      - 设 $A$ 是内射模，则 $R^i F A = 0, forall i > 0$
+      - 任取短正合列：
+        $
+        0 -> A -> B -> C -> 0
+        $
+        由 @Horse-shoe 知存在复形的正合列：
+        $
+        0 -> I_A -> I_B -> I_C -> 0
+        $
+        这里 $I_A, I_C$ 是内射解消，$I_B = I_A directSum I_C$\
+        既然 $F$ 具有加性，以下也是正合列：
+        $
+        0 -> F I_A -> F I_B -> F I_C -> 0
+        $
+        立刻诱导出长正合列：
+        $
+        ... -> H^i (F I_A) -> H^i (F I_B) -> H^i (F I_C) -> H^(i+1) (F I_A) -> ...
+        $
+        也就是：
+        $
+        ... -> R^i F A -> R^i F B -> R^i F C -> R^(i+1) F A -> ...
+        $
+    ]
+    #proof[
+      - 任取内射解消 $0 -> A -> I$，由于 $F$ 左正合知 $0 -> F A -> F I$ 也正合，进而：
+        $
+        R^0 F = H^0 (F I) = F A
+        $
+      - 注意到此时：
+        $
+        0 ->  A -> A -> 0
+        $
+        成为内射解消，进而：
+        $
+        R^i F = H^i (F (0 -> A -> 0 -> ...)) = 0
+        $
+        且这个长正合列是典范的
+    ]
+    上面的命题表明，${R^i F}$ 确实是前面定义的余调 $delta-$函子。
+  == acyclic objects
+    #let Facyclic = [$F-$acyclic]
+    #definition[#Facyclic][
+      - 设 $F$ 是左正合函子，若 $J$ 满足 $R^i F J = 0, forall i >= 1$，则称 $J$ 是 #Facyclic 的
+      - 一个 #Facyclic 解消是指正合列：
+        $
+        0 -> A -> J^0 -> J^1 -> J^2 -> ...
+        $
+        其中 $J^i$ 是 #Facyclic 的
+    ]
+    #theorem[可用 #Facyclic 解消计算导出函子][
+      假设 $CC$ 有足够多内射对象，$F$ 左正合，则：
+      $
+      R^i F A = H^i (F (J))
+      $
+      $J$ 是任意一个 #Facyclic 解消
+    ]
+    #proof[
+      令 $Z^i (J) = ker (J^i -> J^(i+1))$，有正合列：
+      $
+      0 -> A -> J^0 -> Z^1 -> 0 
+      $
+      对于 $i >= 2$，有正合列：
+      $
+      R^(i-1) F J^0 -> R^(i-1) F Z^1 -> R^i F A -> R^i F J^0 \
+      0 -> R^(i-1) F Z^1 -> R^i F A -> 0
+      $
+      表明  $R^(i-1) F Z^1 = R^i F A$\
+      接下来，有正合列：
+      $
+      0 -> Z^1  -> J^1 -> Z^2 -> 0
+      $
+      类似可以证明：
+      $
+      forall i >= 3, R^(i-2) F Z^2 = R^(i-1) F Z^1 = R^i F A
+      $
+      不断进行，可以证明：
+      $
+      R^i F A = R^1 F (Z^(i-1) (J))
+      $
+      而我们有正合列：
+      $
+      0 -> F Z^(i-1) -> F (J^(i-1)) -> F (Z^i) -> R^1 F Z^(i-1) -> 0
+      $
+      因此：
+      $
+      R^1 F Z^(i-1) = (F (Z^i))/(im (F (J^(i-1)) -> F (Z^i)))
+      $
+      另一方面，有：
+      $
+      H^i (F (J)) &= (ker F J^i -> F J^(i+1))/(im F J^(i-1) -> F J^i)\
+      &= (F Z^i) / (im F J^(i-1) -> F J^i)
+      $
+      注意到有正合列：
+      $
+      0 -> J^(i-1) -> J^i -> J^i quo Z^i  -> 0
+      $
+      $F$ 作用之，得正合列：
+      $
+      0 -> F J^(i-1) -> F J^i -> F (J^i quo Z^i) 
+      $
+      给出 $F J^(i-1) -> F J^i$ 是嵌入，当然有 #TODO
+    ]
+    #remark[Dimension shifting][
+      设有正合列：
+      $
+      0 -> A -> B -> C -> 0
+      $
+      且 $B$ 是 #Facyclic 的，则有:
+      $
+      R^i F C = R^(i+1) F A, forall i >= 1
+      $
+    ]
+    假设我们构造了一族余调 $delta-$函子，且 $T^0 = F$，何时这个函子是右导出函子呢？
+    #definition[泛余调 $delta-$函子][
+      称一个余调 $delta-$ 函子 $T$ 是泛的，如果对于任何其他的余调 $delta-$函子 $T'$ 和自然变换 $T^0 ->^f T'^0$，有唯一的自然变换族 $f^i : T^i -> T'^i$ 使得对于任何正合列 
+      $
+      0 -> A -> B -> C -> 0
+      $
+      有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $T^i A$, 1),
+      node((0, 1), $T^i B$, 2),
+      node((0, 2), $T^i C$, 3),
+      node((0, 3), $T^(i+1) A$, 4),
+      node((1, 0), $T'^i A$, 5),
+      node((1, 1), $T'^i B$, 6),
+      node((1, 2), $T'^i C$, 7),
+      node((1, 3), $T'^(i+1) A$, 8),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(5, 6, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(1, 5, $f^i A $),
+      arr(2, 6, $f^i B$),
+      arr(3, 7, $f^i C$),
+      arr(4, 8, $f^(i+1 A)$),)]
+    ]
+    #definition[effaceable][
+      称函子 $F$ 是 effaceable 的，如果对于任意 $A in CC$，存在一个单同态 $u: A -> M$ 使得 $F u = 0$\
+      对偶的，称 $F$ 是 co-effaceable 的，如果对于任意 $A in CC$，存在一个满同态 $v: A -> M$ 使得 $F v = 0$
+    ]
+    #lemma[][
+      设 $CC$ 有足够多内射对象，$F$ 左正合，则$R^i F$ 是 effaceable 的
+    ]
+    #proof[
+      将 $A$ 嵌入内射对象 $I$，用 $R^i F$ 作用产生：
+      $
+      R^i F A -> R^i F I = 0
+      $
+      当然就意味着 $F (A -> I) = 0$
+    ]
+    #lemma[][
+      设 $T$ 是余调 $delta-$函子，$T^0 = F$，若 $T^i, i >= 1$ 是 effaceable 的，则 $T$ 是泛余调 $delta-$函子
+    ]
+    #proof[
+      设 $T^i$ 是另一族余调 $delta-$函子以及 $T^0 ->^(f^0) T'^0$，归纳构造 $f^n$，假设已经有对于任何短正合列：
+      $
+      0 &-> A &&->^() B &&->^() C &&-> 0
+      $
+      有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $T^i C$, 1),
+      node((0, 1), $T^(i+1) A$, 2),
+      node((1, 0), $T'^i C$, 3),
+      node((1, 1), $T'^(i+1) A$, 4),
+      arr(1, 2, $delta^i$),
+      arr(1, 3, $f_A^i$),
+      arr(2, 4, $f_C^i$),
+      arr(3, 4, $$),)]
+      其中 $i = 0, 1, ..., n-1$\
+      想法是利用条件进行降维，对于 $n$ ，选取 $u: A -> M$ 是单态射且 $T^n u = 0$，有短正合列：
+      $
+      0 &-> A &&->^() M  &&->^() A quo M &&-> 0
+      $
+      用 $T$ 进行作用，得到：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $T^(n-1) M$, 1),
+      node((0, 1), $T^(n-1) M quo A$, 2),
+      node((0, 2), $T^n A$, 3),
+      node((1, 0), $T'^(n-1) M$, 4),
+      node((1, 1), $T'^(n-1) M quo A$, 5),
+      node((1, 2), $T'^n A$, 6),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(1, 4, $$),
+      arr(2, 5, $$),
+      arr(3, 6, $exists f_(A, u)^n$),)]
+      其中可以证明 $T^(n-1) M quo A -> T^n A$ 是满射，$f$ 追图可得，需要验证它与 $u$ 无关，再找 $A ->^v N$，有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $A$, 1),
+      node((0, 1), $M$, 2),
+      node((1, 0), $N$, 3),
+      node((1, 1), $coker ((u, -v): A -> M directSum N)$, 4),
+      arr(1, 2, $u$),
+      arr(1, 3, $v$),
+      arr(2, 4, $$),
+      arr(3, 4, $$),
+      arr(1, 4, $omega$)
+      )]
+      显然 $T^n omega = 0$，往证 $f_u = f_omega$（对称的，有 $f_omega = f_v$），首先有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $A$, 1),
+      node((0, 1), $M$, 2),
+      node((0, 2), $M quo A$, 3),
+      node((1, 0), $A$, 4),
+      node((1, 1), $L$, 5),
+      node((1, 2), $L quo A$, 6),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(1, 4, $$),
+      arr(2, 5, $$),
+      arr(3, 6, $$),)]
+      由于上下都是短正合列，用 $T$ 作用于其上，再追图即可
 
+      再证明 $f_A^n$ 是具有函子性的，也即给定 $u: A -> B$，考虑交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $A$, 1),
+      node((0, 1), $M$, 2),
+      node((0, 2), $M quo A$, 3),
+      node((1, 0), $B$, 4),
+      node((1, 1), $N$, 5),
+      node((1, 2), $N quo B$, 6),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(1, 4, $$),
+      arr(2, 5, $$),
+      arr(3, 6, $$),)]
+      其中 $N$ 是用类似上面的在直和中取余核构造得到的，之后的证明是类似的
+
+      最后，证明 $f^n$ 与 $delta$ 有交换性，任取短正合列：
+      $
+      0 &-> A &&->^() B &&->^() C &&-> 0
+      $
+      选取 $v: B -> M$ 使得 $T^n v = 0$，有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $A$, 1),
+      node((0, 1), $B$, 2),
+      node((0, 2), $C$, 3),
+      node((1, 0), $A$, 4),
+      node((1, 1), $M$, 5),
+      node((1, 2), $M quo A$, 6),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(1, 4, $$),
+      arr(2, 5, $$),
+      arr(3, 6, $$),)]
+      以 $T$ 作用于其上，之后的证明也是类似的
+    ]
+    #theorem[][
+      - $R^i F$ 是泛余调 $delta-$函子
+      - 任何泛余调 $delta-$函子都同构于 $R^i F$
+    ]
+    #proof[
+      第一个结论是前两个引理的推论，第二个结论来自于泛余调 $delta-$函子的唯一性（这是容易证明的）
+    ]
+  == Tor 与 Ext
+    设 $R$ 是交换环，$A, B in Mod_R$\
+    #definition[][
+      $
+      Tor_i (M, N) = L_i (- tensorProduct N) (M)\
+      = H^(-i) ( ... -> M tensorProduct P^(-2) -> M tensorProduct P^(-1) -> M tensorProduct P^0 -> 0)\
+      = H_i (... -> M tensorProduct P_(2) -> M tensorProduct P_(1) -> M tensorProduct P_0 -> 0)
+      $
+
+    ]
+    #definition[][
+      $
+      Ext^i (M, N) = (R^i Hom (*, N)) (M)\
+      $
+      这里 $Hom (*, N)$  是反变函子
+    ]
+    显然，$Hom, tensorProduct$ 都是二元函子，为了证明上述导出函子也是二元函子（也就是与先选取谁无关），需要用到下面的平衡性：
+    #definition[][
+      设 $T: C_1 times ... times C_(n)$，其中 $C_n$ 可能是 $C$ 或者 $C_("op")$\
+      若它左正合，且满足：
+      - 若 $T^i$ 是共变的，则只要该分量取任意内射对象，则函子正合
+      - 若 $T^i$ 是反变的，则只要该分量取任意投射对象，则函子正合
+      则称 $T$ 是右平衡的，类似的可以对右正合函子定义左平衡
+    ]
+    #lemma[][
+      $
+      Hom(M_1, M_2), Hom(M_1 tensorProduct M_2, M_3)
+      $
+      都是右平衡的\
+      $tensorProduct$  是左平衡的
+    ]
+    #theorem[][
+      对于右平衡，左正合函子 $T$，有：
+      $
+      R^i T(A_1, ..., A_(i-1), *, A_(i+1), ..., A^n) (A_i)
+      $
+      与 $i$ 取值无关
+    ]
+    #proof[
+      需要用到谱序列，不证明
+    ]
+    #example[][
+      设 $C$ 是 Abel 群构成的范畴，考虑：
+      $
+      Tor_i (Z quo p, B)
+      $
+      注意到有投射解消：
+      $
+      0 -> ZZ ->^p ZZ -> ZZ quo p -> 0
+      $
+      进而：
+      $
+      Tor_i (Z quo p, B) = H_i (0 -> B ->^p B -> 0)
+      $
+      可得：
+      $
+       Tor_i (Z quo p, B) = cases(
+        B quo p B quad i = 0,
+        {b in B | p b = 0} quad i = 1,
+        0 quad i > 1
+      )
+      $
+    ]
+    #proposition[][
+      设 $A, B$ 是交换群，则：
+      - $Tor_1 (A, B)$ 是 torsion group
+      - $Tor_i (A, B) = 0, i > 1$
+      - 既然 $QQ quo ZZ = union Z quo n ZZ$，有 $Tor_1 (QQ quo ZZ, B) = B_("tor")$ 
+      - 无挠群都平坦
+    ]
+    #proposition[][
+      对于张量积函子，平坦模是 acyclic ，既然：
+      $
+      L_i F(N) = 0 <=> Tor_i (M, N) = 0, forall i > 0 
+      $
+      进而计算 $Tor$ 可以使用平坦解消
+    ]
+    #lemma[][
+      - $M$ 是内射对象当且仅当 $Ext^1 (*, M) = 0$
+      - $M$ 是投射对象当且仅当 $Ext^1 (M, *) = 0$
+    ]
+    #proof[
+      任取短正合列用 $Ext$ 作用即可
+    ]
+    #example[][
+      - 设 $A, B$ 是 Abel 范畴中的对象，则 $Ext^n (A, B) = 0, forall n >= 2$
+      - 对于 $ZZ quo p$ 有投射解消：
+        $
+        0 -> ZZ ->^p ZZ -> ZZ quo p -> 0
+        $
+        由定义有：
+        $
+        Ext^n (ZZ quo p, B) = H^n (0 -> Hom(ZZ, B) -> Hom(ZZ quo p, B))
+        $
+      - $Ext(ZZ, A) = 0$
+      - 为了计算 $Ext(A, ZZ)$ 对 $ZZ$ 有内射解消：
+        $
+        0 -> ZZ -> QQ -> QQ quo ZZ -> 0 
+        $
+        因此：
+        $
+        Ext^n (A, ZZ) = H^n (0  -> Hom(A, QQ) -> Hom(A, QQ quo ZZ) -> 0)
+        $
+        假设 $A$ 是挠群，则 $Hom(A, ZZ) = 0 = Hom (A, QQ)$，则此时:
+        $
+        Ext^0 = 0\
+        Ext^1 (A, ZZ) = Hom (A, QQ quo ZZ) 
+        $
+    ]
+    #proof[
+      将 $B$ 嵌入内射对象 $I$，有正合列：
+      $
+      0 -> B -> I -> I quo B -> 0 
+      $
+      然而由@injective-divisible 可得 $I quo B$ 也是内射的，进而结论成立
+    ]
+    #definition[][
+      称 $B$ 是 $A$ 的扩张，如果有短正合列：
+      $
+      0 -> A -> X -> B -> 0
+      $
+      称两个扩张等价，如果有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $0$, 1),
+      node((0, 1), $A$, 2),
+      node((0, 2), $X$, 3),
+      node((0, 3), $B$, 4),
+      node((0, 4), $0$, 5),
+      node((1, 0), $0$, 6),
+      node((1, 1), $A$, 7),
+      node((1, 2), $Y$, 8),
+      node((1, 3), $B$, 9),
+      node((1, 4), $0$, 10),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(4, 5, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(8, 9, $$),
+      arr(9, 10, $$),
+      arr(2, 7, $$, bij_str),
+      arr(3, 8, $$),
+      arr(4, 9, $$, bij_str),
+      )]
+      由 5-lemma，此时一定有 $X tilde.eq Y$\
+      称 $eta$ 是分裂的，如果 $eta$ 等价于：
+      $
+      0 &-> A &&->^() A directSum B &&->^() B &&-> 0
+      $
+    ]
+    #lemma[][
+      对于正合列:
+      $
+      eta: 0 -> A -> X -> B -> 0
+      $
+      可得长正合列：
+      $
+      0 &-> Hom (B, A) &&->^() Hom (B, X) &&->^() Hom (B, B) &&->^delta Ext^1 (B, A) -> ...
+      $
+      注意到 $id_B in Hom (B, B)$ 可以诱导 $delta_eta (id_A)$\
+      这就构造了所有扩张 $eta$ 到 $Ext^1 (B, A)$ 的映射。可以证明这是双射\
+      特别的，若 $Ext^1 (B, A) = 0$，则任意扩张都是分裂的
+    ]
+  ==  三角范畴与导出范畴
+    设 $AA$ 是 Abel 范畴，令 $C(AA)$ 是复形构成的范畴，$K(AA)$ 是复形范畴商掉同伦关系。 对于任何加性函子 $F: AA -> AA$，它当然保持同伦也因此可以延拓到 $K(AA)$ 上。不幸的是，$K(AA)$ 不是 Abel 范畴，不能自由的取 $ker, coker$，但它可以产生一个三角范畴。
+    #definition[三角范畴][
+      设 $K$ 是加性范畴，称 $K$ 是三角范畴，如果它具有自同构 $T = [1] : K -> K$9有时称为 translation functor）以及一族三角形 $A -> B -> C -> A [1]$（也称为正合三角形），要求满足：
+      + 每个态射 $f: A -> B$ 可被延拓成正合三角形 $A -> B -> C -> A[1]$\
+        特别的，$A ->^id A -> 0 -> A[1]$ 是正合三角形，同时同构于正合三角形的三角形也正合
+      + 设 $A -> B -> C -> A [1]$ 是正合三角形，则旋转：
+          $
+          B -> C -> A[1] ->^(-(A -> B)[1]) B[1]\
+          C[-1] ->^(-(C -> A[1])[-1]) -> A -> B -> C
+          $
+          是正合三角形
+      + 
+        设有交换图：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $A$, 1),
+        node((0, 1), $B$, 2),
+        node((0, 2), $C$, 3),
+        node((0, 3), $A[1]$, 4),
+        node((1, 0), $A'$, 5),
+        node((1, 1), $B'$, 6),
+        node((1, 2), $C'$, 7),
+        node((1, 3), $A'[1]$, 8),
+        arr(1, 2, $$),
+        arr(2, 3, $$),
+        arr(3, 4, $$),
+        arr(5, 6, $$),
+        arr(6, 7, $$),
+        arr(7, 8, $$),
+        arr(1, 5, $f$),
+        arr(2, 6, $$),
+        arr(4, 8, $f[1]$),)]
+        其中上下行都是正合三角形，则存在 $C -> C'$ 的态射使得图表交换。
+      + 对于交换的三角形：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $A$, 1),
+        node((0, 1), $B$, 2),
+        node((1, 0), $C$, 3),
+        arr(1, 2, $$),
+        arr(3, 2, $$),
+        arr(1, 3, $$),)]
+        沿着三边分别向外延拓出正合三角形，则延拓的第三项“共线”，也即可延拓出正合三角形。
+
+    ]
+    #definition[拟同构][
+      称 $E -> F$ 是拟同构，如果 $forall n, H^n (E) tilde.eq H^n (F)$
+    ]
+    #definition[局部化][
+      设 $C$ 是范畴，$S$ 是 $C$ 中一些态射的集合。称 $C$ 关于 $S$ 的局部化是范畴 $Inv(S) C$ 以及函子 $Inv(S): C -> Inv(S) C$，满足：
+      - $forall s in S, Inv(S) s$ 是同构
+      - 有泛性质：若 $F s$ 对于所有 $s in S$ 都是同构，则有交换图：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $CC$, 1),
+        node((0, 1), $DD$, 2),
+        node((1, 0), $Inv(S) CC$, 3),
+        arr(1, 2, $F$),
+        arr(3, 2, $exists !$),
+        arr(1, 3, $Inv(S)$),)]
+    ]
+    #remark[][
+      之前构造 $Inv(S) R$ 时，可以将 $R$ 视作范畴，其中 $Ob$ 只有一个元素，$Hom(*, *) = R$，这样局部化的概念就是一致的
+    ]
+    #theorem[][
+      范畴的局部化总是存在的
+    ]
+    #definition[][
+      称 $S$ 是乘性系统，如果：
+      - $S$ 包含所有 $id$
+      - $S$ 在复合下封闭
+      - 对于任何交换图：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $X$, 1),
+        node((0, 1), $Y$, 2),
+        node((1, 0), $Z$, 3),
+        arr(1, 2, $$),
+        arr(3, 2, $t in S$),
+        )]      
+        存在交换图：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $W$, 1),
+        node((0, 1), $Z$, 2),
+        node((1, 0), $X$, 3),
+        node((1, 1), $Y$, 4),
+        arr(1, 2, $$),
+        arr(1, 3, $$),
+        arr(2, 4, $$),
+        arr(3, 4, $$),)]
+        类似于 $Inv(t) g = g Inv(s)$
+      - 有消去律：\
+        设 $f, g : X -> Y$，以下条件等价：
+        -  $exists s in S, s f = s g$
+        - $exists s in S, f t = g t$
+    ]
+    #theorem[Gabriel-Zisman][
+      设 $S$ 是乘性系统，则 $Inv(S) CC$ 可以被显式构造：
+      - $Ob(Inv(S) CC) = Ob (CC)$
+      - $Hom (X, Y) = {f Inv(t) : X <-^t X' -> Y} quo tilde$
+      其中 $ X <-^t_1 X'_1 -> Y$ 与 $ X <-^t_2 X'_2 -> Y$ 等价当今仅当存在 $ X <-^t_3 X'_3 -> Y$ 以及 $X_3 -> X_1, X_3 -> X_2$，并构成交换图
+      则这确实是范畴，且就是 $Inv(S) CC$，对应函子是：
+      $
+      funcDef(q, CC, Inv(CC), (X ->^f Y), (X ->^id X ->^f Y))
+      $
+    ]
+    #definition[][
+      对于任意 Abel 范畴 $AA$，则 $K(AA)$ 是三角范畴，取 $S$ 为其中所有拟同构，则可以验证它是乘性系统，做商得到的范畴称为导出范畴。它包含了所有同调群的信息。
+    ]
+    #lemma[][
+      设 $F: A -> B$ 是加性函子，则自然的拓展到 $K(A) ->^F K(B)$
+      - 若 $F$ 是正合函子，则 $F$ 保持同调群同构，当然就可以延拓到 $D(A) -> D(B)$
+      - 若 $F$ 不是正合函子，一般不能直接进行延拓
+    ]
+    #definition[][
+      设 $q: K(A) -> D(A)$ 称 $F$ 的（全）右导出函子是指 $R F: D^* (AA) -> D^* (B)$ 以及自然变换 $xi: q F -> R F q$，并满足泛性质：对于任意 $G: D(A) -> D(B), eta: q F -> G q$，都有自然变换 $epsilon$ 使得 $epsilon xi = eta$（换言之，这是某种最小的延拓）。
+
+      既然由泛性质给出，故只要存在右导出就是唯一的
+
+    ]
+    #theorem[][
+      若 $AA$ 有足够多的内射对象，则 $R F$ 存在，且满足若 $I$ 是内射对象的有界复形，则：
+      $
+      R F(I) tilde.eq q F(I) => H^n (R F(A)) tilde.eq R^n F(A)
+      $
+    ]
+    #definition[Kan extension][
+      设 $F: AA -> BB, G: CC -> DD$，一个 $F$ 沿着 $G$ 的左 Kan-extension 是指：
+      - 函子 $K: DD -> BB$
+      - 自然变换 $alpha: F -> K G$
+      并且是这样的二元组组成范畴的始对象。
+
+      对偶的，可以定义右 Kan-extension 
+    ]
+    #example[][
+      余极限、极限可以实现成左、右 Kan 延拓。考虑：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $CC$, 1),
+      node((0, 1), $0$, 2),
+      node((1, 0), $DD$, 3),
+      arr(1, 2, $$),
+      arr(1, 3, $F$),)]
+    ]
+    则 $F$ 沿着 $0$ 的左 Kan 延拓是 $(K: 0 -> DD, alpha: F -> K 0)$ 并满足泛性质。事实上，$K$ 只有一个像，记作 $"colim" F$，而自然变换就是交换图：
+    
+     #commutative-diagram(
+    node((0, 0), $F A$, 1),
+    node((0, 1), $F B$, 2),
+    node((1, 0), $"colim" F$, 3),
+    arr(1, 2, $$),
+    arr(3, 2, $$),
+    arr(1, 3, $$),)
+    始对象对应的就是余极限的泛性质
+    
