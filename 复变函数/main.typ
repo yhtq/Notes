@@ -1244,7 +1244,13 @@
       
     ]<integral-mean>
     #proof[
-      就是柯西积分的特殊情况
+      由柯西积分：
+      $
+      f(z) 
+      &= 1/(2 pi i) integral_(diff B(z, r))^() f(w)/(w - z) dif w \
+      &= 1/(2 pi i) integral_(0)^(2pi) f(z + r e^(i theta))/(r e^(i theta)) dif (z + r e^(i theta))\
+      &= 1/(2 pi) integral_(0)^(2pi) f(z + r e^(i theta)) dif theta
+      $
     ]
   == 与几何与分析有关的定理
     #lemma[Schwarz][
@@ -1723,6 +1729,7 @@
           ]
           由引理，立得@int1 趋于零
     ]
+  == 幅角原理
     #theorem[幅角原理|The Argument Principle][
       设 $f$ 是 $G subset CC$ 上的亚纯函数，以 $p_1, ..., p_m$ 为极点（多重重复记）和 $z_1, z_2, ..., z_n$ 为零点（多重重复记），$gamma$ 是 $G$ 上与这些零点，极点不交的可求长曲线，并且：
       $
@@ -1746,6 +1753,46 @@
       integral_gamma (f'(z))/(f(z)) dif z = integral_gamma dif ("Ln"(f(z)))
       $
       几何意义上，就是 $gamma$ 绕 $z$ 一圈时对幅角的积分
+    ]
+    #theorem[幅角原理2][
+      设 $f$ 是 $G subset CC$ 上的亚纯函数，以 $p_1, ..., p_m$ 为极点（多重重复记）和 $z_1, z_2, ..., z_n$ 为零点（多重重复记），$gamma$ 是 $G$ 上与这些零点，极点不交的可求长曲线，$g$ 是区域上的解析函数，并且：
+      $
+      n(gamma, z) = 0, forall z in CC - G
+      $
+      此时：
+      $
+      1/(2 pi i) integral_gamma g(z) (f'(z))/(f(z)) dif z = sum_(k=1)^n g(z_k) n(gamma, z_k) - sum_(k=1)^m g(p_k) n(gamma, p_k)
+      $
+    ]<arg-principle2>
+    #proposition[][
+      设 $f$ 在包含 $closedBall(a, R)$ 的开集上是解析的，在 $B(a; R)$ 上是一一的。设 $Omega = f(B(a; R))$ 则有：
+      $
+      Inv(f) (omega) = 1/(2 pi i) integral_(diff B(a; R))^() (z f'(z))/(f(z) - omega) dif z 
+      $
+    ]
+    #proof[
+      注意到解析的一一映射只能有简单零点，记 $z_0 = Inv(f)(omega)$，它是 $f - omega$ 的简单零点，利用 @arg-principle2 有：
+      $
+      z_0 = 1/(2 pi i) integral_(diff B(a; R))^() (z f'(z))/(f(z) - omega) dif z
+      $
+      证毕
+      
+    ]
+    #theorem[Rouche][
+      设 $f, g$ 在包含 $closedBall(a, R)$ 的开集上是解析的，在 $diff B(a; R)$ 上无零点/极点，设 $Z_f, Z_g, P_f, P_g$ 分别是 $f, g$ 在 $B(a; R)$ 中的零点/极点个数，并且设：
+      $
+      abs(f(z) + g(z)) < abs(f(z)) + abs(g(z)), forall z in diff B(a; R)
+      $
+      则有：
+      $
+      Z_f - P_f = Z_g - P_g
+      $
+    ]
+    #remark[][
+      使用时，往往以下加强的条件已经足够：
+      $
+      abs(f(z) + g(z)) < abs(g(z))
+      $
     ]
 = 解析延拓 Continuation 
   == 沿曲线的解析延拓
@@ -1854,7 +1901,7 @@
       #TODO
     ]
 = 黎曼映射定理  
-  本章的目的是证明黎曼映射定理。它的目的是分类所有的单连通的区域。最终的结果是单连通区域只可能是整个复平面或者单位圆盘中某个区域的双全纯等价。
+  本章的目的是证明黎曼映射定理。它的目的是分类所有的单连通的区域。最终的结果是单连通区域只可能是整个复平面或者与单位圆盘双全纯等价。
   == 双全纯函数
     #remark[][
       $CC$ 当然不可能与任何有界区域双全纯等价，否则与整函数无界矛盾。
