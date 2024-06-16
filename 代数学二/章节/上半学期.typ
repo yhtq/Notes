@@ -1,5 +1,4 @@
 #import "../../template.typ": *
-#import "@preview/commute:0.2.0": node, arr, commutative-diagram
 // Take a look at the file `template.typ` in the file panel
 // to customize this template and discover how it works.
 

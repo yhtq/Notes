@@ -716,7 +716,7 @@
         $
         (dif^2 x)/(dif t^2) + f(x) = 0
         $
-        为二阶自洽方程，引进 $F(x)$ 使得 $F'(x) = f(x)$，令 $y = f'(x), H(x, y) = y^2/2 + F(x)$，有：
+        为二阶自洽方程，引进 $F(x)$ 使得 $F'(x) = f(x)$，令 $y = x', H(x, y) = y^2/2 + F(x)$，有：
         $
         der(H, t) = y der(y, t) + F'(x) der(x, t) = y (dif^2 x)/(dif t^2) + f(x) der(x, t) = 0 
         $
@@ -2063,8 +2063,8 @@
       x = Phi(t) C(t)\
       Phi'(t) C(t) + Phi(t) C'(t) = A(t) Phi(t) C(t) + f(t)\
       Phi(t) C'(t) = f(t)\
-      C'(t) = Inv(phi(t)) f(t)\
-      C(t) = integral_(t_0)^(t) Inv(phi(s)) f(s) dif s
+      C'(t) = Inv(Phi(t)) f(t)\
+      C(t) = integral_(t_0)^(t) Inv(Phi(s)) f(s) dif s
       $
       这给出了可行的 $C$
     ]<constant-variation>
@@ -2643,7 +2643,7 @@
         phi' = rho sin theta
       )
       $
-      此时，第二个边值条件等价于 $theta(1) = beta + 2 k pi$
+      此时，第二个边值条件等价于 $theta(1) = beta + 2 k pi$\
       计算：
       $
       
@@ -2659,7 +2659,7 @@
         由条件知被积函数恒正，从而 $theta$ 关于 $lambda$ 严格递增
       - 观察方程可以发现 $theta = 0$ 时 $theta' = 1$，且当 $lambda$ 充分小时，只要 $theta$ 不太小，就有 $theta' < 0$，我们猜测并证明以下结论：
         - $theta(x) > 0$\
-          如若不然，假设 $x_0$ 是最小的零点，之前的论述表明 $theta'(x) = 1 > 0$，而 $theta(0) = alpha > 0$，利用介质定理将可构造出更小的零点，矛盾！
+          如若不然，假设 $x_0$ 是最小的零点，之前的论述表明 $theta'(x_0) = 1 > 0$，而 $theta(0) = alpha > 0$，利用介质定理将可构造出更小的零点，矛盾！
         - 
           $
           lim_(lambda -> +infinity) theta(x) = +infinity, forall x_0
@@ -2672,7 +2672,11 @@
           $
           theta' >= 1 + n sin^2 theta
           $
-          由比较定理，只需证明 $theta' = 1 + n sin^2 theta$ 的解充分大即可。事实上 #TODO
+          由比较定理，只需证明 $theta' = 1 + n sin^2 theta$ 的解充分大即可。事实上：
+          $
+          x = integral_(alpha)^(theta) 1/(1 + n sin^2 t) dif t
+          $
+          观察不难发现 $n$ 充分大时 $theta$ 也应该充分大
         - 
           $
           lim_(lambda -> -infinity) theta(x) = 0, forall x_0
@@ -2695,7 +2699,7 @@
         theta_(lambda_k) (x) = j pi
         $
         只能有一个解（否则两个相邻解的导数值必然反号）\
-        同时，对于 $j > k$， $theta_(lambda_k) (x) = j pi$ 将无零点，否则由于 $theta(0), theta(1) < j pi$，至少产生两个零点，与上面的论述矛盾！
+        同时，对于 $j > k$， $theta_(lambda_k) (x) = j pi$ 将无解，否则由于 $theta(0), theta(1) < j pi$，至少产生两解，与上面的论述矛盾！
         
     ]
   == 特征函数系的正交性

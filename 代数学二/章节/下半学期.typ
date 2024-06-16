@@ -1,5 +1,4 @@
 #import "../../template.typ": *
-#import "@preview/commute:0.2.0": node, arr, commutative-diagram
 // Take a look at the file `template.typ` in the file panel
 // to customize this template and discover how it works.
 = 赋值环|Valuation ring
@@ -133,18 +132,18 @@
     ]
     #definition[valuation ring][
       设 $A$ 是整环，$k$ 是分式域，称 $A$ 是 $k$ 的赋值环，如果以下等价条件成立：
-      + $forall x in k, x in B or Inv(x) in B$
+      + $forall x in k, x in A or Inv(x) in A$
       + 存在全序阿贝尔群 $(Gamma, +)$ 和满同态 $nu: k^* -> Gamma$，并且满足：
         $
         nu(x + y) >= min(nu(x), nu(y))\
         nu(x y) = nu(x) + nu(y)
         $
-        并且 $B = {x in k | nu(x) >= 0}$
-        此时，称 $v$ 是 $B$ 的一个（加性）赋值
+        并且 $A = {x in k | nu(x) >= 0}$
+        此时，称 $v$ 是 $A$ 的一个（加性）赋值
       + $A$ 的主理想在包含关系下构成全序集
       + $A$ 的所有理想在包含关系下构成全序集
       + $A$ 是局部环并且每个有限生成理想是主理想
-      + $A$ 是局部环且不存在 $k$ 中的局部环支配 $B$
+      + $A$ 是局部环且不存在 $k$ 中的局部环支配 $A$
       + 存在代数闭域 $L$ 以及同态 $theta: A -> L$（一般不是单射），并且 $A, theta$ 是极大的，也就是若 $A subset A' subset k, theta': A' -> L$ 是 $theta$ 的延拓，则 $A = A'$
     ]<valuation-ring-cond>
     #proof[
@@ -152,12 +151,10 @@
         $
         gamma <= gamma' <=> gamma - gamma' in im(B - {0} -> Gamma)
         $
-        #TODO
+        可以验证这是一个全序阿贝尔群
       - 2 $=>$ 1 显然
       - 1 $=>$ 3\
-        断言 $A$ 的主理想与 $(B - {0}) quo B^*$ 有一一对应\
-        #TODO
-        2 的结论就给出其上的全序关系
+        断言 $A$ 的主理想与 $(A - {0}) quo A^*$ 有一一对应，既然主理想 $(a), (b)$ 相等当且仅当 $a, b$ 之间相差一个可逆元，进而 2 的结论就给出其上的全序关系
       - 4 $=>$ 3 显然
       - 3 $=>$ 4 任取两个理想 $I_1, I_2$ ，设 $I_1 subset.not I_2$ ，往证 $I_2 subset I_1$\
         任取 $a in I - J, b in J$，$a in.not J => (a) subset.not (b) subset J$，而由主理想的全序性必有 $(b) subset (a) subset I => b in I$，证毕
@@ -227,7 +224,7 @@
         x = -a_1 - ... - a_n x^(-(n-1))\
         $
         注意到若 $x in.not B$ 必有 $Inv(x) in B$，然而上式右侧全部是 $B$ 中元素，进而 $x$ 也是，矛盾！
-      - 简单验证即可 #TODO
+      - 利用 $x in A orC Inv(x) in A$ 简单验证即可
     ]
     #theorem[赋值环的构造][
       设 $k$ 是任意一个域，$Omega$ 是代数闭域，令：
@@ -399,6 +396,7 @@
     #proof[
       注意到整闭是局部性质，由上面的定理不难推出该定理
     ]
+    #pagebreak()
   == 戴德金整环|Dedekind domains
     这部分在数论课程中更加重要，本门课程不会要求太高
     #definition[戴德金整环|Dedekind domains][
@@ -421,6 +419,7 @@
             - 否则，$p sect ZZ$ 是极大理想，由 @integral-prime-containing 知 $p$ 也是极大理想
         ]
     ]
+    #pagebreak()
   == 分式理想
     #definition[分式理想/可逆理想][
       设 $A$ 是整环，$K$ 是分式域：
@@ -503,6 +502,7 @@
     #proof[
       利用局部化，显然（注意到左推右需要利用诺特性和 @noether-fractional-ideal-finite，右推左需要利用分式理想都有限生成表明环是诺特的）
     ]
+    #pagebreak()
 = Kahler-differentials
   这部分是补充内容，讨论代数的导数和切空间等内容
   #definition[derivation][
@@ -615,6 +615,7 @@
     (F) quo (F^2) -> Omega_(B quo A) tensorProduct_B C -> Omega_(C quo A) -> 0
     $
   ]
+  #pagebreak()
 = 完备化
   == 拓扑阿贝尔群
     #definition[拓扑阿贝尔群][
@@ -635,6 +636,7 @@
         arr(1, 3, $$),
         arr(2, 4, $\"-\"$),
         arr(3, 4, $$),)]
+        因此在 $G times G$ 中，对角线作为 ${0}$ 的连续逆像是闭集，进而 $G$ 是 Hausdorff 空间
     ]
     #lemma[][
       设 $H$ 为所有 $0$ 的邻域的交，则：
@@ -645,7 +647,16 @@
     ]
     #proof[
       - 设 $x, y in H$ ，任取 $0$ 的开邻域 $O$，注意到 $T_x: G -> G$ 连续，则 $Inv(T_x)(O)$ 是开集。同时 $x in O => 0 in Inv(T_x)(O) => y in Inv(T_x)(O) => x + y in O$
-      - #TODO
+      - 
+        $
+        x in H <=> x in U, forall U in N(0)\
+        $
+        任取 $S$ 是闭集，$0 in S <=> 0 in.not G - S$，假设 $x in.not S <=> x in G - S$，则 $x - (G - S)$ 是开集，且 $0$ 在其中，进而：
+        $
+        x in x - (G - S) => 0 in G - S 
+        $
+        矛盾！\
+        因此 $x$ 处于 $0$ 的所有闭邻域之中，自然处于 $H$ 中。反之是类似的。
       - 不难发现 ${0} subset G quo H$ 当然是闭集，因此结论成立
       - 就是上面的引理
     ]
@@ -658,6 +669,11 @@
     #lemma[][
       设 $I$ 是齐次理想，则 $I$  是素理想当且仅当任取齐次元素 $x, y, x y in I$ 均有 $x in I or y in I$
     ]
+    #proposition[][
+      对于分次环 $A$，以下事实等价：
+      - $A$ 是诺特环
+      - $A_0$ 是诺特环且 $A$ 是 $A_0$ 上有限生成代数
+    ]<graded-noether>
   == 拓扑完备化
     #definition[拓扑完备化][
       设 $G$ 是拓扑阿贝尔群，且 $0$ 处有可数邻域基，则可以定义完备化 $hat(G)$ 为所有柯西序列的等价类，其中：
@@ -752,6 +768,9 @@
       $
       进一步，若 ${A_n}$ 是满系统，只需证明 $d_A$ 满继而 $coker d_A = 0$. 事实上，任给 $(a_n) in A$，只需找到 $(x_n)$ 使得 $x_n - overline(x_(n+1)) = a_n$，递归定义即可
     ]
+    #remark[][
+      这里 $coker d_A$ 事实上就是 $inverseLimit^1 A_n$，也即导出函子
+    ]
     #corollary[][
       设 $G$ 满足 @alg-top-completion 的条件，且有正合列：
       $
@@ -806,8 +825,9 @@
         - 取 $A = k[x], I = (x)$，则 $hat(A) = k[[x]]$ 就是形式幂级数环
         - 取 $A = ZZ, I = (p)$，则 $hat(A) = ZZ_p$ 就是 $p$-进整数环
     ]
+    下面的所谓 filtrations 是为了提供另一种在模上定义拓扑的方法
     #definition[][
-      设 $M$ 是$AModule(A)$，$I$ 是理想，称一个 $M$ 的 $A$ filtration 是一个子模的无穷序列：
+      设 $M$ 是$AModule(A)$，$I$ 是理想，称一个 $M$ 的 $A-$ filtration 是一个子模的无穷序列：
       $
       M = M_0 >= M_(1) >= ... 
       $
@@ -825,34 +845,43 @@
       因此，$(M_n), (M'_n)$ 定义相同的 $I-$adic 拓扑
     ]
     #proof[
-      不妨设 $M' = I^n M$，此时当然有：
-      - $I M_n subset M_(n+1) => M'_n subset M_n$
-      #TODO
+      由定义，显然有：
+      $
+      M'_n supset I^n M, forall n
+      $
+      只需找到 $n_0$ 使得 $M_(n + n_0) subset I^n M$，事实上，不妨设 $forall n' > n_0$ 均有：
+      $
+      I M_(n') = M_(n' + 1)  
+      $
+      换言之，有 $M_(n + n_0) = I^n M_(n_0) subset I^n M$，证毕
     ]
-    设 $A^* = directSum_(n = 0)^infinity I^n$ 是分次环，则 $M^* = directSum_(n = 0)^infinity M^n$ 将是分次 $A^*$ 模。若 $A$ 是诺特的，可设 $I = (x_1, x_2, ..., x_n)$，此时 $A^* = A[x_1, x_2, ..., x_n]$ 当然也是诺特的
+    设 $A^* = directSum_(n = 0)^infinity I^n$ 是分次环，则 $M^* = directSum_(n = 0)^infinity M_n$ 将是分次 $A^*$ 模。若 $A$ 是诺特的，可设 $I = (x_1, x_2, ..., x_n)$，此时 $A^* = A[x_1, x_2, ..., x_n]$ 当然也是诺特的
     #lemma[][
       设 $A$ 诺特，$I$ 是理想，$M$ 是有限生成模以及 $I-$filtration $(M_n)$，则以下条件等价：
       + $M^*$ 是有限生成模
       + $(M_n)$ 是稳定 $I-$filtration
     ]
     #proof[
-      - 1 $=>$ 2 设：
+        设：
         $
         Q_n = directSum_(i = 0)^n M_i subset M^*
         $ 
-        （未必是 $A^*$模），令 $M_n^*$ 是由其生成的模。由于 $M$ 有限生成，显然 $M_n^*$ 也是有限生成的。
+        （未必是 $A^*$模），令 $M_n^*$ 是由其生成的模。由于 $M$ 有限生成，显然 $M_n^*$ 也是有限生成的。事实上有：
+        $
+        M_n^* = directSum_(i = 0)^n M_i directSum I M_n directSum I^2 M_n directSum ... 
+        $
 
         显然 $M_n^*$ 构成升链，且 $union M_n^* = M^*$，可以验证：
         $
         M^* "有限生成" <=> M^* = M^*_(n), n "充分大"
         $
-        而后者 #TODO 等价于 $M_(n + r) = I^r M_n, n, r$ 都充分大，证毕
+        而后者就等价于 $M_n$ 最终稳定，证毕
     ]
     #proposition[Artin-Rees Lemma][
-      设 $A$ 诺特，$I$ 是理想，$M$ 是有限生成模以及 稳定 $I-$filtration $(M_n)$，$N$ 是 $M$ 的子模，则 $M' sect M_n$ 是稳定 $I-$filtration\
+      设 $A$ 诺特，$I$ 是理想，$M$ 是有限生成模以及稳定 $I-$filtration $(M_n)$，$M'$ 是 $M$ 的子模，则 $M' sect M_n$ 是稳定 $I-$filtration\
       特别的，若 $M_n = I^n M$，则存在充分大的 $k$ 使得：
       $
-      I^n M sect N = I^(n-k) (I^k M sect N)
+      (I^n M) sect N = I^(n-k) (I^k M sect N)
       $
 
       换言之，$I-$adic 拓扑的限制还是 $I-$adic 拓扑
@@ -895,6 +924,8 @@
       node((1, 1), $hat(F)$, 6),
       node((1, 2), $hat(M)$, 7),
       node((1, 3), $0$, 8),
+      node((1, -1), $0$, 9),
+      arr(9, 5, $$),
       arr(1, 2, $$),
       arr(2, 3, $$),
       arr(3, 4, $$),
@@ -904,13 +935,14 @@
       arr(1, 5, $$),
       arr(2, 6, $$, bij_str),
       arr(3, 7, $$),
-      arr(4, 8, $$),)]
-      其中上下（下是因为满射系统的逆向极限是正合函子）都正合，继而 $M tensorProduct hat(A) -> hat(M)$ 是满射。若 $A$ 是诺特的，$N$ 作为有限生成模的子模也是有限生成模，$N tensorProduct hat(A) -> hat(N)$  也满射，同时 $hat(N) -> hat(F)$ 由完备化的正合性（上面的推论）将成为单射，运用蛇形引理即得 $ker (M tensorProduct hat(A) -> hat(M)) = 0 $，证毕
+      arr(4, 8, $$),
+      )]
+      其中上下（下是因为满射系统的逆向极限是正合函子）都正合，继而简单的追图可得 $M tensorProduct hat(A) -> hat(M)$ 是满射。若 $A$ 是诺特的，$N$ 作为有限生成模的子模也是有限生成模，$N tensorProduct hat(A) -> hat(N)$  也满射，同时 $hat(N) -> hat(F)$ 由完备化的正合性（上面的推论）将成为单射，运用蛇形引理即得 $ker (M tensorProduct hat(A) -> hat(M)) = 0 $，证毕
     ]
     #let hA = $hat(A)$
     #let hI = $hat(I)$
     #corollary[][
-      设 $A$ 诺特，$I$ 是任意理想，则：
+      设 $A$ 诺特，$I$ 是任意理想，在 $I-$ adic 拓扑下有：
       - 完备化是正合函子
       - $hat(A)$ 是平坦 $A$-模
       - $hat(I) = I tensorProduct hat(A) = I hat(A)$
@@ -943,10 +975,8 @@
     ]<Krull>
     #proof[
       设 $E = ker(M -> hat(M))$，它也是 $0$ 的所有开邻域的交。
-      - 一方面，$E$ 的限制拓扑是平凡的
-      - 另一方面，$E$ 的限制拓扑还是 $I-$adic 拓扑
-      #TODO
-      上面两条给出 $I E = E$，由 Nakayama 引理的一个版本可得存在 $alpha in I$ 使得 $(1 - alpha) E = 0$
+      注意到 $E$ 的限制拓扑是平凡的，也即 $E$ 是唯一一个 $E$ 中 $0$ 的邻域，而 @Artin-Rees 引理给出 $E$ 作为 $M$ 的子模产生兼容的拓扑。因此，$I E$ 当然也是 $0$ 的开邻域，
+      以上事实给出 $I E = E$，由 Nakayama 引理的一个版本可得存在 $alpha in I$ 使得 $(1 - alpha) E = 0$
 
       另一方面，设 $(1 - alpha) x = 0$，则 $x = alpha x = ... alpha^n x = ...$，当然 $x in sect I^n M$
     ]
@@ -954,6 +984,14 @@
       在前面的条件中，若 $I$ 落在 Jacobson 根中，必有 $sect I^n M = 0$，继而 $M$ 上的 $I-$adic 拓扑是 Hausdorff 的。
 
       特别的，若 $A$ 是诺特的局部环，则其上所有有限生成模的 $I-$adic 拓扑都是 Hausdorff 的，包括 $A$ 本身
+    ]
+    #remark[][
+      设 $S = 1 + alpha$，前面证明了这是乘性子集，因此产生局部化 $Inv(S) A$\
+      另一方面，注意到：
+      $
+      (1 - x)^(-1) = 1 + x + x^2 + ...
+      $
+      在 $hat(A)$ 中收敛，也即在 $hat(A)$ 中 $S$ 中元素都可逆，泛性质给出 $Inv(S) A$ 可被嵌入 $hat(A)$
     ]
     #theorem[][
       设 $A$ 的诺特环，则 $hat(A)$ 还是诺特的。特别的，诺特环上有限个变元的形式幂级数环（作为多项式环的完备化）还是诺特的
@@ -986,8 +1024,8 @@
           G(A) = A quo I [overline(x_1), ..., overline(x_n) ]
           $
           它当然是诺特的
-        - 前面已经证明
-        - $n$ 充分大时，有 $Gn(n) tilde.eq M_n quo I M_n = A quo I tensorProduct M$，因此 $G(M)$ 本质上仅有前面有限项生成（后面的只是 $I$ 在其上的作用）#TODO，当然是有限生成的 
+        - 前面已经证明 $I^n quo I^(n+1) tilde.eq hat(I)^n quo hat(I)^(n+1)$，结论显然
+        - $n$ 充分大时，有 $M_(n+1) quo M_(n+2) tilde.eq (I M_n) quo (I M_(n+1)) tilde.eq I (Gn(n))$，因此 $G(M)$ 本质上仅有前面有限项生成（后面的只是 $I$ 在其上的作用），而前面有限项当然每项都是有限生成的，它们的直和也是有限生成的
       ]
       #proposition[][
         设 $M$ 是有限生成，且其上的 $I-$filtration 是稳定的，假设 $A$ 完备且 $M$ 是 Hausdoff 的，也即 $sect M_n = 0$，则：
@@ -996,7 +1034,7 @@
       ]
       #proof[
         #lemma[][
-          设 $phi: A -> B$ 是 filtered 群间的同态，诱导 $hat(phi): hat(A) -> hat(B), G(phi) : G(A)  -> G(B)$，则：
+          设 $phi: A -> B$ 是 filtered 群间的同态（也即满足 $phi(A_n) subset B_n$），诱导 $hat(phi): hat(A) -> hat(B), G(phi) : G(A)  -> G(B)$，则：
           - $G(phi)$ 是单射给出 $hat(phi)$ 是单射
           - $G(phi)$ 是满射给出 $hat(phi)$ 是满射
         ]
@@ -1022,17 +1060,18 @@
           arr(5, 6, $$),
           arr(6, 7, $$),
           arr(7, 8, $$),
-          arr(1, 5, $$),
-          arr(2, 6, $$),
-          arr(3, 7, $$),
-          arr(4, 8, $$),)]
-          对 $n$ 做归纳，利用蛇形引理可以验证 $alpha_n$ 是单射/满射，对 $alpha_n$ 取逆向极限结合两者都是满射系统知结论成立
+          arr(1, 5, $G_n (phi)$),
+          arr(2, 6, $alpha_n$),
+          arr(3, 7, $alpha_(n+1)$),
+          arr(4, 8, $$),
+          )]
+          对 $n$ 做归纳，利用蛇形引理可以验证 $alpha_(n+1)$ 是单射/满射，对 $alpha_n$ 取逆向极限结合两者都是满射系统知结论成立
         ]
         取 $G(M)$ 的齐次生成元 $xi_i = overline(x_i), x_i in M_(n_i)$，希望证明 $x_i$ 就是 $M$ 的生成元
 
         取：
         $
-        F = directSum_i F^i where F^i = A, F^i_k = I^(k + n_i)
+        F = directSum_i F^i where F^i = A
         $
         定义 $phi: F -> M, phi(1_i) = xi_i$，则 $G(phi)$ 是满射，由引理 $hat(phi)$ 是满射，有交换图：
         #align(center)[#commutative-diagram(
@@ -1043,7 +1082,9 @@
         arr(1, 2, $$),
         arr(1, 3, $$),
         arr(2, 4, $$),
-        arr(3, 4, $$),)]
+        arr(3, 4, $$),
+        print: true
+        )]
         注意到 $A$ 完备，$M$ Hausdoff，则 $M -> hat(M)$ 是单射。同时由于 $F$ 是有限自由模，可以验证：
         $
         F tilde.eq inverseLimit F quo I^n F tilde.eq hat(F)
@@ -1059,6 +1100,10 @@
       ]
       有了上面的命题，原结论是容易的。事实上，$G(A) tilde.eq G(hat(A))$ 根据上面的命题是诺特的，而 $hat(A)$ 是完备的 Hausdoff 空间，因此由上面的命题 $hat(A)$ 是诺特的。
     ]
+    #corollary[][
+      诺特环上有限个变元的形式幂级数环是诺特的
+    ]
+  #pagebreak()
 = 维数理论 | Dimension theory
   == 维数
     #definition[height, dimension][
@@ -1125,9 +1170,9 @@
     ]
   == 庞卡莱序列
     #definition[庞卡莱序列][
-      设 $A = directSum_i A_i$ 是诺特的分次环，每个 $A_n$ 都诺特。$M$ 是分次的有限生成 $A-$模，$lambda$ 是有限 $A_n-$模 $-> ZZ$ 的加性函数，定义 $M$ 的庞卡莱序列为：
+      设 $A = directSum_i A_i$ 是诺特的分次环，每个 $A_n$ 都诺特。$M$ 是分次的有限生成 $A_0-$模，$lambda$ 是有限 $A_n-$模 $-> ZZ$ 的加性函数，定义 $M$ 的庞卡莱序列为：
       $
-      P(M, t) = sum_(n >= 0) (-1)^n  lambda (M_n) t^n
+      P(M, t) = sum_(n >= 0)  lambda (M_n) t^n
       $
     ]
     #theorem[][
@@ -1136,7 +1181,7 @@
       P(M, t) = (f(t))/(product_(i = 1)^s (1 - t^(k_i))), f(t) in ZZ[x]
       $
       定义 $d(M)$ 为这个函数 $P(M, t)$ 在 $t = 1$ 处极点的阶数\
-      其中 $s$ 是 $A$ 作为 $A_0$ 代数的齐次生成元的个数，$k_s$  在证明中给出
+      其中 $s$ 是 $A$ 作为 $A_0$ 代数的齐次生成元的个数（@graded-noether），$k_s$ 是每个齐次生成元的次数（也就是将 $M_n$ 通过乘法送入 $M_(n + k_s)$）
     ]
     #proof[
       对 $s$ 进行归纳
@@ -1150,7 +1195,7 @@
         0 -> K_n -> M_n -> M_(n + k) -> L_(n+k) -> 0
         $
         其中 $K_n, L_n$ 分别是 $ker, coker$\
-        令 $K = directSum K_n, L = directSum L_n$，则 $K, L$ 被 $x_s$ 零化，进而成为 $A_0 [x_1, ..., x_s]$ 上的模。由归纳假设 $P(K, t), P(L, t)$ 都是定理形式的有理函数。\
+        令 $K = directSum K_n, L = directSum L_n$，则 $K, L$ 被 $x_s$ 零化，进而成为 $A_0 [x_1, ..., x_(s-1)]$ 上的模。由归纳假设 $P(K, t), P(L, t)$ 都是定理形式的有理函数。\
         对正合列取庞卡莱序列，有：
         $
         
@@ -1184,7 +1229,7 @@
     #proof[
       根据 $M_n ->^x M_(n+k)$ 构造正合列：
       $
-      0 -> K_n -> M_n ->^x M_(n+k) -> L_(n+k) -> 0
+      0 -> M_n ->^x M_(n+k) -> M_(n+k) quo (x M_n) -> 0
       $
       将有：
       $
@@ -1198,7 +1243,7 @@
       - $A_n$ 是自由 $A_0$模，生成元集为所有 $n$ 次单项式，作为自由模的维数是 $C_(n + s -1)^(s - 1)$
       - 可以计算得：
         $
-        P(A, t) = lambda(A_0) + lambda(A_1) t + ... = 1/(1 -t)^s
+        P(A, t) = lambda(A_0) + lambda(A_1) t + ... = = sum_n C_(n + s - 1)^(s - 1) t^n = (1 - t)^(-s)
         $
     ] 
     #proposition[][
@@ -1206,15 +1251,15 @@
       - $M quo M_n$ 有限长度
       - $n -> "length"(M quo M_n)$ 是不超过 $s$ 次类多项式，其中 $s$ 是 $q$ 最少的生成元个数
       - 上面多项式的次数和首项系数与 $q$ 无关，只与 $M$ 有关
-      该多项式称为特征多项式
-    ]
+      该多项式称为特征多项式，记作 $chi_q (n)$
+    ]<degree-of-char-poly>
     #proof[
-      - 令 $G(A) = directSum_n q^n quo q^(n+1)$，则由极大理想幂零 $G_n$ 是 Artinian Noetherian 局部环，$G(M)$ 是有限生成 $G(A)$ 模，且每一项都是 Artinian Noethenian 模，因此 $M_n$ 有限长度，$M quo M_n$ 也有限长度。
+      - 令 $G(A) = directSum_n q^n quo q^(n+1)$，则由极大理想幂零 $G_n$ 是 Artinian Noetherian 局部环，$G(M)$ 是有限生成 $G(A)$ 模，且每一项都 Artinian Noethenian 环 $A quo q$ 上的有限生成模，进而是 Artinian Noethenian 模，因此 $M_n quo M_(n+1)$ 有限长度，$M quo M_n$ 也有限长度。
       - 由上题结论，$n -> l(M_(n - 1) quo M_n)$ 是类多项式函数，次数不超过 $s - 1$，求和得 $n -> l(M quo M_n)$ 也是类多项式，次数不超过 $s$，表明结论正确
       - 之前证明了两个稳定 $q-$filtration 互相控制，因此 $n$ 充分大时对应多项式也相互控制，进而首项应该都是一样的
     ]
   #corollary[][
-    $deg kai_q (n) = deg kai_m (n)$ 且首项相等
+    $deg chi_q (n) = deg chi_m (n)$ 且首项相等
   ]
   #proof[
     注意到：
@@ -1224,16 +1269,16 @@
     $
     由长度的定义可得：
     $
-    kai_m (n) <= kai_q (n) <= kai_m (r n)
+    chi_m (n) <= chi_q (n) <= chi_m (r n)
     $
     令 $n -> infinity$ 可得结论
   ]
   #definition[][
     设 $A$  是诺特的局部环，则令：
     $
-    d(A) = deg kai_q (n) = deg kai_m (n) = deg( n -> "length"(A quo m^n)) = d(G_m (A))\
-    where G_m (A) = directSum (m^i quo m^(i+1))
+    d(A) := deg chi_q (n) = deg chi_m (n) = deg( n -> "length"(A quo m^n)) = d(G_m (A))
     $
+    其中 $G_m (A) = directSum (m^i quo m^(i+1))$，$d(G_m (A))$ 是之前定义的希尔伯特多项式的极点阶数
 
   ]
   == 诺特局部环的维度
@@ -1251,22 +1296,21 @@
     #proposition[][
        设 $M$  是有限生成 $A-$ 模，$x$ 不是零因子，则：
        $
-       deg kai_q^(M quo x M) <= deg kai_q (M) - 1
+       deg chi_q^(M quo x M) <= deg chi_q^(M) - 1
        $
     ]
     #proof[
-      令 $N := x M$，作为 $AModule(A)$  同构于 $M$\
+      令 $N := x M$，作为 $AModule(A)$同构于 $M$\
       再令 $M' = M quo x M$\
-      由 @Artin-Rees 可知 $N_n = N sect q^n M$  是稳定 $q-$filtration\
       由正合列：
       $
       0 -> N quo N_n -> M quo q^n M -> M' quo q^n M' -> 0
       $
       由长度的加性，$n$ 充分大时有：
       $
-      l(N quo N_m) - kai_q^M (n) + kai_q^M' (n) = 0
+      l(N quo N_n) - chi_q^M (n) + chi_q^M' (n) = 0
       $
-      既然 $N$  与 $M$  同构且 $q-$filtration 兼容，$l(N quo N_m), kai_q^M (n)$  有相同的次数和首项，因此 $kai_q^M' (n)$  必然比其至少低一次
+      既然 $N$  与 $M$  同构，又由 @Artin-Rees 有 $n$ 充分大时 $l(N quo N_n) = l(N quo q^n N)$，故 $l(N quo N_n), chi_q^M (n)$  有相同的次数和首项，因此 $chi_q^M' (n)$  必然比其至少低一次
     ]
     #proposition[][
       $d(A) >= dim(A)$
@@ -1319,7 +1363,7 @@
       - $m-$primary 理想的最少生成元个数
     ]
     #proof[
-      $delta(A) >= d(A)$ 是上节的主要结论，其余便是本节的结论。
+      $delta(A) >= d(A)$ 是上节的主要结论（@degree-of-char-poly），其余便是本节的结论。
     ]
     #example[][
       之前证明了多项式环的幂级数是 $1 / (1-t)^n$ ，因此它的维度也是 $n$
@@ -1363,6 +1407,15 @@
       A quo m^n tilde.eq hat(A) quo hat(m)^n
       $
       当然特征多项式是一致的
+    ]
+    #corollary[][
+      设 $A$ 是诺特的局部环，$x$ 不是零因子或单位，则：
+      $
+      dim A quo (x) = dim A - 1
+      $
+    ]
+    #proof[
+      前面已经证明 $d (A quo (x)) <= d (A) - 1$，另一方面不难通过生成元数量验证 $delta(A quo (x)) >= delta(A) - 1$ 进而结论成立
     ]
     #definition[][
       设 $A$ 是诺特局部环，$d = dim A$， 若 $sqrt((x_1, ..., x_d)) = m$，则称 $x_1, ..., x_d$ 是一个参数系统|system of parameters
@@ -1433,6 +1486,7 @@
     #corollary[][
       设 $A$ 是 regular local ring ,$k = A quo m subset A$ ，则 $hat(A)$ 同构于 $k[[t_1, ..., t_d]]$
     ]
+  #pagebreak()
 = 同调代数
   == 回顾
     #definition[Abel 范畴][
@@ -1557,8 +1611,8 @@
       - 若 $F$  将短正合列映到短正合列，则称 $F$  是正合函子。这也等价于保持 $ker, im, coker, coim$  或者等价于保持有限极限/余极限。当然由保持 $ker, im$ 可以推出它保持同调群。
     ]
     #proposition[][
-      - $Hom(X, *)$ 是左正合函子。它正合时称 $X$  为投射对象，等价于将任何满同态|eqimorphism $Y -> Z$ 作用得到满同态 $Hom(X, Y) -> Hom(X, Z)$
-      - $Hom(*, Y)$ 是反变左正合函子。它正合时称 $Y$  为内射对象，等价于将任何单同态|monomorphism $Y -> Z$ 作用得到满同态 $Hom(Z, Y) -> Hom(Y, Y)$
+      - $Hom(M, *)$ 是左正合函子。它正合时称 $M$  为投射对象，等价于将任何满同态|eqimorphism $Y -> Z$ 作用得到满同态 $Hom(M, Y) -> Hom(M, Z)$
+      - $Hom(*, N)$ 是反变左正合函子。它正合时称 $Y$  为内射对象，等价于将任何单同态|monomorphism $Y -> Z$ 作用得到满同态 $Hom(Z, N) -> Hom(Y, N)$
     ]
     #example[][
       - $QQ quo ZZ$ 是 Abel 群范畴中的内射对象
@@ -2222,7 +2276,7 @@
         $
         由定义有：
         $
-        Ext^n (ZZ quo p, B) = H^n (0 -> Hom(ZZ, B) -> Hom(ZZ quo p, B))
+        Ext^n (ZZ quo p, B) = H^n (0 -> Hom(ZZ, B) -> Hom(ZZ, B))
         $
       - $Ext(ZZ, A) = 0$
       - 为了计算 $Ext(A, ZZ)$ 对 $ZZ$ 有内射解消：

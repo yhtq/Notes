@@ -5,9 +5,34 @@
 #import "@preview/lemmify:0.1.4": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 
-#let TODO = [#text("TODO", fill: red)]
-#let der(y, x) = $(d #y) / (d #x)$
-#let partialDer(y, x) = $(diff #y) / (diff #x)$
+#let __print_commute = true
+#let old-commutative-diagram = commutative-diagram
+#let en-font = "New Computer Modern"
+#let commutative-diagram(print: __print_commute, ..args) = {
+  if print {
+    old-commutative-diagram(..args)
+  }
+  else {
+    align(center)[
+      #text(style: "italic", font: "New Computer Modern")[
+        _Commutative diagram_
+      ]
+    ]
+  }
+}
+#let TODO = [#text("TODO", fill: red, font: en-font)]
+#let _der(y, x, times, sign) = {
+  if times == [$1$] {
+    [$(#sign #y) / (#sign #x)$]
+  }
+  else {
+    [$(dif^#times #y) / (dif #x^#times)$]
+  }
+}
+#let der(y, x) = _der(y, x, $1$, $dif$)
+#let derN(y, x, times) = _der(y, x, times, $dif$)
+#let partialDer(y, x) = _der(y, x, $1$, $diff$)
+#let partialDerN(y, x, times) = _der(y, x, times, $diff$)
 #let elasticity(P, Q) = $((diff #Q)/(diff #P))/(#Q / #P)$
 #let autoVec3(a, delim: "(" ) = $vec(#a _1, #a _2, #a _3, delim: delim)$
 #let autoVecN(a, n, delim: "(" ) = $vec(#a _1, #a _2,  dots.v, #a _#n, delim: delim)$
@@ -111,7 +136,22 @@
   Upper: $+infinity$
 
 )
+#let defaultProd = (
+  Var: $n$,
+  Lower: $1$,
+  Upper: $+infinity$
+
+)
+#let defaultDirectSum = (
+  Var: $n$,
+  Lower: $0$,
+  Upper: $+infinity$
+
+)
+#let directSum = math.plus.circle
 #let sumf(var: defaultSum.Var, lower: defaultSum.Lower, upper: defaultSum.Upper) = $sum_(#var = #lower)^(#upper)$
+#let prodf(var: defaultProd.Var, lower: defaultProd.Lower, upper: defaultProd.Upper) = $product_(#var = #lower)^(#upper)$
+#let directSumf(var: defaultDirectSum.Var, lower: defaultDirectSum.Lower, upper: defaultDirectSum.Upper) = $directSum_(#var = #lower)^(#upper)$
 
 
 #let emptyArrow(s, e) = arr(str(s), str(e), $$)
@@ -131,7 +171,6 @@
 }
 #let Mod = math.op("Mod")
 #let tensorProduct = math.times.circle
-#let directSum = math.plus.circle
 #let generatedBy(body) = $angle.l #body angle.r$
 #let normalSub(H, G) = $#H lt.tri.eq #G$
 #let norS = math.class("relation", math.lt.tri.eq)
