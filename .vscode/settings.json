@@ -1,0 +1,6 @@
+{
+    "cSpell.enableFiletypes": [
+        "typst"
+    ],
+    "tinymist.formatterMode": "typstfmt",
+}
