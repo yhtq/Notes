@@ -2,7 +2,7 @@
 
 //#import "typst-sympy-calculator.typ": *
 
-#import "@preview/lemmify:0.1.4": *
+#import "@preview/lemmify:0.1.6": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 
 #let __print_commute = true
@@ -290,6 +290,8 @@
   #body
   #parbreak()
   ]
+#let (alg, rules: alg-rules) = new-theorems("thm-group", ("alg": text[Algorithm]))
+#let (alg1, rules: alg-rules1) = new-theorems("thm-group-linear", ("alg1": text[Algorithm]), thm-numbering: thm-numbering-linear)
 #let theorem(name, body) = _convert(theo, name, body)
 #let lemma(name, body) = _convert(lem, name, body)
 #let corollary(name, body) = _convert(cor, name, body)
@@ -303,7 +305,7 @@
 ]
   #linebreak()
 ]
-
+#let algorithm(name, body) = _convert(alg, name, body)
 
 
 #let theoremLinear(name, body) = _convert(theo1, name, body)
@@ -319,6 +321,7 @@
 ]
   #linebreak()
 ]
+#let algorithmLinear(name, body) = _convert(alg1, name, body)
 
 //#let theorem = base_env.with(
 //  type: "Theorem",
@@ -399,6 +402,8 @@
   show: thm-rules
   show: ans-rules
   show: thm-rules1
+  show: alg-rules
+  show: alg-rules1
   show emph: it => {
     text(it, weight: "bold")
   }

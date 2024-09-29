@@ -15,7 +15,34 @@
 #let calB = $cal(B)$
 #let calC = $cal(C)$
 #let calP = $cal(P)$
+#let calL = $cal(L)$
 #let subst(AA, PP, pp) = $AA_( PP \/ pp )$ 
+#let deduction(body) = {
+  set enum(numbering: "(1)")
+  set align(left)
+  body
+}
+#let indent(num) = h((2em * num))
+#let pattern-match(body) = {
+  set list(marker: ([|]))
+  align(center, body)
+}
+#let align_left(body) = {
+  set align(left)
+  body
+}
+#let fA = $ "fromAxiom"$
+#let fS = $"fromFormulaSet"$
+#let deduction-theorem(a, b) = $ "deduction theorem" #a space #b$
+#let transitivity(a, b) = $ "transitivity" #a space #b$
+#let MP(a, b) = $ "MP" #a space #b$
+#let MPb(a, b) = $ "MP" (#a) (#b)$
+#let deduction-theorem-b(a, b) = $ "deduction theorem" (#a) (#b)$
+#let transitivity-b(a, b) = $ "transitivity" (#a) (#b)$
+#let L1 = $"L1"$
+#let L2 = $"L2"$
+#let L3 = $"L3"$
+#let idL = $"引理" calA -> calA$
 = 前言
   - 主要参考书：Introduction to Mathematical Logic
   - 成绩：平时 30%，期末 70%
@@ -184,3 +211,99 @@
     #definition[蕴含][
       称 $calA$ 蕴含 $calB$，记作 $calA models calB$，若任何 $calA$ 的模型都是 $calB$ 的模型
     ]
+    #pagebreak()
+= 形式系统
+  #definition[形式（演绎）系统][
+    形式系统指使用符号和规则来推导命题的系统，其中包含以下几个要素：
+    - 形式语言：用来表达命题的符号
+      + 一个字符表
+      + 由字符表中的字符组成的有限字符串的一个子集，其中的字符串称为 well-formed formula
+    - 公理：一组 well-formed formula
+    - 有限个推理规则集
+  ]
+  #example[][
+    命题逻辑是形式系统，其中：
+    - 字符集是原子公式集以及 $~, ->, (, )$（括号作为技术性符号，未必需要）
+    - 公式集是所有的命题形式
+    - 公理由一组公理模式（schema）来刻画，对于任何公式 $calA_1, calA_2, calA_3$ 都有：
+      + $calA_1 -> (calA_2 -> calA_1)$
+      + $(calA_1 -> (calA_2 -> calA_3)) -> ((calA_1 -> calA_2) -> (calA_1 -> calA_3))$
+      + $(not1 calA_1 -> not1 calA_2) -> (calA_2 -> calA_1)$
+    - 推理规则包括：
+      + $calA, (calA -> calB) => calA$ #align(end, [分离规则（MP）])
+    当然命题逻辑定义为形式系统的方式并不唯一
+  ]
+  #remark[][
+    $calA$ 等并非 $calL_0$ 中语言，而是元语言中符号。在计算机系统中，会使用 quasi-quote 来将元语言中的符号转化为 $calL_0$ 中的符号，例如 $`calA`$ ，该课程中省略该过程。
+  ]
+  公理系统是一种证明论（proof theory），证明论中当然还有其他与公理系统等价的系统。Euclid 的几何学是一个公理系统，但是在 19 世纪被发现是不完备的。
+  #definition[证明][
+    #calL 中的一个证明是指一个公式序列 $calA_i, i = 1, 2, ..., n$，其中要么 $calA_i$ 是公理，要么可以从之前的公式通过推理规则推导出来。$calA_n$ 称为一个定理，亦称 $calA_n$ 可证。
+  ]
+  #definition[演绎][
+    令 $Gamma$ 是 $L$ 中的公式集，若有一个公式序列 $calA_i, i = 1, 2, ..., n$，其中要么 $calA_i in L$，要么 $calA_i$ 是公理，要么可以从之前的公式通过推理规则推导出来。$calA_n$ 称为从 $Gamma$ 可演绎的，记作 $Gamma tack calA_n$。特别的，若 $calA$ 是定理，则有 $emptyset tack calA$ 也记作 $tack calA$
+  ]
+  #theorem[演绎定理][
+    若 $Gamma union {calA} tack calB$，则 $Gamma tack calA -> calB$
+  ]
+  #proof[
+    使用结构归纳法，对 $Gamma union {calA} tack calB$ 的一个演绎 $L$ 做归纳：\
+    #pattern-match[
+      match L with
+      - #align_left[#fA =>（此时 $calB$ 是公理），考虑：]
+        #deduction[
+          + $calB := fA$
+          + $calB -> (calA -> calB) := fA$
+          + $calA -> calB := #MPb(1, 2)$
+        ]
+      - #align_left[#fS => ]
+        + #align_left[若 $B in Gamma$，则 $Gamma tack calA -> calB$ 显然]
+        + #align_left[若 $B = A$，只需使用 $tack calA -> calA$ 即可]
+      - #align_left[#MP("a", "b") => （此时 $b = a -> calB$）] 
+        由归纳法，有 $Gamma tack calA -> a, Gamma tack calA -> (a -> calB)$，只需证明：
+        $
+        {calA -> a, calA -> (a -> calB)} tack calA -> calB
+        $ 
+        来自于：
+        #deduction[
+          + $calA -> a := fS$
+          + $calA -> (a -> calB) := fS$
+          + $(calA -> (a -> calB)) -> ((calA -> a) -> (calA -> calB)) := fA$
+          + #indent(1) $(calA -> a) -> (calA -> calB) := #MPb(3, 2)$
+          + #indent(2) $calA -> calB := #MPb(4, 1)$
+        ]
+    ]
+      
+  ]
+  #theorem[演绎定理2][
+    若 $Gamma tack calA -> calB$，则 $Gamma union {calA} tack calB$
+  ]
+  #example[假言三段论 HS/传递性][
+    证明：
+    $
+    calA -> calB, calB -> calC tack calA -> calC
+    $
+  ]
+  #proof[
+    容易证明 $calA, calA -> calB, calB -> calC tack calC$，应用演绎定理即可
+  ]
+  #definition[][
+    设 $Gamma$ 是公式集：
+    - 若存在 $calA$ 使得 $Gamma tack calA, Gamma tack not1 calA$，则称 $Gamma$ 是不一致的，否则是一致的
+    - 若公式 $calA$ 满足 $Gamma tack.not calA, Gamma tack.not not1 calA$，则称 $calA$ 与 $Gamma$ 独立
+    - 若 $calA, not1 calA in Gamma$ 则 $Gamma tack$ 任何公式，则称形式系统平凡
+    - 若 $Gamma' subset Gamma, Gamma' tack calA$，则 $Gamma tack calA$ ，则称形式系统单调
+  ]
+  #proposition[][
+    公式集不一致当且仅当对于任意公式 $calA$，都有 $Gamma tack calA$
+  ]
+  #definition[极大一致][
+    - 称公式集 $Gamma$ 是极大一致（MC）的，如果它是极大的一致集。
+    - 称 $Gamma' subset Gamma$ 是极大一致子集，如果 $Gamma'$ 是 $Gamma$ 中极大的一致子集
+  ]
+  #theorem[][
+    若 $Gamma$ 是极大一致的，则对于任意 $calA$ 均有 $Gamma tack calA$ 或 $Gamma tack not1 calA$
+  ]
+  #example[极大一致推理][
+    记 $Gamma tack_"MCS" calA$ ，如果对于任何极大一致子集 $Gamma'$，都有 $Gamma' tack calA$，该推理既不平凡也不单调
+  ]

@@ -119,11 +119,125 @@
     某种意义上，程序分析就是输入程序语法，返回程序语义的问题。通常程序分析涉及的层面是：
     - 抽象语法树：表示程序的抽象语法结构
     - 三地址码：将复杂程序简化到每个语句只有一个运算，控制语句全部简化成 goto 的中间代码
-    - 控制流图
+    - 控制流图：（一般在三地址码的基础上），程序的执行构成一个图。控制流指语句执行的顺序，控制流图的节点表示一个不含跳转的单元，边表示跳转关系。
+    #example[IMP][
+      定义非常简单的命令式语言 IMP:
+      ```haskell
+      data UnitCommand = SkipU
+      | AssignU string exp
+      | IfThenElseU exp
+      | IfEnd
+      | WhileU exp
+      | WhileEnd
+      data Command = Skip 
+      | Assign string exp 
+      | Seq Command Command
+      | IfThenElse exp Command Command
+      | While exp Command
+      ```
+      以及图结构：
+      ```haskell
+      newtype Node = Node UnitCommand 
+      data Graph v = {
+        nodes :: Map Int v,
+        edges :: List (Int, Int),
+        start_node :: Int,
+        end_node :: Int
+      }
+      data GraphR = PlainGraph (Graph Node) | ComponentGraph (Graph GraphR) -- 递归的图类型
+      graphNode :: Node -> GraphR
+      graphNode n = PlainGraph $ Graph {
+          nodes = Map.fromList [(0, n)],
+          edges = [],
+          start_node = 0,
+          end_node = 0
+      }
+      ```
+      
+    ]
+    #algorithm[][
+      在上面的例子中，可以给出到控制流图的翻译：
+      ```haskell
+      toCFG :: Command -> GraphR
+      toCFG Skip = graphNode (Node SkipU)
+      toCFG (Assign s e) = graphNode (Node (AssignU s e))
+      toCFG (Seq c1 c2) =
+        let g1 = toCFG c1
+            g2 = toCFG c2
+        in GraphR (ComponentGraph (Graph {
+          nodes = Map.fromList [(1, g1), (2, g2)],
+          edges = [(1, 2)],
+          start_node = 1,
+          end_node = 2
+        }))
+      toCFG (IfThenElse e c1 c2) =
+        let g1 = toCFG c1
+            g2 = toCFG c2
+            gIF = graphNode (Node IfThenElseU e)
+            gEnd = graphNode (Node IfEnd)
+        in GraphR (ComponentGraph (Graph {
+          nodes = Map.fromList [(1, gIF), (2, g1), (3, g2), (4, gEnd)],
+          edges = [(1, 2), (1, 3), (2, 4), (3, 4)],
+          start_node = 1,
+          end_node = 4
+        }))
+      toCFG (While e c) =
+        let gWhile = graphNode (Node WhileU e)
+        in GraphR (ComponentGraph (Graph {
+          nodes = Map.fromList [(1, gWhile), (2, toCFG c), (3, graphNode (Node WhileEnd))],
+          edges = [(1, 2), (2, 1), (2, 3)],
+          start_node = 1,
+          end_node = 3
+        }))
+      ```
+    ]
+    #algorithm[三地址码的控制流图][
+      对于三地址码，没有结构化的 if-else 和 while，需要详细分析 goto 的目标
+      + 首先，基本块就是每两个 goto 语句之间的代码块
+      + 然后，基本块之间的跳转关系就是 goto 语句的目标
+    ]
     #pagebreak()
 
 = 基于抽象解释的程序分析
   == 数据流分析
+    #definition[][
+      记 $A$ 为抽象域的集合，$X$ 为真实值的集合，记：
+      - $Gamma : A -> P(X)$ 将抽象域映射到真实值的集合
+      - $alpha : X -> A$ 将具体值映射到抽象域，需要满足 $alpha(Gamma(a)) = {a}$
+    ]
+    所谓的数据流分析，就是要在带有条件，循环等控制流的程序中，处理类似前言中表达式正负的问题。数据流分析的常见手法是：
+    - 将全局状态（变量到值的映射）转换成抽象状态（变量到抽象值的映射）
+    - 为每个程序语句设计抽象状态函数，实时改变抽象状态
+    #algorithm[抽象状态计算][
+       - 对于一般的顺序语句，抽象状态函数是显然的
+       - 对于条件语句，抽象状态函数是两个分支的抽象状态函数的上确界
+       - 对于循环语句，考虑：
+          ```c
+          x = 100;
+          y = 1;
+          while (y > x) {
+            x *= -100;
+            y += 1;
+          }
+          ```
+          尽管我们不知道循环会执行多少次终止，从逻辑上我们仍然可以得到一些结果。为了实现，我们假设抽象域中有符号 $bot$ 使得 $Gamma(bot) = emptyset$，假设每个节点处符号的初始值都是 $bot$，从 entry 的后继节点开始，分析时随机选取节点使用分支合并更新状态，使用宽度优先方法，如果某节点更新就将其后继加入待更新节点，直至没有节点待更新。
+    ]
+    #theorem[][
+      上面的算法是正确的，也即保证每个变量的值符合抽象状态。同时，它也保证停止，并且停止的结果与最开始选取的节点无关。
+    ]
+    #remark[][
+      这种分析方法产生了以下几种不精确性：
+      - 将值抽象成有限个值的集合
+      - 值的运算抽象到集合上，加大了不精确性
+      - 发生分支时，往往事实上只有一个分支被执行，但我们假设两个都有可能执行
+      - 状态合并时，也会产生不精确性
+    ]
+    #example[可达定值分析][
+      给定程序，判断每个变量的值可能在哪些行被赋值。这与数据流分析很接近，其中具体域是所有程序行号，转换函数是在赋值语句处替换，其他语句不变。注意算法中需要初始将所有节点全部加入待更新节点，否则非赋值语句可能保持 $bot$ 不变，导致算法停止。
+    ]
+    #example[可用表达式分析][
+      给定程序，如果从入口到某一位置 $p$ 的所有路径都计算了表达式 $e$，并且最后一次执行后没有改变与 $e$ 相关的变量，则称 $e$ 是 $p$ 处的一个可用表达式。这个问题中的具体域是程序中的所有表达式，转换函数是计算表达式时增加，变量赋值时删去相关的的表达式，分支合并时取交而非并。 
+    ]
   == 过程间分析
   == 指针分析
     
