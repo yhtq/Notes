@@ -5,6 +5,7 @@
   author: "YHTQ",
   date: datetime.today().display(),
   logo: none,
+  withChapterNewPage: true
 )
 = 前言
   - 授课教师：张磊
@@ -171,6 +172,127 @@
       $
       因此 $D$ 与 $A$ 合同，导致其对角元都正。令 $D = T T^T$，则有：
       $
-      
+      A = L T T^T L^T = (L T) (L T)^T
+      $
+      注意到 $L$ 是单位下三角矩阵，不难验证 $L T$ 是对角元均正的下三角矩阵
+    ]
+    #algorithm[][
+      求 Cholesky 因子当然可以通过 LU 分解，但事实上有更快的办法。只需从：
+      $
+      A = L L^T
+      $
+      便可得到等式：
+      $
+      a_(i j) = sum_(p = 1)^j l_(i p) l_(j p)
+      $
+      这些等式呈三角形，因此可以依次回代动态规划求解。具体而言：
+      ```hs
+      choleskyij :: Matrix -> Map (Int, Int) Double -> Int -> Int -> Map (Int, Int) Double -- 计算 l_(i j)，假设 i >= j
+      choleskyij A L i j = Map.insert L (i, j) lij
+                  where lij = if i = j 
+                    then sqrt (A i i - sum [(L i p)^2 | p <- [1..j - 1]])
+                    else (A i j - sum [(L i p) * (L j p) | p <- [1..j - 1]]) / (L j j)
+      cholesky :: Matrix -> Matrix
+      cholesky A = foldl (choleskyij A) Map.empty [(i, j) | i <- [1..n], j <- [1..i]]
+
+      ```
+      若只考虑乘加运算，运算量约为：
+      $
+      sum_(i=1)^n sum_(j=1)^i 2j approx 1/3 n^3
+      $
+      // $
+      // sum_(k=1)^n sum_(j = k + 1)^n sum_(r = j)^n 2 = sum_(r = 2)^n sum_(j = 2)^r sum_(k=1)^(j-1) 2 = sum_(r = 2)^n sum_(j = 2)^r 2(j - 1) ~ sum_(r = 2)^n r^2 ~ 1/3 n^3
+      // $
+      之后，只需解：
+      $
+      L y = b\
+      L^T x = y
+      $
+      两个三角形方程组即可得到解。
+
+      此外，该分解是稳定的，既然由：
+      $
+      a_(i i) = sum_(p = 1)^(i - 1) l_(i p)^2
+      $
+      不难得到：
+      $
+      abs(l_(i j)) <= sqrt(a_(i i))
       $
     ]
+    #algorithm[改进的平方根法][
+      平方根法需要进行开方运算。为了避免开方，可以求如下形式的分解：
+      $
+      A = L D L^T
+      $
+      其中 $L$ 是单位下三角矩阵，$D$ 是对角元均正的对角矩阵。（该分解称为 $L D L^T$ 分解）这样，方程变为：
+      $
+      a_(i j) = sum_(k = 1)^(j - 1) l_(i k) d_k l_(j k) + l_(i j) d_j 
+      $
+      反解出：
+      $
+      d_j = a_(j j) - sum_(k = 1)^(j - 1) l_(j k)^2 d_k\
+      l_(i j) = (a_(i j) - sum_(k = 1)^(j - 1) l_(i k) l_(j k) d_k) / d_j
+      $
+      同样进行动态规划即可。它的运算量也约为 $1/3 n^3$
+    ]
+= 线性方程组的敏度分析
+  == 向量范数与矩阵范数
+    #definition[向量范数][
+      称满足：
+      - 正定性：$norm(x) >= 0， norm(x) = 0<=> x = 0$
+      - 齐次性：$norm(a x) = a norm(x)$
+      - 三角不等式：$norm(a + b) <= norm(a) + norm(b)$
+      的 $RR-$ 线性空间 $X$ 到 $RR$ 的函数为范数。常用范数包含：
+      - $p-$范数：$norm(x) = root(1/p, sum_i abs(x_i)^p)$
+      - $infinity-$ 范数：$norm(x) = max_i abs(x_i)$
+      - $0-$ "范数"：$"card" {x_i | x_i != 0}$ （并不齐次）
+    ]
+    #definition[相容性][
+      - 称矩阵范数相容，如果 $norm(A B) <= norm(A) norm(B)$
+      - 称矩阵范数与向量范数相容，如果 $norm(A x) <= norm(A) norm(x)$
+      一般的，我们假定我们使用的范数都是相容的。
+    ]
+    #theorem[][
+      给定 $RR^n$ 上向量范数，则可以定义矩阵范数：
+      $
+      norm(A) = sup_(x != 0) (norm(A x))/norm(x)
+      $
+      它是 $RR^(m times n)$ 上的相容矩阵范数，也称为算子范数。它与向量范数相容。
+    ]
+    #example[矩阵范数][
+      常用的矩阵范数包括：
+      - $1-$ 范数：$max_(j) sum_i a_(i j)$，也称列范数
+      - $infinity-$ 范数：$max_(i) sum_j a_(i j)$，它是向量无穷范数的诱导
+      - $2-$ 范数：$norm(A) = A^T A$ 最大特征值的平方根，也称为谱范数，它是向量 $2-$ 范数的诱导
+    ]
+    #proposition[][
+      设 $A in RR^(m times n)$，则有：
+      - $norm(A)_2 = max_(norm(bx)_2 = 1, norm(by)_2 = 1) norm(by^T A bx)$
+      - $norm(A)_2 = norm(A^T)_2 = sqrt(norm(A A^T)_2)$
+      - 设 $U$ 是正交矩阵，则 $norm(U A)_2 = norm(A U) = norm(A)$
+    ]
+    #definition[谱半径][
+      称矩阵的特征值的绝对值最大值为谱半径，记为 $rho(A)$
+    ]
+    #theorem()[][
+      - 对于任意矩阵范数，有 $norm(A) >= rho(A)$
+      - 对于任意 $epsilon > 0$，存在矩阵范数使得 $norm(A) <= rho(A) + epsilon$
+    ]
+    #proof[
+      - 设 $lambda$ 是特征值且 $abs(lambda) = rho(A)$，$alpha$ 是对应的特征向量。将有：
+        $
+        rho(A) norm(alpha e_1^T)= norm(rho(A) alpha e_1^T) = norm(A alpha e_1^T) <= norm(A) norm(alpha e_1^T)
+        $
+        两边消去即可。
+    ]
+    #theorem[][
+      设 $A in CC^(n times m)$，则：
+      $
+      lim_(n -> +infinity) A^n = 0 <=> rho(A) < 1
+      $
+      更进一步，$lim_(n -> +infinity) A^n exists <=> rho(A) <= 1$
+    ]
+    #proof[
+      使用 Jordan 分解即可。
+    ]
+

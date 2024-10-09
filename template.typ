@@ -36,6 +36,8 @@
 #let elasticity(P, Q) = $((diff #Q)/(diff #P))/(#Q / #P)$
 #let autoVec3(a, delim: "(" ) = $vec(#a _1, #a _2, #a _3, delim: delim)$
 #let autoVecN(a, n, delim: "(" ) = $vec(#a _1, #a _2,  dots.v, #a _#n, delim: delim)$
+#let autoVecNF(f, n, delim: "(" ) = $vec(#(f(1)), #(f(2)),  dots.v, #(f(n)), delim: delim)$
+#let autoRVecNF(f, n ) = $(#(f(1)), #(f(2)),  dots, #(f(n)))$
 #let autoMat3(delim: "(", ..var) = {
   let varList = var.pos()
   let row(n) = varList.map(v => $#v _#n$)
@@ -46,6 +48,15 @@
 #let with = "with"
 #let andC = $" 且 "$
 #let orC = $" 或 "$
+#let hb = $hat(bold(beta))$
+#let sb = $bold(beta)^star$
+#let bbeta = $bold(beta)$
+#let balpha = $bold(alpha)$
+#let bgamma = $bold(gamma)$
+#let by = $bold(y)$
+#let bx = $bold(x)$
+#let bu = $bold(u)$
+#let bv = $bold(v)$
 
 #let inner(x, y) = $〈#x, #y〉$
 #let HomoCoor = math.vec.with(delim: "[")
@@ -383,7 +394,9 @@
 //  box(scale(160%, origin: bottom + right, sym.square.stroked))
 //})
 #let note(title: "Note title", author: "Name", logo: none, date: none,
-          preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, withHeadingNumbering: true, body) = {
+          preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, withHeadingNumbering: true, 
+          withChapterNewPage: false,
+          body) = {
   // Set the document's basic properties.
   set document(author: (author, ), title: title)
   set page(
@@ -413,7 +426,6 @@
       "(" + (counter(heading).get() + (num,)).map(str).join(".") + ")") if withHeadingNumbering == true
   let headingfunc = (it => it)
   if withHeadingNumbering == false {
-    set math.equation(numbering: "(1)")
   }
   else {
     headingfunc = (it => {
@@ -436,7 +448,13 @@
   // )
   // Set paragraph spacing.
   show par: set block(above: 1.2em, below: 1.2em)
-
+  let headingfunc1 = it => it
+  if withChapterNewPage == true{
+    headingfunc1 = it => {
+            pagebreak()
+            it
+      }
+  }
   if withTitle{
     // Title page.
     // The page can contain a logo if you pass one with `logo: "logo.png"`.
@@ -475,10 +493,12 @@
       } else {
         outline(depth: 3, indent: true)
       }
-
-      pagebreak()
+      if withChapterNewPage == false{
+        pagebreak() // 补上目录的换页
+      }
     }
   }
+  show heading.where(level: 1) : headingfunc1
 
 
   // Main body
@@ -486,7 +506,6 @@
 
   set heading(numbering: "1.")
   set heading(numbering: none) if withHeadingNumbering == false
-
   // Code
   show raw.where(block: false): box.with(
     fill: luma(240),

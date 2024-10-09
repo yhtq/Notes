@@ -6,6 +6,7 @@
   date: datetime.today().display(),
   logo: none,
 )
+
 = 前言
   - 教师：吴磊（leiwu\@math.pku.edu.cn）
   - 成绩：作业 40% + 大作业 60%（两到三人组）
@@ -38,6 +39,7 @@
     通过训练集得到的近似函数在训练集之外往往一定程度上有效，这被称为泛化。泛化的成立根本上依赖于问题本身具有的某些良好性质，例如连续性，可微性等等。然而随着提供的训练数据在高维空间中迅速变得稀疏，这些简单直观的性质提供的泛化能力往往会在维度升高时迅速衰减，这被称为维度灾难（curse of dimensionality）。
 = 传统机器学习  
   == 线性回归
+    #let hR = $hat(cal(R))$
     使用线性函数：
     $
     f_i (x) = beta^T x + beta_0
@@ -46,7 +48,67 @@
     $
     f_i (x) = (beta^T, beta_0) vec(x, 1)
     $
-    使用均方误差时，它有解析解。
+    定义均方误差：
+    $
+    hR_n (beta) = 1/n sum_(j=1)^n 1/2 (beta^T x_j - y_j)^2 = 1/(2 n) norm(vec(x_1^T, dots.v, x_n^T) beta - y)
+    $
+    #algorithm[OLS 普通最小二乘][
+      求解：
+      $
+      0 = nabla hR_n (beta)
+      $
+      得到：
+      $
+      1/n sum_(j=1)^n (beta^T x_j - y_j) x_j &= 0\
+      sum_(j=1)^n (beta^T x_j) x_j &= sum_(j=1)^n y_j x_j\
+      sum_(j=1)^n  x_j (beta^T x_j) &= sum_(j=1)^n y_j x_j\
+      sum_(j=1)^n x_j x_j^T beta &= (x_1, ..., x_n) y\
+      (sum_(j=1)^n x_j x_j^T) beta &= (x_1, ..., x_n) y\
+      (x_1, ..., x_n) vec(x_1^T, dots.v, x_n^T)  beta &= (x_1, ..., x_n) y\
+      $
+      记 $X = vec(x_1^T, dots.v, x_n^T)$，上式化为：
+      $
+      X^T X beta = X^T y
+      $
+      假设 $X$ 满秩，则上式有唯一解：
+      $
+      hat(beta) = (X^T X)^(-1) X^T y
+      $
+      否则，需要找到一个最优解。例如许多时候我们希望找到一个最小范数的解，这被称为 Ridge Regression，也就是求解以下问题：
+      $
+      min_(beta in RR^d) norm(beta) \
+      s.t. X beta = y
+      $
+      其中 $n < d, X in RR^(n times d) "满秩", y in RR^n$，此时可以解得解析解：
+      $
+      hb = X^T (X X^T)^(-1) by
+      $
+      #proof[
+        由条件，方程显然有解。设 $bbeta = X^T bu + bv$，代入方程有：
+        $
+        X (X^T bu + bv) &= by\
+        bu &= (X X^T)^(-1) (by - X bv)\
+        norm(bbeta)^2 &= (bu^T X + bv^T)(X^T bu + bv)\
+        &= bu^T X X^T bu + bu^T X bv + bv^T X^T bu + bv^T bv\
+        &= (by^T - bv^T X^T)(X X^T)^(-1)(by - X bv) + (by^T - bv^T X^T) (X X^T)^(-1) X bv + bv^T X^T (X X^T)^(-1) (by - X bv) + bv^T bv\
+        &= bv^T (I -  X^T (X X^T)^(-1) X) bv + by^T (X X^T)^(-1) by
+        $
+        #lemmaLinear[][
+          $I -  X^T (X X^T)^(-1) X$ 是半正定矩阵
+        ]
+        #proof[
+          令 $P = X^T (X X^T)^(-1) X$，注意到：
+          - $P^2 = P$
+          - $P = P^T$
+          因此：
+          $
+          (I - P)^2 = I - 2P + P^2 = I - P\
+          x^T (I - P) x = x^T (I - P)^2 x = x^T (I -P)^T (I - P) x = norm((I- P) x) >= 0
+          $
+        ]
+        由引理，显然上式取得最小值当且仅当 $bv = 0$，此时 $bbeta = x^T (X X^T)^(-1) by$
+      ]
+    ]
     #example[][
       通常情况下数据是有噪声的，这时需要采用正则化方法，例如：
       - Ridge Regression：$min_(beta) sum_(i=1)^n (y_i - beta^T x_i)^2 + lambda norm(beta)_2^2$
