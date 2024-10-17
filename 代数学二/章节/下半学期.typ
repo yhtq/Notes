@@ -396,7 +396,7 @@
     #proof[
       注意到整闭是局部性质，由上面的定理不难推出该定理
     ]
-    #pagebreak()
+    
   == 戴德金整环|Dedekind domains
     这部分在数论课程中更加重要，本门课程不会要求太高
     #definition[戴德金整环|Dedekind domains][
@@ -419,7 +419,7 @@
             - 否则，$p sect ZZ$ 是极大理想，由 @integral-prime-containing 知 $p$ 也是极大理想
         ]
     ]
-    #pagebreak()
+    
   == 分式理想
     #definition[分式理想/可逆理想][
       设 $A$ 是整环，$K$ 是分式域：
@@ -502,7 +502,7 @@
     #proof[
       利用局部化，显然（注意到左推右需要利用诺特性和 @noether-fractional-ideal-finite，右推左需要利用分式理想都有限生成表明环是诺特的）
     ]
-    #pagebreak()
+    
 = Kahler-differentials
   这部分是补充内容，讨论代数的导数和切空间等内容
   #definition[derivation][
@@ -615,7 +615,7 @@
     (F) quo (F^2) -> Omega_(B quo A) tensorProduct_B C -> Omega_(C quo A) -> 0
     $
   ]
-  #pagebreak()
+  
 = 完备化
   == 拓扑阿贝尔群
     #definition[拓扑阿贝尔群][
@@ -1103,7 +1103,7 @@
     #corollary[][
       诺特环上有限个变元的形式幂级数环是诺特的
     ]
-  #pagebreak()
+  
 = 维数理论 | Dimension theory
   == 维数
     #definition[height, dimension][
@@ -1486,7 +1486,7 @@
     #corollary[][
       设 $A$ 是 regular local ring ,$k = A quo m subset A$ ，则 $hat(A)$ 同构于 $k[[t_1, ..., t_d]]$
     ]
-  #pagebreak()
+  
 = 同调代数
   == 回顾
     #definition[Abel 范畴][

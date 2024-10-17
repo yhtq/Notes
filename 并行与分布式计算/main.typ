@@ -116,4 +116,27 @@
       #definition[BSP 模型][
         BSP (Bulk Synchronous Parallel) 模型是一种并行计算模型，其中有 $p$ 个处理器。计算过程分为多个超步，每个超步之内处理器单独计算，超步结束时处理器之间进行通信，同步所有状态。
       ]
+= MPI（Message Passing Interface）
+  MPI 是一种消息传递接口，是一种标准。
+  == 进程定位
+    在 MPI 中，每个进程处在一个通信域（communicator）中，每个通信域有一个唯一的标识符，可以通过这个标识符来定位进程。通信域中每个进程有一个标识符，称为 rank
+  == 阻塞/非阻塞通信
+  == 点对点通信
+  == 集合通信
+  == 程序的并行性
+    #definition[][
+      对于两个程序（进程）$P_1, P_2$，记 $I(P), O(P)$ 分别为 $P$ 程序需要读取/写入的数据集合
+    ]
+    #theorem[Bernstein][
+      两个程序 $P_1, P_2$ 可以并行执行，记作 $P_1 || P_2$，如果 $O(P_1) sect I(P_2) = emptyset$ 且 $O(P_2) sect I(P_1) = emptyset$ 且 $O(P_1) sect O(P_2) = emptyset$
+    ]
+    #definition[][
+      不满足 Bernstein 条件的程序会产生竞争条件和数据依赖，也就是两个进程同时访问了相同数据，且至少有一个进程写入了数据。这样的并行程序如果直接执行，其结果将不能确定。具体而言，数据依赖常常分为：
+      - 流依赖：read after write，RAW
+      - 反依赖：write after read，WAR
+      - 输出依赖：write after write，WAW
+    ]
+    #definition[][
+      当且仅当所有不可消除（有些数据依赖是可消除的，例如多个数求和即使产生输出依赖也不影响结果）的程序依赖得以满足后，并行程序满足串行一致性。
+    ]
 

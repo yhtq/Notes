@@ -295,4 +295,136 @@
     #proof[
       使用 Jordan 分解即可。
     ]
+    #corollary[][
+      假设 $norm(I) = 1, norm(A) < 1$，则 $I - A$ 可逆，且有：
+      $
+      norm(Inv((I - A))) <= 1/(1 - norm(A))
+      $
+    ]<norm-inv>
+    #proof[
+      #let suma = sumf()
+      #let summ = sumf(lower: $m$)
+      考虑形式幂级数：
+      $
+      suma A^n
+      $
+      断言它收敛，事实上使用柯西准则：
+      $
+      norm(summ A^n) <= summ norm(A^n) <= summ norm(A)^n -> 0 
+      $
+      因此一定收敛。设其和为 $B$，则：
+      $
+      B (I - A) = (suma A^n)(I - A) = I
+      $
+      表明 $B$ 就是 $I-A$ 的逆，并且：
+      $
+      norm(B) = norm(suma A^n) <= suma norm(A^n)  <= suma norm(A)^n = 1/(1 - norm(A))
+      $
+      证毕
+    ]
+  == 线性方程组的敏度分析
+    本节中，我们希望计算解线性方程组的条件数。假设我们使用的范数满足 $norm(I) = 1$，对线性方程组问题：
+    $
+    A x = b
+    $
+    其中 $A$ 非奇异，假设微扰后变为：
+    $
+    (A + delta A)(x + delta x) = b + delta b\
+    A x + A delta x + delta A x + delta A delta x = b + delta b\
+     A delta x + delta A x + delta A delta x= delta b\
+     (A +delta A)delta x = delta b - delta A x\
+     delta x = Inv((A + delta A)) (delta b - delta A x) = Inv((I + Inv(A) delta A)) Inv(A) (delta b - delta A x)\
+     norm(delta x) <= norm(Inv((I + Inv(A) delta A))) norm(Inv(A)) (norm(delta b) + norm(delta A) norm(x))\
+     norm(delta x)/norm(x) <= norm(Inv((I + Inv(A) delta A))) norm(Inv(A)) (norm(delta b)/norm(x) + norm(delta A) )\
+     norm(delta x)/norm(x) <= norm(Inv((I + Inv(A) delta A))) norm(Inv(A)) (norm(delta b)/norm(x) + norm(delta A) )  <= (norm(A) norm(Inv(A)) ) / (1 - norm(Inv(A)) norm(delta A)) (norm(delta b)/(norm(A) norm(x)) + norm(delta A)/norm(A) )\
+     <= (norm(A) norm(Inv(A)) ) / (1 - norm(Inv(A)) norm(delta A)) (norm(delta b)/(norm(A x)) + norm(delta A)/norm(A) )
+     <= (norm(A) norm(Inv(A)) ) / (1 - norm(Inv(A)) norm(delta A)) (norm(delta b)/(norm(b)) + norm(delta A)/norm(A) )
+    $
+    其中运用了：
+    $
+    norm(Inv((I + Inv(A) delta A))) <= 1/(1 - norm(Inv(A) delta A)) <= 1/(1 - norm(Inv(A)) norm(delta A))
+    $
+    因此我们得到定理：
+    #theorem[][
+      假设 $A x =b$ 经微扰变为 $(A + delta A)(x + delta x) = b + delta b$，则有：
+      $
+      (delta x) / x <= (norm(A) norm(Inv(A)) ) / (1 - norm(Inv(A)) norm(delta A)) (norm(delta b)/norm(b) + norm(delta A)/norm(A) )
+      $
+      若令 $kappa(A) = norm(A) norm(Inv(A))$，则上式表明 $(delta x)/x$ 与 $kappa(A)$ 大约为线性，因此 $kappa(A)$ 称为线性方程组问题的条件数。
+    ]
+    此外，我们有：
+    #theorem[][
+      在求逆问题中，有：
+      $
+      (norm((A + delta A)^(-1) - A^(-1))) / norm(A^(-1)) &<= norm(I - A (A + delta A)^(-1)) = norm(I - Inv((I + delta A Inv(A))))\
+      &= norm(((I + delta A Inv(A)) - I)Inv((I + delta A Inv(A))))\
+      &<= norm(delta A) norm(Inv(A)) norm(Inv((I + delta A Inv(A))))\
+      &<= (norm(delta A) norm(Inv(A)))/(1 - norm(delta A) norm(Inv(A)))\
+      &= (norm(A) norm(Inv(A)))/(1 - norm(delta A) norm(Inv(A))) norm(delta A)/norm(A)\
+      $
+      可见 $kappa(A)$ 也是求逆问题的条件数。
+    ]
+    #theorem[][
+      若使用谱范数，则有：
+      $
+      min {norm(delta A) | A +delta A "奇异"} = 1/norm(Inv(A))
+      $
+    ]
+    #proof[
+      由于谱范数是算子范数，取 $x$ 使得：
+      $
+      norm(Inv(A) x) = norm(Inv(A))
+      $
+      取：
+      $
+      y = (Inv(A) x)/norm(Inv(A) x)\
+      $
+      则：
+      $
+      A y = x/norm(x) = (x y^T y)/(norm(x)) = (x y^T)/norm(x) y
+      $
+      也即：
+      $
+      (A - (x y^T)/norm(x)) y = 0
+      $
+      同时：
+      $
+      norm((x y^T)/norm(x)) = 1/norm(x) sqrt(norm(x y^T y x^T)) = sqrt(norm(x x^T))/norm(x) = sqrt(norm(x^T x))/norm(x) = 1
+      $
+      表明 $A - (x y^T)/norm(x)$ 是奇异的，而 $(x y^T)/norm(x)$ 就是我们要找的微扰。
 
+      对于更小的微扰，@norm-inv 保证矩阵一定可逆。
+    ]
+= 线性最小二乘问题
+  #definition[最小二乘][
+    给定 $A in RR^(m times n), b in RR^m$，线性最小二乘问题是求解：
+    $
+    min norm(A x - b)^2
+    $
+    其中 $x in RR^n$ 为未知向量。
+  ]
+  显然
+  - 若 $m = n$ 且 $A$ 非奇异时，$x = Inv(A) b$ 即可
+  - 若 $m < n$，称作嵌进方程组，解有无穷多组，我们往往希望解出：
+    $
+    min norm(x)^2 s.t. A x = b
+    $
+    也即范数最小的解。对于这种问题，我们往往通过拉格朗日乘子法解决。
+  - 若 $m > n$，称方程组超定 (overdetermined)，我们希望解出：
+    $
+    min norm(A x - b)^2
+    $
+    也即最小化误差的平方和。这种问题的解法是线性最小二乘问题。当我们采用2-范数时，这是凸问题，存在唯一的最优解，求导可得解就是以下线性方程组的解：
+    $
+    A^T A x = A^T b
+    $
+    这被称为最小二乘问题的正则化方程，线性代数的知识保证了它总是有解的。假设 $A$ 列满秩，则 $A^T A$ 对称正定，使用平方根法即可，否则用一般的解线性方程组方法即可。
+
+  然而，注意到 $A^T A$ 的条件数是 $A$ 的条件数的平方，因此使用一般的线性方程组解法会导致误差放大，因此我们希望采用其他方法求解。之前高斯变换我们使用的是初等变换矩阵，这里我们改用初等正交矩阵：
+  #definition[][
+    对于任意向量 $v$，令：
+    $
+    H = I - 2/ (v^T v)  v v^T 
+    $
+    这样的矩阵称为 Householder 矩阵，对应向量称为 Householder 向量 。它是对称的正交/对合矩阵，且 $v$ 是特征向量，对应特征值为 $-1$。事实上，它就是关于超平面 $v^T$ 的反射。
+  ]

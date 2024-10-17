@@ -5,6 +5,7 @@
   author: "YHTQ",
   date: datetime.today().display(),
   logo: none,
+  withChapterNewPage: true
 )
 #let not1 = math.tilde
 #let True = $T$
@@ -43,6 +44,7 @@
 #let L2 = $"L2"$
 #let L3 = $"L3"$
 #let idL = $"引理" calA -> calA$
+#let language = $cal(L)$
 = 前言
   - 主要参考书：Introduction to Mathematical Logic
   - 成绩：平时 30%，期末 70%
@@ -424,6 +426,69 @@
       - 推理规则：MP
     ]
     主流数学仍是基于经典逻辑的，但是其中有些分支也应用了直觉主义逻辑。
+= 一阶逻辑：模型论
+  == 谓词和量词
+    一阶逻辑就是在命题逻辑中将基本命题细分为：
+    - 谓词结构，形如 $A(x)$，表示对于任何变元（主词），谓词 $A$，产生基本命题 $A(x)$
+    - 任意结构，形如 $forall x, A(x)$，表示对于任何 $x$，$A(x)$ 都成立
+    - 存在结构，形如 $exists x, A(x)$，表示存在一个 $x$ 使得 $A(x)$ 成立
+    #definition[][
+      被量词限定的变元称为自由变元，否则称为约束变元。含有自由变元的项往往无法确定真值。
+    ]
+  == 一阶语言
+    本节给出一阶语言（记为 #language）的形式定义
+    #definition[一阶语言的字符表][
+      一阶语言的字符表包括：
+      - 至多可数的变元集合 $x_1, x_2, ...$
+      - 至多可数的常元集合 $a_1, a_2, ...$
+      - 逻辑符号 $not1, infer$
+      - 量词 $forall$
+      - 谓词符 $A_m^n$，表示第 $m$ 个谓词符，有 $n$ 个参数
+      - 函项符号 $f_m^n$，表示第 $m$ 个函项符号，有 $n$ 个参数
+    ]
+    #remark[][
+      零元的谓词符/函项符事实上是常元/常命题，方便期间我们仍然保留额外定义的常元，但不额外定义常命题。
+    ]
+    #definition[][
+      称 $language^+$ 为 $language$ 的一个扩展，如果它拓展了 $language$ 的变元集合/常元集合/谓词符/函项符
+    ]
+    #definition[公式与项][
+      一阶语言中良好的表达式分为公式与项，满足文法规则：
+      ```
+      term ::= x_i 
+              | a_i 
+              | f_m^n (term_1, ..., term_n)
+      formula ::= A_m^n (term_1, ..., term_n) 
+                 | not formula 
+                 | formula -> formula 
+                 | forall x_i, formula
+      ```
+      特别的：
+      - 只由常元和函项符构成的项称为闭项，否则称为开项。显然将一些闭项加入常元集可以得到拓展，称为闭项拓展。只用常元的拓展称为常元拓展。
+      - 不含量词，变元的公式称为命题公式，也就是命题逻辑语言 $language_0$ 中的公式
+    ] 
+    #lemma[][
+      #language 中的公式集和项集都是至多可数的
+    ]
+    #definition[][
+      在公式 $forall x (calA)$ 中，称 $calA$ 是 $x$ 的辖域。$calA$ 中所有 $x$ 的出现以及 $forall x$ 中 $x$ 的出现称为约束的出现；变元在辖域之外的出现称为自由出现。
+    ]
+    #example[][
+      $forall x_1(A(x_1, x_2) -> forall x_2 (B(x_2)))$ 中，$x_1$ 约束出现两次，$x_2$ 约束出现一次，自由出现一次
+    ]
+    #definition[替换][
+      设 $s, t$ 是项，将 $s$ 中所有 $x_i$ 替换为 $t$ 的操作记作 $s(x_i \/ t)$
+    ]
+    #remark[][
+      替换是可能产生歧义的，例如：
+      $
+      forall x_1 (x_2)
+      $
+      用 $x_1$ 替换 $x_2$ 会导致自由变元 $x_1$ 和约束变元 $x_1$ 产生混淆，这是非法的。
+    ]
+    #definition[][
+      称 $t$ 在 $calA$ 中对 $x_i$ 是自由的，如果对于任意在 $t$ 中出现的变元 $x$， $calA$ 中所有形如 $forall x(calB)$ 的子公式均满足 $x_i$ 不在 $calB$ 中自由出现。
 
-    
+      如此，我们使用 $t$ 替换 $x_i$ 的所有自由出现便不会产生歧义。
+    ]
     

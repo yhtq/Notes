@@ -6,6 +6,7 @@
   author: "YHTQ",
   date: none,
   logo: none,
+  withChapterNewPage: true
 )
 #include "章节/上半学期.typ"
 #include "章节/下半学期.typ"

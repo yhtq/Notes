@@ -85,6 +85,7 @@
 #let conjugateLeft(g, a) = $#g^(-1) #a #g$
 #let conjugateRight(g, a) = $#g #a #g^(-1)$
 #let quotient(G, H) = $#G\\#H$
+#let empty = ""
 #let lift = math.arrow.t
 #let quo = math.class("relation", $slash$)
 #let ord = math.op("ord")
@@ -524,6 +525,7 @@
   // Code block with line numbers
   show raw.where(block: true): it => {
     if not code_with_line_number { return it }
+    set text(font: ("Noto Serif CJK SC", "New Computer Modern Math"))
     let lines = it.text.split("\n")
     let length = lines.len()
     let i = 0
@@ -551,3 +553,4 @@
 
   body
 }
+#let prop = sym.prop
