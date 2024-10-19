@@ -256,15 +256,15 @@
         称 $(S, sup)$ 为半格，如果满足：
         - 幂等性：$x sup x = x$
         - 交换性：$x sup y = y sup x$
-        - 非对称性：$$
-        不难验证，$x subset y := x sup y = y$ 是偏序关系。
+        - 结合性：$(x sup y) sup z = x sup (y sup z)$
+        它是幂等的交换半群。不难验证，$x subset y := x sup y = y$ 是偏序关系，$sup$ 实际上是求上确界运算。
 
-        有最小值 $bot$ 的半格称为有界半格。
+        有最小值 $bot$ 的半格称为有界半格，它是幂等的交换幺半群。
 
         称一个有界半格的高度指其中全序子集元素个数的最大值。
       ]
       #theorem[不动点定理][
-        给定有限高度的有界半格 $S$ 和单调函数 $f: S -> S$，则 $bot, f(bot), ..., $ 一定在有限步停止在 $f$ 的最小不等点
+        给定有限高度的有界半格 $S$ 和单调函数 $f: S -> S$，则 $bot, f(bot), ..., $ 一定在有限步停止在 $f$ 的最小不动点
       ]
       #proof[
         - 首先证明序列终止。不难验证：
@@ -291,7 +291,7 @@
       ]
     === 数据流分析拓展：条件压缩
       在上面的近似方案中，我们认为所有分支都会执行从而得到分析结果，这当然是荒谬的。为了使结果更精确，我们需要更精细地处理这个问题。一个常见的方案是增加条件压缩节点，也就是：
-      ```
+      ```c
       if (x > 0)
       {
         x += 1;
@@ -302,7 +302,7 @@
       }
       ```
       转换成：
-      ```
+      ```c
       if (x > 0)
       {
         assert(x > 0);
@@ -423,6 +423,64 @@
           g compose gamma = gamma compose f
           $
         显然最佳抽象总是存在的，但精确抽象不一定存在。
+      ]
+      取具体域为程序执行踪迹的集合，抽象域为分析结果，并令：
+      - $alpha$ 为踪迹集合对应的精确分析结果，也即 $alpha(X) := sup_(x in X) beta(x)$
+      - $gamma(Y) = {x | beta(x) <= Y}$
+      容易证明这构成一个 Galois 连接。事实上，一个精确的程序分析应该满足：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $"抽象输入"$, 1),
+      node((0, 1), $"分析结果"$, 2),
+      node((1, 0), $"输入轨迹集合"$, 3),
+      node((1, 1), $"执行踪迹集合"$, 4),
+      arr(1, 2, $"抽象语义"$),
+      arr(3, 1, $beta$),
+      arr(4, 2, $alpha$),
+      arr(3, 4, $"具体语义"$),)]
+      而通常如果保证：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $"抽象输入"$, 1),
+      node((0, 1), $"分析结果"$, 2),
+      node((1, 0), $"输入轨迹集合"$, 3),
+      node((1, 1), $"执行踪迹集合"$, 4),
+      arr(1, 2, $"抽象语义"$),
+      arr(3, 1, $beta$),
+      arr(4, 2, $alpha <= $),
+      arr(3, 4, $"具体语义"$),)]
+      #let trans = $"trans"$
+      #let State = $"State"$
+      #let Set = $"Set"$
+      #let Step = $"Step"$
+      #let List = $"List"$
+      #let Node = $"Node"$
+      #let Trace = $"Trace"$
+      #let Step = $"Step"$
+      就称之为安全的。具体而言，这里我们将单个节点 $v$ 的程序语义抽象成状态转换函数：
+      ```hs
+      trans: Node -> State -> Set State
+      ```
+      程序的一个具体执行序列 $T: Trace$ 定义为：
+      ```hs
+      Trace := [(Node, State)]
+      ```
+      则给定一个执行序列 $T$ ，可以定义：
+      ```hs
+      Step T : Trace -> Set Trace
+      Step T = do
+          next_node <- next v 
+          let (v, s) = last T
+          next_state <- trans v s
+          return $ T ++ [(next_node, next_state)]
+      Step_inf : Trace -> [Set Trace]
+      Step_inf T = iterate (\ma -> ma >>= Step) (return T)
+      ```
+      有了这些定义，我们可以详细地证明程序分析在语义上的正确性。
+    === 敏感性
+      我们往往用敏感性表示程序分析的精确性，往往包括：
+      - 流敏感性：分析结果忽略了程序的控制流，任意交换语句顺序不改变分析结果。数据流分析是流敏感的。如果在数据流分析中，直接认为所有节点都是当前节点的前驱，则产生的就是流不敏感的分析。
+      - 路径敏感：对于控制流不同的路径，分析结果可能不同。带有条件压缩的数据流分析是路径敏感的。
+      #block(width: 100%)[
+        11111112312
       ]
   == 过程间分析
   == 指针分析

@@ -1,0 +1,11 @@
+第一题
+finish solving QR, L2 delta = 1.767452739021671e-14,time = 12.450451ms
+finish solving LU, L2 delta = 6.705522537231457e-8,time = 184.741µs, 
+finish solving LU, L2 delta = 2.403102424134844e-7,time = 389.34µs
+finish solving QR, L2 delta = 8.404086261191095e-16,time = 29.234434ms
+finish solving LU, L2 delta = 4.397857599616979e-16,time = 153.74µs
+finish solving LU, L2 delta = 4.397857599616979e-16,time = 527.099µs
+finish solving Cholesky, L2 delta = 0.04990533241083495,time = 97.177µs
+finish solving Cholesky, L2 delta = 0.049905332410834204,time = 106.153µs
+第二题
+得到最佳逼近：[[0.9999999999999998, 0.9999999999999999, 1.0]]，误差为：6.473657049138938e-16

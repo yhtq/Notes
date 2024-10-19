@@ -400,6 +400,11 @@
           body) = {
   // Set the document's basic properties.
   set document(author: (author, ), title: title)
+  show list: set align(top + left)
+  show list: set block(breakable: true)
+  show block: set align(top + left)
+  set block(breakable: true)
+  show enum: set block(breakable: true)
   set page(
     numbering: "1",
     number-align: end,
@@ -422,6 +427,11 @@
     text(it, weight: "bold")
   }
   show math.equation: set text(font: ("Noto Serif CJK SC", "New Computer Modern Math"))
+  show math.equation: it => {
+    show block: set align(center)
+    it
+    }
+  show math.equation.where(block: true): set align(center)
   set math.equation(numbering: "(1)")
   set math.equation(numbering: num =>
       "(" + (counter(heading).get() + (num,)).map(str).join(".") + ")") if withHeadingNumbering == true
@@ -448,7 +458,7 @@
   //}
   // )
   // Set paragraph spacing.
-  show par: set block(above: 1.2em, below: 1.2em)
+  set par(spacing: 1.2em)
   let headingfunc1 = it => it
   if withChapterNewPage == true{
     headingfunc1 = it => {
@@ -525,7 +535,7 @@
   // Code block with line numbers
   show raw.where(block: true): it => {
     if not code_with_line_number { return it }
-    set text(font: ("Noto Serif CJK SC", "New Computer Modern Math"))
+    set text(font: ("Serif Italic", "Noto Serif CJK SC"))
     let lines = it.text.split("\n")
     let length = lines.len()
     let i = 0

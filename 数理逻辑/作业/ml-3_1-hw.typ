@@ -3,7 +3,7 @@
 #import "../main.typ": not1, True, False, infer
 #import "../main.typ": *
 #show: note.with(
-  title: "作业2_1",
+  title: "作业3_1",
   author: "YHTQ",
   date: datetime.today().display(),
   logo: none,
