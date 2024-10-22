@@ -63,6 +63,7 @@
 #let autoHomoCoor3 = autoVec3.with(delim: "[")
 #let Det = math.mat.with(delim: "|")
 
+#let notModels = sym.tack.r.double.not
 #let Gal = math.op("Gal")
 #let Hom = math.op("Hom")
 #let Ext = math.op("Ext")

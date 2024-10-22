@@ -17,6 +17,7 @@
 #let calC = $cal(C)$
 #let calP = $cal(P)$
 #let calL = $cal(L)$
+#let Interpret = $cal(I)$
 #let subst(AA, PP, pp) = $AA_( PP \/ pp )$ 
 #let deduction(body) = {
   set enum(numbering: "(1)")
@@ -477,18 +478,131 @@
       $forall x_1(A(x_1, x_2) -> forall x_2 (B(x_2)))$ 中，$x_1$ 约束出现两次，$x_2$ 约束出现一次，自由出现一次
     ]
     #definition[替换][
-      设 $s, t$ 是项，将 $s$ 中所有 $x_i$ 替换为 $t$ 的操作记作 $s(x_i \/ t)$
+      设 $s, t$ 是项，将 $s$ 中所有（自由出现的） $x_i$ 替换为 $t$ 的操作记作 $s(x_i \/ t)$
     ]
     #remark[][
-      替换是可能产生歧义的，例如：
+      我们不对约束变元进行替换。尽管如此，替换仍是可能产生歧义的，例如：
       $
       forall x_1 (x_2)
       $
       用 $x_1$ 替换 $x_2$ 会导致自由变元 $x_1$ 和约束变元 $x_1$ 产生混淆，这是非法的。
     ]
     #definition[][
-      称 $t$ 在 $calA$ 中对 $x_i$ 是自由的，如果对于任意在 $t$ 中出现的变元 $x$， $calA$ 中所有形如 $forall x(calB)$ 的子公式均满足 $x_i$ 不在 $calB$ 中自由出现。
+      称 $t$ 在 $calA$ 中对 $x_i$ 是自由的，如果对于任意在 $t$ 中出现的变元 $x$， $calA$ 中所有形如 $forall x(calB)$ 的子公式均满足 $x_i$ 不在 $calB$ 中自由出现。若 $x_i$ 不在 $calA$ 中自由出现，则 $t$ 总对 $x_i$ 自由。
 
       如此，我们使用 $t$ 替换 $x_i$ 的所有自由出现便不会产生歧义。
     ]
-    
+    直觉上来说，约束变元的“名字”应当不影响公式的结构。具体来说，我们定义：
+    #definition[换名替换][
+      若 $x_j$ 是不在 $calA$ 中自由出现的，对 $x_i$ 自由的变元，则 $forall x_j calA(x_i \/ x_j)$ 只是在 $forall x_i calA$ 中将所有 $x_i$ 换为 $x_j$ 的结果。
+    ]
+    #definition[相似公式][
+      设 $x_i, x_j$ 是不同变元，称 $calA(x_i)$ 和 $calA(x_j)$ 是相似的，如果 $x_j$ 在 $calA(x_i)$ 中对 $x_i$ 自由且 $calA(x_i)$ 中没有 $x_j$ 的自由出现。
+    ]
+    #proposition[][
+      相似是对称的，也即若 $calA(x_i)$ 和 $calA(x_j)$ 相似，则 $calA(x_j)$ 和 $calA(x_i)$ 相似
+    ]
+    #definition[二阶语言/高阶语言][
+      一阶逻辑中的一阶是指量词只能作用于变元，若量词可以作用于项/谓词，则称为二阶逻辑。二阶逻辑与一阶逻辑有根本区别，例如数学归纳法：
+      $
+        forall P((P(0) and forall n("is_N"(n) -> P(n) -> P(n + 1))) -> forall n("is_N"(n) -> P(n)))
+      $
+      就是二阶公式
+    ]
+  == 解释：一阶语言的语义
+    在一阶逻辑中，由于变元/函项的存在，我们不可能一次性规定所有情况下的准确语义。抽象而言：
+    - 世界中应当有一些对象
+    - 对于谓词符，存在一些对象满足这个谓词，而另一些不满足
+    - 对于函项符，它将一些对象映射为另一个对象
+    这应该能准确的描述一阶逻辑中的非逻辑符号的解释。这被称为 FOL 假设。
+      
+      具体而言，我们可以依赖于集合论建立一阶语言的模型：
+    #definition[Tarski][
+      一个一阶语言 $language$ 的解释 $Interpret$ 包括：
+      - 一个非空论域 $D_I$，它是一个非空集合（通常不考虑空论域的问题）
+      - 一个个体集 ${overline(a_i)}$，它是可数的，构成对常元的解释
+      - 一个函项符集 ${overline(f)_i^n}$，其中：
+        $
+        overline(f)_i^n: D_I^n -> D_I
+        $
+        构成对函项符的解释
+      - 一个关系集 $overline(A_i)$，其中：
+        $
+        A_i^n subset D_I^n
+        $
+        构成对谓词符的解释
+      - 对于量词 $forall x(P(x))$，解释为对于所有 $d in D_I$，$P(d)$ 都成立。（更进一步，对于二阶语言的量词，可以解释为论域中子集构成的集合）
+    ]
+    #remark[][
+      Tarski 解释必须基于集合论，因此从根本上无法解决集合论的问题（例如罗素悖论）。只有给定一个解释 $I$，才能对一阶逻辑中的公式讨论真假值，否则是无意义的。
+
+      为了方便，假设 $language$ 中的常元为 $a_1, ..., a_i, ...$，我们就可以记：
+      $
+        D_I = {a_i} 
+      $
+      （如果常元不足，做常元扩展即可）\
+      该记法成立是因为 $D_I$ 是元语言中的集合，其中元素与记法无关，因此不妨就用 #language 中的常元符号。
+    ]
+    #definition[赋值][
+      令 #Interpret 是一个论域为 $D_I$ 的解释，称一个 #language 的项集到 $D_I$ 的映射 $v$ 是一个赋值，如果：
+      $
+        v(a_i) = overline(a_i)\
+        v(f(a_1, ..., a_n)) = overline(f)(v(a_1), ..., v(a_n))\
+      $
+    ]
+    #remark[][
+      注意上面的赋值并没有要求对变元的行为。事实上，一个变元也是一个项，因此的确需要确定变元的赋值。同时，由项的构造语法，一组确定的变元赋值便可以唯一确定一个赋值。
+    ]
+    #definition[$i-$ 等值][
+      称两个赋值 $v, w$ 是 $i-$ 等值的，如果对于所有 $x_j != x_i$，$v(x_j) = w(x_j)$，也就是两个赋值在除了 $x_i$ 之外的所有变元上是相同的。
+    ]
+    #definition[可满足性][
+      定义 $calA$ 是 #language 中公式，#Interpret 是一个解释，$tilde(v)$ 是一个变元赋值，称 $calA$ 在 $I$ 中对 $v$ 成立，记作 $Interpret, v models calA[tilde(v)]$ 或者简写为 $Interpret, v models calA， v models calA$，如果：
+      - 若 $calA$ 是原子 $A_m^n (a_1, ..., a_n)$，则定义为 $overline(A_m^n)(v(a_1), ..., v(a_n)) = T$
+      - 若 $calA$ 是 $not1 calB$，则定义为 $not1 Interpret, v models calB$
+      - 若 $calA$ 是 $calB -> calC$，则定义为 $Interpret, v models not1 calB$ 或者 $Interpret, v models calC$
+      - 若 $calA$ 是 $forall x_i s(calB)$，则定义为对于所有与 $v space $ $i-$等值的赋值 $w$，均有 $Interpret, w models calB$，这等价于对于任意 $d_i in D_I$，均有 $Interpret, v models calB(x_i \/ d_i)$
+    ]
+    #theorem[][
+      设 $v$ 是一个赋值，$v'$ 是另一个赋值，它们 $i-$ 等值，且 $v'(x_i) = v(t)$，则有对于任意项 $s$，都有：
+      $
+        v(s(x_i \/ t)) = v'(s)
+      $
+    ]
+    #proof[
+      归纳证明即可
+    ]
+    #theorem[][
+      设 $calA(x_i)$ 是公式，$t$ 是项，且在 $calA(x_i)$ 中对 $x_i$ 自由。设 $v$ 是一个赋值，$v'$ 是另一个赋值，它们 $i-$ 等值，且 $v'(x_i) = v(t)$，则我们有：
+      $
+        v models calA(t) <=> v' models calA(x_i)
+      $
+    ]
+    #proof[
+      $
+        &"match" calA(x_i) with\
+        &| A_m^n (a_1, ..., a_n) => v' models calA(x_i) &&<=> overline(A_m^n)(v'(a_1), ..., v'(a_n)) = T\
+        &space &&<=> overline(A_m^n)(v(a_1 (x_i \/ t)), ..., v(a_n (x_i \/ t))) = T\
+        &space &&<=> v models A_m^n (a_1(x_i \/ t), ..., a_n (x_i \/ t)) \
+        &space &&<=> v models calA(t)\
+        &| not1 calB(x_i) => "易证"\
+        &| calB(x_i) -> calC(x_i) => "易证"\
+        &| forall x_i calB(x_i) => "替换只替换自由变元，显然"\
+        &| forall x_j calB(x_i) => v' models calA(x_i) &&<=> "forall" d_i in D_I, v' models calB(x_i)(x_j \/ d_i)\
+        
+      $
+      #lemmaLinear[][
+        $t$ 在 $calB(x_i)(x_j \/ d_i)$ 对 $x_i$ 自由，且 $calB(x_i)(x_j \/ d_i)(x_i \/ t) = calB(t)(x_j \/ d_i)$
+      ]
+      #proof[
+        - 假设 $t$ 中有 $x_j$ 自由出现，那么由 $t$ 对 $x_i$ 自由的定义，$x_i$ 将不能在 $calB(x_i)$ 中出现，结论显然。
+        - 否则，$t$ 中无 $x_j$ 自由出现，不难验证 $t$ 在 $calB(x_i)(x_j \/ d_i)$ 对 $x_i$ 自由等价于 $t$ 在 $calB(x_i)$ 对 $x_i$ 自由，立刻由条件保证，而替换顺序的交换是容易的。
+      ]
+      由引理及归纳假设：
+      $
+        &"forall" d_i in D_I, v models calB(x_i)(x_j \/ d_i)(x_i \/ t) \
+        &<=> "forall" d_i in D_I, v models calB(x_i)(x_j \/ d_i)(x_i \/ t) \
+        &<=> "forall" d_i in D_I, v models calB(t)(x_j \/ d_i)\ 
+        &<=> v models  forall x_j calB(t)
+      $
+    ]
