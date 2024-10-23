@@ -574,29 +574,240 @@
     y_k = x_k - x = M x_(k-1) + g - x = M y_(k-1)
     $
     因此显然方程收敛当且仅当 $M^k -> 0$，也即 $M$ 的谱半径小于 $1$。
+    === 收敛条件
+      上面介绍的两种迭代法 Jacobi 和 Gauss - Seidel 有着不同的迭代矩阵，它们的收敛范围也互不包含。然而谱半径并不好计算，我们可以找到一些充分条件。
+      #theorem[][
+        若迭代矩阵满足 $norm(M) = q < 1$，则有：
+        $
+        norm(x_k - x) <= (q^k)/(1-q) norm(x_1 - x_0)
+        $
+      ]
+      #proof[
+        $
+        norm(x_k - x) <= q^k norm(x_0 - x)\
+        norm(x_0 - x) <= norm(x_1 - x_0) + norm(x_1 - x) <= norm(x_1 - x_0) + q norm(x_0 - x)\
+        norm(x_1 - x_0) >= (1 - q) norm(x_0 - x) >= (1-q)/q^k norm(x_k - x)
+        $
+      ]
+      这个定理可以用来得到所需要的迭代次数，但往往偏高。
+      #theorem[][
+        若迭代矩阵满足 $norm(M) = q < 1$，则有：
+        $
+        norm(x_k - x) <= q/(1 - q) norm(x_k - x_(k-1))
+        $
+      ]
+      #proof[
+        就是上面定理的特例。
+      ]
+      这个界往往更加准确，往往可以用来在迭代过程中及时估计误差。当然若 $q$ 很接近于 $1$，则误差还可能较大。注意上面两个定理中我们并不假定用何种范数，因此实践上往往使用便于计算的列范数 $norm(M)_1$ 和行范数 $norm(M)_infinity$。
 
-    上面介绍的两种迭代法 Jacobi 和 Gauss - Seidel 有着不同的迭代矩阵，它们的收敛范围也互不包含。然而谱半径并不好计算，我们可以找到一些充分条件。
+      当系数矩阵 $A$ 正定时，它的收敛性可能更易判定：
+      #theorem[][
+        设 $A x = b$ 中，$A$ 对称且对角元 $> 0$，则 Jacobi 迭代收敛当且仅当 $A, 2 D - A$ 都正定。
+      ]
+      #proof[
+        注意到：
+        $
+          M = Inv(D) (L + U) = Inv(D) (D - A) = I - Inv(D) A
+        $
+        由条件，$D$ 可以开平方根，上式等于：
+        $
+          D^(-1/2) (I - D^(-1/2) A D^(-1/2)) D^(1/2)
+        $
+        显然 $I - D^(-1/2) A D^(-1/2)$ 对称，且与 $M$ 相似，有相同的特征值和谱半径，因此 $M$ 特征值均为实数。类似的，$I - M$ 与 $D^(-1/2) A D^(-1/2)$ 相似，$I + M$ 与 $(2 I - D^(-1/2) A D^(-1/2))$\
+        不难验证由 $M$ 特征值均为实数， $rho(M) < 1$ 当且仅当 $I - M, I + M$ 的特征值均为正实数，略作化简即是定理条件。
+      ]
+      #theorem[][
+        设 $A x = b$ 中，$A$ 对称正定，则 Gauss - Seidel 迭代收敛。
+      ]
+    === 正定矩阵的判别
+      #definition[对角占优][
+        设矩阵 $A$ 满足：
+        $
+        abs(a_(i i)) >= sum_(j != i) abs(a_(i j)), forall i
+        $
+        且对至少一个 $i$ 严格不等号成立，则称之为弱严格对角占优。若对所有 $i$ 严格不等号成立，则称之为严格对角占优。
+      ]
+      #definition[不可约][
+        如果存在 $n$ 阶正定矩阵 $P$ 使得：
+        $
+          P A P^T = mat(A_(1 1), 0;A_(2 1), A_(2 2))
+        $
+        则称 $A$ 可约或者可分，否则称之为不可约。假设 $A$ 可约，则方程：
+        $
+          A x = b
+        $
+        可以立刻化简为：
+        $
+          P A P^T P x = P b
+        $
+        进而可以将 $n$ 阶方程组降为两个低维的方程组。
+      ]
+      若一个矩阵弱严格对角占优且不可约，则称之为*不可约对角占优*。
+      #theorem[][
+        若 $A$ 严格对角占优或不可约对角占优的，则 $A$ 非奇异。
+      ]
+      #proof[
+        我们只证明前一种情形。如若不然，则存在非零向量 $x$ 使得：
+        $
+          A x = 0
+        $
+        不妨设 $norm(x)_infinity = 1 = abs(x_i)$，则有：
+        $
+          abs(a_(i i)) = abs(a_(i i) x_i) = abs(sum_(j != i) a_(i j) x_j) <= sum_(j != i) abs(a_(i j)) < abs(a_(i i))
+        $
+        矛盾！
+      ]
+      #corollary[][
+        若 $A$ 是严格对角占优或不可约对角占优的对称矩阵，且 $A$ 对角线元素均为正数，则 $A$ 正定。
+      ]
+      #theorem[][
+        若 $A$ 是严格对角占优或不可约对角占优，则 Jacobi 迭代法和 Gauss - Seidel 迭代法都收敛。
+      ]
+      #proof[
+        我们只证 Jacobi 迭代，首先由条件对角元均非零，因此 $D$ 可逆。考虑：
+        $
+          M = Inv(D) (L + U)
+        $
+        假设它有特征值 $lambda >= 1$，不难验证 $lambda D - L - U$ 也是严格对角占优/不可约对角占优的，因此非奇异。但另一方面：
+        $
+          0 = abs(lambda I - Inv(D) (L + U)) = abs(Inv(D)) abs(lambda D - L - U) 
+        $
+        而前面已经说明 $Inv(D), lambda D - L - U$ 都非奇异，矛盾！
+      ]
+    === 收敛速度
+      #definition[][
+          令：
+          $
+           R_k (M) := (-ln norm(M^k))/k
+          $
+          为迭代矩阵为 $M$ 时 $k$ 次迭代的平均收敛速度。特别的，记：
+          $
+            R_infinity (M) := lim_(k -> +infinity) R_k (M)
+          $
+          称为渐进收敛速度。
+      ]
+      #proposition[][
+        假设 $M$ 对称，则不难验证：
+        $
+          norm(M^k) = rho(M)^k
+        $
+        进而 $R_k (M) = -ln rho(M)$\
+        但一般而言，$R_k (M)$ 是依赖于 $k$ 的
+      ]
+      #proposition[][
+        对于任何矩阵 $M$ 都有：
+        $
+          R_infinity (M) = - ln rho(M)
+        $
+      ]
+      #proof[
+        注意到谱半径小于任何范数，因此：
+        $
+          rho(M)^k = rho(M^k) <= norm(M^k) => rho(M) <= norm(M^k)^(1/k)
+        $
+        另一方面，不难验证对于任意 $epsilon > 0$ 有：
+        $
+          rho(1/(rho(M) + epsilon) M) < 1
+        $
+        进而对于充分大的 $k$:
+        $
+          norm((1/(rho(M) + epsilon) M)^k) <= 1\
+          norm(M^k) <= (rho(M) + epsilon)^k\
+          rho(M) <= norm(M^k)^(1/k) <= rho(M) + epsilon
+        $
+        由 $epsilon$ 的任意性，得证。
+      ]
+  == 超松弛迭代法 SOR
+    考虑 Gauss - Seidel 迭代法：
+    $
+      x_(k + 1) = Inv(D) L x_(k + 1) + Inv(D) U x_k + Inv(D) b
+    $
+    令 $Delta x = x_(k + 1) - x_k$ 称为修正项。如果给修正项加一系数 $omega$ （称为松弛因子），也即：
+    $
+      x_(k + 1) = x_k + omega Delta x
+    $
+    迭代公式变为：
+    $
+      x_(k + 1) = (1 - omega) x_k + omega (Inv(D) L x_(k + 1) + Inv(D) U x_k + Inv(D) b)
+    $
+    若 $omega > 1$ 则称为超松弛迭代，否则 $omega < 1$ 时称为低松弛迭代。上面的迭代公式等价于：
+    $
+      x_(k + 1) = L_omega x_k + omega(D - omega L)^(-1) b\
+      where L_omega = Inv((D - omega L)) ((1 - omega) D + omega U)
+    $
     #theorem[][
-      若迭代矩阵满足 $norm(M) = q < 1$，则有：
-      $
-      norm(x_k - x) <= (q^k)/(1-q) norm(x_1 - x_0)
-      $
+      SOR 迭代法收敛的充要条件是 $rho(L_omega) < 1$
+    ]
+    #theorem[][
+      SOR 迭代法收敛的必要条件是 $0 < omega < 2$
     ]
     #proof[
+      不难发现若迭代法收敛，则：
       $
-      norm(x_k - x) <= q^k norm(x_0 - x)\
-      norm(x_0 - x) <= norm(x_1 - x_0) + norm(x_1 - x) <= norm(x_1 - x_0) + q norm(x_0 - x)\
-      norm(x_1 - x_0) >= (1 - q) norm(x_0 - x) >= (1-q)/q^k norm(x_k - x)
+        abs(det(L_omega)) < 1\
+        abs(det((1 - omega) D + omega U)) < abs(det(D - omega L))\
+        abs(det((1 - omega) I + omega U Inv(D))) < abs(det(I - omega L Inv(D)))\
+        abs(1 - omega)^n < abs(1)^n\
       $
+      化简立得结果
     ]
-    这个定理可以用来得到所需要的迭代次数，但往往偏高。
     #theorem[][
-      若迭代矩阵满足 $norm(M) = q < 1$，则有：
-      $
-      norm(x_k - x) <= q/(1 - q) norm(x_k - x_(k-1))
-      $
+      若 $A$ 严格对角占优或不可约对角占优的，则当 $omega in (0, 1]$ 时迭代法收敛
+    ]
+    #theorem[][
+      若 $A$ 是实对称正定的，则当 $omega in (0, 2)$ 时迭代法都收敛。
     ]
     #proof[
-      就是上面定理的特例。
+      设：
+      $
+        Inv((D - omega L))((1 - omega) D + omega L) x = lambda x\
+        (1 - omega) D x + omega U x = lambda (D - omega L) x\
+        (1 - omega) x^* D x + omega x^* U x = lambda x^* D x - lambda omega x^* L x\
+      $
+      令 $x^* D x = delta, x^* L x = beta$，将有：
+      $
+        (1 - omega) delta + omega overline(beta) = lambda delta - lambda omega beta\
+        (1 - omega) delta + omega overline(beta) = lambda (delta - omega beta)\
+      $
+      同时我们有：
+      $
+        x^* (D - L - U) x > 0\
+        x^T D x > x^T L x + overline(x^T L x)\
+        delta > beta + overline(beta)
+      $<cond1>
+      假设 $delta = omega beta$，意味着 $beta$ 是实数，将有：
+      $
+        omega beta > 2 beta
+      $
+      与 $omega < 2$ 矛盾。因此有：
+      $
+        lambda &= ((1 - omega) delta + omega overline(beta))/(delta - omega beta) \
+        norm(lambda)^2 &= norm((1 - omega) delta + omega overline(beta))^2/norm(delta - omega beta)^2\
+        &=(((1 - omega) delta + omega overline(beta))((1 - omega) delta + omega beta))/((delta - omega beta)(delta - omega overline(beta)))\
+        &=((1 - omega)^2 delta^2 + omega(1-omega)delta (beta + overline(beta)) + omega^2 norm(beta)^2)/(delta^2 - omega delta (beta + overline(beta)) + omega^2 norm(beta)^2)\
+        &=((1 - omega)^2 delta^2 + omega delta (beta + overline(beta)) - omega^2 delta (beta + overline(beta)) + omega^2 norm(beta)^2)/(delta^2 - omega delta (beta + overline(beta)) + omega^2 norm(beta)^2)\
+        $
+        往证上式 $<1$，也即：
+        $
+          (1 - omega)^2 delta^2 + omega delta (beta + overline(beta)) - omega^2 delta (beta + overline(beta)) + omega^2 norm(beta)^2 < delta^2 - omega delta (beta + overline(beta)) + omega^2 norm(beta)^2\
+          -2 omega delta^2 + omega^2 delta^2 + 2 omega delta (beta + overline(beta)) - omega^2 delta (beta + overline(beta)) < 0 \
+          delta^2 omega (omega - 2) + omega delta (beta + overline(beta))(2 - omega) < 0 \
+          delta omega (2 - omega) (-delta +  (beta + overline(beta))) < 0 \
+        $
+        注意到正定矩阵对角元均正，因此 $delta > 0$，结合 @cond1 立得结论成立。
+        // &= norm(((1 - omega) delta + omega overline(beta))(delta - omega overline(beta)))/((delta - omega beta)(delta - omega overline(beta)))\
+        // &= norm((1 - omega)delta^2 - omega (1-omega) delta overline(beta) + omega delta overline(beta) - omega^2 overline(beta)^2)/((delta - omega beta)(delta - omega overline(beta)))\
+        // &= norm((1 - omega)delta^2 + omega^2 delta overline(beta) - omega^2 overline(beta)^2)/((delta - omega beta)(delta - omega overline(beta)))\
+      
+      // 假设 $lambda > -1$，则 $omega + lambda omega > 0$，有：
+      // $
+      //   (omega + lambda omega) x^T D x  > 2 (omega + lambda omega) x^T L x = -2 (1 - omega - lambda) x^T D x\
+      //   (2 - omega - 2 lambda + lambda omega) x^T D x > 0\
+      //   (lambda - 1)(omega - 2) x^T D x > 0\
+      //   (lambda - 1) x^T D x < 0
+      // $
+      // 上面的不等式已经表明 $x^T D x != 0$，而若 $x^T D x < 0$，将有 $x^T L x < 0, lambda > 1, 1 - omega - lambda < 0, omega(1 + lambda) > 0$
     ]
-    这个界往往更加准确，往往可以用来在迭代过程中及时估计误差。当然若 $q$ 很接近于 $1$，则误差还可能较大。注意上面两个定理中我们并不假定用何种范数，因此实践上往往使用便于计算的列范数 $norm(M)_1$ 和行范数 $norm(M)_infinity$。
+
+    

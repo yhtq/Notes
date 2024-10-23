@@ -287,6 +287,84 @@
       $
       而令 $tr (W^T X^T X W)$ 最大的 $W$ 就是 $X^T X$ 的前 $k$ 大的特征值对应的特征向量。
     ]
+    PCA 可以推广到一般的形式，也即对于矩阵 $X$，希望找到矩阵 $Y, E$ 使得 $X = Y + E$，其中  $Y$ 是低秩矩阵，而 $E$ 是较小的矩阵。这里的小可以有多种解释，例如：
+    #algorithm[Robust PCA][
+      如果认为上面的“小”指的是稀疏，这种算法被称为 Robust PCA。例如在监控视频中，背景几乎是不变的，因此我们希望将整个视频分解成低秩的背景和稀疏的前景。我们可以写出优化问题：
+      $
+        min norm(E)_0 + rank(Y)\
+        s.t. X = Y + E
+      $
+      然而这显然是不好解决的优化问题。为了解决，我们希望用一个凸问题代替。首先 $norm(E)_0$ 可以松弛到 $norm(E)_1$，其次 $rank(Y)$ 就是非零奇异值的个数，可以松弛到奇异值向量的 $L_1$ 范数（通常称为核范数，它确实是范数），因此问题变成：
+      $
+        min norm(E)_1 + norm(Y)_("ker")\
+        s.t. X = Y + E
+      $
+      这是个凸问题，我们总可以高效求解。
+    ]
+    从另一个角度，PCA 可以认为是一个 $f: RR^m -> RR^n$ 的映射，其中 $m > n$，我们希望有另一个映射 $g: RR^n -> RR^m$，使得：
+    $
+      min 1/n sum_i norm(x_i - g(f(x_i)))^2
+    $
+    往往称 $f$ 为 encoder，$g$ 为 decoder。如果假设 $f, g$ 都是线性，得到的解就是 PCA。而如果选择非线性的函数，就可以得到 PCA 的另一种推广。
+
+    接下来我们介绍另一种线性降维的方法，称为 Random Projection。假设有一组数据 $x_1, ..., x_n$ ，希望通过投影函数 $f$ 投影到低维空间，并且使得：
+    $
+    norm(f(x_i) - f(x_j)) approx norm(x_i - x_j)
+    $<random-projection>
+    有趣的是，它的解法是取：
+    $
+      f (x_i) = 1/sqrt(K) W x_i
+    $
+    其中 $W in RR^(K times d)$ 是随机矩阵，其中每个元素都独立同分布到 $N(0, 1)$
+    #lemma[Johnson-linkoslvous][
+      设 $x_i in RR^d$ 是一组向量，对于任意 $delta > 0$，则以 $1 - delta$ 的概率：
+      $
+        max_i abs(norm(1/sqrt(K) W x_i)^2 / norm(x_i)^2 - 1) <= epsilon
+      $
+      只要 $K >= C (ln (n / delta))/(epsilon^2)$
+    ]
+    #proof[
+      不妨设 $norm(x_i) = 1$，有：
+      $
+        norm(1/sqrt(K) W x_i)^2 = 1/K sum_k (W_k^T x_i)^2
+      $
+      注意到 $W_k^T x_i tilde N(0, 1)$，记其为 $xi_k$，将有：
+      $
+        norm(1/sqrt(K) W x_i)^2 = 1/K sum_k xi_k^2
+      $
+      不难发现：
+      $
+        E(1/K sum_k xi_k^2) = 1
+      $
+      又有概率集中不等式：
+      $
+        P(abs(1/K sum_k xi_k^2 - 1) > epsilon) <= C_1 e^(-C_2 K epsilon^2)
+      $
+      这就对每一个变量的误差做出了估计。最后：
+      $
+        P(max_i abs(norm(1/sqrt(K) W x_i)^2 - 1) > epsilon) <= sum_i P(abs(norm(1/sqrt(K) W x_i)^2 - 1) > epsilon) <= n C_1 e^(-C_2 K epsilon^2) 
+      $
+      为了使：
+      $
+        n C_1 e^(-C_2 K epsilon^2) < delta
+      $
+      只需要 $K >= C (ln (n / delta))/(epsilon^2)$
+    ]
+    #remark[][
+      - 上面的 $K$ 与 $d$ 无关，甚至 $d$ 为无穷时结果仍然成立。当然这并不奇怪，因为 $n$ 个点张成空间仅有 $n$ 维。
+      - 上面的证明中其实并没有用到高斯分布的特性，只要概率集中不等式成立（条件很弱）上面的性质都成立。实际计算时，可能会取：
+      $
+        W_(i j) tilde cases(
+          a space p_1,
+          0 space p_2,
+          b space p_1
+        )
+      $
+      使得期望和方差满足要求，最后得到的 $W$ 几乎是个稀疏矩阵，运算量较小。
+    ]
+    回到@random-projection，只需在上面的引理中取约 $n^2$ 个向量 $x_i - x_j$ 即可，结论保证了 $n$ 个向量可以随机投影到约 $ln n$ 维空间，距离就可以几乎不变。
+
+    与 PCA 相比，Random Projection 必须在 $d$ 很高的时候才能有优势，也不能实现降低到很低的维度。同时，PCA 的分析建立于数据真的分布在一个较低维的空间上，而 Random Projection 并不假设这个信息。然而，Random Projection 的分析基于欧式距离，而在很多问题中欧氏距离并不是重要的度量。
     
   
 = 现代机器学习（深度学习）

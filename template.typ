@@ -78,6 +78,8 @@
 #let Ass = math.op("Ass")
 #let Sylow(p) = $"Sylow"-#p$
 #let Isom = math.op("Isom")
+#let diag = math.op("diag")
+#let rank = math.op("rank")
 
 #let GL = math.op("GL")
 #let char = math.op("char")
