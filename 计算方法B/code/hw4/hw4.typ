@@ -58,3 +58,11 @@
       = - mat(0, 0, a;0, 0, 0;0, 0, -a^2)
     $
     特征多项式为 $lambda^2 (lambda + a^2)$，收敛当且仅当 $a in (-1, 1)$
+= 5.
+  注意到严格对角占优或不可约对角占优矩阵的 $abs(a_(i i)) > 0$，因此下三角矩阵 $D - L$ 是可逆的。假设迭代矩阵有特征值 $lambda$，即：
+  $
+    Inv((D - L)) U x = lambda x\
+    U x = lambda (D - L) x\
+    (lambda D - lambda L - U) x = 0
+  $
+  然而，假若 $abs(lambda) > 1$，将有 $lambda D - lambda L - U$ 仍是严格对角占优/不可约对角占优的，因此它非奇异，进而 $x = 0$，这是荒谬的。

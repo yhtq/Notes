@@ -1,0 +1,164 @@
+a = 5.0, epsilon = 1.0, n = 100, h = 0.01
+Jacobi iter times: 3676
+L2 distance to true result: 5.921846539731673
+GaussSeidel iter times: 2453
+L2 distance to true result: 6.18397778357538
+SOR(0.1) iter times: 8619
+L2 distance to true result: 4.477783486196022
+SOR(0.2) iter times: 7067
+L2 distance to true result: 4.960630218865966
+SOR(0.3) iter times: 5995
+L2 distance to true result: 5.29243344448672
+SOR(0.4) iter times: 5184
+L2 distance to true result: 5.530871762923173
+SOR(0.5) iter times: 4535
+L2 distance to true result: 5.7094222462918625
+SOR(0.6) iter times: 3995
+L2 distance to true result: 5.847539611179676
+SOR(0.7) iter times: 3534
+L2 distance to true result: 5.957538242434259
+SOR(0.8) iter times: 3131
+L2 distance to true result: 6.046866222378512
+SOR(0.9) iter times: 2774
+L2 distance to true result: 6.121170892383228
+SOR(1) iter times: 2453
+L2 distance to true result: 6.18397778357538
+SOR(1.1) iter times: 2159
+L2 distance to true result: 6.237296035026294
+SOR(1.2) iter times: 1888
+L2 distance to true result: 6.283496222887509
+SOR(1.3) iter times: 1635
+L2 distance to true result: 6.323826545739257
+SOR(1.4) iter times: 1396
+L2 distance to true result: 6.359294739650764
+SOR(1.5) iter times: 1167
+L2 distance to true result: 6.390544785708596
+SOR(1.6) iter times: 946
+L2 distance to true result: 6.418713575891958
+SOR(1.7) iter times: 728
+L2 distance to true result: 6.443998683998524
+SOR(1.8) iter times: 508
+L2 distance to true result: 6.467204360639959
+SOR(1.9) iter times: 270
+L2 distance to true result: 6.488964559120968
+a = 5.0, epsilon = 0.1, n = 100, h = 0.01
+Jacobi iter times: 2241
+L2 distance to true result: 8.47980079594857
+GaussSeidel iter times: 1361
+L2 distance to true result: 8.868621735813866
+SOR(0.1) iter times: 8189
+L2 distance to true result: 6.13818131688307
+SOR(0.2) iter times: 5917
+L2 distance to true result: 6.562808712427978
+SOR(0.3) iter times: 4545
+L2 distance to true result: 7.309250432209296
+SOR(0.4) iter times: 3647
+L2 distance to true result: 7.799826018968644
+SOR(0.5) iter times: 3010
+L2 distance to true result: 8.131166319249132
+SOR(0.6) iter times: 2529
+L2 distance to true result: 8.366185748862383
+SOR(0.7) iter times: 2149
+L2 distance to true result: 8.539941221547958
+SOR(0.8) iter times: 1840
+L2 distance to true result: 8.674607679712206
+SOR(0.9) iter times: 1582
+L2 distance to true result: 8.782029176081542
+SOR(1) iter times: 1361
+L2 distance to true result: 8.868621735813866
+SOR(1.1) iter times: 1169
+L2 distance to true result: 8.940592152488428
+SOR(1.2) iter times: 1000
+L2 distance to true result: 9.001915883811032
+SOR(1.3) iter times: 848
+L2 distance to true result: 9.053507001401911
+SOR(1.4) iter times: 710
+L2 distance to true result: 9.097991421340561
+SOR(1.5) iter times: 583
+L2 distance to true result: 9.136686072074122
+SOR(1.6) iter times: 465
+L2 distance to true result: 9.171365704039834
+SOR(1.7) iter times: 352
+L2 distance to true result: 9.2013206866065
+SOR(1.8) iter times: 242
+L2 distance to true result: 9.229757040191986
+SOR(1.9) iter times: 101
+L2 distance to true result: 9.265687795660412
+a = 5.0, epsilon = 0.01, n = 100, h = 0.01
+Jacobi iter times: 390
+L2 distance to true result: 10.224465304165633
+GaussSeidel iter times: 249
+L2 distance to true result: 10.23218396815693
+SOR(0.1) iter times: 3047
+L2 distance to true result: 10.030397830119355
+SOR(0.2) iter times: 1599
+L2 distance to true result: 10.15527770368997
+SOR(0.3) iter times: 1069
+L2 distance to true result: 10.190664326742885
+SOR(0.4) iter times: 790
+L2 distance to true result: 10.20660261362473
+SOR(0.5) iter times: 617
+L2 distance to true result: 10.215770215078297
+SOR(0.6) iter times: 499
+L2 distance to true result: 10.221877853489847
+SOR(0.7) iter times: 412
+L2 distance to true result: 10.225723438841495
+SOR(0.8) iter times: 345
+L2 distance to true result: 10.228352531685081
+SOR(0.9) iter times: 293
+L2 distance to true result: 10.230875081465333
+SOR(1) iter times: 249
+L2 distance to true result: 10.23218396815693
+SOR(1.1) iter times: 213
+L2 distance to true result: 10.233584465518236
+SOR(1.2) iter times: 182
+L2 distance to true result: 10.23466854777744
+SOR(1.3) iter times: 155
+L2 distance to true result: 10.235668434107824
+SOR(1.4) iter times: 130
+L2 distance to true result: 10.236463167126514
+SOR(1.5) iter times: 101
+L2 distance to true result: 10.237570799088974
+SOR(1.6) iter times: 121
+L2 distance to true result: 10.237724738278974
+SOR(1.7) iter times: 150
+L2 distance to true result: 10.237419998577563
+SOR(1.8) iter times: 219
+L2 distance to true result: 10.237555871672775
+SOR(1.9) iter times: 394
+L2 distance to true result: 10.237758024771484
+a = 5.0, epsilon = 0.0001, n = 100, h = 0.01
+Jacobi iter times: 108
+L2 distance to true result: 11.112979119467605
+GaussSeidel iter times: 104
+L2 distance to true result: 11.113102583635092
+SOR(0.1) iter times: 1145
+L2 distance to true result: 11.093807992956652
+SOR(0.2) iter times: 587
+L2 distance to true result: 11.105676056724421
+SOR(0.3) iter times: 394
+L2 distance to true result: 11.1090949049822
+SOR(0.4) iter times: 295
+L2 distance to true result: 11.110577420927575
+SOR(0.5) iter times: 235
+L2 distance to true result: 11.111557284440579
+SOR(0.6) iter times: 194
+L2 distance to true result: 11.112103208654522
+SOR(0.7) iter times: 164
+L2 distance to true result: 11.112456369753351
+SOR(0.8) iter times: 141
+L2 distance to true result: 11.112741403303614
+SOR(0.9) iter times: 122
+L2 distance to true result: 11.112929142067141
+SOR(1) iter times: 104
+L2 distance to true result: 11.113102583635092
+SOR(1.1) iter times: 135
+L2 distance to true result: 11.113156983922442
+SOR(1.2) iter disconverge
+SOR(1.3) iter disconverge
+SOR(1.4) iter disconverge
+SOR(1.5) iter disconverge
+SOR(1.6) iter disconverge
+SOR(1.7) iter disconverge
+SOR(1.8) iter disconverge
+SOR(1.9) iter disconverge
