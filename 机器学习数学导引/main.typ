@@ -365,7 +365,78 @@
     回到@random-projection，只需在上面的引理中取约 $n^2$ 个向量 $x_i - x_j$ 即可，结论保证了 $n$ 个向量可以随机投影到约 $ln n$ 维空间，距离就可以几乎不变。
 
     与 PCA 相比，Random Projection 必须在 $d$ 很高的时候才能有优势，也不能实现降低到很低的维度。同时，PCA 的分析建立于数据真的分布在一个较低维的空间上，而 Random Projection 并不假设这个信息。然而，Random Projection 的分析基于欧式距离，而在很多问题中欧氏距离并不是重要的度量。
-    
   
+    无监督学习中，还有一种常见的问题是聚类。假设有若干数据 ${x_i}$，以及 $S = {1, ..., n}$，我们希望找到一个划分 $C = {C_1, ..., C_k}$，使得：
+    - 同一个 $C_i$ 中的点尽可能相近
+    - 不同的 $C_i$ 中的点尽可能远离
+    第二种思路是它的推广，也即考虑每个数据落在某个集合的概率，产生概率向量：
+    $
+      (gamma_(x_j) (i)): RR^k
+    $
+    #algorithm[K-means][
+      K-means 是最经典的聚类算法之一。对于每个划分 $C_k$，我们不去寻找集合本身，反而寻找它的中心 $alpha_k$. 具体而言，算法的计算方法为：
+      - 随机选取 $k$ 个中心，每个点按照距离分配到最近的中心
+      - 重新计算每个子集的中心，作为新的中心
+      - 重复直到收敛
+      如果定义：
+      $
+        I(C) = 1/2 sum_k 1/abs(C_k) sum_(i, j in C_k) norm(x_i - x_j)^2\
+        = sum_k sum_(i in C_k) norm(x_i - alpha_k)^2
+      $
+      以及：
+      $
+        I(C, beta) = sum_i norm(x_i - beta_k)^2
+      $
+      显然有 $min_beta I(C, beta) = I(C)$，因此我们考虑一般的形式 $min_beta I(C, beta)$，而它恰好是 coordinate descent 的形式。
+    ]
+    #proposition[][
+      K-means 算法下：
+      - $I(C^(t + 1)) <= I(C^t)$
+      - 不能保证收敛到全局最优解，很可能收敛到局部最优解。
+    ]
+    #proof[
+      - 
+        $
+          I(C^(t + 1)) <= I(C^(t + 1), beta^(t + 1)) <= I(C^t, beta^(t + 1)) <= I(C^t)
+        $
+    ]
+    当然，这是在假设 K-means 采用欧式距离，而实际使用上，使用其他距离也是可行的。
+    #definition[Gaussian mixture model, GMM][
+      在聚类问题中，属于某个聚类的概率分布 $rho$ 应当是多峰的。设 $phi(x\; mu_k, Sigma_k)$ 是服从参数 $mu_k, Sigma_k$ 的高斯分布，定义：
+      $
+        rho(x) = sum_k pi_k phi(x\; mu_k, Sigma_k) where
+        sum_k pi_k = 1, pi_k >= 0
+      $
+      它是一个概率密度，而且有多个峰出现。
+    ]  
+    为了对 GMM 进行分析，假设引入隐变量 $z$，使得：
+    $
+      p(x, z = k) = pi_k phi_k (x)
+    $
+    代表 $x$ 属于第 $k$ 类的概率。从而：
+    $
+      p(x) = sum_k p(x, z = k) = sum_k pi_k phi_k (x)
+    $
+    进而，可以取：
+    $
+      gamma_k (x) = p(z = k | x) = p(x, z = k) / p(x) = (pi_k phi_k (x)) / (sum_j pi_j phi_j (x))
+    $
+    用来代表上面概率模型中的 $gamma$。
+
+    进一步，如果样本给定，我们可以使用最大似然估计来估计参数。也即：
+    $
+      max_(mu, Sigma) 1/n sum_i ln (sum_k pi_k phi_k (x_i\; mu_k, Sigma_k))
+    $
+    当 $K = 1$ 时，上面的问题有容易的解析解，就是取样本的期望和方差即可。然而 $K > 1$ 时，对数内的求和带来了复杂性。具体而言：
+    $
+      0 = partialDer(L, mu_k) = 1/n sum_i (pi_k phi_k (x)) / (sum_j pi_j phi_j (x)) (- Inv(Sigma_k) (x - mu_k))\
+      sum_i gamma_(x_i) (k) mu_k = sum_i gamma_(x_i) (k) x_i\
+      mu_k = (sum_i gamma_(x_i) (k) x_i) / (sum_i gamma_(x_i) (k))
+    $
+    类似的，可以得到：
+    $
+      Sigma_k = (sum_i gamma_(x_i) (k) (x_i - mu_k) (x_i - mu_k)^T) / (sum_i gamma_(x_i) (k))
+    $
+
 = 现代机器学习（深度学习）
 = 理论基础

@@ -559,7 +559,7 @@
     #definition[可满足性][
       定义 $calA$ 是 #language 中公式，#Interpret 是一个解释，$tilde(v)$ 是一个变元赋值，称 $calA$ 在 $I$ 中对 $v$ 成立，记作 $Interpret, v models calA[tilde(v)]$ 或者简写为 $Interpret, v models calA， v models calA$，如果：
       - 若 $calA$ 是原子 $A_m^n (a_1, ..., a_n)$，则定义为 $overline(A_m^n)(v(a_1), ..., v(a_n)) = T$
-      - 若 $calA$ 是 $not1 calB$，则定义为 $not1 Interpret, v models calB$
+      - 若 $calA$ 是 $not1 calB$，则定义为 $Interpret, v notModels calB$
       - 若 $calA$ 是 $calB -> calC$，则定义为 $Interpret, v models not1 calB$ 或者 $Interpret, v models calC$
       - 若 $calA$ 是 $forall x_i s(calB)$，则定义为对于所有与 $v space $ $i-$等值的赋值 $w$，均有 $Interpret, w models calB$，这等价于对于任意 $d_i in D_I$，均有 $Interpret, v models calB(x_i \/ d_i)$
     ]
@@ -577,7 +577,7 @@
       $
         v models calA(t) <=> v' models calA(x_i)
       $
-    ]
+    ]<substitution-theorem>
     #proof[
       $
         &"match" calA(x_i) with\
@@ -606,3 +606,89 @@
         &<=> v models  forall x_j calB(t)
       $
     ]
+  == 真值
+    #definition[][
+      - 一个公式 $calA$ 在 #Interpret 中为真，如果对于每个赋值 $v$，$v models calA$。我们称 $calA$ 是可满足的，如果存在一个赋值使得 $calA$ 为真。若 $calA$ 是不可满足的，我们称 $calA$ 是假的。
+      - 一个解释 #Interpret 称为 #calA 的模型，如果在其中 #calA 为真，记作 $I models calA$。若在其中 #calA 为假，则称 #Interpret 不是 #calA 的模型。
+      - 设 $Gamma$ 是一个公式集，称 $I$ 是 $Gamma$ 的模型，如果对于每个 $calA in Gamma$，$I models calA$。
+      - 若对于所有模型，都有 $Interpret models calA$，则称 $calA$ 是逻辑有效的，记作 $models calA$；类似的，若在每个模型下均假，则称之为矛盾式，记作 $notModels calA$
+    ]
+    #remark[][
+      显然有些公式在某些解释中既不真也不假，但不可能有公式在某个解释下又真又假，也不可能 $calA, not1 calA$ 都为真/有效。若公式带有自由变元，则该公式很可能在某个解释下既不真也不假。但后面会说明，不含自由变元的公式一定在某个解释下有确定的真值。
+    ]
+    #proposition[][
+      给定解释 #Interpret, 设 $calA, calA -> calB$ 都为真，则 $calB$ 为真
+    ]
+    #proof[
+      任取赋值 $v$，有：
+      $
+        v models calA, calA -> calB
+      $
+      而由定义，$v models calA -> calB$ 当且仅当 $v models not1 calA$ 或 $v models calB$，然而 $v$ 不可能同时满足 $calA, not1 calA$，因此 $v models calB$
+    ]
+    #corollary[][
+      若 $calA, calA -> calB$ 都是有效的，则 $calB$ 也是有效的
+    ]
+    #proposition[][
+      设 $calA$ 是公式，则 $I models calA$ 当且仅当 $I models forall x_i calA$，其中 $x_i$ 为任意变元。
+    ]
+    #proof[
+      两者事实上都是“对于任意赋值 $v$ 有 $v models calA$”
+    ]
+    #corollary[][
+      $calA$ 是有效的当且仅当 $forall x_i calA$ 是有效的，其中 $x_i$ 为任意变元。
+    ]
+    #remark[][
+      上面的命题说明，在考虑真值时，我们用 $A(x_i)$ 代替 $forall x_i, A(x_i)$ 是不会产生问题的。这被称为*全称量化公式*
+    ]
+    #proposition[][
+      给定解释 #Interpret，则 $v models exists x_i calA$ 当且仅当至少存在一个 $i-$等值于 $v$ 的赋值 $w$ 使得 $w models calA$
+    ]
+    #definition[替换实例][
+      设 $calA_0$ 是 $language_0$ 中的一个公式，$calA$ 是 $language$ 中的一个公式。用 $calA$ 替换 $calA_0$ 中某一个命题符的所有出现，得到 #language 中的公式 $calA'$，这被称为 $calA_0$ 的一个替换实例。
+    ]
+    #definition[重言式][
+      称 #calA 是 #language 的重言式，如果它是 $language_0$ 中一个重言式的一个替换实例。
+    ]
+    #proposition[][
+      #language 中的重言式在任何解释中均为真
+    ]
+    #proof[
+      假设重言式是由 $calA$ 替换 $calA_0$ 中 $p_0$ 得到的。任给解释 #Interpret 和赋值 $v$，构造 $language_0$ 中赋值 $v'$，使得：
+      $
+        v'(p_0) = v(calA)\
+        v'(p_i) = v(p_i) "if" p != p_0
+      $
+      容易验证 $v models calA$ 当且仅当 $v' models calA_0$，而后者由重言式定义显然成立。
+    ]
+    #remark[][
+      不是所有有效式都是重言式，例如 $forall x_1, x_1 -> x_1$
+    ]
+    #definition[][
+      若 #calA 中没有自由变元出现，则称之为闭式，否则称为开式。有时，也将不含量词的开式称为纯开式
+    ]
+    #remark[][
+      前面定义闭项是不含变元的项，与闭式略有不同。可以证明有效的纯开式必是重言式。
+    ]
+    #proposition[][
+      令 #Interpret 是一解释，$v, v'$ 是两个赋值，且满足对于 $calA$ 中每个自由变元 $x_i$ 均有 $v(x_i) = v'(x_i)$，则 $v models calA$ 当且仅当 $v' models calA$
+    ]
+    #proof[
+      简单使用结构归纳法即可。
+    ]
+    #corollary[][
+      设 $calA$ 是一个闭式，则任意两个赋值下 $calA$ 的真值相同。特别的，$calA$ 要么为真，要么为假。
+    ]
+    #definition[蕴含/等价][
+      - 设 $calA, calB$ 是公式，称 $calA$ 蕴含 $calB$，记作 $calA models calB$，如果所有 $calA$ 的模型也是 $calB$ 的模型。
+      - 若 $calA, calB$ 互相蕴含，则称之为逻辑等价，记作 $calA eq.triple calB$
+    ]
+  == 斯科伦式
+    #definition[][
+      若公式 $exists x_i calB$ 出现在 $calA$ 中，且属于 $forall x_(i 1) ... x_(i t)$ 的辖域，则可删除 $exists x_i$ ，且以函项 $h_i^r (x_(i 1), ..., x_(i t))$ 替换 $x_i$，其中 $h_i^r (x_(i 1), ..., x_(i t))$ 称为斯科伦函项，替换后的公式称为斯科伦式。
+    ]
+    斯科伦式和原式未必是等价的。只有以下的弱等价关系：
+    #theorem[弱等价性/反证等价性][
+      设 $calA$ 是公式，则它是矛盾的当且仅当它的斯科伦式是矛盾的
+    ]
+    
