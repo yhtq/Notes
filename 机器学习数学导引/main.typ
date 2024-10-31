@@ -316,7 +316,7 @@
       f (x_i) = 1/sqrt(K) W x_i
     $
     其中 $W in RR^(K times d)$ 是随机矩阵，其中每个元素都独立同分布到 $N(0, 1)$
-    #lemma[Johnson-linkoslvous][
+    #lemma[Johnson-Lindenstrauss][
       设 $x_i in RR^d$ 是一组向量，对于任意 $delta > 0$，则以 $1 - delta$ 的概率：
       $
         max_i abs(norm(1/sqrt(K) W x_i)^2 / norm(x_i)^2 - 1) <= epsilon
@@ -437,6 +437,185 @@
     $
       Sigma_k = (sum_i gamma_(x_i) (k) (x_i - mu_k) (x_i - mu_k)^T) / (sum_i gamma_(x_i) (k))
     $
+    #algorithm[Expectation-Maximization, EM][
+      假设我们有参数未知的分布 $rho(x | theta)$，$n$ 个样本 $X_i$ 满足：
+      $
+        X_i tilde rho(x | theta)
+      $
+      则我们有极大似然估计：
+      $
+        L(theta) = sum_i ln rho(x_i | theta)
+      $
+      之前介绍的高斯混合模型事实上是隐变量模型，也即真正的分布应该是某个高维分布的边缘分布，也即：
+      $
+        rho(x | theta) = sum_i rho(x, z = i | theta)
+      $
+      同时，联合分布 $rho(x, z | theta)$ 应该是简单的。类似于在 K-means 算法中的做法，我们可以：
+      - 选择参数的初值 $theta_0$
+      - 计算后验分布 $rho(z | x_i , theta^t)$
+      - 按照上面的后验分布抽样 $z_i^j$
+      - 在样本：
+        $
+          (x_i, z_i^j) \
+          i = 1, ..., n; j = 1, ..., m
+        $
+        下，解联合分布的极大似然问题：
+        $
+          sum_i 1/m sum_j ln rho(x_i, z_i^j | theta)
+        $
+      事实上，注意到 $m$ 是我们任取的，而不妨设我们可以取得充分大，从而极大似然问题变成：
+      $
+        sum_i E_(z | x_i, theta_t) ln rho(x_i, z | theta) := Q(theta | theta_t)
+      $
+      因此，事实上只需解：
+      $
+        theta_(t+1) = argmax Q(theta | theta_t)
+      $
+
+      从优化的角度，可以重新解释这个算法。不妨假设只有一个样本，我们有：
+      $
+        rho(z | x, theta) = rho(z, x | theta) / rho(x | theta)
+      $
+      目标是优化极大似然函数：
+      $
+        L(theta) = ln rho(x | theta) = ln (rho(x, z | theta))/ rho(z | x, theta)\
+        = ln (rho(x, z | theta))/ rho(z | x, theta_t) + ln (rho(z | x, theta_t))/(rho(z | x, theta))\
+      $
+      取期望得：
+      $
+        L(theta) =  E_(z | x, theta_t) L(theta) \
+        = E_(z | x, theta_t) ln (rho(x, z | theta))/ rho(z | x, theta_t) + E_(z | x, theta_t) ln (rho(z | x, theta_t))/(rho(z | x, theta))
+      $
+      注意到：
+      - $E_(z | x, theta_t) ln (rho(x, z | theta))/ rho(z | x, theta_t)$ 与之前定义的 $Q(theta | theta_t)$ 只差一个与 $theta$ 无关的常数，因此之前的 $argmax$ 等价于对它取 $argmax$
+      - $E_(z | x, theta_t) ln (rho(z | x, theta_t))/(rho(z | x, theta)) = "KL" (rho_(z | x, theta_t) | rho_(z | x, theta)) := H(theta, theta_t) >= 0$
+      因此我们有：
+      - $L(theta) >= Q(theta | theta_t)$
+      - $L(theta_t) = Q(theta_t | theta_t)$
+      - $L(theta_(t + 1)) >= Q(theta_(t + 1) | theta_t) >= Q(theta_(t) | theta_t) = L(theta_t)$
+      - 事实上可以证明：
+        $
+          nabla L(theta)|_(theta = theta_t) = nabla Q(theta | theta_t)|_(theta = theta_t)
+        $
+        这也意味着它至少比最泛用的梯度上升法：
+        $
+          theta_(t + 1) = theta_t + eta nabla L(theta)|_(theta = theta_t)
+        $<gradient-ascent>
+        更好，因为如果
+        $
+          theta_(t + 1) = argmax Q(theta | theta_t)
+        $
+        也用梯度上升法求解并且只做一步，恰好就是@gradient-ascent
+    ]
+    上面介绍了大量的传统机器学习方法。它们具有很强的可解释性，但往往难以解决复杂问题，例如 PCA 要求问题线性，许多方法在高维会出现维数灾难。同时，设计每个模型的方法的泛化性也不够强。深度学习方法则往往是它的反面，往往优化问题的解法更加泛用，不可解释，但往往能够解决复杂问题。
 
 = 现代机器学习（深度学习）
+  现代深度学习往往希望将问题转化为基本形式：
+  $
+    min_theta L(theta)
+  $
+  更进一步，我们希望 $theta$ 是无约束的。传统最优化方法往往花费巨大精力研究如果在某种约束下找到最优解，因此不够通用。
+
+  对于一般的问题，我们往往不能保证找到全局最优解，我们能得到的收敛性条件往往是：
+  $
+    norm(nabla L(theta)) -> 0
+  $
+  但它实际意义十分有限。而在凸问题中，或许可以得到：
+  $
+    f(x_i) -> f(x^*)
+  $
+  在现实情境下已经是十分好的结果了。
+  == 梯度下降法
+    #algorithm[][
+      梯度下降法有标准形式：
+      $
+        x_(t + 1) = x_t - eta_t nabla f(x_t)
+      $
+      其中 $eta_t$ 被称为步长/学习率。
+    ]
+    学习率如何选择是一个重要的问题，机器学习领域常见的方法是：
+    - 固定学习率，例如 $eta_t = eta$
+    - 逐渐减小学习率，例如 $eta_t = eta / t$，例如假如目标函数不够光滑，固定的学习率可能会导致震荡。
+    在传统数值方法领域，还有一种方法称作线搜索，也就是取：
+    $
+      eta_t = argmin f(x_t - eta nabla f(x_t))
+    $
+    也就是尽可能沿梯度下降方向移动。然而，在机器学习领域它略显太过激进，同时在实际情境中梯度或许并不准确。
+
+    在实际分析中，一个常见的技巧是：
+    $
+      (X_(t + 1) - X_t)/eta = - nabla f(X_t)
+    $
+    事实上，它是微分方程：
+    $
+      der(x, t) = - nabla f(x)
+    $
+    的离散化，同时有：
+    $
+      der(f(x_t), t) = inner(nabla f(x_t), der(x, t)) = - norm(nabla f(x_t))^2
+    $
+    #theorem[][
+      $
+        min_(t in [0, T]) norm(nabla f(x_t))^2 <= f(x_0) - f(x^*) 
+      $
+    ]
+    #proof[
+      $
+        min_(t in [0, T]) norm(nabla f(x_t))^2 <= 1/T integral_(0)^(T) norm(nabla f(x_t))^2 dif t <= 1/T (f(x_0) - f(x_t) ) <= 1/T (f(x_0) - f(x^*))
+      $
+    ]
+    #theorem[][
+      假设 $f$ 的一阶梯度 Lipschitz 连续，也即：
+      $
+        norm(nabla f(x) - nabla f(y)) <= L norm(x - y)
+      $
+      则有：
+      $
+        f(y) <= f(x) + inner(nabla f(x), y - x) + L/2 norm(y - x)^2
+      $
+      进一步：
+      $
+        f(x_(t + 1)) <= f(x_t) - eta_t norm(nabla f(x_t))^2 + eta_t L/2 norm(nabla f(x_t))^2\
+        = f(x_t) - eta_t (1 - L/2 eta_t) norm(nabla f(x_t))^2
+      $
+      为使其收敛，我们假设 $eta_t < 1/L$，上式有：
+      $
+        f(x_t) - f(x_(t + 1)) >= eta_t/2 norm(nabla f(x_t))^2
+      $
+      求和有：
+      $
+        f(x_(0)) - f(x_(T + 1)) >= sum_(t = 0)^(T) eta_t/2 norm(nabla f(x_t))^2 
+      $
+      假若 $eta_T$ 取常数，则同样用：
+      $
+        min_t norm(nabla f(x_t))^2 <= O(1/T)
+      $
+    ]
+    #theorem[][
+      假设 $f$ 是凸函数，且学习率是常数，则：
+    ]
+    #proof[
+      $
+        f(x_(t + 1)) - f(x^*) <= f(x_t) - f(x^*) - eta_t/2 norm(nabla f(x_t))^2\
+      $
+      而由凸性条件：
+      $
+        f(x^*) >= f(x_t) + inner(nabla f(x_t), x^* - x_t)
+      $
+      两式结合：
+      $
+        f(x_(t + 1)) - f(x^*) <= inner(nabla f(x_t), x^* - x_(t )) - eta_t/2 norm(nabla f(x_t))^2\
+        = -1/(2 eta_t) (eta_t^2 norm(nabla f(x_t))^2 - 2 eta_t inner(nabla f(x_t), x^* - x_t) + norm(x^* - x_t)^2) + 1/(2 eta_t) norm(x^* - x_t)^2\
+        = -1/(2 eta_t) norm(eta_t nabla f(x_t) - (x^* - x_t))^2 + 1/(2 eta_t) norm(x^* - x_t)^2\
+        = -1/(2 eta_t) norm(x_(t + 1) - x^*)^2 + 1/(2 eta_t) norm(x^* - x_t)^2\
+      $
+      求和得：
+      $
+        1/T sum_t f(x_t) - f(x^*) <= 1/(2 eta) norm(x_0 - x^*)^2
+      $
+      进一步有：
+      $
+        f(1/T sum_t x_t) - f(x^*) <= 1/(2 eta) norm(x_0 - x^*)^2
+      $
+    ]
 = 理论基础
