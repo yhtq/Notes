@@ -48,7 +48,38 @@
       &<= (L^* h)^2 + 1/(n h)   \
     $
 = #empty
+  #let kde_code = read("./code/src/kde.py")
+  代码如下：
+  #raw(kde_code, lang: "python", block: true)
+  结果如下：
+  #let kernels = ("box_kernel", "triangle_kernel","gaussian_kernel")
+  #for ker in kernels{
+    let image_path = "./code/output/" + ker + ".png"
+    image(image_path)
+  }
 = #empty
+  #let pca_code = read("./code/src/pca.py")
+  代码如下：
+  #raw(pca_code, lang: "python", block: true)
+  结果如下：
+
+  top 87 eigenvectors are enough to explain 90% variance
+  #image("./code/output/reconstruction_error.png")
+  #block[
+    #for k in (5, 30, 50, 100, 400){
+      let image_path = "./code/output/reconstruction_" + str(k) + ".png"
+      figure(
+        image(image_path, alt: "reconstruction" ),
+        caption: align(center,"reconstruction with " + str(k) + " eigenvectors"),
+        numbering: none,
+        placement: auto,
+        supplement: none
+      )
+    }
+  ]
+  #image("./code/output/random.png")
+  #image("./code/output/top2_eigenvectors.png")
+
 = #empty
   #block[
     #show "x": $bold(x)$
