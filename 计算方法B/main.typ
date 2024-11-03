@@ -49,15 +49,8 @@
         $
         则称之为 $p$ 次渐进收敛
     ]
-= 数值代数
-  == 基本知识
-    数值代数的基本问题：
-    + 线性方程组
-    + 线性最小二乘
-    + 矩阵特征值
-    + 奇异值分析
-  == 直接法解线性方程组
-    === 三角形方程组和 LU 分解
+= 直接法解线性方程组
+    == 三角形方程组和 LU 分解
       若 $L$ 是下三角矩阵，且对角线上没有零，则称 $L y = b$ 是三角方程组。不难发现，这样的方程组可以在 $O(n^2)$ 时间解出。自然的，如果方程组 $A x = y$ 可以分解成：
       $
       A = L U\
@@ -815,5 +808,248 @@
       // $
       // 上面的不等式已经表明 $x^T D x != 0$，而若 $x^T D x < 0$，将有 $x^T L x < 0, lambda > 1, 1 - omega - lambda < 0, omega(1 + lambda) > 0$
     ]
+= 特征值问题  
+  #definition[特征值和特征向量][
+    设 $A in CC^(n times n)$，若存在 $lambda in CC, x in CC^n, x != 0$ 使得：
+    $
+    A x = lambda x
+    $
+    则称 $lambda$ 为 $A$ 的特征值，$x$ 为对应的特征向量。
 
-    
+    我们记 $lambda(A)$ 为 $A$ 特征值的集合，称为 $A$ 的谱集。称特征值在特征多项式中的重数为代数重数 $n_i$，几何重数称为 $m_i$
+  ]
+  矩阵特征值当然可以通过特征多项式计算，然而高次多项式求根是很困难的问题，因此求特征值往往会通过迭代法进行。
+  #proposition[][
+    设 $A = P B Inv(P)$，其中 $P$ 是非奇异矩阵，则 $A, B$ 有相同的特征值，特征向量由 $P$ 变换可得。
+  ]
+  #theorem[Jordan 分解][
+    设 $A$ 有 $r$ 个互不相同的特征值 $lambda_1, lambda_2, ..., lambda_r$，其代数重数分别为 $n_1, n_2, ..., n_r$，则存在非奇异矩阵 $P$ 使得：
+    $
+    P^(-1) A P = diag(J(lambda_1), J(lambda_2), ..., J(lambda_r))
+    $
+    其中 $J(lambda_i) in CC^(n_i times n_i)$ 由 Jordan 块构成。
+  ]
+  #theorem[Schur 分解][
+    设 $A in CC^(n times n)$，则存在酉矩阵 $Q$ 使得：
+    $
+    Q^T A Q = T
+    $
+    其中 $T$ 是上三角矩阵。
+  ]
+  实践上，Jordan 分析并非不可行，但往往数值相当不稳定，而 Schur 分解更加稳定。
+  == 幂法
+    如果我们只想要计算模最大的特征值，那么幂法是相当简单实用的方法。
+    #algorithm[幂法][
+      任取初值 $x_0$ 使得 $norm(x_0) = 1$，令：
+      $
+        x_(k + 1) = (A x_k) / norm(A x_k)\
+        lambda_(k +1) = inner(x_(k + 1), A x_(k + 1))
+      $
+      不断迭代即可。显然事实上有：
+      $
+        x_k = (A^k x_0) / norm(A^k x_0)\
+      $
+    ]
+    #theorem[][
+      假设 $A$ 存在唯一模最大的特征值，其代数重数等于几何重数，且初始向量 $x_0$ 在 $lambda_1$ 的特征子空间的投影不为零，则在幂法中，$x_k$ 确实收敛于 $A$ 的模最大特征值对应的特征向量，而 $lambda_k$ 收敛于该特征值。
+    ]<power_method>
+    #proof[
+      不妨设：
+      $
+        A = P diag(J(lambda_1), J(lambda_2), ..., J(lambda_r)) Inv(P)
+      $
+      其中 $abs(lambda_1) > abs(lambda_i), i != 1$则：
+      $
+        A^k x_0 = P diag(J(lambda_1)^k, J(lambda_2)^k, ..., J(lambda_r)^k) Inv(P) x_0
+      $
+      #lemma[][
+        设 $J(lambda)$ 是 Jordan 块，$abs(lambda') > abs(lambda)$，则：
+        $
+          (J(lambda) / lambda')^k -> 0
+        $
+      ]
+      由引理，有：
+      $
+        A^k x_0 = lambda_1^k P diag(I, (J(lambda_2) / lambda_1)^k, ..., (J(lambda_r)/ lambda_1)^k) Inv(P) x_0 \
+        (A^k x_0)/norm(A^k x_0) = (P diag(I, (J(lambda_2) / lambda_1)^k, ..., (J(lambda_r)/ lambda_1)^k) Inv(P) x_0) / norm(P diag(I, (J(lambda_2) / lambda_1)^k, ..., (J(lambda_r)/ lambda_1)^k) Inv(P) x_0)\
+        -> (P diag(I, 0, ..., 0) Inv(P) x_0)/norm(P diag(I, 0, ..., 0) Inv(P) x_0)
+      $
+      不难验证：
+      $
+        A (P diag(I, 0, ..., 0) Inv(P) x_0) &= P diag(J(lambda_1), 0, 0, ..., 0) Inv(P) x_0 \
+        &= lambda_1 P diag(I, 0, 0, ..., 0) Inv(P) x_0
+      $
+      表明 $x_k$ 确实收敛于一个 $lambda_1$ 的特征向量，而 $lambda_k$ 收敛于 $lambda_1$ 是容易验证的。
+    ]
+    #remark[][
+      - 容易看出幂法是指数收敛的，取决于 $abs(lambda_2 / lambda_1)$
+      - 幂法的运算简单，收敛也很快，但在 $abs(lambda_2 / lambda_1)$ 比较接近 $1$ 时收敛较慢，且一旦 @power_method 中条件不成立，则幂法无法收敛。例如实矩阵可能有两个共轭的特征值，它们的模相等，此时幂法可能不收敛。
+    ]
+    #algorithm[带位移策略的幂法][
+      我们可以转而用幂法计算 $A' := A - sigma I$ 的特征值，此时需要保证：
+      - $lambda_1 - sigma$  是 $A - sigma I$ 的最大特征值
+      - $max_(i != 1) abs((lambda_i - sigma) / (lambda_1 - sigma))$ 尽可能小
+      这种加速很直观，但一般来说 $sigma$ 很难选取到合适的值。
+    ]
+    #algorithm[带位移策略的反幂法][
+      如果将幂法用于 $Inv(A)$，就可以求出 $A$ 的模最小特征值：
+      - 选取初值 $x_0, sigma$
+      - $x_(k + 1) = ((A - sigma I)^(-1) x_k)/norm((A - sigma I)^(-1) x_k)$
+      它可以收敛到与 $sigma$ 最近的特征值。如果能取得与某个 $lambda$ 比较近的 $sigma$，则算法收敛将很快。实践上，我们不会求逆，而是对矩阵：
+      $
+      A - sigma I
+      $
+      作 LU 分解，然后再解线性方程组。
+    ]
+    #algorithm[Rayleigh 商迭代][
+      在上面的方法中，我们希望 $sigma$ 离 $lambda$ 越近越好。事实上，我们可以动态地调整 $sigma$
+      - 选取初值 $x_0$ 使得 $norm(x_0) = 1$
+      - 在每步中，取：
+        $
+          sigma_k = inner(x_k, A x_k)
+        $
+        令：
+        $
+          x_(k + 1) = ((A - sigma_k I)^(-1) x_k)/norm((A - sigma_k I)^(-1) x_k)
+        $   
+    ]
+    #theorem[][
+      若 Rayleigh 商迭代收敛到某个单特征值，则其收敛速度至少是二次的。若矩阵 $A$ 是对称的，则收敛速度可以达到局部的三次收敛。
+    ]
+    Rayleigh 商迭代有极快的收敛速度，然而每次要解不同的线性方程组，每步计算量更大。
+  == QR 迭代
+    #algorithm[QR 迭代][
+      - 取初值 $A_1 = A$
+      - 对矩阵 $A_k$ 做 $Q R$ 分解，有：
+        $
+          A_(k) = Q_k R_k
+        $
+      - 令：
+        $
+          A_(k + 1) = R_k Q_k
+        $
+    ]
+    #remark[][
+      事实上有：
+      $
+        A_(k + 1) &= R_k Q_k \
+        &= (Q_k^T Q_k) R_k Q_k\
+        &= Q_k^T A_k Q_k\
+        &= ...\
+        &= Q_k^T Q_(k-1)^T ... Q_1^T A Q_1 ... Q_(k-1) Q_k
+      $
+    ]
+    #let Qt = $tilde(Q)$
+    #let Rt = $tilde(R)$
+    接下来，我们记:
+    $
+      Qt_k = Q_1 ... Q_k\
+      Rt_k = R_k ... R_1
+    $
+    将有：
+    $
+      A_(k + 1) &= Qt_k^T A Qt_k\ 
+      Qt_k Rt_k &= Qt_(k - 1) Q_k R_k Rt_(k-1) = Qt_(k - 1) A_k Rt_(k-1)\
+                &= Qt_(k -1)  Qt_(k-1)^T A Qt_(k-1) Rt_(k-1)\
+                &= A Qt_(k-1) Rt_(k-1)\
+                &= ...\
+                &= A^k
+    $
+    这表明 $Qt_k Rt_k e_1 = A^k e_1$，换言之按照幂法当 $k$ 充分大时，$Qt_k Rt_k$ 的第一列将收敛到 $A$ 的模最大特征值对应的特征向量。类似的，有：
+    $
+      A Qt_k &= Qt_k A_(k +1) = Qt_k Q_(k + 1) R_(k + 1) = Qt_(k + 1) R_(k + 1)\
+      Qt_(k + 1) &= A Qt_k Inv(R_(k + 1)) = Inv(((A Qt_k Inv(R_(k + 1)))^T))\
+      &= Inv((A^T)) Qt_(k) R^T_(k + 1)\
+      Qt_(k + 1) e_n &= Inv((A^T)) Qt_(k) R^T_(k + 1) e_n = c_n Inv((A^T)) Qt_(k) e_n\
+      &= ... \
+      &= c (A^T)^(-k) e_n
+    $
+    也就是说最后一列和反幂法的现象是一致的。
+    #theorem[][
+      设 $A$ 具有 $n$ 个互不相等的特征值：
+      $
+        abs(lambda_1) > abs(lambda_2) > ... > abs(lambda_n)
+      $
+      设 $n$ 阶方阵 $Y$ 的第 $i$ 行是 $lambda_i$ 对应的特征向量。若 $Y$ 有 LU 分解，则 QR 方法产生的 $A_m$ 对角线以下元素收敛到零，并有第 $i$ 个对角元收敛于 $lambda_i$
+    ]
+    #proof[
+      令 $X = Inv(Y), Lambda = diag(lambda_i)$，则：
+      $
+        A = X Lambda Y\
+        A^m = X Lambda^m Y = X Lambda^m L U = X (Lambda^m L Lambda^(-m)) Lambda^m U
+      $
+      由条件，可以验证：
+      $
+        Lambda^m L Lambda^(-m) -> I
+      $
+      再令 $X = Q R$，不妨设 $R$ 对角元均正，则：
+      $
+        X (Lambda^m L Lambda^(-m)) Lambda^m U = Q  (R Lambda^m L Lambda^(-m) Inv(R)) R Lambda^m U 
+      $
+      当 $m$ 足够大时 $R Lambda^m L Lambda^(-m) Inv(R)$ 也非奇异，对其做 QR 分解得：
+      $
+        (R Lambda^m L Lambda^(-m) Inv(R)) = Q_m R_m
+      $
+      且：
+      $
+        Q_m -> I\
+        R_m -> I
+      $
+      最终有：
+      $
+        A^m = (Q Q_m)(R^m R Lambda^m U)
+      $
+      这是 $A^m$ 的一个 QR 分解，而由 QR 分解的唯一性：
+      $
+        Q Q_m D_1 = Qt_m\
+        D_1 R_m R Lambda^m U = Rt_m
+      $
+      其中 $D_1$ 是由 $1, -1$ 组成的对角阵。注意到 $A_m = Qt_m^T A Qt_m$，代入得：
+      $
+        A_m = D_1 Q_m^T Q^T A Q Q_m D_1 = D_1 Q_m^T Q^T Q R Lambda Inv(R) Q^T Q Q_m D_1\
+        = D_1 Q_m^T R Lambda Inv(R) Q_m D_1
+      $
+      而 $Q_m -> I$，验证发现上式确实趋近于上三角矩阵，且对角元依次就是 $lambda_i$
+    ]
+    #algorithm[带位移的 QR 方法][
+      QR 方法也可以进行位移，也就是：
+      - $A_k - sigma_k I = Q_k R_k$
+      - $A_(k + 1) = R_k Q_k + sigma_k I$
+      其中有：
+      $
+        A_(k + 1) = Q_k^T Q_k R_k Q_k + sigma_k I = Q_k^T (A_k - sigma_k I) Q_k + sigma_k I = Q_k^T A_k Q_k
+      $
+      如何选择 $sigma_k$ 是一个需要考虑的问题。可以设想，若 $sigma_k$ 比较接近最小特征值，则收敛可以明显加速。因此实践中往往取 $sigma_k = A_(k (n n))$
+    ]
+    一旦矩阵有复特征值，我们就不能希望 QR 迭代收敛于上三角矩阵。此时我们需要借助：
+    #theorem[实 Schur 分解][
+      设 $A in RR^(n times n)$，则存在正交矩阵 $Q$ 使得：
+      $
+        Q^T A Q = diag(R_1, R_2, ..., R_n)
+      $
+      其中 $R_i$ 要么是单个特征值，要么是由共轭特征值产生的 $2 times 2$ 块。
+    ]
+    QR 分解和矩阵乘法的复杂度达到 $O(n^3)$，而若迭代进行 $n$ 次，复杂度达到 $O(n^4)$，这是通常不能接受的。
+    #definition[上 Hessenberg 矩阵][
+      称矩阵 $H$ 为上 Hessenberg 矩阵，如果 $H_(i j) = 0, i > j + 1$，也就是次对角线以下都为零
+    ]
+    #theorem[][
+      设 $A in RR^(n times n)$，则存在正交矩阵 $Q$ 使得：
+      $
+        Q^T A Q = H
+      $
+      其中 $H$ 是上 Hessenberg 矩阵。
+    ]
+    #algorithm[][
+      求解上 Hessenberg 分解的方法是：
+      - 先对 $A$ 的第一列做 Householder 变换，将第一列次对角线以下变为零，设变换矩阵为 $Q$
+      - 令 $A_1 = Q A Q^T$，容易验证 $A_1$ 第一列次对角线以下元素为零
+      - 再对 $A_1$ 的第一列做 Householder 变换，重复进行以上步骤即可
+    ]
+    计算量为约为 $14/3 n^3$
+    #theorem[][
+      - 设 $A$ 是非奇异的上 Hessenberg 矩阵，且 QR 分解后 $A = Q R$，则 $R Q$ 也是上 Hessenberg 矩阵。
+      - 若 $A$ 是主对角线和次对角线上没有零的上 Hessenberg 矩阵，它是不可约的
+      - 若 $A$ 是不可约的上 Hessenberg 矩阵，则 $R Q$ 也是不可约的上 Hessenberg 矩阵
+    ]
+    对上 Hessenberg 矩阵进行 QR 分解时，可以考虑利用 $n-1$ 个 Givens 变换，一次迭代计算量仅有 $O(n^2)$
