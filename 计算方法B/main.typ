@@ -22,7 +22,7 @@
     用计算机计算的数值总是不精确的。：
     - 敏度分析是指原始数据的微小变化对计算结果的影响。往往能找到 $c(x)$ 使得：
       $
-      norm(f(x + delta x) - f(x)) / norm(f(x)) <= c(x) norm(delta x) 
+      norm(f(x + delta x) - f(x)) / norm(f(x)) <= c(x) norm(delta x)/norm(x) 
       $
       其中的 $c(x)$ 就称为*条件数*，显然若 $f(x)$ 可微则可取 $c(x) = norm(x f'(x))/norm(f(x))$\
       条件数较大的问题称为病态问题，这是问题本身的性质，与算法无关
@@ -51,7 +51,7 @@
     ]
 = 直接法解线性方程组
     == 三角形方程组和 LU 分解
-      若 $L$ 是下三角矩阵，且对角线上没有零，则称 $L y = b$ 是三角方程组。不难发现，这样的方程组可以在 $O(n^2)$ 时间解出。自然的，如果方程组 $A x = y$ 可以分解成：
+      若 $L$ 是下三角矩阵，且对角线上没有零，则称 $L y = b$ 是三角方程组。不难发现，这样的方程组可以在 $n^2$ 时间解出。自然的，如果方程组 $A x = y$ 可以分解成：
       $
       A = L U\
       L (U x) = y
@@ -364,7 +364,7 @@
       $
     ]
     #proof[
-      由于谱范数是算子范数，取 $x$ 使得：
+      由于谱范数是算子范数，取单位向量 $x$ 使得：
       $
       norm(Inv(A) x) = norm(Inv(A))
       $
@@ -374,15 +374,15 @@
       $
       则：
       $
-      A y = x/norm(x) = (x y^T y)/(norm(x)) = (x y^T)/norm(x) y
+      A y = x/norm(Inv(A)) = (x y^T y)/(norm(Inv(A))) = (x y^T)/norm(Inv(A)) y
       $
       也即：
       $
-      (A - (x y^T)/norm(x)) y = 0
+      (A - (x y^T)/norm(Inv(A))) y = 0
       $
       同时：
       $
-      norm((x y^T)/norm(x)) = 1/norm(x) sqrt(norm(x y^T y x^T)) = sqrt(norm(x x^T))/norm(x) = sqrt(norm(x^T x))/norm(x) = 1
+      norm((x y^T)/norm(Inv(A))) = 1/norm(Inv(A)) sqrt(norm(x y^T y x^T)) = 1/norm(Inv(A)) sqrt(norm(x x^T)) = 1/norm(Inv(A))
       $
       表明 $A - (x y^T)/norm(x)$ 是奇异的，而 $(x y^T)/norm(x)$ 就是我们要找的微扰。
 
@@ -497,7 +497,7 @@
     为了数值稳定性，实际计算时，我们不用保证 $s, c$ 平方和为 1
   === QR 分解，正交变换法
     #theorem[QR][
-      设 $A in RR^(m times n)$，则存在一个单位列正交阵 $Q$ 和对角元非负的上三角矩阵 $R$ 使得：
+      设 $A in RR^(m times n)$，则存在一个列正交阵 $Q$ 和对角元非负的上三角矩阵 $R$ 使得：
       $
       A = Q vec(R, 0)
       $
@@ -521,7 +521,7 @@
     R x = Q_1^T b\
     x = Inv(R) Q_1^T b
     $
-    即可。求解 QR 分解的方法可以采用之前的 Householder 变换，也可以采用 Givens 变换。往往在非零元素较多时使用 Givens 变换。
+    即可。求解 QR 分解的方法可以采用之前的 Householder 变换，也可以采用 Givens 变换。往往在非零元素较多时使用 Givens 变换。使用 Householder 变换进行 QR 分解的复杂度约为 $2 n^2 (m - n/3)$，比正规化方法运算量大很多，但数值稳定性也好很多。
 = 解线性方程组的迭代法
   第一章已经介绍了解线性方程组的直接法，然而对于常见的大规模矩阵，它的元素往往比较稀疏，而 LU 分解会破坏许多零元素，不能保持稀疏性。本章介绍解线性方程组的迭代法，也就是构造一个向量序列使得它趋近于问题的解。对于迭代法，往往要解决以下几个问题：
   - 如何构造迭代序列
@@ -775,7 +775,7 @@
         x^T D x > x^T L x + overline(x^T L x)\
         delta > beta + overline(beta)
       $<cond1>
-      假设 $delta = omega beta$，意味着 $beta$ 是实数，将有：
+      假设 $delta = omega beta$，意味着 $beta$ 是正实数，且有有：
       $
         omega beta > 2 beta
       $
@@ -794,7 +794,7 @@
           delta^2 omega (omega - 2) + omega delta (beta + overline(beta))(2 - omega) < 0 \
           delta omega (2 - omega) (-delta +  (beta + overline(beta))) < 0 \
         $
-        注意到正定矩阵对角元均正，因此 $delta > 0$，结合 @cond1 立得结论成立。
+        注意到正定矩阵对角元均正，因此 $delta > 0$，结合@cond1 立得结论成立。
         // &= norm(((1 - omega) delta + omega overline(beta))(delta - omega overline(beta)))/((delta - omega beta)(delta - omega overline(beta)))\
         // &= norm((1 - omega)delta^2 - omega (1-omega) delta overline(beta) + omega delta overline(beta) - omega^2 overline(beta)^2)/((delta - omega beta)(delta - omega overline(beta)))\
         // &= norm((1 - omega)delta^2 + omega^2 delta overline(beta) - omega^2 overline(beta)^2)/((delta - omega beta)(delta - omega overline(beta)))\
@@ -997,7 +997,7 @@
       $
       最终有：
       $
-        A^m = (Q Q_m)(R^m R Lambda^m U)
+        A^m = (Q Q_m)(R_m R Lambda^m U)
       $
       这是 $A^m$ 的一个 QR 分解，而由 QR 分解的唯一性：
       $

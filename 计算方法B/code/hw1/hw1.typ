@@ -1,5 +1,5 @@
-#import "../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark
-#import "../../template.typ": *
+#import "../../../template.typ": proof, note, corollary, lemma, theorem, definition, example, remark
+#import "../../../template.typ": *
 #show: note.with(
   title: "作业1",
   author: "YHTQ",
