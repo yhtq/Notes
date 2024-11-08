@@ -618,4 +618,45 @@
         f(1/T sum_t x_t) - f(x^*) <= 1/(2 eta) norm(x_0 - x^*)^2
       $
     ]
+    #definition[KL-condition][
+      如果：
+      $
+        norm(nabla f(x))^2 >= 2 mu (f(x) - f(x^*))^alpha
+      $
+      对于某个 $mu, alpha$ 成立，则称问题满足 KL condition。
+    ]
+    #theorem[][
+      一旦函数满足 KL condition，则有：
+      $
+        der(f(x_t) - f(x^*), t) <= -mu (f(x_t) - f(x^*))^alpha
+      $
+      容易解得误差将会指数收敛。
+    ]
+    #definition[强凸函数][
+      设 $f in C^1(RR^n)$，则称 $f$ 是强凸的，如果存在 $mu > 0$ 使得：
+      $
+        f(y) >= f(x) + inner(nabla f(x), y - x) + mu/2 norm(y - x)^2
+      $
+      如果 $f$ 二阶可微，上面的条件等价于 $lambda_min (nabla^2 f(x)) >= mu$
+    ]
+    #proposition[][
+      强凸函数都满足 KL-condition
+    ]
+    #proof[
+      $
+        f(y) >= min_z (f(x) + inner(nabla f(z), z - x) + mu/2 norm(x - z)^2)\
+      $
+      计算可得：
+      $
+        norm(nabla f(x))^2 >= 2 mu (f(x) - f(y))
+      $
+    ]
+    #remark[][
+      在过参数化的最小二乘问题中，损失函数并不是强凸的，但却满足 PL-condition (KL-condition 中 $alpha = 1$) 的情形。
+      事实上，满足 KL-condition 的函数都未必是凸的，然而可以证明这样的函数每一个极小值都是最小值，不会产生局部最优问题。
+    ]
+
+    
+    上面我们证明了理论上满足 KL-condition 的函数应该以很快的速度收敛。然而事实上我们总是只能取有限的学习率，而且往往很小。这种情况下，
+    实践上的收敛速度仍然比较缓慢。
 = 理论基础

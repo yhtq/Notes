@@ -39,11 +39,22 @@
 #let transitivity(a, b) = $ "transitivity" #a space #b$
 #let MP(a, b) = $ "MP" #a space #b$
 #let MPb(a, b) = $ "MP" (#a) (#b)$
+#let GEN = $ "GEN"$
 #let deduction-theorem-b(a, b) = $ "deduction theorem" (#a) (#b)$
 #let transitivity-b(a, b) = $ "transitivity" (#a) (#b)$
 #let L1 = $"L1"$
 #let L2 = $"L2"$
 #let L3 = $"L3"$
+#let K1 = $"K1"$
+#let K2 = $"K2"$
+#let K3 = $"K3"$
+#let K4 = $"K4"$
+#let K5 = $"K5"$
+#let R1 = $"R1"$
+#let R2 = $"R2"$
+#let R3 = $"R3"$
+#let R4 = $"R4"$
+#let tauto = $"重言式"$
 #let idL = $"引理" calA -> calA$
 #let language = $cal(L)$
 = 前言
@@ -691,4 +702,186 @@
     #theorem[弱等价性/反证等价性][
       设 $calA$ 是公式，则它是矛盾的当且仅当它的斯科伦式是矛盾的
     ]
-    
+= 一阶逻辑：证明论
+  == 形式系统
+    对于固定的一阶语言 #language，我们用 $K_language$ 代表其上的形式系统，也可简记为 $K$
+    #definition[一阶逻辑的形式系统][
+      在一阶语言之上，定义以下公理：
+      - K1 : $calA -> (calB -> calA)$
+      - K2 : $(calA -> (calB -> calC)) -> ((calA -> calB) -> (calA -> calC))$
+      - K3 : $(not1 calA -> not1 calB) -> (calA -> calB)$
+      - K4 : $forall x_i calA -> calA (x_i \/ t)$ ，其中 $t$ 在 $calA$ 中对 $x_i$ 自由
+      - K5: $forall x_i (calA -> calB) -> (calA -> (forall x_i calB))$，其中 $x_i$ 不在 $calA$ 中自由出现
+      推理规则包括：
+      - R1（分离规则, MP）：若 $calA, calA -> calB$ 则 $calB$
+      - R2（概括规则, gen）：若 $calA$，则 $forall x_i calA$
+    ]
+    #definition[证明][
+      一个证明是一个有限长度的公式序列 $calA_1, ..., calA_n$，满足：
+      - 对于每个 $calA_i$，要么是公理，要么是之前的公式通过推理规则得到
+      此时，称 $tack calA_n$
+
+      类似的，设 $Gamma$ 是公式集，则该公式集下的证明是一个有限长度的公式序列 $calA_1, ..., calA_n$，满足：
+      - 对于每个 $calA_i$，要么是公理，要么是 $Gamma$ 中的公式，要么是之前的公式通过推理规则得到
+      此时，称 $Gamma tack calA_n$，也称 $calA$ 是 $Gamma$ 的一个后承
+    ]
+    #proposition[][
+      若 $calA$ 是重言式，则 $calA$ 是定理
+    ]
+    #proof[
+      注意到 $calA$ 是重言式当且仅当它是命题逻辑中重言式的替换，而由命题逻辑的完全性它是命题逻辑中的定理。由于一阶逻辑的公理和推理规则都是命题逻辑的推广，因此 $calA$ 也是一阶逻辑的定理。
+    ]
+    #proposition[][
+      K4, K5 是逻辑有效的
+    ]
+    #proof[
+      考虑任意的模型和任意的赋值即可，利用 @substitution-theorem 即可
+    ]
+    #theorem[可靠性 / Soundness][
+      #language 中的任何公式都是逻辑有效的，也即：
+      $
+        tack calA => models calA
+      $
+    ]
+    #corollary[一致性][
+      K 是一致的，也即不存在公式 $calA$ 使得 $tack calA$ 且 $tack not1 calA$
+    ]
+    #remark[][
+      演绎定理在一阶逻辑中不再有效。考虑：
+      $
+        calA tack forall x_i calA
+      $
+      这就是概括规则本身，然而：
+      $
+        tack calA -> forall x_i calA
+      $
+      是不正确的，事实上，它不是有效的。
+    ]
+    #definition[][
+      设 $Gamma$ 是公式集，$calA in Gamma$，考虑一个基于 $Gamma$ 的证明序列 $calA_i$，称 $calA_i$ 依据于 $calA$，如果：
+      - $calA_i = calA$ 且它来源于 $calA in Gamma$，或者
+      - $calA_i$ 来源于演绎规则，而演绎规则中涉及了依据于 $calA$ 的公式
+
+    ]
+    #proposition[][
+      若 $Gamma, calA tack calB$，且 $calB$ 不依据于 $calA$，则 $Gamma tack calB$
+    ]
+    #proof[
+      显然
+    ]
+    #theorem[演绎定理][
+      设 $Gamma union {calA} tack calB$，且演绎对涉及 $calA$ 中自由出现的变元没有使用概括规则，则 $Gamma tack calA -> calB$
+    ]
+    #proof[
+      对演绎序列做归纳：
+      - 若只有一个公式 $calB$，结论容易验证
+      - 否则，考虑 $calB$ 的来源：
+        - 来源于公理集或 $Gamma union {calA}$，显然
+        - 来源于 MP，同命题逻辑中演绎定理的证明
+        - 由演绎中前面的公式用概括规则而得。此时可设：
+          $
+            calB = forall x_i calC
+          $
+          由假设条件，我们可以知道 $x_i$ 不在 $calA$ 中自由出现。归纳假设给出：
+          $
+            Gamma tack calA -> calC
+          $
+          概括规则给出：
+          $
+            Gamma tack forall x_i (calA -> calC)
+          $
+          K5 和 MP 规则给出：
+          $
+            Gamma tack calA -> (forall x_i calC)
+          $
+          证毕
+    ]
+    #corollary[][
+      设 $calA$ 是闭式，且 $Gamma union {calA} tack calB$，则 $Gamma tack calA -> calB$
+    ]
+    #corollary[][
+      对任意 #language 中的公式 $calA, calB, calC$ 有：
+      $
+        calA -> calB, calB -> calC tack calA -> calC
+      $
+    ]
+    #proof[
+      同命题逻辑
+    ]
+    #theorem[演绎定理的逆][
+      若 $Gamma tack calA -> calB$，则 $Gamma union {calA} tack calB$
+    ]
+    #proof[
+      同命题逻辑
+    ]
+    #example[][
+      $tack forall x_1 forall x_2 calA -> forall x_2 forall x_1 calA$
+
+      先证明 $forall x_1 forall x_2 calA tack forall x_2 forall x_1 calA$
+      #deduction[
+        + $forall x_1 forall x_2 calA := fS$
+        + $forall x_2 calA := MPb(1, K4)$
+        + $calA := MPb(2, K4)$
+        + $forall x_1 calA := GEN(3)$
+        + $forall x_2 forall x_1 calA := GEN(4)$
+      ]
+      注意到演绎符合演绎定理的条件，因此原命题成立
+    ]
+    #example[][
+      设 $x_i$ 不在 $calA$ 中自由出现，则有 $tack (calA -> forall x_i calB) -> forall x_i (calA -> calB)$
+
+      先证明 $calA -> forall x_i calB tack forall x_i (calA -> calB)$
+      #deduction[
+        + $calA -> forall x_i calB := fS$
+        + $forall x_i calB -> calB := K4$
+        + $calA -> calB := transitivity(1, 2)$
+        + $forall x_i (calA -> calB) := GEN (x_i) (3)$
+      ]
+      注意到由条件，$x_i$ 不在 $calA$ 中自由出现，因此利用演绎定理命题成立。
+
+      这就是 K5 的反向，而其中并未用到 K5
+    ]
+    #proposition[][
+      - $tack forall x_i (calA -> calB) -> (forall x_i calA -> forall x_i calB)$
+      - $tack forall x_i (calA -> calB) -> (exists x_i calA -> exists x_i calB)$
+    ]
+    #definition[导出规则][
+      以下介绍一些导出规则，它们由演绎定理和之前的方法可以容易地推出（特别的，它们不会对在公式中自由出现的变元利用 GEN）：
+      - R3（特例规则）: 若 $t$ 在 $calA$ 中对 $x_i$ 自由，则 $forall x_i calA -> calA(x_i \/ t)$
+      - R4（存在规则）：若 $t$ 在 $calA$ 中对 $x_i$ 自由，则：
+        $
+          calA(x_i \/ t) tack exists x_i calA
+        $
+      - 否定消去 $not1 not1 calA tack calA$
+      - 否定引入 $calA tack not1 not1 calA$
+      - 合取消去 $calA and calB tack calA, calB$
+      - 合取消去 $not1 (calA and calB) tack not1 calA or not1 calB$
+      - 合取引入 $calA, calB tack calA and calB$
+      - 析取消去 $calA or calB, not1 calA tack calB$
+      - 析取消去 $calA or calB, not1 calB tack calA$
+      - 析取消去 $not1 (calA or calB) tack not1 calA and not1 calB$
+      - 析取消去 $calA -> calC, calB -> calC, calA or calB tack calC$
+      - 析取引入 $calA tack calA or calB, calB tack calA or calB$
+      - ...
+      由这些引入规则和消去规则定义的证明论称为 Gentzen 型证明论，它与之前的证明论等价。
+    ]
+
+    #example[][
+      $tack forall x_i calA -> exists x_i calA$
+    ]
+    #proof[
+      #deduction[
+        + $forall x_i calA := fS$
+        + $calA := R3$
+        + $exists x_i calA := R4$
+        + $forall x_i calA tack exists x_i calA$
+        + $tack forall x_i calA -> exists x_i calA$
+      ]
+    ]
+$
+  ((alpha -> beta) -> alpha) -> alpha\
+  ((alpha -> beta) -> alpha) -> (not1 alpha -> not1 (alpha -> beta))\
+  not1 (alpha -> beta) -> alpha\
+  (not1 alpha -> not1 (alpha -> beta)) -> (not1 alpha -> alpha)
+$ 
+
