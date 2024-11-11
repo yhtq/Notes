@@ -693,7 +693,7 @@
     #definition[蕴含/等价][
       - 设 $calA, calB$ 是公式，称 $calA$ 蕴含 $calB$，记作 $calA models calB$，如果所有 $calA$ 的模型也是 $calB$ 的模型。
       - 若 $calA, calB$ 互相蕴含，则称之为逻辑等价，记作 $calA eq.triple calB$
-    ]
+    ]<logic-equiv>
   == 斯科伦式
     #definition[][
       若公式 $exists x_i calB$ 出现在 $calA$ 中，且属于 $forall x_(i 1) ... x_(i t)$ 的辖域，则可删除 $exists x_i$ ，且以函项 $h_i^r (x_(i 1), ..., x_(i t))$ 替换 $x_i$，其中 $h_i^r (x_(i 1), ..., x_(i t))$ 称为斯科伦函项，替换后的公式称为斯科伦式。
@@ -742,7 +742,7 @@
       $
         tack calA => models calA
       $
-    ]
+    ]<first-order-soundness>
     #corollary[一致性][
       K 是一致的，也即不存在公式 $calA$ 使得 $tack calA$ 且 $tack not1 calA$
     ]
@@ -878,10 +878,129 @@
         + $tack forall x_i calA -> exists x_i calA$
       ]
     ]
-$
-  ((alpha -> beta) -> alpha) -> alpha\
-  ((alpha -> beta) -> alpha) -> (not1 alpha -> not1 (alpha -> beta))\
-  not1 (alpha -> beta) -> alpha\
-  (not1 alpha -> not1 (alpha -> beta)) -> (not1 alpha -> alpha)
-$ 
-
+  == 等价
+    #definition[可证等价][
+      若 $calA, calB$ 是公式，称 $calA$ 和 $calB$ 是可证等价的，如果 $tack calA <-> calB$
+    ]
+    #proposition[][
+      可证等价是自反的、对称的、传递的
+    ]
+    #proposition[][
+      若 $calA, calB$ 可证等价，则它们逻辑等价（@logic-equiv）
+    ]
+    #proof[
+      就是 @first-order-soundness
+    ]
+    #remark[][
+      逻辑等价也可以证明论地定义为：
+      $
+        calA tack calB "iff" calB tack calA
+      $
+      使用之后我们会证明的一阶逻辑完备性，它和之前模型论的完备性是等价的。然而注意到，它与
+      $
+        tack calA <-> calB
+      $
+      并不相同，既然一阶逻辑的演绎定理需要一些额外的条件。
+    ]
+    #proposition[变元换名][
+      假设 $x_j$ 不在 $calA$ 中（自由或约束）出现，则：
+      $
+        tack forall x_i calA <-> forall x_j calA(x_i \/ x_j)
+      $
+    ]
+    #definition[全称闭式][
+      设 $calA$ 中所有自由变元为 $x_1, x_2, ..., x_n$，则称：
+      $
+        forall x_1 forall x_2 ... forall x_n calA
+      $
+      为 $calA$ 的全称闭式，将其记作 $calA'$。容易证明，逻辑闭式与 $calA$ 逻辑等价，但并不一定可证等价。
+    ]
+    #theorem[替换定理][
+      设 $calA, calB$ 是公式，设 $calB_0$ 是用 $calB$ 替换 $calA_0$ 中的一次或多次替换 $calA$ 的出现的公式，则：
+      $
+        tack (calA <-> calB)' -> (calA_0 <-> calB_0)
+      $
+    ]
+    #proof[
+      往证：
+      $
+        (calA <-> calB)' tack calA_0 <-> calB_0
+      $
+      对 $calA_0$ 做结构归纳：
+      - $calA_0 = calA$ 显然
+      - $calA_0$ 不含 $calA$ 作为子公式：显然
+      - $calA_0 = calA_1 -> calA_2$，归纳假设给出：
+        $
+          (calA <-> calB)' tack calA_1 <-> calB_1\
+          (calA <-> calB)' tack calA_2 <-> calB_2
+        $
+        HS 容易给出 $(calA <-> calB)' tack calB_1 -> calB_2$
+      - $calA_0 = not1 calA_1$，归纳假设给出：
+        $
+          (calA <-> calB)' tack calA_1 <-> calB_1
+        $
+        重言式 $(calA_1 <-> calB_1) <-> (not1 calB_1 <-> not1 calA_1)$ 给出：
+        $
+          (calA <-> calB)' tack not1 calB_1 <-> not1 calA_1 = (calB_0 <-> calA_0)
+        $
+      - $calA_0 = forall x_i calA_1$，归纳假设给出：
+        $
+          (calA <-> calB)' tack  calA_1 <-> calB_1
+        $
+        同时注意到：
+        $
+          calA_1 <-> calB_1 tack forall x_i (calA_1 <-> calB_1) tack forall x_i calA_1 <-> forall x_i calB_1
+        $
+        这里对 $x_i$ 使用了 GEN 规则，但是既然 $(calA <-> calB)'$ 是全称闭式，因此不会破坏演绎定理的条件。
+    ]
+    #corollary[][
+      - 若 $tack calA <-> calB$，则 $tack calA_0 <-> calB_0$
+      - 若 $tack calA <-> calB$，且 $tack calA_0$，则 $tack calB_0$
+    ]
+  == 前束范式和子句范式
+    #proposition[][
+      - $tack not1 (forall x_i) calA <-> (exists x_i) not1 calA$
+      - $tack not1 (exists x_i) calA <-> (forall x_i) not1 calA$
+      此外，若 $x_i$ 不在 $calA$ 中自由出现，则：
+      - $tack forall x_i (calA -> calB) <-> (calA -> forall x_i calB)$
+      - $tack exists x_i (calA -> calB) <-> (calA -> exists x_i calB)$
+      - $tack (exists x_i calB -> calA) <-> (not1 forall x_i not1 calB -> calA) <-> (not1 calA -> forall x_i not1 calB) <-> forall x_i (calB -> calA)$
+      - $tack (forall x_i calB -> calA) <-> (not1 calA -> exists x_i not1 calB) <-> exists x_i (calB -> calA)$
+    ]<prop-quantifier>
+    #definition[前束范式][
+      称形如：
+      $
+        Q_1 x_1 ... Q_n x_n calA
+      $
+      的公式为前束范式，其中 $Q_i$ 是量词，$x_i$ 是变元，$calA$ 是无量词公式。如果所有的存在量词都在全称量词的左边，则称之为斯科伦前束范式。此外，$calA$ 往往被化成命题逻辑的合取范式或析取范式。
+    ]
+    #theorem[][
+      任意公式 $calA$ 都存在前束范式 $calB$ 与其可证等价
+    ]
+    #proof[
+      由换名规则，不妨设 $calA$ 中自由变元和约束变元不存在重名。考虑 $calA$ 为：
+      - 原子公式：显然
+      - $not1 calC$: 归纳假设给出 $calC$ 的前束范式 $Q_1 x_1 ... Q_n x_n calC'$，而：
+        $
+          not1 Q_1 x_1 ... Q_n x_n calC' <-> Q_1^* x_1 ... Q_n^* x_n not1 calC'
+        $
+        其中 $Q_i^*$ 是 $Q_i$ 的对偶，成立性来自于 @prop-quantifier
+      - $calB -> calC$:
+        归纳假设给出：
+        $
+          tack calB <-> Q_1 x_1 ... Q_n x_n calB'\
+          tack calC <-> P_1 y_1 ... P_n y_n calC'
+        $
+        无妨设 $x_i != x_j, x_1 != y_j$，则由替换定理的推论，有：
+        $
+          tack (Q_1 x_1 ... Q_n x_n calB' -> P_1 y_1 ... P_n y_n calC') <-> calA 
+        $
+    ]
+    #definition[$Pi, Sigma$][
+      称前束范式为 $Pi_n$ 范式，如果它以全称量词开始，且量词交替 $n - 1$ 次。称前束范式为 $Sigma_n$ 范式，如果它以存在量词开始，且量词交替 $n - 1$ 次。该概念在涉及一阶逻辑的计算中很有用。
+    ]
+    #theorem[弱等价性定理][
+      设 $K^s$ 是把 $K$ 的每个公理换成斯科林式而得，则：
+      - 若 $calB$ 是 $K$ 的公式且 $tack_(K^s) calB$，则 $tack_K calB$
+      - $K$ 是一致的当且仅当 $K^s$ 是一致的
+    ]
