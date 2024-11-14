@@ -534,11 +534,13 @@
     inset: 10pt,
     radius: 4pt,
   )
-
+  show raw: it => {
+    set text(font: ("Serif Italic", "Noto Serif CJK SC"))
+    it
+  }
   // Code block with line numbers
   show raw.where(block: true): it => {
     if not code_with_line_number { return it }
-    set text(font: ("Serif Italic", "Noto Serif CJK SC"))
     let lines = it.text.split("\n")
     let length = lines.len()
     let i = 0

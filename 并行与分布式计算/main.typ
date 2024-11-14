@@ -5,6 +5,7 @@
   author: "YHTQ",
   date: datetime.today().display(),
   logo: none,
+  withChapterNewPage: true
 )
 = 前言
   + 教师：杨超 chao_yang\@pku.edu.cn 智华楼 333
@@ -182,3 +183,18 @@
     OpenMP 采用松弛一致性。数据在缓存中未必随时更新，一些同步操作（例如并行区入口，barrier 操作）会自动调用更新，也可以使用 flush 手动更新。例如假设有共享变量 `x`，希望在一个线程更新后，另一个线程能够捕捉到更新，就需要在更新后手动调用 flush。
   == 线程亲和性
     在 NUMA 架构中，我们需要决定线程如何分配到处理器上。既可以集中分布，也可以分散分布。可以手动进行线程绑定来固定映射策略。一般来说，我们也可以利用 numactl 工具来进行线程绑定。
+= GPU/CUDA
+  CUDA 的使用方式主要有：
+  - 使用现有的计算库，性能经过专业人员调优
+  - 使用 OpenACC，理念接近于 OpenMP，通过编译制导语句快速实现多核/GPU 并行执行
+  - 使用 CUDA 编程语言，直接调用 GPU 的 API
+  NVIDIA GPU 的架构大致可以分为：
+  - 一个 GPU 包含多个 Streaming Multiprocessor（SM），SM 之间共享 L2 cache，每个 SM 包含多个 Streaming Processor（SP），SP 之间共享 L1 cache
+  - SP 包括单精度核心，双精度核心，特殊函数核心等
+  - GPU 与 CPU 的数据传输主要通过 PCIE，速度大约在 30 GB/s
+  - GPU 与 GPU 之间的数据传输可以通过 NVLink，速度大约在 300 GB/s
+  从软件的角度来说：
+  - 每个 SM 中的核都是 SMT （Single Instruction Multiple Thread）的。每 32 个线程一组构成线程簇 warp，同一个 warp 中是相同程序，不同数据进行并发的
+  通常来讲，CUDA 代码分为两部分：
+  - host 代码，也就是由 CPU 执行的代码
+  - kernel 代码，也就是由 GPU 执行的代码。具体执行时，需要指定一个线程网格，每个线程网格包含多个线程块，每个线程块包含多个线程。换言之，每个线程的索引是三维的。
