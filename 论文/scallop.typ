@@ -15,10 +15,33 @@
 
 == 基本思想
 
-- 深度学习（梯度下降......）和符号推理（Datalog 式的逻辑编程）的结合
+- 深度学习（梯度下降......）和符号推理（Datalog 式的逻辑编程）的结合。例如说对于手写公式的求值问题，完全依赖两种模式的其中之一听起来都令人两眼一黑，需要将两者适当的结合起来。
 - 符号推理是离散的，深度学习需要可微性。将离散问题连续化的一个常见思路就是概率化建模
-- 通常的概率建模计算复杂度是指数的，往往不可接受，因此我们需要采用某种替代策略，进行精度与效率的权衡
+- 通常的工作流可能是先识别出符号，再用经典方法求值。但这需要中间变量的数据被显式给出（比如已有大量的图片与其代表的符号的对应），而许多时候中间变量可能是隐式的。同时，这样做也会丢失最后结果的信息反馈。
+== #empty
+  #align(center)[#commutative-diagram(
+  node((0, 0), $"Graph(data)"$, 1),
+  node((0, 1), $"Exp(data)"$, 2),
+  node((0, 2), $"Res"$, 3),
+  node((1, 0), $"Graph(logic)"$, 4),
+  node((1, 1), "Exp(logic)", 5),
+  arr(1, 2, $partialDer(r, theta)$),
+  arr(2, 3, $partialDer(y, r)$),
+  arr(4, 5, $$),
+  arr(5, 3, "RL", label-pos: right),
+  arr(1, 4, $$),
+  arr(2, 5, "Repr", label-pos: right),
+  )]
+  这里: 
+  - $partialDer(r, theta)$ 代表已有的深度学习框架的学习机制，而 $partialDer(y, r)$ 是需要设计的 differential reasoning engine
+  - Repr 是数据的表示
+  - RL (Reasoning Language) 是基于表示进行推理的逻辑语言
 
+== #empty
+  因此主要工作就分成三部分：
+  - 数据表示：关系型
+  - 推理语言：基于 Datalog，支持递归，否定和聚合
+  - 自动微分引擎：provenance semiring 和近似算法的概率计算
 == 例子
   ```rust
   // Knowledge base facts
@@ -40,19 +63,28 @@
   // Count the animals
   rel num_animals(n) :- n = count(o: name(o, "animal"))
   ```
+== provenance
+  某种意义上，程序的执行结果就是函数值，而如果我们做微分，就要对函数的执行做出拓展。Scallop 将程序计算的代数结构抽象为一个 provenance，也就是包含以下运算：
+  $
+    directSum, tensorProduct, minus.circle, eq.circle
+  $
+  以及 $0, 1$ 的代数结构。其中 $directSum, tensorProduct, 0, 1$ 构成半环（同时为了递归的安全，还需要额外的 absorptive），negation, saturation 也要满足一些性质。provenance 中的元素称为 tag，类似于概率的推广。
 
-== 概率化建模
-  #let tP = $tilde(P)$
-  假设 $X$ 是一些离散值（例如 $X = {T, F}$） $X$ 上可以建立概率空间 $cal(X)$，它由一个映射：
-  $
-    P : X -> [0, 1] with sum_(x in X) P(x) = 1
-  $
-  唯一决定。显然它也可以由向量 $tP in RR^abs(X)$ 唯一确定，其中#footnote[
-  当然实际的深度学习中我们往往不会使用上面这种比较硬的计算。一种替代是 Softmax 函数，但想法是差不多的。
-  ]：
-  $
-    P(x_i) = tP_i / norm(tP)_1
-  $
+  有了这些定义，我们就可以在更加广泛的意义下去执行 Datalog 程序。Scallop 会先转换成 low-level representation *SclRam* ，程序的输入被称为 extensional database（EDB），最终的执行结果称为 intentional database（IDB）。provenance 既实现了普通的 Datalog 执行，也实现了概率化的 Datalog 程序以及梯度的传播。（当然每个具体的实现都会基于一些比较复杂的算法）。
+  #image("./屏幕截图 2024-11-15 173540.png") 
+  其中 $sigma_beta$ 是用 $beta$ 筛选，$pi_alpha$ 是用 $alpha$ 做 map, $gamma_g$ 指用 $g$ 做 aggregation
+// == 概率化建模
+//   #let tP = $tilde(P)$
+//   假设 $X$ 是一些离散值（例如 $X = {T, F}$） $X$ 上可以建立概率空间 $cal(X)$，它由一个映射：
+//   $
+//     P : X -> [0, 1] with sum_(x in X) P(x) = 1
+//   $
+//   唯一决定。显然它也可以由向量 $tP in RR^abs(X)$ 唯一确定，其中#footnote[
+//   当然实际的深度学习中我们往往不会使用上面这种比较硬的计算。一种替代是 Softmax 函数，但想法是差不多的。
+//   ]：
+//   $
+//     P(x_i) = tP_i / norm(tP)_1
+//   $
 // == 概率的传播
 //   设 $f: X -> Y$ 是函数，显然 $f(cal(X))$ 应该是一个概率空间。其上的概率非常典范的定义为：
 //   $
@@ -99,21 +131,21 @@
 //   // ]
 //   #image("./屏幕截图 2024-11-06 204619.png")
 //   简单来说就是把所有东西拆成若干原子命题之间的演算即可
-== 证明的构建
-  Scallop 实际上不去建立命题的真值的概率分布，而是建立命题的证明的概率分布。对于任何一个命题 $X$，我们可以把它视作一个类型，其中的值是所有 $X$ 的证明#footnote[原论文实际上没有使用“类型”而是简单的使用集合语言。不过这里也只是换一个术语，应该比集合套集合清晰一些]。自然的，原子命题只有一个证明，而：
-  $
-  A tensorProduct B := A and B = A times B, A directSum B := A or B = A + B
-  $
-  当然，不难验证 $tensorProduct, directSum$ 运算在命题空间上构成半环结构，称为 proof semiring。可以想象，Datalog 程序无非是由原子命题和 $tensorProduct, directSum$ 构成的表达式，因此我们可以得到析取范式：
-  $
-    P = directSum_j (tensorProduct_i A_(i j))
-  $
-  其中 $A_(i j)$ 是一些原子命题，根据 $A_(i j)$ 的概率计算 $P$ 的概率的问题称为 WMC（Weighted Model Counting）问题。当然这个计算过程听起来复杂度就是指数级的，因此需要一些近似算法。
-== top-k
-  上面的思路无非是用逻辑演算构造一个分类问题，而分类问题中我们可以期望概率分布是相当不平衡的，大部分概率集中在少数几个类别上。因此，我们可以只考虑那些概率比较大的证明。具体来说，在上一页的公式中，我们可以只考虑 $P$ 中概率最大的 $k$ 个证明，这样就得到了 top-k 算法。换言之，重新定义：
-  $
-    A tensorProduct B := "Top"_k (A and B) , A directSum B := "Top"_k (A or B) 
-  $
-  可以证明这样定义的运算仍然构成半环，因此可以在其上高效地计算 WMC
-== 梯度传播
-  可以想象梯度的计算和概率的计算应该是一体的。因此为了能够计算梯度，只需要在计算概率的同时再加一个梯度的记录即可，论文中将其称为 _gradient semiring augmented WMC procedure_
+// == 证明的构建
+//   Scallop 实际上不去建立命题的真值的概率分布，而是建立命题的证明的概率分布。对于任何一个命题 $X$，我们可以把它视作一个类型，其中的值是所有 $X$ 的证明#footnote[原论文实际上没有使用“类型”而是简单的使用集合语言。不过这里也只是换一个术语，应该比集合套集合清晰一些]。自然的，原子命题只有一个证明，而：
+//   $
+//   A tensorProduct B := A and B = A times B, A directSum B := A or B = A + B
+//   $
+//   当然，不难验证 $tensorProduct, directSum$ 运算在命题空间上构成半环结构，称为 proof semiring。可以想象，Datalog 程序无非是由原子命题和 $tensorProduct, directSum$ 构成的表达式，因此我们可以得到析取范式：
+//   $
+//     P = directSum_j (tensorProduct_i A_(i j))
+//   $
+//   其中 $A_(i j)$ 是一些原子命题，根据 $A_(i j)$ 的概率计算 $P$ 的概率的问题称为 WMC（Weighted Model Counting）问题。当然这个计算过程听起来复杂度就是指数级的，因此需要一些近似算法。
+// == top-k
+//   上面的思路无非是用逻辑演算构造一个分类问题，而分类问题中我们可以期望概率分布是相当不平衡的，大部分概率集中在少数几个类别上。因此，我们可以只考虑那些概率比较大的证明。具体来说，在上一页的公式中，我们可以只考虑 $P$ 中概率最大的 $k$ 个证明，这样就得到了 top-k 算法。换言之，重新定义：
+//   $
+//     A tensorProduct B := "Top"_k (A and B) , A directSum B := "Top"_k (A or B) 
+//   $
+//   可以证明这样定义的运算仍然构成半环，因此可以在其上高效地计算 WMC
+// == 梯度传播
+//   可以想象梯度的计算和概率的计算应该是一体的。因此为了能够计算梯度，只需要在计算概率的同时再加一个梯度的记录即可，论文中将其称为 _gradient semiring augmented WMC procedure_
