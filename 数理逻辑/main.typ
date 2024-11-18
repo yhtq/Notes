@@ -18,7 +18,7 @@
 #let calP = $cal(P)$
 #let calL = $cal(L)$
 #let Interpret = $cal(I)$
-#let subst(AA, PP, pp) = $AA_( PP \/ pp )$ 
+#let subst(AA, PP, pp) = $AA_( PP \/ pp )$
 #let deduction(body) = {
   set enum(numbering: "(1)")
   set align(left)
@@ -98,7 +98,7 @@
       - 如果任取变元的所有赋值，该命题形式均为真，则称该命题形式为重言式/永真式
       - 如果任取变元的所有赋值，该命题形式均为假，则称该命题形式为矛盾式
       - 否则称该命题形式为可满足式
-      判断一个命题形式是否可可满足式是一个 NP 问题，该问题称为 SAT 问题      
+      判断一个命题形式是否可可满足式是一个 NP 问题，该问题称为 SAT 问题
     ]
     #definition[][
       - 若 $calA -> calB$ 是重言式，则称 $calA$ 蕴含 $calB$，记作 $calA => calB$
@@ -115,7 +115,7 @@
       这里的“反证法”是一种逻辑演算之外的证明方法。因为之前定义的赋值存在于元语言中，因此反证法也是在元语言中反证。
     ]
     #definition[][
-      设 $calA$ 是包含变元 $p_1, p_2, ..., p_n$ 的命题形式，$calP_i, 1<=i<=n$ 是任意的命题形式，则称将 $p_i$ 替换为 $calP_i$ 的操作称为替换，记作 $subst(calA, p_i, calP_i)$ 
+      设 $calA$ 是包含变元 $p_1, p_2, ..., p_n$ 的命题形式，$calP_i, 1<=i<=n$ 是任意的命题形式，则称将 $p_i$ 替换为 $calP_i$ 的操作称为替换，记作 $subst(calA, p_i, calP_i)$
     ]
     #definition[受限命题形式][
       在 @proposition-form 中，若只用 $not1, and, or$ 作为连接符，则称其为受限命题形式
@@ -133,7 +133,7 @@
     ]
     #theorem[常用命题逻辑定理][
       以下都是重言式：
-      - $not1 (A and not1 A)$ 
+      - $not1 (A and not1 A)$
       - $A or not1 A$
       - $A <-> not1 not1 A$
       - $A <-> A or A <-> A and A$
@@ -273,11 +273,11 @@
           - #align_left[#fS => ]
             + #align_left[若 $B in Gamma$，则 $Gamma tack calA -> calB$ 显然]
             + #align_left[若 $B = A$，只需使用 $tack calA -> calA$ 即可]
-          - #align_left[#MP("a", "b") => （此时 $b = a -> calB$）] 
+          - #align_left[#MP("a", "b") => （此时 $b = a -> calB$）]
             由归纳法，有 $Gamma tack calA -> a, Gamma tack calA -> (a -> calB)$，只需证明：
             $
             {calA -> a, calA -> (a -> calB)} tack calA -> calB
-            $ 
+            $
             来自于：
             #deduction[
               + $calA -> a := fS$
@@ -287,7 +287,7 @@
               + #indent(2) $calA -> calB := #MPb(4, 1)$
             ]
         ]
-          
+
       ]
       #theorem[演绎定理2][
         若 $Gamma tack calA -> calB$，则 $Gamma union {calA} tack calB$
@@ -336,7 +336,7 @@
       #definition[重言式][
         若 $v models calA$ 对任意赋值 $v$ 都成立，则称 $calA$ 是重言式，记作 $models calA$
       ]
-      
+
   == 完全性定理
     前面的形式系统使用的是证明论的思想，使用 $tack$，是指纯粹语法的推断。而之前的章节从真值指派看待命题逻辑，使用的是模型论的思想，使用 $models$，指通过语义进行的分析。完全性定理即是说，这两种思想是等价的。
     #theorem[命题逻辑的可靠性（soundness）][
@@ -347,8 +347,8 @@
       #pattern-match[
           match L with
           - #align_left[#fA => 逐一验证公理都是重言式即可]
-          - #align_left[#MP("a", "b") => 此时 $b = a -> calB$] 
-            由归纳法，$a, b$ 都是重言式，不难验证 $b space a : calB$ 当然也是重言式 
+          - #align_left[#MP("a", "b") => 此时 $b = a -> calB$]
+            由归纳法，$a, b$ 都是重言式，不难验证 $b space a : calB$ 当然也是重言式
         ]
     ]
     #theorem[命题逻辑的一致性][
@@ -389,7 +389,7 @@
       v(calA) = T "if and only if" tack_(L^') calA
       $
       $L'$ 的一致完全性保证了定义是合理的。
-      
+
       为了证明它是赋值，只需证明：
       $
       v(calA -> calB) = T "if and only if" v(calA) = F "or" v(calB) = T
@@ -413,9 +413,9 @@
       直觉主义逻辑由如下资料定义：
       - 字符集：公式集及 ${top(真), bot(假), and, or, ->}$
       - 公理模式：
-        #enum(numbering: 
+        #enum(numbering:
           (nums => "(I" + str(nums) + ")")
-        
+
         )[$calA -> (calB -> calA)$][
           $(calA -> (calB -> calC)) -> ((calA -> calB) -> (calA -> calC))$
         ][
@@ -467,18 +467,18 @@
     #definition[公式与项][
       一阶语言中良好的表达式分为公式与项，满足文法规则：
       ```
-      term ::= x_i 
-              | a_i 
+      term ::= x_i
+              | a_i
               | f_m^n (term_1, ..., term_n)
-      formula ::= A_m^n (term_1, ..., term_n) 
-                 | not formula 
-                 | formula -> formula 
+      formula ::= A_m^n (term_1, ..., term_n)
+                 | not formula
+                 | formula -> formula
                  | forall x_i, formula
       ```
       特别的：
       - 只由常元和函项符构成的项称为闭项，否则称为开项。显然将一些闭项加入常元集可以得到拓展，称为闭项拓展。只用常元的拓展称为常元拓展。
       - 不含量词，变元的公式称为命题公式，也就是命题逻辑语言 $language_0$ 中的公式
-    ] 
+    ]
     #lemma[][
       #language 中的公式集和项集都是至多可数的
     ]
@@ -526,7 +526,7 @@
     - 对于谓词符，存在一些对象满足这个谓词，而另一些不满足
     - 对于函项符，它将一些对象映射为另一个对象
     这应该能准确的描述一阶逻辑中的非逻辑符号的解释。这被称为 FOL 假设。
-      
+
       具体而言，我们可以依赖于集合论建立一阶语言的模型：
     #definition[Tarski][
       一个一阶语言 $language$ 的解释 $Interpret$ 包括：
@@ -549,7 +549,7 @@
 
       为了方便，假设 $language$ 中的常元为 $a_1, ..., a_i, ...$，我们就可以记：
       $
-        D_I = {a_i} 
+        D_I = {a_i}
       $
       （如果常元不足，做常元扩展即可）\
       该记法成立是因为 $D_I$ 是元语言中的集合，其中元素与记法无关，因此不妨就用 #language 中的常元符号。
@@ -600,7 +600,7 @@
         &| calB(x_i) -> calC(x_i) => "易证"\
         &| forall x_i calB(x_i) => "替换只替换自由变元，显然"\
         &| forall x_j calB(x_i) => v' models calA(x_i) &&<=> "forall" d_i in D_I, v' models calB(x_i)(x_j \/ d_i)\
-        
+
       $
       #lemmaLinear[][
         $t$ 在 $calB(x_i)(x_j \/ d_i)$ 对 $x_i$ 自由，且 $calB(x_i)(x_j \/ d_i)(x_i \/ t) = calB(t)(x_j \/ d_i)$
@@ -613,7 +613,7 @@
       $
         &"forall" d_i in D_I, v models calB(x_i)(x_j \/ d_i)(x_i \/ t) \
         &<=> "forall" d_i in D_I, v models calB(x_i)(x_j \/ d_i)(x_i \/ t) \
-        &<=> "forall" d_i in D_I, v models calB(t)(x_j \/ d_i)\ 
+        &<=> "forall" d_i in D_I, v models calB(t)(x_j \/ d_i)\
         &<=> v models  forall x_j calB(t)
       $
     ]
@@ -993,7 +993,7 @@
         $
         无妨设 $x_i != x_j, x_1 != y_j$，则由替换定理的推论，有：
         $
-          tack (Q_1 x_1 ... Q_n x_n calB' -> P_1 y_1 ... P_n y_n calC') <-> calA 
+          tack (Q_1 x_1 ... Q_n x_n calB' -> P_1 y_1 ... P_n y_n calC') <-> calA
         $
     ]
     #definition[$Pi, Sigma$][

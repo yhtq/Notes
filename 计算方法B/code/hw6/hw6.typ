@@ -22,7 +22,7 @@
 
   #ys.map(str).join(", ")
 
-  #let laugrange(x: float) = {
+  #let laugrange(f, x) = {
     let res = 0.0
     for xi in xs{
       let l = 1
@@ -31,7 +31,7 @@
           l *= (x - xj) / (xi - xj)
         }
       }
-      res += l * calc.sin(xi)
+      res += l * f(xi)
     }
     res
   }
@@ -39,18 +39,18 @@
   $
     abs(R(x)) = abs((f^(5) (xi))/5! product_(i = 1)^5 (x - x_i)) = abs((cos xi)/5! product_(i = 1)^5 (x - x_i)) <= 1/5! product_(i = 1)^5 abs(x - x_i)
   $
-  #let laugrange_err(x: float) = 1 / factorial(n: 5) * xs.map(xi => calc.abs(x - xi)).product()
+  #let laugrange_err(x) = 1 / factorial(n: 5) * xs.map(xi => calc.abs(x - xi)).product()
   #let test_point = range(10).map(i => i * 3 / 20)
   选取测试点为：
 
   #test_point.map(str).join(", ")\
   计算误差界分别为：
 
-  #test_point.map(x => laugrange_err(x: x)).map(str).join(", ")
+  #test_point.map(x => laugrange_err(x)).map(str).join(", ")
 
   实际误差为：
 
-  #test_point.map(x => calc.abs(laugrange(x: x) - calc.sin(x))).map(str).join(", ")
+  #test_point.map(x => calc.abs(laugrange(calc.sin, x) - calc.sin(x))).map(str).join(", ")
 
   可见误差界比较准确。要使最大误差小于 $10^(-10)$，注意到：
   $
