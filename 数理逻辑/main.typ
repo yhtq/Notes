@@ -1018,3 +1018,280 @@
       + 最后，直接去掉所有全称量词
       不难验证这就是我们需要的子句范式
     ]
+  == 完全性定理
+    前面非常简单地证明了一阶逻辑的可靠性，而完备性则要复杂得多。
+    #theorem[完全性定理][
+      在 #language 中，若公式是（逻辑）有效的，则它是定理。也即：
+      $
+        若 models calA space 则 space tack calA
+      $
+    ]
+    本节的目标就是证明它。回顾一下，我们证明一阶逻辑的完备性是来自于极大一致扩充。类似于命题逻辑，我们定义：
+    #definition[][
+      - 称 $K$ 的一个扩充是通过扩大或修改 $K$ 的公理集，使得 $K$ 的所有定理仍是定理的得到的形式系统。
+      - 设 $K_1, K_2$ 是两个扩充，则称 $K_2$ 是 $K_1$ 的扩充，如果 $K_1$ 的每个定理都是 $K_2$ 的定理。
+      - 称一个一阶系统为一阶语言的扩充。
+    ]
+    #proposition[][
+      设 $S$ 是一致的一阶系统，且闭式 $calA$ 不是 $S$ 中定理，则将 $not1 calA$ 加进 $S$ 得到的扩充 $S^*$ 仍然是一致的。
+    ]
+    #proof[
+      如若不然，则存在 $calB$ 使得：
+      $
+        tack_(S^*) calB, not1 calB
+      $
+      则由矛盾律：
+      $
+        tack_(S^*) calA
+      $
+      这表明：
+      $
+        not1 calA tack_(S) calA
+      $
+      根据演绎定理：
+      $
+        tack_(S) not1 calA -> calA
+      $
+      而根据熟知引理，这表明：
+      $
+        tack_(S) calA
+      $
+      矛盾！
+    ]
+    #definition[][
+      称一阶系统 $S$ 是完全的，若对于每个闭式 $calA$，都有 $calA$ 和 $not1 calA$ 至少一个是 $calA$ 的定理。
+    ]
+    #remark[][
+      一阶语言显然不是完全的，例如：
+      $
+        a, not1 a
+      $
+      都不是定理
+    ]
+    #theorem[Lindenbaum][
+      设 $S$ 是一致的一阶系统，则存在 $S$ 的一致完全扩充
+    ]
+    #proof[
+      假设一阶语言中，所有闭式为 $calA_i$，构造扩充序列如下：
+      - $S_0 = S$
+      - 若 $tack_(S_(n - 1)) calA_(n - 1)$，则 $S_n = S_(n - 1)$。否则，将 $not1 calA_(n - 1)$ 加入 $S_(n - 1)$ 得到 $S_n$
+      不难验证，每个 $S_n$ 都是 $S$ 一致扩充，取 $S^*$ 是这些扩充的并，也就是将所有 $S_n$ 的公理都当作公理。显然它是完全扩充，往证它是一致的：
+      - 如若不然，则存在 $calA$ 使得：
+        $
+          tack_(S^*) calA, not1 calA
+        $
+        由于证明序列是有限的，用到的公理也是有限的，因此存在充分大的 $N$ 使得：
+        $
+          tack_(S_N) calA, not1 calA
+        $
+        这与 $S_N$ 的构造矛盾
+    ]
+    给定一个固定论域的一阶语言，前面定义了它的一个扩展，也就是在其中加入了一些新的常元。注意常元扩展可能添加新的公式，它们可能是公理/定理，可能不是。例如假设 $b_1$ 来自于常元拓展，则：
+    $
+      not1 forall x_1 calA (x_1) -> not1 calA (b_1)
+    $
+    是定理，它可以翻译成：
+    $
+      exists x_1, not1 calA(x_i) -> not1 calA(t)
+    $
+    其中 $t$ 来自于闭项扩展。换言之，可以找到闭项 $t$ 来替代变元 $x_i$
+    #proposition[][
+      给定一阶语言的一致扩充 $S$，以及常元拓展 $language^+$，则 $S^+$ 作为 $S$ 在 $language^+$ 中的扩充是一致的
+    ]
+    #proof[
+      假设：
+      $
+        tack_(S^+) calA, not1 calA
+      $
+      由于证明序列有限，引进的常元也是有限的。而注意到在符号演算之中，使用不同的常元没有任何区别，因此在证明序列中把 $language^+$ 引入的常元换成 $language$ 中的常元，证明序列是不变的。进而：
+      $
+        tack_(S) calA, not1 calA
+      $
+      这是荒谬的
+    ]
+    上面的命题仅是理清概念，表明常元的选择在证明序列中是无关紧要的。
+    #proposition[][
+      设 $S$ 是 $language$ 的一致扩充，则存在 $language$  的一个解释，使得 $S$ 中每个定理在此解释中为真。
+    ]<model-existence>
+    #proof[
+      令 $language^+$ 是一个（项）扩展，类似上面定义 $S^+, K^+$，上面的命题表明 $S^+$ 在 $K^+$ 上一致。
+      - 首先，枚举 $language^+$ 中仅含一个自由变元的公式：
+        $
+          calA_0(x_(i_0)), calA_1(x_(i_1)), ...
+        $
+        其中 $x_(i_k)$ 不必是不同的。在 $b_i$ 中选取一个子列 $c_i$，使得：
+        - $c_0$ 不在 $calA_0$ 中自由出现
+        - $c_n$ 互不重复且不在 $calA_0(x_(i_0)), calA_1(x_(i_1)), ..., calA_i (x_(i_n))$ 中出现
+        对每个 $k$，记：
+        $
+          calB_k := not1 (forall x_(i k)) calA_k (x_(i_k)) -> not1 calA_k (c_k)
+        $
+        令 $S_n$ 为在 $S^+$ 中引入 $calB_0, ..., calB_n$ 作为公理得到的扩充，最终取这些扩充的并得到 $S^infinity$
+
+      - 往证 $S^infinity$ 是一致的，类似的只要证明每个 $S_n$ 是一致的，如若不然，假设 $S_n$ 是一致的，但 $S_(n + 1)$ 不是，立刻有：
+        $
+          calB_(n + 1) tack_(S_n)  not1 calB_(n + 1)\
+        $
+        利用演绎定理和演算，得到：
+        $
+          tack_(S_n) not1 calB_(n + 1) 
+        $
+        也即：
+        $
+          tack_(S_n) not1 (not1 (forall x_(i k)) calA_k (x_(i_k)) -> not1 calA_k (c_k))
+        $
+        立刻得到：
+        $
+          tack_(S_n) not1 (forall x_(i k)) calA_k (x_(i_k))\
+          tack_(S_n) calA_k (c_k)\
+        $
+        然而，设 $y$ 是不在 $tack_(S_n) calA_k (c_k)$ 的证明序列中出现的变元，用 $y$ 替换其中所有的 $c_k$，证明序列仍然是合法的，因此有：
+        $
+          tack_(S_n) calA_k (y)
+        $
+        再使用 $GEN$ 得到：
+        $
+          tack_(S_n) forall y calA_k (y)
+        $
+        然而 $forall y calA_k (y)$ 与 $forall x_(i k) calA_k (x_(i_k))$ 可证等价，与 $S_n$ 的一致性矛盾！
+
+      - 由此，设 $T$ 是 $S^infinity$ 的一个一致完全扩充，构造 $language^+$ 的一个解释 $I$ 如下：
+        - 论域 $D_I$ 为 $language^+$ 中所有闭项的集合
+        - 常元就是自身的解释
+        - 谓词符就取 $language^+$ 中所有谓词符，并且对 $d_i in D_I$，注意到 $A_i^n (d_1, ..., d_n)$ 是闭式，因此由完全性，可以定义它成立当且仅当 $tack_T A_i^n (d_1, ..., d_n)$，它不成立当且仅当 $tack_T not1 A_i^n (d_1, ..., d_n)$
+        - 函项符也取 $language^+$ 中所有函项符，解释也同 $language^+$ 中的解释
+
+        #lemma[][
+          对 $language^+$ 的任意闭式 $calA$，$tack_T calA$ 当且仅当 $I models calA$
+        ]
+        #proof[
+          在该证明过程中，我们使用 $and, or, not, =>, <=>$ 用于元语言中的推理，它们均符合命题逻辑的运算。同时，由于 $T$ 的一致完备性，对于任意公式我们都有：
+          $
+            not (tack_T calA) <=> (tack_T not1 calA)\
+            not (tack_T not1 calA) <=> (tack_T calA)
+          $
+          利用结构归纳法：
+          - $calA = A(d_1, d_2, ..., d_n)$，由定义显然
+          - $calA = not1 calB$，容易验证：
+            $
+              tack_T not1 calB <=> not (tack_T calB) <=> not (I models calB) <=> I models not1 calB
+            $
+            其中利用了 $T$ 的一致完全性
+          - $calA = calB -> calC$，有：
+            $
+              I models calB -> calC <=> (I models not1 calB) or (I models calC) <=> (tack_T not1 calB) or (tack_T calC) <=> tack_T calB -> calC
+            $
+            其中：
+            - 第一步由定义可得
+            - 第二步是归纳假设
+            - 第三步 $(tack_T not1 calB) or (tack_T calC) <=> tack_T calB -> calC$ 中，左推右是显然的，右推左来自于 $tack_T calB, tack_T not1 calB$ 有且只有一个成立，$tack_T calC, tack_T not1 calC$ 有且只有一个成立，枚举所有情况不难验证右推左正确。
+          - $calA = forall x_i calB(x_i)$，不妨假设 $x_i$ 在 $calB$ 中有自由出现，则（注意到 $calA$ 是闭式）它是一个仅有一个自由变元的公式，由前面的定义可设：
+            $
+              calB = calA_k
+            $
+            则：
+            $
+              calA = forall x_i calA_k (x_i)
+            $
+            由前面的定义，$T$ 中有公理：
+            $
+              not1 (forall x_(i_k)) calA_k (x_(i_k)) -> not1 calA_k (c_k)
+            $
+            利用换名，可以得到：
+            $
+              tack_T not1 (forall x_i) calA_k (x_i) -> not1 calA_k (c_i)
+            $
+            立刻有：
+            $
+               not1 calA tack_T not1 calA_k (c_i)
+            $
+            从而：
+            $
+              I models calA => I models calA_k (c_i) => tack_T calA_k (c_i) => not (tack_T not1 calA) => tack_T calA
+            $
+            另一方面，设：
+            $
+              tack_T calA = forall x_i calA_k (x_i)
+            $
+            如果存在 $I$ 的赋值 $v$ 使得 $I models not1 calA_k (v(x_i))$，设 $v(x_i) = d in D_I$，则 $d$ 也是闭项，且 $v(d) = d = v(x_i)$，因此事实上有：
+            $
+              I models not1 calA_k (d)
+            $
+            归纳假设给出：
+            $
+              tack_T not1 calA_k (d)
+            $
+            然而这显然与假设矛盾
+        ]
+      - 最后，注意到我们构造的解释是对于 $language^+$ 的，对它的解释作出限制，排除所有新引入的常元 $b_i$ 以及基于它们的项的解释，得到的就是 $language$ 的解释，且 $S$ 中每个定理在这个限制解释下当然也为真
+    ]
+    #remark[][
+      从证明过程可以看出，上面的定理可以加强为一定存在一个可枚举的解释满足条件
+    ]
+    最后，完全性定理的证明就很简单了：
+    #proof[
+      设 $calA$ 逻辑有效，$calA'$ 是它的全称闭式，则 $calA'$ 也是有效的（模型论论逻辑等价性）。假设 $calA$ 不是定理，则 $calA'$ 当然也不是定理（证明论逻辑等价性），因此将 $not1 calA'$ 作为公理的扩充是一致的，则将存在一个解释使得该扩充下每个定理为真。特别的，$not1 calA'$ 为真，$calA'$ 将为假，矛盾！
+    ]
+    #corollary[][
+      设 $Gamma$ 是任意公式集，则：
+      $
+        Gamma models calA <=> Gamma tack calA
+      $
+    ]
+    #proof[
+      注意到 $Gamma models calA, Gamma tack calA$ 等价于在将 $Gamma$ 中所有公式当作公理的扩充中，有：
+      $
+        tack calA, not1 calA
+      $
+      利用与完全性定理相似的证明，结论是显然的。
+    ]
+  == 模型和一致性
+    #definition[模型][
+      - 设 $Gamma$ 是一个公式集，$I$ 是一个解释。若 $Gamma$ 中每个公式在 $I$ 下为真，则称 $I$ 是 $Gamma$ 的一个模型，记作 $I models Gamma$
+      - 若 $S$ 是一个一阶系统，则 $S$ 的一个模型是指 $S$ 的每个公理都为真的一个解释。 
+    ]
+    #proposition[][
+      $I$ 是 $S$ 的模型当且仅当 $S$ 中每个公式都为真
+    ]
+    #proof[
+      简单运用可靠性即可
+    ]
+    #proposition[Godel 第二完全性定理（弱完全性定理）][
+      一阶系统是一致的当且仅当它有模型
+    ]
+    #proof[
+      假设一阶系统一致，则 @model-existence 就给出了它的一个模型。反之，有模型的一阶模型当然不可能推出矛盾，因此是一致的
+    ]
+    #proposition[][
+      任何一致但不完全的一阶系统都至少有两个模型
+    ]
+    #proof[
+      由于其不完全，则存在闭式 $calA, not1 calA$ 都不是定理，分别取其扩充后的模型即可。
+    ]
+    #proposition[][
+      对于任何无穷基数 $m$，任何一致一阶系统都有基数为 $m$ 的模型
+    ]
+    #theorem[Compactness][
+      若一个一阶系统 $S$ 的公理集的任何有限子集都有模型，则 $S$ 有模型
+    ]
+    #proof[
+      假设 $S$ 没有模型，则它是不一致的。假设：
+      $
+        tack_S calA, not1 calA
+      $
+      但证明序列是有限的，则这些证明序列中用得到有限个公理已经不一致，这与假设矛盾！
+    ]
+    #definition[][
+      假设 $I$ 是一个模型，定义一阶系统 $S(I)$ 为将 $I$ 中所有公式都作为公理的系统。显然 $S(I)$ 是一致完全的。
+    ]
+    #definition[][
+      - 称 $calA$ 是不可判定句子，如果 $calA, not1 calA$ 都不是定理
+      - 称一阶系统 $S$ 是公理化的，如果它的公理集是（计算机）可判定的
+    ]
+    #proposition[半可判定性][
+      - 一阶语言是不可判定的，也即不存在算法判定任一公式是否为定理
+      - 一阶系统是半可判定的，即若一个公式是定理，则存在算法证明它是定理
+    ]
+    #proof[
+      只证明半可判定性。事实上，不难发现按照推理的定义，对于任意的 $n$，$n$ 步的推理序列是有限的，只要枚举所有的证明序列，则可证明的公式都可以被枚举到。
+    ]
