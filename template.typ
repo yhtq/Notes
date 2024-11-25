@@ -4,6 +4,7 @@
 
 #import "@preview/lemmify:0.1.6": *
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
+#import "@preview/showybox:2.0.3": showybox
 
 #let __print_commute = true
 #let old-commutative-diagram = commutative-diagram
@@ -276,16 +277,104 @@
     name
 }
 }
+
+
+#let frame-map = (
+  Proposition: (
+    border-color: blue,
+    title-color: blue.lighten(30%),
+    body-color: blue.lighten(95%),
+    footer-color: blue.lighten(80%)
+  ),
+  Theorem: (
+    title-color: green.darken(40%),
+    body-color: green.lighten(80%),
+    footer-color: green.lighten(60%),
+    border-color: green.darken(60%),
+  ),
+  Lemma: (
+    title-color: orange.darken(40%),
+    body-color: orange.lighten(80%),
+    footer-color: orange.lighten(60%),
+    border-color: orange.darken(60%),
+  ),
+  Corollary: (
+    title-color: red.darken(40%),
+    body-color: red.lighten(80%),
+    footer-color: red.lighten(60%),
+    border-color: red.darken(60%),
+  ),
+  Definition: (
+    title-color: purple.darken(40%),
+    body-color: purple.lighten(80%),
+    footer-color: purple.lighten(60%),
+    border-color: purple.darken(60%),
+  ),
+  Example: (
+    border-color: red.darken(40%),
+    title-color: red.darken(30%),
+    body-color: red.lighten(90%),
+    radius: 0pt,
+    thickness: 2pt,
+    body-inset: 1em,
+  ),
+  Remark: (
+    border-color: green.darken(40%),
+    title-color: green.darken(30%),
+    body-color: green.lighten(90%),
+    radius: 0pt,
+    thickness: 2pt,
+    body-inset: 1em,
+  ),
+  Algorithm: (
+    border-color: blue.darken(40%),
+    title-color: blue.darken(30%),
+    body-color: blue.lighten(90%),
+    radius: 0pt,
+    thickness: 2pt,
+    body-inset: 1em,
+  ),
+)
+
+#let theorem-like-style(thm-type, name, number, body) = {
+  showybox(
+    body,
+    title: [#strong(thm-type) #number #if name != none [ (#name) ]],
+    frame: frame-map.at(thm-type)
+  )
+}
+
+#let proof-style(thm-type, name, number, body) = {
+  showybox(
+    breakable: true,
+    title: "Proof",
+    frame: (
+    border-color: red.darken(30%),
+    title-color: red.darken(30%),
+    body-color: red.lighten(90%),
+    radius: 0pt,
+    thickness: 2pt,
+    body-inset: 1em,
+    dash: "densely-dash-dotted"
+  ),
+  )[
+    #body
+    #linebreak()
+    #h(1fr)
+    #box(scale(100%, origin: bottom + right, sym.square.stroked))
+  ]
+}
+
 #let (
   theorem: theo, lemma: lem, corollary: cor,
   remark: rem, proposition: prop, example:ex , definition:def,
   proof: pr, rules: thm-rules
-) = default-theorems("thm-group", lang: "en")
+) = default-theorems("thm-group", lang: "en", thm-styling: theorem-like-style, proof-styling: proof-style)
 #let (
   theorem: theo1, lemma: lem1, corollary: cor1,
   remark: rem1, proposition: prop1, example:ex1 , definition:def1,
   proof: pr1, rules: thm-rules1
-) = default-theorems("thm-group-linear", lang: "en", thm-numbering: thm-numbering-linear)
+) = default-theorems("thm-group-linear", lang: "en", thm-numbering: thm-numbering-linear, thm-styling: theorem-like-style, proof-styling: proof-style)
 #let my-ans-style(
   thm-type, name, number, body
 ) = block(spacing: 11.5pt, {
@@ -305,8 +394,8 @@
   #body
   #parbreak()
   ]
-#let (alg, rules: alg-rules) = new-theorems("thm-group", ("alg": text[Algorithm]))
-#let (alg1, rules: alg-rules1) = new-theorems("thm-group-linear", ("alg1": text[Algorithm]), thm-numbering: thm-numbering-linear)
+#let (alg, rules: alg-rules) = new-theorems("thm-group", ("alg": "algorithm"))
+#let (alg1, rules: alg-rules1) = new-theorems("thm-group-linear", ("alg1": "algorithm"), thm-numbering: thm-numbering-linear)
 #let theorem(name, body) = _convert(theo, name, body)
 #let lemma(name, body) = _convert(lem, name, body)
 #let corollary(name, body) = _convert(cor, name, body)
@@ -338,65 +427,7 @@
 ]
 #let algorithmLinear(name, body) = _convert(alg1, name, body)
 
-//#let theorem = base_env.with(
-//  type: "Theorem",
-//  fg: blue,
-//  bg: rgb("#e8e8f8"),
-//)
-//
-//#let proposition = base_env.with(
-//  type: "Proposition",
-//  fg: blue,
-//  bg: rgb("#e8e8f8"),
-//)
-//
-//#let example = base_env.with(
-//  type: "Example",
-//  fg: orange,
-//  bg: rgb("#f8e8e8"),
-//)
-//#let definition = base_env.with(
-//  type: "Definition",
-//  fg: orange,
-//  bg: rgb("#f8e8e8"),
-//)
-//
-//#let lemma = base_env.with(
-//  type: "Lemma",
-//  fg: purple,
-//  bg: rgb("#efe6ff"),
-//)
-//
-//#let corollary = base_env.with(
-//  type: "Corollary",
-//  fg: green,
-//  bg: rgb("#e8f8e8"),
-//)
-//#let equationNumber = locate(
-//  location => {
-//    let lvl = counter(heading).at(location)
-//    let i = counter("equation_number").at(location).first()
-//    let top = if lvl.len() > 0 { lvl.first() } else { 0 }
-//        counter("equation_number").step()
-//        align(end)[(#top.#(i+1))]
-//  }
-//)
-// Proof environment
-//#let proof(body) = block(spacing: 11.5pt, {
-//  set enum(numbering: "Step 1.1.")
-//  emph[Proof.]
-//  [ ] + body
-//  linebreak()
-//  h(1fr)
-//  box(scale(160%, origin: bottom + right, sym.square.stroked))
-//})
-//#let answer(body) = block(spacing: 11.5pt, {
-//  set enum(numbering: "Step 1.1.")
-//  body
-//  linebreak()
-//  h(1fr)
-//  box(scale(160%, origin: bottom + right, sym.square.stroked))
-//})
+
 #let note(title: "Note title", author: "Name", logo: none, date: none,
           preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, withHeadingNumbering: true, 
           withChapterNewPage: false,
@@ -426,6 +457,9 @@
   show: thm-rules1
   show: alg-rules
   show: alg-rules1
+
+
+
   show emph: it => {
     text(it, weight: "bold")
   }
