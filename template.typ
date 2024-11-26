@@ -569,7 +569,7 @@
     radius: 4pt,
   )
   show raw: it => {
-    set text(font: ("Serif Italic", "Noto Serif CJK SC"))
+    // set text(font: ("Serif Italic", "Noto Serif CJK SC"))
     it
   }
   // Code block with line numbers

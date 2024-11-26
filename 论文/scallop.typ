@@ -72,7 +72,60 @@
 
   有了这些定义，我们就可以在更加广泛的意义下去执行 Datalog 程序。Scallop 会先转换成 low-level representation *SclRam* ，程序的输入被称为 extensional database（EDB），最终的执行结果称为 intentional database（IDB）。provenance 既实现了普通的 Datalog 执行，也实现了概率化的 Datalog 程序以及梯度的传播。（当然每个具体的实现都会基于一些比较复杂的算法）。
   #image("./屏幕截图 2024-11-15 173540.png") 
-  其中 $sigma_beta$ 是用 $beta$ 筛选，$pi_alpha$ 是用 $alpha$ 做 map, $gamma_g$ 指用 $g$ 做 aggregation
+  其中 $sigma_beta$ 是用 $beta$ 筛选，$pi_alpha$ 是用 $alpha$ 做 map, $gamma_g$ 指用 $g$ 做 aggregation。当然，如果没理解错的话这应该只是个理论模型，实际实现很大程度上还是一种 provenance 对应一种算法。
+== 集成其他模型
+  似乎 AI 那边认为语言模型从自然语言中产生结构化数据的能力还不错，同时其他模型很多直接输出的就是结构化数据，因此可以基于 Scallop 的概率计算能力，将这些模型作为一个纯函数集成在内，再通过 Scallop 的逻辑能力进行计算（而不是让语言模型直接输出结果）。这样就可以在一个统一的框架下进行推理，甚至集成多个不同的模型。
+```Datalog
+type Expr = Const(f32) | Add(Expr, Expr) | Sub(Expr, Expr) | Mult(Expr, Expr) | Div(Expr, Expr)
+
+type eval(bound e: Expr, v: f32)
+rel eval(e, v) = case e is Const(v)
+rel eval(e, v1 + v2) = case e is Add(e1, e2) and eval(e1, v1) and eval(e2, v2)
+rel eval(e, v1 - v2) = case e is Sub(e1, e2) and eval(e1, v1) and eval(e2, v2)
+rel eval(e, v1 * v2) = case e is Mult(e1, e2) and eval(e1, v1) and eval(e2, v2)
+rel eval(e, v1 / v2) = case e is Div(e1, e2) and eval(e1, v1) and eval(e2, v2)
+
+@gpt(
+    prompt="""
+Suppose we have the following symbolic expression language:
+
+Expr ::= Const(float) | Add(Expr, Expr) | Sub(Expr, Expr) | Mult(Expr, Expr) | Div(Expr, Expr)
+
+Please semantically parse the following question into a symbolic expression:
+
+Question: {{x}}
+Symbolic Program: {{y}}
+""",
+    examples=[
+        (
+            "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?",
+            "Add(Const(48), Mult(Const(0.5), Const(48)))"
+        ),
+        // (
+        //     "Lisa, Jack, and Tommy earned $60 from washing cars all week. However, half of the $60 was earned by Lisa. Tommy earned half of what Lisa earned. How much more money did Lisa earn than Tommy?",
+        //     "Sub(Mult(Const(0.5), Const(60)), Mult(Const(0.5), Mult(Const(0.5), Const(60)))"
+        // ),
+        // (
+        //     "Arnel had ten boxes of pencils with the same number of pencils in each box.  He kept ten pencils and shared the remaining pencils equally with his five friends. If his friends got eight pencils each, how many pencils are in each box?",
+        //     "Add(Const(10), Mult(Const(5), Const(8)))"
+        // ),
+        // (
+        //     "Colton had 72 dolphin stickers. He gave 4 stickers each to 3 friends.  He also gave his friend Mandy 2 more than he gave his three friends total.   And he gave Justin 10 less than Mandy.  How many stickers does Colton have left?",
+        //     "Sub(Sub(Sub(Const(72), Mult(Const(4), Const(3))), Add(Const(2), Mult(Const(4), Const(3)))), Sub(Add(Const(2), Mult(Const(4), Const(3))), Const(10)))"
+        // ),
+    ],
+    model="gpt-4",
+    debug=true,
+) 
+type semantic_parser(bound x: String, y: Entity)
+
+type question(ctx: String)
+
+rel parsed_expr(s) = question(q) and semantic_parser(q, s)
+rel result(v) = parsed_expr(e) and eval(e, v)
+
+query result
+```
 // == 概率化建模
 //   #let tP = $tilde(P)$
 //   假设 $X$ 是一些离散值（例如 $X = {T, F}$） $X$ 上可以建立概率空间 $cal(X)$，它由一个映射：
