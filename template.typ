@@ -394,8 +394,8 @@
   #body
   #parbreak()
   ]
-#let (alg, rules: alg-rules) = new-theorems("thm-group", ("alg": "algorithm"))
-#let (alg1, rules: alg-rules1) = new-theorems("thm-group-linear", ("alg1": "algorithm"), thm-numbering: thm-numbering-linear)
+#let (alg, rules: alg-rules) = new-theorems("thm-group", ("alg": "Algorithm"), thm-styling: theorem-like-style)
+#let (alg1, rules: alg-rules1) = new-theorems("thm-group-linear", ("alg1": "Algorithm"), thm-numbering: thm-numbering-linear, thm-styling: theorem-like-style)
 #let theorem(name, body) = _convert(theo, name, body)
 #let lemma(name, body) = _convert(lem, name, body)
 #let corollary(name, body) = _convert(cor, name, body)
