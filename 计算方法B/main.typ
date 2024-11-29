@@ -1348,3 +1348,159 @@
         integral_(a)^(b) rho(x) x^k = sum_i c_i x_i^k
       $
       对于尽可能多的 $k$ 都成立。大致而言，我们有 $2 n$ 个未知数，应该期望恰有 $2 n$ 个方程，获得 $2 n - 1$ 阶代数精度。
+= 常微分方程的数值解法
+  给定一个确定初值的常微分方程：
+  $
+    cases(
+      der(y, x) = f(x, y),
+      y(a) = y_0,
+    )
+  $<standard-form>
+  其中 $x in [a, b]$
+  #theorem[][
+    若@standard-form 中，$f(x, y)$ 是连续的，且对于 $y$ 满足 Lipschitz 条件，则解存在唯一，且解连续可导。
+  ]
+  数值上解方程的方法的基本思路是将区间 $[a, b]$ 分成小区间，再在小区间上做近似处理。
+  #definition[常微分方程数值稳定性][
+  给定一个数值方法，对于任意步长 $h$，求解：
+  $
+    y' = lambda y, Re(lambda) < 0
+  $ 
+  （该方程称为试验方程)
+  得到节点上的函数值 $y_n$，若 $n -> +infinity$ 时 $y_n -> 0$，则称该方法在步长 $h$ 上绝对稳定，否则称其不稳定。 
+
+  假设 $mu = lambda h$ 在区域 $Omega$ 上时绝对稳定，则称 $Omega$ 是该方法的绝对稳定域。
+
+  ]
+  == Euler 方法 
+    回忆前向差商公式：
+    $
+      y'(x_i) = (y(x_(i + 1)) - y(x_i))/h - 1/2 h y''(xi)
+    $
+    反解出：
+    $
+      y(x_(i + 1)) approx y(x_i) + h y'(x_i) + 1/2 h^2 y''(xi) = y(x_i) + h f(x_i, y(x_i)) + 1/2 h^2 y''(xi)
+    $
+    这就是向前的 Euler 格式，通常称为显式格式。类似的由向后差商公式：
+    $
+      y'(x_i) = (y(x_i) - y(x_(i - 1)))/h + 1/2 h y''(xi)
+    $
+    可以得到向后的 Euler 格式：
+    $
+      y(x_(i)) = y(x_(i-1)) + h f(x_i, y(x_i)) - 1/2 h^2 y''(xi)\
+      y(x_(i  + 1)) = y(x_(i)) + h f(x_(i + 1), y(x_(i + 1))) - 1/2 h^2 y''(xi)\
+    $
+    通常称为隐式格式。注意到如果使用隐式格式，我们会需要解出一个方程才能得到 $y_(i + 1)$。
+
+    在向前 Euler 格式中，试验方程的解为：
+    $
+      y_(n + 1) = y_n + lambda h y_n = (1 + lambda h) y_n
+    $
+    因此绝对稳定域就是 $abs(1 + mu) < 1$
+
+    可以想象，假设初值 $y_0$ 有一定误差得到 $y_0 + e_0$，则真实的计算方程为：
+    $
+      (y_n + e_n) = (1 + lambda h) (y_(n - 1) + e_(n - 1))\
+      e_n = (1 + lambda h) e_(n - 1)
+    $
+    因此在绝对稳定域中，误差最终会收敛到零，否则误差会爆炸。
+
+    而向后 Euler 格式的试验方程解为：
+    $
+      y_(n + 1) = y_n + h lambda y_(n + 1)\
+      y_(n + 1) = (1 - lambda h)^(-1) y_n
+    $
+    因此稳定域为 $abs(1 - lambda h) > 1$，可见比向前 Euler 格式更加稳定。
+
+    同时，如果采用中心差商公式，可以计算得到该格式对应的 Euler 格式总是不稳定的，因此不会采用这种公式。
+  == 单步法的精度
+    #definition[][
+      - 称形如 $y_(n + 1) = y_n + phi(x_n, x_(n + 1), y_n, y_(n + 1), h)$ 的数值解法为单步法
+      - 称 $tau_(n + 1) = y(x_(n + 1)) - y(x_n) - phi(x_n, x_(n + 1), y(x_n), y(x_(n + 1)), h)$ 为单步法的局部截断误差
+      - 若 $tau_(n + 1) = O(h^(p + 1))$ 则称该单步法有 $p$ 阶精度
+    ]
+    对于向前 Euler 格式，有：
+    $
+      tau_(n + 1) = y(x_(n + 1)) - y(x_n) - h f(x_n, y(x_n))\ = (y(x_n) + h y'(x_n) + h^2/2 y''(x_n) + O(h^2)) - y(x_n) - h f(x_n, y(x_n))\
+      = h^2/2 y''(x_n) + O(h^2)
+    $
+    因此它具有一阶精度，主项为 $(y''(x_n))/2$
+
+    类似的，向后 Euler 格式有：
+    $
+      tau_(n + 1) = - h^2/2 y''(x_(n + 1)) + O(h^3)
+    $
+
+    注意到一般我们有：
+    $
+      y(x + h) = y(x) + integral_(x)^(x + h) f(s, y(s)) dif s 
+    $
+    利用矩形公式，有：
+    $
+      y(x_n + h) = y(x_n) + h f(x_n, y(x_n)) + R_n
+    $
+    其中：
+    $
+      R_n 
+      &<= abs(integral_(x_n)^(x_n + s) f(s, y(s)) - f(x_n, y(x_n)) dif s )\
+      &<= integral_(x_n)^(x_n + s) abs(f(s, y(s)) - f(x_n, y(x_n)) dif s )\
+      &<= integral_(x_n)^(x_n + s) abs(f(s, y(s)) - f(x_n, y(s)) + f(x_n, y(s)) - f(x_n, y(x_n)) dif s )\
+      &<= integral_(x_n)^(x_n + s) k abs(s - x_n) + L abs(y(s) - y(x_n)) dif s\
+      &<= integral_(x_n)^(x_n + s) k abs(s - x_n) + L M_y' abs(s - x_n) dif s\
+      &<= h^2/2 (k + L M_y')
+    $
+    因此：
+    $
+      y_(n + 1) - y(x_(n + 1)) = y_n + h f(x_n, y_n) - y(x_n + h) \
+      = y_n  + h f(x_n, y_n) - (y(x_n) + h f(x_n, y(x_n)) + R_n)\
+      = (y_n - y(x_n)) + h(f(x_n, y_n) - f(x_n, y(x_n))) - R_n\
+    $
+    再做推导即得：
+    #theorem[][
+      设 $f$ 关于 $x, y$ 满足 Lipschitz 条件，则向前 Euler 格式的解一致收敛于真实解，并且整体截断误差满足：
+      $
+        e_n = O(h)
+      $
+    ]
+  == Runge-Kutta 方法
+    在上面的单步法通用格式中，Euler 方法只利用了一阶导数的信息。而我们希望让 $phi$ 更加复杂，使得 $y(x + h)$ 与 $h phi$ 有更高阶的相同项。例如，我们可以取两个点 $(x, y), (x + a_2 h, y + b_2 h f(x, y))$：
+    并设：
+    $
+      phi(x, y, f, h) = c_1 f + c_2 f(x + a_2 h, y + b_2 h f)
+    $
+    泰勒展开得到：
+    $
+      phi(x, y, f, h) = c_1 f + c_2 (f + a_2 h f_x + b_2 h f_y f) + O(h^2)\
+    $
+    比对：
+    $
+      y(x + h) = y(x) + h y'(x) + h^2/2 y''(x) + O(h^3)\
+      = y(x) + h f + h^2/2 (f_x + f_y y) + O(h^3)
+    $
+    得到方程：
+    $
+      cases(
+        c_1 + c_2 = 1,
+        c_2 a_2 = 1/2,
+        c_2 b_2 = 1/2
+      )
+    $
+    不难验证方程有无穷多解。任取一组解都可以获得一个数值格式。例如若取 $c_1 = c_2 = 1/2, a_2 = b_2 = 1$，就得到：
+    $
+      y_(n + 1) = y_n + h/2 f(x_n, y_n) + h/2 f(x_n + h, y_n + h f(x_n, y_n))
+    $
+    这样得到的数值格式被称为二阶的 Runge-Kutta 方法。类似的，可以构造更高阶的 Runge-Kutta 方法。
+    #definition[Runge-Kutta][
+      设 $m$ 是正整数，代表 Runge-Kutta 采用的点的个数，则 $m$ 级显式 Runge-Kutta 方法的格式为：
+      $
+        y_(n + 1) = y_n + h sum_(i = 1)^m b_i k_i
+      $
+      其中：
+      $
+        k_1 = f(x_n, y_n)\
+        k_2 = f(x_n + a_2 h, h b_(2 1) k_1)\
+        ... \
+        k_m = f(x_n + a_m h, h sum_(i = 1)^(m - 1) b_(m i) k_i)
+      $
+    ]
+    常用的公式包括
