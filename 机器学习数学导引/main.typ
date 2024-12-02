@@ -659,4 +659,31 @@
     
     上面我们证明了理论上满足 KL-condition 的函数应该以很快的速度收敛。然而事实上我们总是只能取有限的学习率，而且往往很小。这种情况下，
     实践上的收敛速度仍然比较缓慢。
+
+  == 深度学习
+    现代深度学习起源于对人类神经元的模拟，然而现代深度学习经过了长足的发展。
+    === 激活函数
+      经典的激活函数选择包括：
+      - sigmoid: $1/(1 + e^(-x))$，现代已经很少使用
+      - RELU：$max(0, x)$，曾经较为常用，但由于 $0$ 点处不可导，已经逐渐被其他变种取代
+      - Leaky RELU: $max(a x, x)$，其中 $a$ 是较小值
+      - Softplus: $ln(1 + e^x)$，是 RELU 的平滑版本
+      - GELU: $x Phi(x)$，其中 $Phi(x)$ 是 $N(0, 1)$ 的累积分布函数
+      - SiLU: $x sigma_("sigmoid") (beta x)$
+    #theorem[Universal approximation theorem][
+      设 $Omega$ 是 $RR^d$ 上的紧集，假设 $sigma$ 是类 sigmodial 函数，也就是：
+      $
+        sigma(t) -> 1, t -> +infinity\
+        sigma(t) -> 0, t -> -infinity
+      $
+      则对任意 $f in C(Omega)$，$f$ 可以被以 $sigma$ 为激活函数的两层神经网络：
+      $
+        f_m (x, theta) = sum_(i = 1)^(m) a_i sigma(inner(w_i, x) + b_i)
+      $
+      一致逼近
+    ]
+    当然，事实上这个定理只是 Weiersstrass 定理的推广，并且与其类似的在实践中并没有什么用处。
+  === 卷积神经网络
+    深度学习的发展受到计算机视觉研究的推动，卷积神经网络是其中的代表，它受到了对人类视觉神经元研究的启发。
+
 = 理论基础
