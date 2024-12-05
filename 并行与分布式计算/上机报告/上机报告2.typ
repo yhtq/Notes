@@ -167,7 +167,7 @@
     GCC 编译器可以自动利用向量化指令完成某些运算，但需要非常多的额外信息，包括内存对齐，非别名等等。编译时开启 `-fopt-info-vec-all` 可以帮助我们知道向量化失败的原因。本次实现的初版矩阵乘法为：
     ```cpp
     template <int M, int N, int S, typename T>
-Matrix<T, M, S> mul_parallel (const Matrix<T, M, N>& a, const Matrix<T, N, S>& b) {
+    Matrix<T, M, S> mul_parallel (const Matrix<T, M, N>& a, const Matrix<T, N, S>& b) {
     if constexpr (debug){
         if (a.ncols() != b.nrows()) {
             fmt::print("Error: Matrix size not match!\n");
@@ -184,7 +184,7 @@ Matrix<T, M, S> mul_parallel (const Matrix<T, M, N>& a, const Matrix<T, N, S>& b
     T* c_data = c.get();
     const T* a_data = a.get();
     const T* b_data = b.get();
-    以下 assume 可以帮助进行自动向量化
+    // 以下 assume 可以帮助进行自动向量化
     __builtin_assume_aligned(c_data, BYTE_ALIGNMENT);
     __builtin_assume_aligned(a_data, BYTE_ALIGNMENT);
     __builtin_assume_aligned(b_data, BYTE_ALIGNMENT);
@@ -260,7 +260,7 @@ Matrix<T, M, S> mul_parallel (const Matrix<T, M, N>& a, const Matrix<T, N, S>& b
       ```
       可以很大程度上避免忘记 gap 造成的 Bug
     === 循环展开
-      事实上，不难发现核心循环的最内层循环次数并不多，因此循环展开可能获得很大的收益。这里最开始担心编译器无法充分优化，手动写了一层展开：
+      不难发现核心循环的最内层循环次数并不多，因此循环展开可能获得很大的收益。这里最开始担心编译器无法充分优化，手动写了一层展开：
       ```cpp
       // 由于一个 cache_line 事实上只有两个向量，我们手动展开
       template<typename T>
@@ -507,4 +507,5 @@ Matrix<T, M, S> mul_parallel (const Matrix<T, M, N>& a, const Matrix<T, N, S>& b
     - 线程数为 $1, 2, 4, 8$ 时，运行时间几乎线性下降，这和我们之前的分析是一致的。
     - 线程数为 $16$ 时，并没有获得线性加速。推测是因为服务器使用的是 12 个逻辑核的 E5-2650 v4，对于矩阵乘法这样运算非常密集的任务，超线程带来的性能提升当然比不上物理线程。
     - $m = n = p = 2048$ 时，矩阵乘法花费约 400ms，性能已经比较好。但是可以看到，与 1024 的实验相比，缓存失效率暴增，说明还有很大的优化空间。
+    - 每个实验中，分支预测失败率都非常低，这或许是编译器充分循环展开带来的收益。
     - 每个实验中，平均一个 CPU 周期都完成了两条以上的指令，可见现代 CPU 为了尽可能提高性能，也做出了相当大的努力。
