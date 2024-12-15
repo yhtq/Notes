@@ -39,6 +39,7 @@
 #let autoVecN(a, n, delim: "(" ) = $vec(#a _1, #a _2,  dots.v, #a _#n, delim: delim)$
 #let autoVecNF(f, n, delim: "(" ) = $vec(#(f(1)), #(f(2)),  dots.v, #(f(n)), delim: delim)$
 #let autoRVecNF(f, n ) = $(#(f(1)), #(f(2)),  dots, #(f(n)))$
+#let autoRVecN(a, n) = $(#a _1, #a _2,  dots, #a _#n)$
 #let autoMat3(delim: "(", ..var) = {
   let varList = var.pos()
   let row(n) = varList.map(v => $#v _#n$)

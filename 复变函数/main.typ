@@ -365,7 +365,7 @@
       (diff^2 u)/(diff x^2) = (diff^2 v)/(diff x diff y)\
       (diff^2 u)/(diff y^2) = -(diff^2 v)/(diff x diff y)\
       $
-      进而拉普拉斯算子 $(diff^2 u)/(diff x^2) + (diff^2 u)/(diff y^2) = 0$，满足前式的 $C^2$ 函数称为 调和|harmonic 函数\
+      进而拉普拉斯算子 $(diff^2 u)/(diff x^2) + (diff^2 v)/(diff y^2) = 0$，满足前式的 $C^2$ 函数称为 调和|harmonic 函数\
       类似的 $v$ 也是调和函数
     ]
     #definition[][
