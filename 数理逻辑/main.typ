@@ -174,12 +174,16 @@
       #let value = "value"
       设真值函数 $v: {T, F}^n -> {T, F}$，定义：
       $
-      c_value := (not1 v(value)) "xor" c({(p_i, value[i]) | i <= n}) "for value in" {T, F}^n
+      c_value := (not1 v(value)) and c({(p_i, value[i]) | i <= n}) "for value in" {T, F}^n
       $
       则 $or_value c_value$ 就是我们要找的受限命题形式
     ]
     #remark[][
-      上面找到的受限命题形式称为真值函数的范式
+      上面找到的受限命题形式称为真值函数的范式。不难注意到，它本质上是一个析取范式，也即形如：
+      $
+        or_i (and_j p_(i j))
+      $
+      其中 $p_(i j)$ 是文字
     ]
     #definition[][
       设 $S$ 是连接符（原则上，每个真值函数都可定义连接符）的集合，且对于任何真值函数 $v$，都存在受限命题形式 $calA$ 使得其真值表与给定真值表相同，则称 $S$ 是完备的
@@ -261,6 +265,25 @@
       #definition[演绎][
         令 $Gamma$ 是 $L$ 中的公式集，若有一个公式序列 $calA_i, i = 1, 2, ..., n$，其中要么 $calA_i in L$，要么 $calA_i$ 是公理，要么可以从之前的公式通过推理规则推导出来。$calA_n$ 称为从 $Gamma$ 可演绎的，记作 $Gamma tack calA_n$。特别的，若 $calA$ 是定理，则有 $emptyset tack calA$ 也记作 $tack calA$
       ]
+      #lemma[常用定理][
+        - $tack calA -> calA$
+        - $tack not1 calB -> (calB -> calA)$
+      ]
+      #proof[
+        - #deduction[
+          + $calA -> ((calA -> calA) -> calA) := fA$
+          + $calA -> calA -> calA := fA$
+          + $(calA -> ((calA -> calA) -> calA)) -> (calA -> calA -> calA) -> calA -> calA := fA$
+          + $calA -> calA := MPb(2, MPb(1, 3))$
+        ]
+        - #deduction[
+          + $(not1 calB -> ((not1 calA -> not1 calB)) -> (calB -> calA)) -> (not1 calB -> (not1 calA -> not1 calB)) -> not1 calB -> (calB -> calA) := fA$
+          + $((not1 calA -> not1 calB)) -> (calB -> calA) := fA$
+          + $not1 calB -> ((not1 calA -> not1 calB)) -> (calB -> calA) := MPb(2, fA)$
+          + $(not1 calB -> (not1 calA -> not1 calB)) -> not1 calB -> (calB -> calA) := MPb(2, 1)$
+          + $not1 calB -> (calB -> calA) := MPb(fA, 4)$
+        ]
+      ]
       #theorem[演绎定理][
         若 $Gamma union {calA} tack calB$，则 $Gamma tack calA -> calB$
       ]
@@ -304,6 +327,31 @@
       ]
       #proof[
         容易证明 $calA, calA -> calB, calB -> calC tack calC$，应用演绎定理即可
+      ]
+      #lemma[更多基本定理][
+        - $tack not1 not1 calA -> calA$
+        - $tack calA -> not1 not1 calA$
+        - $tack (calA -> calB) -> (not1 calB -> not1 calA)$
+      ]
+      #proof[
+        - #deduction[
+          + $(not1 calA -> not1 not1 not1 calA) -> (not1 not1 calA -> calA) := fA$
+          + $(not1 not1 not1 not1 calA -> not1 not1 calA) -> (not1 calA -> not1 not1 not1 calA) := fA$
+          + $not1 not1 calA -> (not1 not1 not1 not1 calA -> not1 not1 calA) := fA$
+          + $not1 not1 calA -> (not1  not1 calA -> calA) := $ HS 
+          + $(not1 not1 calA -> not1 not1 calA) -> (not1 not1 calA -> calA) := MPb(4, fA)$
+          + $not1 not1 calA -> not1 not1 calA := fA$
+          + $not1 not1 calA -> calA := MPb(6, 5)$
+        ]
+        - #deduction[
+          + $not1 not1 not1 calA -> not1 calA :=$ （前已证）
+          + $calA -> not1 not1 calA:= MPb(1, fA)$ 
+        ]
+        - 不难验证：
+          $
+            (calA -> calB) <-> (not1 not1 calA -> not1 not1 calB)
+          $
+          而 $(not1 not1 calA -> not1 not1 calB) -> (not1 calB -> not1 calA)$ 是公理
       ]
       #definition[][
         设 $Gamma$ 是公式集：
@@ -385,7 +433,7 @@
       - 完全的，显然每个公式都满足 $calA, not1 calA$ 其中至少有一个是定理
     ]
     #proposition[][
-      若 $L^*$ 是 $L$ 的一个一致扩充，则存在一个赋值使得 $L^*$ 的每个定理取值均为 $T$
+      若 $L^*$ 是 $L$ 的一个一致完全扩充，则存在一个赋值使得 $L^*$ 的每个定理取值均为 $T$
     ]<consistency-extension-value>
     #proof[
       设 $L'$ 是 $L^*$ 的一致完全扩充，定义赋值如下：
