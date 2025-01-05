@@ -1647,7 +1647,7 @@
     #definition[Pf][
       定义 $NN$ 上的关系 Pf 为：
       $
-        "Pf"(m, n) <=> m "是" calN "中一个公式序列的配数，且是" n "对应公式的一个证明"
+        "Pf"(m, n) <=> m space 是 space calN "中一个公式序列的配数，且是" n "对应公式的一个证明"
       $
     ]
     #proposition[][

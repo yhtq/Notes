@@ -1123,7 +1123,7 @@
         $
         解得：
         $
-          k(x) = (f^(n + 1) (x))/((n + 1)!)
+          k(x) = (f^(n + 1) (xi))/((n + 1)!)
         $
       ]
       #remark[][
@@ -1498,9 +1498,9 @@
       其中：
       $
         k_1 = f(x_n, y_n)\
-        k_2 = f(x_n + a_2 h, h b_(2 1) k_1)\
+        k_2 = f(x_n + a_2 h, y_n + h b_(2 1) k_1)\
         ... \
-        k_m = f(x_n + a_m h, h sum_(i = 1)^(m - 1) b_(m i) k_i)
+        k_m = f(x_n + a_m h, y_n + h sum_(i = 1)^(m - 1) b_(m i) k_i)
       $
       事实上，往往有：
       $
@@ -1684,7 +1684,7 @@
     $
       min_alpha f(x_k + alpha alpha_k)
     $
-    其中 $alpha_k$ 是事先确定的方向。再选择 $alpha alpha_k$ 为步长即可。它的缺点是计算量过大，很多时候没有必要。大多数时候，我们都会选择非精确线搜素策略，常见的准则包括：
+    其中 $alpha_k$ 是事先确定的方向。再选择 $alpha alpha_k$ 为步长即可。它的缺点是计算量过大，很多时候没有必要。大多数时候，我们都会选择非精确线搜索策略，常见的准则包括：
     - Armijo 准则：
       $
         f(x_k + alpha alpha_k) <= f(x_k) + rho g_k^T alpha_k alpha
@@ -1999,6 +1999,110 @@
         - 采用 Wolfe 准则的 DY 方法得到的方向是下降方向a 
       ]
 = 约束最优化问题
+  == 一般约束最优化问题
+    一般约束最优化问题的形式为：
+    $
+      min f(x)\
+      s.t. c_i (x) = 0, i in E\
+      s.t. c_i (x) >= 0, i in I
+    $
+    其中 $f(x)$ 是目标函数，$c_i (x)$ 是约束函数，$I, E$ 分别代表等式约束和不等式约束。我们希望找到 $x$ 使得 $f(x)$ 最小，同时满足约束条件。这种问题的求解方法有很多，下面介绍几种常见的方法。
+
+    通常记：
+    $
+      g(x) = nabla f(x)\
+      a_i (x) = nabla c_i (x) 
+    $
+    同时称所有满足约束的点构成的集合为可行域，记作 $D$，原问题也可以写成：
+    $
+      min_(x in D) f(x)
+    $
+    约束最优化问题同样也有局部最优解和全局最优解。
+  == 约束规范条件
+    #definition[][
+      设 $x$ 是可行点，若存在 ${x_i}$ 是一列可行点，满足 $x_i -> x$，且若记 $x_k = x + alpha_k d_k$，其中 $norm(d_k) = 1$ 且 $d_k -> d$，则 $d$ 称为一个可行方向
+    ]
+    #definition[][
+      记：
+      $
+        F(x) = {d | norm(d) = 1, a_i^T d = 0 forall i in E, a_i^T d >= 0 forall i in I}
+      $
+      为在 $x$ 处线性化的可行方向集合
+    ]
+    #lemma[][
+      可行方向都是线性化可行方向
+    ]
+    #definition[下降方向][
+      记：
+      $
+        D = {d | nabla f(x)^T d < 0}
+      $
+      为 $f(x)$ 在 $x$ 处的下降方向集合
+    ]
+    有了这些概念，我们引入以下规范条件：
+    #definition[约束规范条件][
+      - KT 约束规范条件：可行方向等同于线性化可行方向。由于实践中不易验证，因此使用较少。
+      - 正则性假设：可行的下降方向等同于线性化可行的下降方向。这个条件更容易验证，因此更常用。
+    ]
+    #theorem[一阶必要条件][
+      若 $x^*$ 是约束最优化问题的局部最优解，则 $x^*$ 处可行方向和下降方向的交集为空集。
+    ]
+    #proof[
+      假设 $d$ 是可行方向，则按可行方向定义取 $x_k$，使得：
+      $
+        x_k = x^* + alpha_k d_k
+      $
+      泰勒展开得到：
+      $
+        f(x_k) = f(x^*) + alpha_k nabla f(x^*)^T d_k + o(alpha_k)
+      $
+      由于 $x^*$ 是极小值，有：
+      $
+         alpha_k nabla f(x^*)^T d_k + o(alpha_k) >= 0
+      $
+      令 $k -> +infinity$，立得 $d$ 不是下降方向。
+    ]
+  == 一阶最优性条件
+    #lemma[分离定理][
+      设 $C = {sum_i lambda_i a_i | lambda_i >= 0}$，若 $g in.not C$，则存在法向量 $d$ 对应的超平面分离 $g$ 与 $C$，且 $g^T d < 0$
+    ]
+    #lemma[Farkes引理][
+      给定任意 $n$ 维向量 $a_1, a_2, ..., a_m, g$，则集合：
+      $
+        D = {d | g^T d < 0, a_i^T d >= 0}
+      $
+      为空集的充要条件是存在 $lambda_i >= 0$ 使得：
+      $
+        g = sum_(i = 1)^m lambda_i a_i
+      $
+    ]
+    #proof[
+      由分离定理显然
+    ]
+    #corollary[][
+      $
+        D = {d | g^T d < 0, a_i^T d >= 0 forall i in I, a_i^T d = 0 forall i in E}
+      $
+      为空集的充要条件是存在 $lambda_i$ 使得：
+      $
+        g = sum_(i in I union E) lambda_i a_i\
+        lambda_i >= 0, i in I\
+      $
+    ]
+    #theorem[一阶必要条件 KKT][
+      若 $x^*$ 是约束最优化问题的局部最优解，且在 $x^*$ 处正则性假设成立，则存在拉格朗日乘子 $lambda$ 使得：
+      $
+        nabla_x (f(x^*) - sum_(i in I union E) lambda_i c_i (x^*)) := nabla_x L(x^*, lambda) = 0\
+        c_i (x^*) = 0, i in E\
+        c_i (x^*) >= 0, i in I\
+        lambda_i >= 0, i in I\
+        lambda_i c_i (x^*) = 0, i in I union E
+      $
+      上面的条件称为 KKT 条件。
+    ]
+    #theorem[一阶充分条件][
+      假设对于所有可行方向 $d$ 都有 $g(x)^T d > 0$，则 $x$ 是严格局部最优解。
+    ]
   == 罚函数方法
     罚函数方法分为外罚函数和内罚函数。时间原因只介绍外点罚函数方法。对于等式约束求解问题：
     $
