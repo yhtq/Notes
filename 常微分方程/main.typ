@@ -1404,14 +1404,14 @@
       若：
       $
       cases(
-        (diff^(k+l) F)/(diff y^k diff p^l) (x, psi(x), psi'(x)) = 0\, forall 0 <=k <= m-1\, 0 <= l <= n-1,
-        (diff^m F)/(diff y^m) (x, psi(x), psi'(x)) != 0,
-        (diff^n F)/(diff p^n) (x, psi(x), psi'(x)) != 0
+        (partial^(k+l) F)/(partial y^k partial p^l) (x, psi(x), psi'(x)) = 0\, forall 0 <=k <= m-1\, 0 <= l <= n-1,
+        (partial^m F)/(partial y^m) (x, psi(x), psi'(x)) != 0,
+        (partial^n F)/(partial p^n) (x, psi(x), psi'(x)) != 0
       )
       $
       其中 $n, m in NN, n > m$。如果：
       - $m, n$ 之一为奇数，或
-      - $m, n$ 均为偶数，且 $(diff^m F)/(diff y^m) (diff^n F)/(diff p^n) < 0$
+      - $m, n$ 均为偶数，且 $(partial^m F)/(partial y^m) (partial^n F)/(partial p^n) < 0$
       则 $psi$ 是奇解
     ]
     #proof[
@@ -1425,7 +1425,7 @@
       #proof[
         利用积分余项：
         $
-        f(x, y) - sum_(k=0)^n f_k (x) y^k = y^n/n! integral_0^1 (1-t)^n (diff^n f(x, y t))/(diff t^n)   dif t
+        f(x, y) - sum_(k=0)^n f_k (x) y^k = y^n/n! integral_0^1 (1-t)^n (partial^n f(x, y t))/(partial t^n)   dif t
         $
         容易看出结论成立
       ]
@@ -1454,9 +1454,9 @@
       只需证明 $u = 0$ 是奇解即可。事实上，$H$ 满足如下条件：
       $
       cases(
-        (diff^(k+l) F)/(diff y^k diff p^l) (x, 0, 0) = 0\, forall 0 <=k <= m-1\, 0 <= l <= n-1,
-        (diff^m F)/(diff y^m) (x, 0, 0) != 0,
-        (diff^n F)/(diff p^n) (x, 0, 0) != 0
+        (partial^(k+l) F)/(partial y^k partial p^l) (x, 0, 0) = 0\, forall 0 <=k <= m-1\, 0 <= l <= n-1,
+        (partial^m F)/(partial y^m) (x, 0, 0) != 0,
+        (partial^n F)/(partial p^n) (x, 0, 0) != 0
       )
       $
       可以想象，$H$ 泰勒展开后的形式非常简单。事实上，有：
@@ -1465,14 +1465,14 @@
       $
       其中 $H_1, H_2$ 都无穷阶可导，且：
       $
-      H_1 (x, 0, 0) = (diff^m F)/(diff y^m) (x, psi(x), psi'(x)) != 0\
-      H_2 (x, 0, 0) = (diff^n F)/(diff p^n) (x, psi(x), psi'(x)) != 0
+      H_1 (x, 0, 0) = (partial^m F)/(partial y^m) (x, psi(x), psi'(x)) != 0\
+      H_2 (x, 0, 0) = (partial^n F)/(partial p^n) (x, psi(x), psi'(x)) != 0
       $
       因此可以（在某个小邻域内）不妨设 $H_1, H_2 !=0 $，方程化为：
       $
       u^m H_1 (x, u, u') + u'^n H_2 (x, u, u') = 0
       $
-      我们当然希望进行开方，可以验证在假设的条件下（即 $m, n$ 之一为奇数，或 $m, n$ 均为偶数，且 $(diff^m F)/(diff y^m) (diff^n F)/(diff p^n) < 0$），我们将确实可以开方，对开方后的函数利用 @lemma0_is_odd 即可
+      我们当然希望进行开方，可以验证在假设的条件下（即 $m, n$ 之一为奇数，或 $m, n$ 均为偶数，且 $(partial^m F)/(partial y^m) (partial^n F)/(partial p^n) < 0$），我们将确实可以开方，对开方后的函数利用 @lemma0_is_odd 即可
     ]
     #corollary[][
       设 $F(x, y, y') in C^2$，且：
@@ -1484,7 +1484,7 @@
       $
       若：
       $
-      (diff^2 F)/(diff p^2) (x, psi(x), psi'(x)) != 0\
+      (partial^2 F)/(partial p^2) (x, psi(x), psi'(x)) != 0\
       partialDer(F, y) (x, phi(x), phi'(x)) != 0
       $
       则 $psi$ 是奇解

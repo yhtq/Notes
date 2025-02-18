@@ -2,25 +2,26 @@
 
 //#import "typst-sympy-calculator.typ": *
 
-#import "@preview/lemmify:0.1.6": *
-#import "@preview/commute:0.2.0": node, arr, commutative-diagram
+#import "@preview/lemmify:0.1.7": *
+// #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 #import "@preview/showybox:2.0.3": showybox
 
 #let __print_commute = true
-#let old-commutative-diagram = commutative-diagram
+// #let old-commutative-diagram = commutative-diagram
+// #let commutative-diagram(print: __print_commute, ..args) = {
+//   if print {
+//     old-commutative-diagram(..args)
+//   }
+//   else {
+//     align(center)[
+//       #text(style: "italic", font: "New Computer Modern")[
+//         _Commutative diagram_
+//       ]
+//     ]
+//   }
+// }
+
 #let en-font = "New Computer Modern"
-#let commutative-diagram(print: __print_commute, ..args) = {
-  if print {
-    old-commutative-diagram(..args)
-  }
-  else {
-    align(center)[
-      #text(style: "italic", font: "New Computer Modern")[
-        _Commutative diagram_
-      ]
-    ]
-  }
-}
 #let TODO = [#text("TODO", fill: red, font: en-font)]
 #let _der(y, x, times, sign) = {
   if times == [$1$] {
@@ -32,9 +33,9 @@
 }
 #let der(y, x) = _der(y, x, $1$, $dif$)
 #let derN(y, x, times) = _der(y, x, times, $dif$)
-#let partialDer(y, x) = _der(y, x, $1$, $diff$)
-#let partialDerN(y, x, times) = _der(y, x, times, $diff$)
-#let elasticity(P, Q) = $((diff #Q)/(diff #P))/(#Q / #P)$
+#let partialDer(y, x) = _der(y, x, $1$, $partial$)
+#let partialDerN(y, x, times) = _der(y, x, times, $partial$)
+#let elasticity(P, Q) = $((partial #Q)/(partial #P))/(#Q / #P)$
 #let autoVec3(a, delim: "(" ) = $vec(#a _1, #a _2, #a _3, delim: delim)$
 #let autoVecN(a, n, delim: "(" ) = $vec(#a _1, #a _2,  dots.v, #a _#n, delim: delim)$
 #let autoVecNF(f, n, delim: "(" ) = $vec(#(f(1)), #(f(2)),  dots.v, #(f(n)), delim: delim)$
@@ -445,12 +446,16 @@
     number-align: end,
     // Running header.
     header-ascent: 14pt,
-    header: locate(loc => {
-      let i = counter(page).at(loc).first()
-      if i == 1 { return }
-      set text(size: 8pt)
-      if calc.odd(i) { align(end, title) } else { align(start, title) }
-    }),
+    header: [ 
+      #context [
+        #let i = here().position().at("page")
+        #{
+          if i == 1 { return }
+          set text(size: 8pt)
+          if calc.odd(i) { align(end, title) } else { align(start, title) }
+        }
+      ]
+      ]
   )
   set text(font: "Noto Serif CJK SC", lang: "zh")
   show: thm-rules
@@ -538,9 +543,9 @@
           = Contents
         ]
 
-        outline(title: none, depth: 3, indent: true)
+        outline(title: none, depth: 3, indent: auto)
       } else {
-        outline(depth: 3, indent: true)
+        outline(depth: 3, indent: auto)
       }
       if withChapterNewPage == false{
         pagebreak() // 补上目录的换页
