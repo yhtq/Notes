@@ -5,6 +5,7 @@
 #import "@preview/lemmify:0.1.7": *
 // #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 #import "@preview/showybox:2.0.3": showybox
+#import "autoArithExp/lib.typ": *
 
 #let __print_commute = true
 // #let old-commutative-diagram = commutative-diagram
@@ -49,6 +50,7 @@
 }
 #let where = "where"
 #let with = "with"
+#let suchThat = $ space "s.t." space $
 #let andC = $" 且 "$
 #let orC = $" 或 "$
 #let hb = $hat(bold(beta))$
@@ -147,6 +149,24 @@
 #let linearCombinationb = linearCombination.with(name: $b$)
 #let linearCombinationlambda = linearCombination.with(name: $lambda$)
 #let linearCombinationmu = linearCombination.with(name: $mu$)
+
+// e^(x^2)
+#let eX2(x) = autoPow($e$, autoPow(x, 2))
+// e^(-x^2)
+#let eNX2(x) = autoPow($e$, autoNeg(autoPow(x, 2)))
+// e^(x i)
+#let eXi(x) = autoPow($e$, autoMul(x, $i$))
+// e^(- x^2/y)
+#let eNX2Y(x, y) = autoPow($e$, autoNeg(autoFraction(autoPow(x, 2), y)))
+
+#let NormalDis(x, mu, sigma) = autoMul(
+  autoFraction(
+    oneContent, autoMul(
+      autoSqrt($2 pi$), sigma
+    )
+  ),
+  eNX2Y(autoSub(x, mu), autoMul(2, autoPow(sigma, 2)))
+)
 
 #let defaultSum = (
   Var: $n$,
