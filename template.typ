@@ -40,14 +40,17 @@
 #let autoVec3(a, delim: "(" ) = $vec(#a _1, #a _2, #a _3, delim: delim)$
 #let autoVecN(a, n, delim: "(" ) = $vec(#a _1, #a _2,  dots.v, #a _#n, delim: delim)$
 #let autoVecNF(f, n, delim: "(" ) = $vec(#(f(1)), #(f(2)),  dots.v, #(f(n)), delim: delim)$
-#let autoRVecNF(f, n ) = $(#(f(1)), #(f(2)),  dots, #(f(n)))$
-#let autoRVecN(a, n) = $(#a _1, #a _2,  dots, #a _#n)$
+#let autoRListNF(f, n) = $#(f(1)), #(f(2)),  dots, #(f(n))$
+#let autoRVecNF(f, n ) = $(autoRListNF(f, n))$
+#let autoRListN(a, n) = $#a _1, #a _2,  dots, #a _#n$
+#let autoRVecN(a, n) = $(autoRListN(a, n))$
 #let autoMat3(delim: "(", ..var) = {
   let varList = var.pos()
   let row(n) = varList.map(v => $#v _#n$)
   let data = (row(1), row(2), row(3))
   math.mat(delim: delim, ..data)
 }
+// #let autoMat(delim: "(", f) = 
 #let where = "where"
 #let with = "with"
 #let suchThat = $ space "s.t." space $
@@ -58,10 +61,12 @@
 #let bbeta = $bold(beta)$
 #let balpha = $bold(alpha)$
 #let bgamma = $bold(gamma)$
+#let htheta = $hat(theta)$
 #let by = $bold(y)$
 #let bx = $bold(x)$
 #let bu = $bold(u)$
 #let bv = $bold(v)$
+#let xbar = $overline(x)$
 
 #let inner(x, y) = $〈#x, #y〉$
 #let HomoCoor = math.vec.with(delim: "[")
@@ -85,6 +90,7 @@
 #let Isom = math.op("Isom")
 #let diag = math.op("diag")
 #let rank = math.op("rank")
+#let approxVar(R) = $tilde(R)$
 
 #let GL = math.op("GL")
 #let char = math.op("char")
@@ -156,8 +162,12 @@
 #let eNX2(x) = autoPow($e$, autoNeg(autoPow(x, 2)))
 // e^(x i)
 #let eXi(x) = autoPow($e$, autoMul(x, $i$))
+// e^(x / y)
+#let eXdY(x, y) = autoPow($e$, autoFraction(x, y))
+// e^(- x/y)
+#let eNXdY(x, y) = autoPow($e$, autoNeg(autoFraction(x, y)))
 // e^(- x^2/y)
-#let eNX2Y(x, y) = autoPow($e$, autoNeg(autoFraction(autoPow(x, 2), y)))
+#let eNX2dY(x, y) = eNXdY(autoPow(x, 2), y)
 
 #let NormalDis(x, mu, sigma) = autoMul(
   autoFraction(
@@ -165,8 +175,31 @@
       autoSqrt($2 pi$), sigma
     )
   ),
-  eNX2Y(autoSub(x, mu), autoMul(2, autoPow(sigma, 2)))
+  eNX2dY(autoSub(x, mu), autoMul(2, autoPow(sigma, 2)))
 )
+#let NormalDisN(x, mu, sigma, n) = autoMul(
+  autoPow($2 pi$, autoNeg(autoFraction(n, 2))),
+  autoMul(autoPow(autoDet(sigma), $- 1/2$),
+    autoPow($e$,
+      autoNeg(
+        // $1/2 autoSub(x, mu)^T autoPow(sigma, -1) autoSub(x, mu)$
+        autoMul($1/2$, 
+          autoMul(
+            autoPow(autoSub(x, mu), $T$),
+            autoMul(
+              autoPow(sigma, -1),
+              autoSub(x, mu)
+            )
+          )
+        )
+      )
+    )
+  )
+)
+#let ExpDis(x, lambda) = autoMul(lambda, autoPow($e$, autoNeg(autoMul(lambda, x)))) 
+// #let WeibullDis(x, m, eta) = autoMul(
+
+// )
 
 #let defaultSum = (
   Var: $n$,
@@ -230,8 +263,7 @@
 #let def_str = "def"
 #let nat_str = "nat"
 // Theorem and definition environments.
-#let base_env(type: "Theorem", numbered: true, fg: black, bg: white,
-          name, body) = locate(
+#let base_env(type: "Theorem", numbered: true, fg: black, bg: white, name, body) = locate(
     location => {
       let lvl = counter(heading).at(location)
       let top = if lvl.len() > 0 { lvl.first() } else { 0 }
@@ -362,7 +394,8 @@
   showybox(
     body,
     title: [#strong(thm-type) #number #if name != none [ (#name) ]],
-    frame: frame-map.at(thm-type)
+    frame: frame-map.at(thm-type),
+    footer: ""
   )
 }
 
@@ -412,42 +445,42 @@
 )
 #let (answer, rules:ans-rules) = new-theorems("thm-ans", ("answer": "Answer"), ..my-styling)
 
-#let _convert(f, name, body) = f(name: noneNameChecker(name))[
+#let _convert(f, footer,name, body) = f(name: noneNameChecker(name))[
   #body
   #parbreak()
   ]
 #let (alg, rules: alg-rules) = new-theorems("thm-group", ("alg": "Algorithm"), thm-styling: theorem-like-style)
 #let (alg1, rules: alg-rules1) = new-theorems("thm-group-linear", ("alg1": "Algorithm"), thm-numbering: thm-numbering-linear, thm-styling: theorem-like-style)
-#let theorem(name, body) = _convert(theo, name, body)
-#let lemma(name, body) = _convert(lem, name, body)
-#let corollary(name, body) = _convert(cor, name, body)
-#let proposition(name, body) = _convert(prop, name, body)
-#let definition(name, body) = _convert(def, name, body)
-#let example(name, body) = _convert(ex, name, body)
-#let remark(name, body) = _convert(rem, name, body)
+#let theorem(footer: "",name, body) = _convert(theo, footer, name, body)
+#let lemma(footer: "",name, body) = _convert(lem, footer,name, body)
+#let corollary(footer: "",name, body) = _convert(cor, footer, name, body)
+#let proposition(footer: "",name, body) = _convert(prop, footer, name, body)
+#let definition(footer: "",name, body) = _convert(def, footer, name, body)
+#let example(footer: "",name, body) = _convert(ex, footer, name, body)
+#let remark(footer: "",name, body) = _convert(rem, footer, name, body)
 #let proof(body) = [#pr[
   #set text(size: 10pt)
   #body
 ]
   #linebreak()
 ]
-#let algorithm(name, body) = _convert(alg, name, body)
+#let algorithm(footer: "",name, body) = _convert(alg, footer,name, body)
 
 
-#let theoremLinear(name, body) = _convert(theo1, name, body)
-#let lemmaLinear(name, body) = _convert(lem1, name, body)
-#let corollaryLinear(name, body) = _convert(cor1, name, body)
-#let propositionLinear(name, body) = _convert(prop1, name, body)
-#let exampleLinear(name, body) = _convert(ex1, name, body)
-#let remarkLinear(name, body) = _convert(rem1, name, body)
-#let definitionLinear(name, body) = _convert(def1, name, body)
+#let theoremLinear(footer: "",name, body) = _convert(theo1, footer,name, body)
+#let lemmaLinear(footer: "",name, body) = _convert(lem1, footer,name, body)
+#let corollaryLinear(footer: "",name, body) = _convert(cor1, footer,name, body)
+#let propositionLinear(footer: "",name, body) = _convert(prop1, footer: "",name, body)
+#let exampleLinear(footer: "",name, body) = _convert(ex1, footer,name, body)
+#let remarkLinear(footer: "",name, body) = _convert(rem1, footer,name, body)
+#let definitionLinear(footer: "",name, body) = _convert(def1, footer,name, body)
 #let proofLinear(body) = [#pr1[
   #set text(size: 10pt)
   #body
 ]
   #linebreak()
 ]
-#let algorithmLinear(name, body) = _convert(alg1, name, body)
+#let algorithmLinear(footer: "",name, body) = _convert(alg1, footer: "",name, body)
 
 
 #let note(title: "Note title", author: "Name", logo: none, date: none,
@@ -576,7 +609,10 @@
 
 
   // Main body
-  set par(justify: true, first-line-indent: 22pt)
+  set par(justify: true, first-line-indent: (
+      amount: 22pt,
+      all: false
+    ))
 
   set heading(numbering: "1.")
   set heading(numbering: none) if withHeadingNumbering == false

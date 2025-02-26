@@ -8,6 +8,7 @@
 )
 #let cov = "Cov"
 #let var = "Var"
+#let approxVar(Y) = $overline(Y)$
 = 前言  
   - Instructor: Ruibin Xi
   - Office: 智华楼470
@@ -135,7 +136,333 @@
       为 $X$ 的特征函数（一定存在）。
     ]
     #theorem[][
-      - 若 $phi_Y = phi_X$，则 $X$ 和 $Y$ 的分布相同。
-      - 若 $X, Y$ 独立，则 $phi_(X, Y)(t) = phi_x (t_1) phi_y (t_2)$
+      - 若在某个开集上有 $phi_Y = phi_X$，则 $X$ 和 $Y$ 的分布相同。
+      - 若 $X, Y$ 独立，则:
+        - $phi_(X, Y)(t) = phi_x (t_1) phi_y (t_2)$
+        - $phi_(X + Y) (t) = phi_x (t) phi_y (t)$
     ]
+    #example[][
+      设 $X tilde chi_(k_1)^2, Y tilde chi_(k_2)^2$，则：
+      $
+        phi_X (t) = (1 - 2 i t)^(- k_1 / 2)\
+        phi_Y (t) = (1 - 2 i t)^(- k_2 / 2)
+        phi_(X + Y) (t) = (1 - 2 i t)^(- (k_1 + k_2) / 2)
+      $
+      可见 $chi^2$ 分布具有可加性
+    ]
+    #definition[多元正态分布][
+      称：
+      $
+        NormalDisN(x, mu, Sigma, n)
+      $
+      为 $n$ 元正态的分布函数，其中 $Sigma$ 通常是正定矩阵。此时，记：
+      $
+        Y tilde N(mu, Sigma)
+      $
+      并且有：
+      $
+        E Y = mu, var Y = Sigma
+      $
+      对于标准正态分布，有：
+      $
+        M_Z (t) = e^(1/2 t^T t)
+      $
+      因此可以证明：
+      $
+        M_Y (t) = e^(t^T mu + 1/2 t^T Sigma t)\
+        phi_Y (t) = e^(i t^T mu - 1/2 t^T Sigma t)
+      $
+    ]
+    #theorem[][
+      设 $Y tilde N(mu, Sigma)$，$C$ 满秩，则：
+      $
+        C Y + d tilde N(C mu + d, C Sigma C^T)
+      $
+      特别的，若 $T tilde N(0, 1)$，则：
+      $
+        C Y + d tilde N(d, C C^T)
+      $
+    ]
+    #proof[
+      $
+        M_(C Y + d) (t) = E(e^(t^T (C Y + d))) = E(e^((C^T t)^T Y)) e^(t^T d) = e^(t^T (C mu + d) + 1/2 (t^T C Sigma C^T t))
+      $
+    ] 
+    高维正态分布有非常好的性质，$x_i, x_j$ 独立当且仅当 $Sigma$ 的 $i j$ 元为零（协方差为零），非常便于计算。
+    #example[][
+      假设 $T tilde N(mu, Sigma)$，其中：
+      $
+        Y = vec(Y_1, Y_2), mu = vec(mu_1, mu_2), Sigma = mat(Sigma_11, Sigma_12; Sigma_21, Sigma_22)
+      $
+      则：
+      $
+        Y_1 = (1, 0) Y := B Y
+      $
+      由上面的结论得：
+      $
+        Y_1 tilde N(B mu, B Sigma B^T) = N(mu_1, Sigma_1)
+      $
+      同时，若设 $y_2 = Y_1 | Y_2$，则：
+      $
+        y_2 tilde N(mu_1 + Sigma_(12) Inv(Sigma_22) (Y_2 - mu_2), Sigma_11 - Sigma_12 Inv(Sigma_22) Sigma_21)
+      $
+      这是因为若设：
+      $
+        A = mat(1, - Sigma_12 Inv(Sigma_22);0, 1)
+      $
+      则：
+      $
+        u := A (Y - mu) 
+      $
+      满足 $E u = 0$ 且：
+      $
+        var mu = A Sigma A^T = mat(
+          Sigma_11 - Sigma_12 Inv(Sigma_22) Sigma_21, 0;0, Sigma_22
+        )
+      $
+      这表明 $u_1, u_2$ 相互独立，进而：
+      $
+        u_1 | u_2 tilde u_1 tilde N(0, Sigma_11 - Sigma_12 Inv(Sigma_22) Sigma_21)\
+        ((Y_1 - mu_1) - Sigma_12 Inv(Sigma_22) (Y_2 - mu_2)) | (Y_2 - mu_2) tilde N(0, Sigma_11 - Sigma_12 Inv(Sigma_22) Sigma_21)\
+        Y_1 | (Y_2 - mu_2) tilde N(mu_1 + Sigma_12 Inv(Sigma_22) (Y_2 - mu_2), Sigma_11 - Sigma_12 Inv(Sigma_22) Sigma_21)\
+        Y_1 | Y_2 tilde N(mu_1 + Sigma_12 Inv(Sigma_22) (Y_2 - mu_2), Sigma_11 - Sigma_12 Inv(Sigma_22) Sigma_21)\
+      $
+    ]
+    #theorem[][
+      假设 $Y$ 是 $n$ 维随机变量，期望和方差存在，则它是多元正态分布当且仅当每个分量的任意线性组合都服从正态分布（或者每个一维边缘分布都是正态分布）。
+    ]
+    #theorem[][
+      设 $Y$ 是多元正态的，则 $A Y$ 与 $B Y$ 独立当且仅当：
+      $
+        cov(A Y, B Y) = A Sigma B^T = 0
+      $
+    ]
+    #example[][
+      设 $Y tilde N(mu, sigma^2)$，令：
+      $
+        approxVar(Y)_n = 1/n sum_i Y_i\
+        S_n^2 = 1/(n - 1) sum_i (Y_i - approxVar(Y))^2
+      $
+      则 $approxVar(Y), S_n^2$ 独立
+    ]
+    #proof[
+      只需证明 $approxVar(Y)$ 与 $Y_i - approxVar(Y)$ 都独立即可。事实上，设：
+      $
+        I = vec(1, 1, dots.v, 1)\
+        W = vec(Y_1 - approxVar(Y), Y_2 - approxVar(Y), dots.v, Y_n - approxVar(Y))
+      $
+      则有：
+      $
+        approxVar(Y) = 1/n I^T Y\
+        W = Y - 1/n I I^T Y 
+      $
+      并且：
+      $
+        cov(approxVar(Y), W) = 1/n^2 I^T (cov(Y, Y) - 1/n cov(Y, Y) I^T I) = 0
+      $
+      由上面的定理可知它们独立。
+    ]
+    
+    #theorem[][
+      设 $Y tilde N(0, 1)$ ，$A$ 对称，幂等，则：
+      $
+        Y^T A Y tilde chi_(rank(A))^2
+      $
+    ]
+    #proof[
+      对 $A$ 做对角化，设：
+      $
+        A = T^T D T
+      $
+      则：
+      $
+        Y^T A Y = (T Y)^T A (T Y)
+      $
+      同时，$Z := T Y tilde N(0, 1)$，上式形如：
+      $
+        sum_(i = 1)^r Z_i^2 tilde chi_r^2
+      $
+      证毕
+    ]
+    #theorem[][
+      设 $Y tilde N(0, 1)$ ，$A$ 对称，则：
+      $
+        Y^T A Y tilde chi_(r)^2
+      $
+      当且仅当 $A$ 幂等且 $rank(A) = r$
+    ]
+    #proof[
+      类似的，无妨设 $A$ 是对角矩阵，则：
+      $
+        M_Y (t) = product_i (1 - 2 d_i t)^(-1/2) = (1 - 2 t)^(-r/2)
+      $
+    ]
+    #example[][
+      设 $Y tilde N(mu I, sigma^2 I)$，则：
+      $
+        ((n - 1) S_n^2) / sigma^2 tilde chi_(n - 1)^2
+      $
+      事实上，设：
+      $
+        W = 1/sigma vec(Y_1 - approxVar(Y), Y_2 - approxVar(Y), dots.v, Y_n - approxVar(Y)) = (1 - 1/n I I^T) (Y - mu)/sigma
+      $
+      则：
+      - $(Y - mu)/sigma tilde N(0, 1)$
+      - $(1 - 1/n I I^T)$ 幂等，且 $rank(1 - 1/n I I^T) = tr(1 - 1/n I I^T) = n - 1$
+      因此 $((n - 1) S_n^2)/sigma^2 = W^T W tilde chi_(n - 1)^2$ 
+    ]
+    #theorem[][
+      设 $Y tilde N(0, 1)$ ，$A$ 对称，且：
+      $
+        Y^T A Y tilde chi_(r)^2
+      $
+      则 $Y^T (I - A) Y tilde chi_(n - r)^2$
+    ]
+    #proof[
+      注意到此时一定有 $A$ 幂等，进而 $rank(A) + rank(I - A) = n$，且 $I - A$ 也幂等，结论是显然的
+    ]
+    #theorem[][
+      设 $A, B$ 对称，$Y^T A Y$ 和 $Y^T B Y$ 都服从 $chi^2$ 分布，则它们独立当且仅当 $A B = 0$
+    ]
+    #proof[
+      - 一方面，独立的 $chi^2$ 变量的和还是 $chi^2$ 变量，导出 $A + B$ 幂零，因此 $A B = 0$ 是必要条件
+      - 另一方面，假设 $A B = 0$，则任取 $RR$ 中可测集 $(-infinity, x)$，有：
+      $
+        (Y^T A Y)^(-1) ((-infinity, x)) = {Y | norm(A Y) < sqrt(x)} = Inv(A) ({Y | norm(Y) < sqrt(x)})\
+        (Y^T B Y)^(-1) ((-infinity, y)) = Inv(B) ({Y | norm(Y) < sqrt(y)})
+      $
+      由于 $A B = B A = 0$，我们有：
+      $
+        im B subset ker A, im A subset ker B\
+      $
+      因此：
+      $
+        Inv(A) ({Y | norm(Y) < sqrt(x)}) inter Inv(B) ({Y | norm(Y) < sqrt(y)})
+      $
+
+      // $
+      //   phi (t) = E eXi(t_1 Y^T A Y + t_2 Y^T B Y) = E eXi((Y^T (t_1 A + t_2 B) Y))
+      // $
+      // - 注意到：
+      //   $
+      //     Y^T B Y = (B Y)^T B Y < x^2 <=> norm(B Y) < x\
+      //     Y^T A Y = (A Y)^T A Y < x^2 <=> norm(A Y) < x
+      //   $
+      //   若 $A B != 0$，则存在 $X$ 使得 $A B u != 0$. 由线性代数知识，将存在 $v$ 使得 $A v = B u != 0$. 此时，若 $x < norm(A v), y > norm(A v)$，记：
+      //   $
+      //     S_1 = {Y | norm(B Y) < x}\
+      //     S_2 = {Y | norm(A Y) < y} 
+      //   $
+      //   则 $u in.not S_1, v in S_2$. 设 $u in B$ 是一小开球且 $B subset.not S_1, Inv(A) (B) subset S_2$. 这将导致 $Inv(A) (B)$ 是 $Y^T A Y < y^2$ 的可行区域，但不是 $Y^T A Y < y^2 | Y^T B Y < x^2$ 的可行区域，矛盾！
+    ]
+    #example[][
+      设 $Y tilde N(theta, sigma^2 I), P_i$ 对称，$Q_i = 1/sigma (Y - theta)^T P_i (Y- theta)$. 若 $Q_i tilde chi_(r_i)^2 and Q_1 - Q_2 >= 0$，则 $Q_1 - Q_2 $ 和 $Q_2$ 是独立服从 $chi_(r_1 - r_2)^2$ 和 $chi_(r_2)^2$ 的随机变量
+    ]
+    #proof[
+      注意到：
+      $
+        Q_1 - Q_2 = 1/sigma (Y - theta)^T (P_1 - P_2) (Y - theta)
+      $
+      由条件，$P_1 - P_2 >= 0$. 同时：
+      $
+        (P_1 - P_2)^2 = P_1 + P_2 - P_1 P_2 - P_2 P_1 
+      $
+      断言 $P_2 P_1 = P_2$，这是因为假设 $P_2 (I - P_1) x != 0$，则有：
+      $
+        x in.not im P_1 => x in ker P_1\
+        x in.not ker P_2
+      $
+      从而：
+      $
+        x^T (P_1 - P_2) x = - x^T P_2 x < 0
+      $
+      矛盾！
+
+      进而 $P_2 = P_2^T = P_1^T P_2^T = P_1 P_2$，因此 $P_1 - P_2$ 是幂等矩阵，且：
+      $
+        rank(P_1 - P_2) = tr(P_1) - tr(P_2) = rank(P_1) - rank(P_2) 
+      $
+      同时，$(P_1 - P_2) P_2 = 0$，上面的定理给出它们独立
+    ]
+    #theorem[][
+      设 $Y tilde N(0, Sigma), A$ 是对称矩阵，则 $Y^T A Y$ 是 $chi_r^2$ 分布当且仅当 $A Sigma$ 恰有 $r$ 个 $1$ 作为特征值，其余均为零
+    ]
+    #proof[
+
+      - 假设 $Y^T A Y$ 满足条件，设 $Sigma = R R^T$（$R$ 未必是方阵）。取标准正态变量 $Z$，则 $R Z$ 与 $Y$ 同分布，进而 $(R Z)^T A (R Z) tilde chi^2_r$，由之前的定理知 $R^T A R$ 幂等，秩为 $r$. 熟知 $R^T A R$ 与 $A R R^T = A Sigma$ 有相同的非零特征值，并且 $tr(R^T A R) = tr(A R R^T)$ 因此 $1$ 特征值的数量也相等，结论成立。
+      - 反之，由于 $R^T A R$ 特征值仅有 $0, 1$，当然幂等，其余推理是类似的。
+    ]
+    #corollary[][
+      设 $Y tilde N(mu, Sigma), Sigma > 0$，则 $(Y - mu)^T Inv(Sigma) (Y - mu) tilde chi_n^2$
+    ]
+= 最小二乘法
+  #let RSS = "RSS"
+  给定模型：
+  $
+    Y = X beta + epsilon
+  $
+  目标是估计其中的 $beta$. 定义：
+  $
+    RSS(beta) = norm(Y - X beta)^2
+  $
+  为残差。我们希望它达到极小，也就是计算：
+  $
+    hat(beta) = argmin_beta RSS(beta)
+  $
+  事实上，${beta | X beta}$ 是一线性空间，最小取值当然就是正交投影，也即：
+  $
+    X^T (Y - X beta) = 0\
+    X^T X beta = X^T Y
+  $
+  该方程通常被称为正则化方程。线性代数知识可以证明它一定有解，当然解未必唯一。若 $X$ 满秩，则上述方程有唯一解。
+
+  若 $X$ 满秩，则取：
+  $
+    P = X (X^T X)^(-1) X^T
+  $
+  可以验证 $P$ 就是将向量投影到 $X$ 空间的投影算子（显然是幂等/对称的，且秩就是 $X$ 的秩）。令 $hat(Y) = X hat(beta) = P Y, e = Y - hat(Y)$，则残差：
+  $
+    RSS = norm(e)^2 = (Y - P Y)^T (Y - P Y) = norm(Y)^2 - norm(hat(Y))^2
+  $
+  同时，不难发现：
+  $
+    E(hat(beta)) = E((X^T X) X^T Y) = (X^T X) X^T E Y = (X^T X) X^T X beta = beta\
+  $
+  进而，如果假设 $var(epsilon) = sigma^2 I$，则：
+  $
+    var(hat(beta)) = Inv((X^T X)) X^T var(Y) X Inv((X^T X)) = sigma^2 Inv((X^T X))
+  $
+  #theorem[][
+    设 $hat(theta)$ 是最小二乘估计，假设 $theta = X beta, $, $X$ 未必满秩。对于任意 $c in RR^n$，任意线性函数 $A$， $A c$ 是 $c^T theta$ 的无偏估计，则 $var (A c) >= var(c^T theta)$。换言之，$c^T theta$ 是最好的线性无偏估计（best linear unbiased estimator, BLUE）。
+  ]
+  #proof[
+    取 $P$ 是某个线性投影算子，则：
+    $
+      E(hat(theta)) = P E Y = P X beta = X beta = theta
+    $
+    当然 $c^T hat(theta)$ 是无偏的估计，也是线性的估计。
+
+    进一步，假设 $d^T Y$ 是一个 $c^T theta$ 的无偏线性估计，有：
+    $
+      c^T theta = E(d^T Y) = d^T E Y = d^T theta\
+      (c - d)^T X = 0 => P(c - d) = 0 => P c = P d
+    $
+    因此：
+    $
+      var (d^Y) - var(c^T hat(theta))\
+      = sigma^2 d^T d - sigma^2 (P c)^T (P c)\
+      = sigma^2 d^T d - sigma^2 (P d)^T (P d)\
+      = sigma^2 d^T (I - P) d >= 0
+    $
+    若等号成立，则：
+    $
+      (I - P) d = 0, d = P d = P c, d^T Y = c^T P Y = c^T hat(theta)
+    $
+  ]
+  #remark[][
+    上面定理的限定条件很多。例如假如我们不要求无偏，可能能找到方差更小的估计。
+  ]
+
+
+    
   

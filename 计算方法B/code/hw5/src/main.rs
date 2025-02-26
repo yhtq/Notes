@@ -51,19 +51,23 @@ where DefaultAllocator: na::allocator::Allocator<D, U1>
         let y = (&self.matrix) * x;
         y.ad_mul(&self.x.as_ref())[0]
     }
+    fn get_x(&self) -> &Unit<OVector<T, D>> {
+        &self.x
+    }
     fn run_until(self, max_iter: usize, tol: T) -> Result<(Self, usize), String> {
         let mut lambda_o = self.get_lambda();
         let mut next = self;
         for i in 0..max_iter {
             next = next.next();
             let lambda = next.get_lambda();
-            if (lambda - lambda_o).abs() < tol * lambda.abs()
+            if (lambda - lambda_o).abs() < tol
             {
                 return Ok((next, i));
             }
             lambda_o = lambda;
         }
-        Err(format!("{}: max_iter reached", next.name.to_string()))
+        // Err(format!("{}: max_iter reached", next.name.to_string()))
+        return Ok((next, max_iter));
     }
 }
 
@@ -107,15 +111,30 @@ where
     let lambda = power_method.get_lambda();
     println!("max root: {}, iter: {}", lambda, iter);
 }
-
+// use nalgebra::U3;
 fn main() {
-    get_max_root_of_polynomial(
-        &OVector::<f64, U3>::from_vec(vec![1.0, -5.0, 3.0])
+    // get_max_root_of_polynomial(
+    //     &OVector::<f64, U3>::from_vec(vec![1.0, -5.0, 3.0])
+    // );
+    // get_max_root_of_polynomial(
+    //     &OVector::<f64, U3>::from_vec(vec![0.0, -3.0, -1.0])
+    // );
+    // get_max_root_of_polynomial(
+    //     &OVector::<f64, U8>::from_vec(vec![101.0, 208.01, 10891.01, 9802.08, 79108.9, -99902.0, 790.0, -1000.0])
+    // );
+    let m = OMatrix::<f64, U3, U3>::new(
+        2.0, 1.0, 1.5, 
+        0.0, 1.0, 0.5,
+        0.0, 0.0, 1.0
     );
-    get_max_root_of_polynomial(
-        &OVector::<f64, U3>::from_vec(vec![0.0, -3.0, -1.0])
-    );
-    get_max_root_of_polynomial(
-        &OVector::<f64, U8>::from_vec(vec![101.0, 208.01, 10891.01, 9802.08, 79108.9, -99902.0, 790.0, -1000.0])
-    );
+    let x = Unit::new_normalize(OVector::<f64, U3>::repeat_generic(U3, U1, 1.0));
+    let power_method = PowerMethod::new("test", m, x.clone());
+    let (power_method, iter) = power_method.run_until(1000, 1e-15).unwrap();
+    println!("lambda: {:?},vec: {:?}, iter: {}",  power_method.get_lambda(), power_method.get_x(), iter);
+    let mtm = m.transpose() * m;
+    println!("{:?}", mtm);
+    let power_method1 = PowerMethod::new("test", mtm, x);
+    let (power_method1, iter) = power_method1.run_until(100, 1e-15).unwrap();
+    println!("lambda: {:?}, vec: {:?}, iter: {}", power_method1.get_lambda(), power_method1.get_x(), iter);
+    
 }

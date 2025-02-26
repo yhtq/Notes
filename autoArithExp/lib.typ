@@ -124,5 +124,15 @@
   if checkOne(x) {
     return oneContent
   }
-  return $sqrt(#x)$
+  return $sqrt(autoParaIfAddOrSub(#x))$
+}
+
+#let autoDet(x) = {
+  if checkZero(x) {
+    return zeroContent
+  }
+  if checkOne(x) {
+    return oneContent
+  }
+  return $det(autoParaIfAddOrSub(#x))$
 }
