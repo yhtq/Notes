@@ -92,6 +92,7 @@
 #let bu = $bold(u)$
 #let bv = $bold(v)$
 #let xbar = $overline(x)$
+#let Xbar = $overline(X)$
 #let cov = "Cov"
 #let var = "Var"
 
