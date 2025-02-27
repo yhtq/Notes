@@ -10,4 +10,3 @@
   withHeadingNumbering: false
 )
 P59 3, 6, 9, $7^*$
-57x er4

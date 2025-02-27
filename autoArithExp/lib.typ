@@ -24,7 +24,7 @@
 #let getNegPart(x) = getBodyArr(x).at(1)
 #let checkAddOrSub(x) = getBodyArr(x).contains(addContent) or getBodyArr(x).contains(subContent)
 
-#let autoPara(x) = {
+#let autoBrace(x) = {
   if getBodyArr(x).len() != 1 {
     return [$(#x)$]
   }
@@ -33,9 +33,9 @@
   }
 }
 
-#let autoParaIfAddOrSub(x) = {
+#let autoBraceIfAddOrSub(x) = {
   if checkAddOrSub(x) {
-    return autoPara(x)
+    return autoBrace(x)
   }
   else {
     return x
@@ -49,7 +49,7 @@
   if checkNeg(x) {
     return getNegPart(x)
   }
-  return [$-#autoParaIfAddOrSub(x)$]
+  return [$-#autoBraceIfAddOrSub(x)$]
 }
 
 #let autoAdd(x, y) = {
@@ -62,12 +62,12 @@
   if checkNeg(y) {
     return [$#x - #(getNegPart(y))$]
   }
-  return [$#x + #autoParaIfAddOrSub(y)$]
+  return [$#x + #autoBraceIfAddOrSub(y)$]
 }
 
 #let autoSub(x, y) = {
   if checkZero(x) {
-    return [$-#autoPara(y)$]
+    return [$-#autoBrace(y)$]
   }
   if checkZero(y) {
     return x
@@ -75,7 +75,7 @@
   if checkNeg(y) {
     return [$#x - #(getNegPart(y))$]
   }
-  return [$#x - #autoPara(y)$]
+  return [$#x - #autoBrace(y)$]
 }
 
 #let autoMul(x, y) = {
@@ -88,7 +88,7 @@
   if checkOne(y) {
     return x
   }
-  return [$#autoParaIfAddOrSub(x) #autoParaIfAddOrSub(y)$]
+  return [$#autoBraceIfAddOrSub(x) #autoBraceIfAddOrSub(y)$]
 }
 
 #let autoFraction(x, y) = {
@@ -114,7 +114,7 @@
   if checkOne(y) {
     return x
   }
-  return [$#autoPara(x) ^ #y$]
+  return [$#autoBrace(x) ^ #y$]
 }
 
 #let autoSqrt(x) = {
@@ -124,7 +124,7 @@
   if checkOne(x) {
     return oneContent
   }
-  return $sqrt(autoParaIfAddOrSub(#x))$
+  return $sqrt(autoBraceIfAddOrSub(#x))$
 }
 
 #let autoDet(x) = {
@@ -134,5 +134,9 @@
   if checkOne(x) {
     return oneContent
   }
-  return $det(autoParaIfAddOrSub(#x))$
+  return $det(autoBraceIfAddOrSub(#x))$
+}
+// #repr($n - (n - 1)$)
+#let evalSub(x, y) = {
+
 }

@@ -50,6 +50,31 @@
   let data = (row(1), row(2), row(3))
   math.mat(delim: delim, ..data)
 }
+#let autoMat(delim: "(", n, pre: 3, interval: 2, post: 3, f) = {
+  let rows_pre = ();
+  for i in range(1, pre + 1) {
+    let row = ();
+    row = row + range(1, pre + 1).map(j => f(i, j))
+    row.push($dots$)
+    row = row + range(post - 1, -1, step: -1).map(j => f(i, autoSub(n, j)))
+    rows_pre.push(row)
+  }
+  let row_dots = ()
+  for i in range(0, interval) {
+    let row = range(1, pre + 1).map(i => $dots.v$)  + ($dots.down$,) + range(post - 1, -1, step: -1).map(i => $dots.v$)
+    row_dots.push(row)
+  }
+  
+  let rows_post = ()
+  for i in range(post - 1, -1, step: -1) {
+    let row = ();
+    row = row + range(1, pre + 1).map(j => f(autoSub(n, i), j))
+    row.push($dots$)
+    row = row + range(post - 1, -1, step: -1).map(j => f(autoSub(n, i), autoSub(n, j)))
+    rows_post.push(row)
+  }
+  math.mat(delim: delim, ..rows_pre, ..row_dots, ..rows_post)
+}
 // #let autoMat(delim: "(", f) = 
 #let where = "where"
 #let with = "with"
@@ -67,6 +92,8 @@
 #let bu = $bold(u)$
 #let bv = $bold(v)$
 #let xbar = $overline(x)$
+#let cov = "Cov"
+#let var = "Var"
 
 #let inner(x, y) = $〈#x, #y〉$
 #let HomoCoor = math.vec.with(delim: "[")
@@ -95,7 +122,7 @@
 #let GL = math.op("GL")
 #let char = math.op("char")
 #let Frac = math.op("Frac")
-#let Inv(a) = $#a^(-1)$
+// #let Inv(a) = $#a^(-1)$
 #let conjugateLeft(g, a) = $#g^(-1) #a #g$
 #let conjugateRight(g, a) = $#g #a #g^(-1)$
 #let quotient(G, H) = $#G\\#H$
@@ -168,7 +195,7 @@
 #let eNXdY(x, y) = autoPow($e$, autoNeg(autoFraction(x, y)))
 // e^(- x^2/y)
 #let eNX2dY(x, y) = eNXdY(autoPow(x, 2), y)
-
+#let Inv(x) = autoPow(x, -1)
 #let NormalDis(x, mu, sigma) = autoMul(
   autoFraction(
     oneContent, autoMul(
@@ -201,6 +228,15 @@
 
 // )
 
+#let quadForm(x, A, y) = autoMul(
+  autoPow(x, $T$),
+  autoMul(autoBrace(A),
+  autoBraceIfAddOrSub(y))
+)
+#let quadFormSym(x, A) = quadForm(x, A, x)
+#let tMul(A) = autoMul(autoPow(A, $T$), A)
+#let mulT(A) = autoMul(A, autoPow(A, $T$))
+
 #let defaultSum = (
   Var: $n$,
   Lower: $0$,
@@ -223,6 +259,9 @@
 #let sumf(var: defaultSum.Var, lower: defaultSum.Lower, upper: defaultSum.Upper) = $sum_(#var = #lower)^(#upper)$
 #let prodf(var: defaultProd.Var, lower: defaultProd.Lower, upper: defaultProd.Upper) = $product_(#var = #lower)^(#upper)$
 #let directSumf(var: defaultDirectSum.Var, lower: defaultDirectSum.Lower, upper: defaultDirectSum.Upper) = $directSum_(#var = #lower)^(#upper)$
+#let sumfBr(var: defaultSum.Var, lower: defaultSum.Lower, upper: defaultSum.Upper, body) = $sum_(#var = #lower)^(#upper) #autoBraceIfAddOrSub(body)$
+#let prodfBr(var: defaultProd.Var, lower: defaultProd.Lower, upper: defaultProd.Upper, body) = $product_(#var = #lower)^(#upper) #autoBraceIfAddOrSub(Body)$
+#let directSumfBr(var: defaultDirectSum.Var, lower: defaultDirectSum.Lower, upper: defaultDirectSum.Upper, body) = $directSum_(#var = #lower)^(#upper) #autoBraceIfAddOrSub(Body)$
 
 
 #let emptyArrow(s, e) = arr(str(s), str(e), $$)
