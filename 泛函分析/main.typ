@@ -167,6 +167,23 @@
         连续函数 $f$ 将紧集映成紧集。特别的，实值连续函数在紧集上的像有界且有最大最小值。
       ]
       #lemma[][
+        连续函数将预紧集映成预紧集
+      ]
+      #proof[
+        设 $B = f(A)$，则：
+        - $f(overline(A)) subset overline(B)$: 显然
+        - 假设 $f(overline(A)) != overline(B)$，则可以取得点 $p in overline(B) - f(overline(A))$. 由定义，可设：
+          $
+            exists p_i in B, p_i -> p
+          $
+          换言之：
+          $
+            exists a_i in overline(A), f(a_i) -> p
+          $
+          然而 $overline(A)$ 是紧集，连续函数在紧集上的像是闭的，因此 $p in f(overline(A))$，矛盾！
+      ]
+      #lemma[][
+        
         紧集上的连续函数一致连续
       ]
       #definition[][
@@ -238,8 +255,276 @@
       #definition[][
         称 $F subset C(M, Y)$ 是点预紧(point-wise pre-compact)的，如果对于任何 $x in M$，$F(x)$ 是 $Y$ 中的预紧集
       ]
-      #theorem[][
-        设 $M$ 是紧的度量空间，$Y$ 是完备的度量空间，则 $F subset C(M, Y)$ 预紧当且仅当 $F$ 点预紧且等度连续
+      #theorem[Arzela-Ascoli][
+        设 $M$ 是紧的度量空间，$Y$ 是度量空间，则 $F subset C(M, Y)$ 预紧当且仅当 $F$ 点预紧且等度连续
       ]
+      #proof[
+        - 假设 $F$ 预紧：取：
+          $
+            funcDef(tau_x, C(X, Y), Y, f, f(x))
+          $
+          则它是连续函数，由连续函数保持预紧性，$F(x)$ 是预紧的。而等度连续的证明与之前类似。
+        - 假设 $F$ 点列紧且等度连续，证明完全有界同前。同时，还要证明 $F$ 的闭包是完备的。设 $f_n$ 是柯西列，注意到 $f_n (x)$ 对于任何 $x$ 都柯西，而 $F(x)$ 是预紧的，因此 $f_n (x)$ 收敛，记极限为 $f(x)$，只需验证：
+          - $f_n -> f$: 任取 $epsilon$，可设 $n, m > N$ 时，$d(f_n, f_m < epsilon)$，进而：
+            $
+              d(f_n (x)) - d(f(x)) = d(f_n (x) - f_m (x)) + d(f_m (x) - f(x)) < epsilon + d(f_m (x) - f(x))
+            $
+            令 $m$ 充分大，上式 $<= 2 epsilon$，证毕
+          - $f in C(X, Y)$：注意到上面的收敛事实上是一致收敛，因此 $f$ 是连续的
+      ]
+      AA 定理的经典应用是在 ODE 中证明 Peano 定理和 Picard 定理，构造欧拉折线并证明欧拉折线满足 AA 定理的条件，进而存在一个收敛子列。类似的想法在 PDE 中也有很多应用。
+  == 赋范空间/Norm Vector Space 
+    === 线性空间
+      我们使用与线性代数相同的定义。这里为了区分清楚，将纯代数意义上的基称为 Hamel Basis。
+      #theorem[][
+        - 设 $X$ 是非零的线性空间，则 $X$ 中存在 Hamel 基
+        - 线性空间中，两个 Hamel 基等势
+      ]
+      #proof[
+        设 $A$ 是 $X$ 中所有线性无关子集构成的集合
+        -  $A$ 非空：显然单个非零向量构成的集合是线性无关的
+        -  $A$ 有上界：显然 $A$ 本身是一个上界
+        -  每个链有最大值：假设 $Z_i$ 是一个增链，则 $union.big_i Z_i$ 是该增链的最大值。只需证明它线性无关，而注意到线性有关只涉及有限个向量，因此这些向量一定被包含在某个 $Z_i$ 中，进而线性无关。
+        因此 $A$ 有极大元 $Gamma$，而极大的线性无关子集当然就是 Hamel 基。
+
+        对于第二个命题，假设 $E, F$ 是两个 Hamel Basis，则对于任意 $f in F$，设：
+        $
+          v = sum_(i in I) lambda_i e_i\
+          E(f) = {i in I | lambda_i != 0}  
+        $ 
+        显然 $E(f) subset E, union.big_(f in F) E(f) subset E$. 同时，显然 $union.big_(f in F) E(f)$ 是一个基，因此当然有 $E = union.big_(f in F) E(f)$。当 $E$ 有限时 $F$ 当然也有限，线性代数知识足以给出结论，而假设两者都无限时有：
+        $
+          abs(E) = abs(union.big_(f in F) E(f)) <= abs(union.big_(f in F) NN) <= abs(F times NN) = abs(F)
+        $
+        同理有 $abs(F) <= abs(E)$，因此 $abs(E) = abs(F)$
+      ]
+      大多数情况下，无穷维空间的 Hamel 基是无法直接找出的。一个特例是多项式空间，${1, x, x^2, ...}$ 就是一个自然的 Hamel 基。注意在 $prodf() RR$，${1_i}$ 并不构成一组基，因为无穷个位置非零的元素不能由有限个线性组合得到。
+    === 赋范空间
+      自然的，我们会想到如何在线性空间上定义距离。事实上，按照直觉应当有：
+      $
+        d(x, y) = d(x - y, 0)
+      $
+      因此只需考虑如何定义 $d(x, 0)$ 就足够了。这样的函数被称为范数。
+      #definition[范数][
+        设 $X$ 是线性空间，称 $n : X -> RR$ 是范数，如果：
+        - $n(x) >= 0, n(x) = 0 <=> x = 0$
+        - $n(lambda x) = |lambda| n(x)$
+        - $n(x + y) <= n(x) + n(y)$
+        往往在给定范数的情况下，用 $norm(-)$ 表示范数。对于带有范数的线性空间，称之为赋范空间。 
+      ]
+      #remark[][
+        范数可以自然的诱导一个度量，即 $d(x, y) = norm(x - y)$. 同时，若一个度量是与线性空间的线性结构相容的，则它也可以诱导一个范数。
+      ]
+      #definition[Banach 空间][
+        称赋范空间 $X$ 是 Banach 空间，如果 $X$ 是完备的。有时也记为 $B-$ 空间。
+      ]
+      #theorem[][
+        任何赋范空间可以完备化到一个 Banach 空间
+      ]
+      #example[][
+        - $C[0, 1], norm(f) = sup norm(f)$ 是完备的度量空间
+        - $C[0, 1], norm(f) = integral_(0)^(1) abs(f) dif t$ 不是完备的，它的完备化是 $L^1[0, 1]$
+        - 取 $directSum_(n = 1)^(+infinity) KK$，$norm(x)_p = (sum_i abs(x_i)^p)^(1/p)$，则对 $p >= 1$ 都是 Banach 空间
+      ]
+      #definition[][
+        假设 $n_1, n_2$ 是 $X$ 上的两个范数，称 $n_1$ 强于 $n_2$，如果存在 $C > 0$ 使得 $n_1 (x) <= C n_2 (x)$ 
+
+        如果还有 $n_2 (x) <= C n_1 (x)$，则称 $n_1, n_2$ 等价
+      ]
+      #theorem[][
+        $n_1$ 强于 $n_2$ 当且仅当所有 $n_2$  范数收敛于零的序列在 $n_1$ 范数下也收敛于零
+      ]
+      #proof[
+        一方面是显然的。另一方面，假设存在一列数使得：
+        $
+          norm(x_n)_1 > n norm(x_n)_2
+        $
+        则取 $Z_n = x_n/(norm(x_n)_1)$，不难发现：
+        $
+          norm(Z_n)_2 -> 0\
+          norm(Z_n)_1 = 1
+        $
+        矛盾！
+      ]
+    === 有限维空间
+      #theorem[][
+        设 $X$ 是有限维线性空间，则 $X$ 上所有范数等价
+      ]
+      #proof[
+        取 $e_i$ 是一组基，先取通常的范数（2-范数），同时再取另外一个范数 $norm(*)_2$，设：
+        $
+          funcDef(f, X, RR, (xi_1, xi_2, ..., xi_i), norm(sum_i xi_i e_i)_2)
+        $
+        计算：
+        $
+          norm(f(xi) - f(eta)) <= norm(sum_i (xi_i - eta_i) e_i)_2 <= sqrt(sum_i norm(xi_i - eta_i)^2 sum_i norm(e_i)_2^2) = C norm(xi - eta)
+        $
+        因此 $f$ 是 Lipschitz 连续的。取单位球 $S = {xi in X | norm(xi) = 1}$，由于连续函数在紧集上有最大值最小值，$f$ 在 $S$ 上有界，换言之，可设：
+        $
+          forall xi in S, A <= f(xi) <= B
+        $
+        同时，可以证明 $A, B > 0$，其中 $B > 0$ 是显然的，$A > 0$ 是因为检查 $f$ 的定义发现 $f$ 在 $S$ 上不可能取零。
+
+        上式事实上就是：
+        $
+          forall xi in X, A <= f(xi)/norm(xi) <= B
+        $
+        然而，事实上 $f(xi) = norm(xi)_2$，因此：
+        $
+          forall xi in X, A <= norm(xi)_2/norm(xi) <= B
+        $
+        证毕
+      ]
+      #corollary[][
+        - 有限维线性空间都是完备的
+        - 任何两个维数相同的有限维线性空间同时是代数/拓扑/度量意义上的同构
+        - 任何线性空间的有限维子空间都是闭的（既然有限维空间是完备的）
+        - 如果 $KK$ 是有界闭的，则 $KK^n$ 是有界闭的
+      ]
+      上面的事实表明，有限维空间总是几乎和 $KK^n$ 相同，这是符合直觉的。
+      #proposition[][
+        设 $X$ 是无穷维线性空间，则 $X$ 上总存在不等价的范数
+      ]
+      #proof[
+        取 $X$ 的一个 Hemel 基 ${e_alpha}$，对于任何 $x in X$，取定 $J(x) subset {e_alpha}$ 是有限集，使得：
+        $
+          x = sum_(alpha in J(x)) lambda_alpha^x e_alpha
+        $
+        定义以下两种范数：
+        $
+          norm(x)_1 = sum_(alpha in J(x)) |lambda_alpha^x|\
+          norm(x)_infinity = max_(alpha in J(x)) |lambda_alpha^x|
+        $
+        可以验证它们都是范数，且 $infinity$ 范数控制 $1$ 范数，但是反之 $1$ 范数不可能控制 $infinity$ 范数。事实上，取 $e_i$ 基中的一列，$x_n = sum_(j = 1)^n 1/n e_j$，将有：
+        $
+          norm(x_n)_infinity = 1/n -> 0\
+          norm(x_n)_1 = 1
+        $
+        因此 $1$ 范数不可能控制 $infinity$ 范数
+      ]
+      #lemma[Risez][
+        设 $X$ 是 NVS，$X_0$ 是闭的非平凡子空间，则对于任意 $epsilon > 0$，可以找到 $y_0 in X suchThat norm(y_0) = 1, dist(y_0, X_0) >= 1 - epsilon$
+      ]
+      #proof[
+        由于 $X_0 in.not X$，设 $Z_0 in X - X_0$，则肯定有：
+        $
+          d := dist(Z_0, X_0) > 0
+        $
+        取比较小的 $eta$，可以找到 $x_0$ 使得：
+        $
+          d <= d(Z_0, x_0) <= d + eta
+        $
+        则考虑向量 $Y_0 := (Z_0 - x_0)/norm(Z_0 - x_0)$，不难发现任给 $x in X$，有：
+        $
+          norm(Y_0 - x) = norm((Z_0 - x_0)/norm(Z_0 - x_0) - x) = norm(Z_0 - x_0 - x norm(Z_0 - x_0))/norm(Z_0 - x_0)\
+          = norm(Z_0 - (x_0 + x norm(Z_0 - x_0)))/norm(Z_0 - x_0)\
+        $
+        注意到 $(x_0 + x norm(Z_0 - x_0)) in X$，因此有：
+        $
+          norm(Z_0 - (x_0 + x norm(Z_0 - x_0)))/norm(Z_0 - x_0) >= d/(d + eta)
+        $
+        显然只要 $eta$ 足够小就有上式 $>= 1 - epsilon$，证毕
+      ]
+      #remark[][
+        上面的引理中，我们只找到了与 $z_0$ 尽可能远的向量，一般而言，最远的向量（恰好垂直）未必是存在的，例如假设取：
+        $
+          X = C([-1, 1]), norm(f) = sup_x norm(f(x))\
+          X_0 = {f in X mid(|) integral_(0)^(1) f = integral_(-1)^(0) f = 0 }
+        $ 
+        取 $g$ 使得：
+        $
+          integral_(-1)^(0) g = -1\
+          integral_(0)^(1) g = 1 
+        $
+        将有：
+        $
+          integral_(0)^(1) g - f = 1 => sup_(x in [0, 1]) (g - f) >= 1\
+          integral_(-1)^(0) g - f = -1 => inf_(x in [-1, 0]) (g - f) <= -1
+        $
+        同时，这些函数都是闭区间上的连续函数，上下确界均可取得。而假设它们严格相等，将会有 $g = -1, forall x in [-1, 0]; g = 1, forall x in [0, 1]$，与连续性是矛盾的。因此一定有：
+        $
+          sup_(x in [-1, 1]) (g - f) > 1\
+        $
+        因此 $dist(g, X_0) >= 1$
+
+        另外，取一串 $g_n$ 逼近 $- 1_[-1, 0] + 1_[0, 1]$，则 $dist(g_n, X_0) arrow.b-> 1$，进而 $dist(g, X_0)$ 恰好为 $1$
+      ]
+      下面的 Riesz 定理是刻画有限维 NVS 的一个重要定理：
+      #theorem[Riesz][
+        设 $X$ 是 NVS，以下说法等价：
+        + $X$ 是有限维的
+        + 单位球 $B = {x in X | norm(x) <= 1}$ 是紧的
+        + 单位球面 $S = {x in X | norm(x) = 1}$ 是紧的
+      ]
+      #proof[
+        - $1 => 2$ 显然
+        - $2 => 3$ 检查列紧性即可
+        - $3 => 1$ 假设 $X$ 是无穷维的，取 $x_0, x_1 in S$，$X_1 = <x_1>$，则由 Riesz lemma 可以找到 $x_2$ 使得 $d(x_1, X_1) >= 1/2$\
+          再取 $X_2 = <x_1, x_2>$，以此类推进行。由于空间不是有限维的，这个操作可以一直进行，从而构造出单位球面上的无穷序列，其中每个元素都与前面的元素距离至少 $1/2$。然而条件表明这个序列应该列紧，至少有一个聚点，这是荒谬的。
+      ]
+    === 商空间与乘积空间
+      代数上，可以在线性空间中对子空间做商得到新的线性空间。事实上，我们可以把范数也延拓到商空间上。
+      #definition[][
+        假设 $X$ 是 NVS，则 $X quo X_0$ 上可以定义函数：
+        $
+          f(x + X_0) = inf_(z in X_0) norm(x - z)
+        $
+        则它是良定义的范数。同时，若 $X$ 是完备的，则 $X quo X_0$ 也是完备的
+      ]
+      #proof[
+        - 容易验证 $f$ 是良定义的
+        - 若 $f(x + X_0) = 0$，则存在一列 $z_i in X_0 -> x$. 由于 $X_0$ 是闭的，当然 $x in X_0$
+        - $norm(lambda (x + X_0)) = norm(lambda x + X_0) = lambda norm(x + X_0)$，容易验证
+        - $norm(x + y + X_0) <= norm(x + z_x + y + z_y) <= norm(x + z_x) + norm(y + z_y)$，再由 $z_x, z_y$ 的任意性可得：
+          $
+            norm(x + y + X_0) <= norm(x + X_0) + norm(y + X_0)
+          $
+        接下来，假设 $X$ 完备，往证 $X quo X_0$ 完备。给定商空间上柯西列 ${alpha_i + X_0}$，我们希望从中选出适当的代表元使得代表元也是柯西的。
+
+        - 取 $n_k$ 使得 $forall n, m >= n_k$ 有：
+          $
+            norm((alpha_m - alpha_n) + X_0) < 1/2^k
+          $
+        - 记 $y_1 = 0$. 由范数定义，存在 $y_2$ 使得：
+          $
+            norm((alpha_(n_1) - alpha_(n_2)) + y_2) < 1
+          $
+          存在 $y_3$ 使得：
+          $
+            norm(((alpha_(n_2) - y_2)  - (alpha_(n_3) - y_3))) < 1/2
+          $
+        - 以此类推，构造出的 $alpha_(n_i) - y_i$ 一定是一个柯西列。由完备性，假设它收敛到 $x^*$，容易验证 $x_(n_k) -> x^*$，而柯西列的子列收敛足以表明柯西列收敛，证毕。
+      ]
+      #theorem[][
+        假设 $X_0, X quo X_0$ 都完备，则 $X$ 也完备
+      ]
+      #proof[
+        略
+      ]
+      接下来，考虑（有限的）乘积空间。线性空间的乘积是非常熟悉的，其上的范数有着多种自然的选择。选取一个自然的范数，可以证明（假设 $X, Y$ 非空），$X, Y$ 完备当且仅当 $X times Y$ 完备。由于本门课程中不会涉及较为复杂的无限乘积空间，因此这里不再详细讨论。
+  == 内积空间
+    #definition[][
+      设 $X$ 是线性空间，假设 $inner(-, -) : X times X -> RR$ 是双线性函数，并且满足：
+      + $inner(x, y) = inner(y, x)$
+      + $inner(x, x) >= 0$
+      + $inner(x, x) = 0 <=> x = 0$
+      则称 $X$ 是（实）内积空间
+
+      类似的，假设 $inner(-, -) : X times X -> CC$ 对第一个变量线性，对第二个共轭线性，并且满足：
+      + $inner(x, y) = overline(inner(y, x))$
+      + ...
+      则称 $X$ 是复内积空间
+    ]
+    #theorem[Cauthy Schwarz][
+      $
+        |inner(x, y)|^2 <= inner(x, x) inner(y, y)
+      $
+    ]
+    #proof[
+      略
+    ]
+    #theorem[][
+      - 内积空间上，$sqrt(inner(x, x)), sqrt(inner(x, y)^2)$ 就是自然的范数和内积定义
+    ]
 
 

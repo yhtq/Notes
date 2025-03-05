@@ -6,6 +6,9 @@
   logo: none,
   withChapterNewPage: true
 )
+#let sumBrN(body) = sumfBr(body, lower: $1$, upper: $n$)
+#let Xs = $autoRListN(X, n)$
+#let xs = $autoRListN(x, n)$
 = 前言
   - 教师：刘力平，智华楼 335，liping\@math.pku.edu.cn
   - 教材：陈家鼎等《数理统计学讲义》
@@ -155,4 +158,134 @@
         M_theta(htheta) = E_theta (htheta - theta)^2
       $
       假设 $htheta$ 是无偏的，则它就是方差。
+    ]
+    #definition[有效][
+      对于 $g(theta)$ 的两个估计 $phi_1, phi_2$，若 $M_theta (phi_1) >= M_theta (phi_2)$，则称 $phi_1$ 不次于 $phi_2$。若等号不恒成立，则称 $phi_1$ 比 $phi_2$ 有效。
+    ]
+    #example[][
+      假设 $sumBrN(lambda_i) = 1$，则 $sumBrN(lambda_i x_i)$ 总是无偏估计。但计算均方误差不难发现，除非 $lambda_i = lambda_j$，否则 $Xbar$ 总比它有效。
+    ]
+    注意通常来说，我们找不到“最好的”估计。例如我们始终使用 $theta_0$ 进行估计，则最好情况下均方误差为零，最坏情况下则可能很大。
+    #definition[（一致）最小方差无偏估计（MVUE）][
+      若 $phi$ 是 $g(theta)$ 的无偏估计，且对于任何无偏估计 $phi'$，有 $M_theta (phi) <= M_theta (phi'), forall theta$，则称 $phi$ 是 $g(theta)$ 的最小方差无偏估计。
+    ]
+    在许多常见情形下，MVUE 是存在的并且可以求出。注意 MVUE 只是均方误差意义上的最佳，不代表在其他意义上最佳。
+    #definition[充分统计量][
+      称 $U := phi(Xs)$ 为充分统计量（sufficient statistic），如果似然函数可表示为：
+      $
+        L = q(phi(xs), theta) dot h(xs)
+      $
+      等价于对于任何可测集 $A$：
+      $
+        P((Xs) in A | U = u_0) " 与" theta "无关"
+      $
+    ]
+    显然 $(Xs)$ 是充分统计量，但通常没有意义。因为充分统计量的目的往往是降低数据的维数和复杂度。
+    #example[][
+      - 对于两点分布，估计 $p$ 时，$Xbar$ 就是一个充分统计量。
+      - 对于指数分布，$Xbar$ 也是一个充分统计量。
+      - 对于正态分布，$Xbar, S_n$ 是一个充分统计量。
+    ]
+    #definition[][
+      假设存在函数 $h(x), S(theta), k, C_j (theta), T_j (x)$，使得随机变量的密度函数形如：
+      $
+        f(x, theta) = S(theta) h(x) exp(sum_(j) C_j (theta) T_j (x))
+      $
+      则称其服从指数族分布。指数分布族包含许多常见分布，包括两点分布，二项分布，指数分布，正态分布，泊松分布等。
+    ]
+    #theorem[][
+      假设 $X$ 服从指数分布族，则 $sumBrN(T_j (x_i)), forall i$ 是一个充分统计量。
+    ]
+    #definition[完全统计量][
+      称 $U = phi(Xs)$ 是 $theta$ 的完全统计量，如果对于任何可测函数 $u$，有：
+      $
+        forall theta, E_theta (u(U)) = 0 -> forall theta, u(U) =^("以概率" 1) 0
+      $
+    ]
+    #example[][
+      - 在两点分布中，$U := sumBrN(x_i) tilde B(n, p)$，如果：
+        $
+          E_p u(U) = 0, forall p
+        $
+        则：
+        $
+          sumBrN(C_n^i p^i (1 - p)^(n - i) u(i) = 0), forall p
+        $
+        前式是关于 $p$ 的多项式，如果它对所有 $p$ 都成立，则它的系数都为零，因此 $u(i) = 0$。
+
+        然而，$(sum_(i = 1^k) x_i, sum_(i = k + 1)^n x_i)$ 并不是完全统计量，取 $u = (sum_(i = 1^k) x_i)/k - (sum_(i = k + 1)^n x_i)/(n - k)$ 就可将期望归零，但显然它不会以概率 $1$ 为零。
+    ]
+    某种意义上，充分性是保留了数据的所有特征，完全性是说没有保留更多的信息（独立性）。
+
+    #theorem[][
+      设参数空间是开集，则指数分布族中 $sumBrN(T_j (x_i)), forall i$ 就是完全统计量。
+    ]
+    #theorem[Blackwell-Lehmann-Scheffe][
+      设 $phi$ 是一个完全充分统计量，$psi(phi)$ 是 $g(theta)$ 的无偏估计，那么 $psi(phi)$ 就是 $g(theta)$ 的 MVUE。同时，在几乎处处相等的意义下，它是唯一的最小方差无偏估计。
+    ]
+    #example[][
+      对于正态变量，样本均值和样本方差就是完全充分统计量。因此，它们是正态分布参数的 MVUE。
+    ]
+    注意无偏估计有时不存在。例如，设 $X tilde B(n, p)$，对于任意的估计 $psi$ 均有：
+    $
+      E_p psi(X) = sumBrN(C_n^i p^i (1 - p)^(n - i) psi(i) )
+    $
+    这是关于 $p$ 的至多 $n$ 次多项式。可见，设 $g$ 不是小于 $n$ 次的多项式，则 $g(p)$ 都不可能存在无偏估计。
+
+    同时，无偏估计可能是完全不合理的，例如设 $X$ 服从泊松分布，样本量为 $1$，$g(theta) = e^(- 2 theta)$，则 $g(theta)$ 的唯一无偏估计为：
+    $
+      (-1)^x
+    $
+    然而 $g$ 是非负的，$-1$ 显然是不合理的估计值。所幸，上面的反例通常不是非常常见，因此在大多数情况下，我们可以找到一个合理的无偏估计。
+    #theorem[Crammer-Rao (C-R)不等式][
+      设 $X$ 的密度函数为 $f(x, theta), theta in (a, b)$（$a, b$ 可能为无穷），$(Xs)$ 是 $X$ 的简单随机样本，$phi$ 是 $g(theta)$ 的无偏估计，则在下列条件下：
+      + $f$ 的支集 $Inv(f)((0, +infinity))$ 与 $theta$ 无关
+      + $g' (theta), partialDer(f, theta)$ 都存在，且：
+        - $
+            integral_()^() partialDer(f, theta) dif x = partialDer(integral_()^() f dif x, theta) = 0 
+          $
+        - $
+            partialDer(
+              integral phi product_i f(x_i, theta) dif bx, theta 
+            ) = 
+            integral phi partialDer(, theta) product_i f(x_i, theta) dif bx
+          $
+      则有：
+      $
+        var(phi(Xs)) >= (g'(theta))^2/(n I(theta))
+      $
+      其中：
+      $
+        I(theta) = E_theta (partialDer(ln f(X, theta), theta))^2
+      $
+      称为 Fisher 信息量。
+    ]
+    #proof[
+      不妨设 $var(phi(Xs)), I(theta)$ 都有限。注意到：
+      $
+        partialDer(space, theta) product_i f(x_i, theta) &= sum_j (product_(i != j) f(x_i, theta) partialDer(f(x_j, theta), theta))\
+        &= 
+      $
+      所以：
+      $
+        g'(theta) &= integral phi sumBrN(partialDer(ln f, theta)) product_i f(x_i, theta) dif bx\
+        &= E_theta (phi sumBrN(partialDer(ln f, theta)) product_i f(x_i, theta))\
+      $
+      而：
+      $
+        E_theta (sumBrN(partialDer(ln f, theta)) product_i f(x_i, theta)) = sumBrN(E_theta (partialDer(ln f, theta) product_i f(x_i, theta)))\
+      $
+      利用柯西不等式：
+      $
+        (g'(theta))^2 &<= E phi E (sumBrN(partialDer(ln f, theta)))\
+        &= var(phi) var(sumBrN(partialDer(ln f, theta)))\
+        &= n var(phi) var(partialDer(ln f, theta))\
+        &= n var(phi) I_theta\
+      $
+      证毕。
+    ]
+    #remark[][
+      - $C - R$ 不等式表明，无偏估计的方差至少也是 $1/n$ 量级，和中心极限定理的结论是一致的。
+      - 若一个估计达到了 $C - R$ 不等式的等号，则其一定为 MVUE。
+      - $C - R$ 不等式的下界未必可以取得。
     ]

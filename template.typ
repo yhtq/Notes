@@ -97,6 +97,7 @@
 #let var = "Var"
 
 #let inner(x, y) = $〈#x, #y〉$
+#let span(..x) = $<#(x.pos().join($, $))>$
 #let HomoCoor = math.vec.with(delim: "[")
 #let autoHomoCoor3 = autoVec3.with(delim: "[")
 #let Det = math.mat.with(delim: "|")
@@ -118,6 +119,7 @@
 #let Isom = math.op("Isom")
 #let diag = math.op("diag")
 #let rank = math.op("rank")
+#let dist = math.op("dist")
 #let approxVar(R) = $tilde(R)$
 
 #let GL = math.op("GL")

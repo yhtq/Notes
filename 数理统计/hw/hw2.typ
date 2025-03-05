@@ -71,3 +71,98 @@ P59 3, 6, 9, $7^*$
       sumfB(ln x_i) < sumfB(ln eta_0) = n ln eta_0
     $
     这就表明条件不能同时成立。
+P60 10 11 12 8\*
+= 10
+  $
+    Xbar = E X = c\
+    overline(X^2) = E X^2 = integral_(c - theta)^(c + theta) 1/(2 theta) x^2 dif x = 1/6 (4 c^2 + (c - theta)^2 + (c + theta)^2) = c^2 + 1/3 theta^2\
+    = Xbar^2 + 1/3 theta^2\
+    theta = plus.minus sqrt(3 (overline(X^2) - 3 Xbar^2))
+  $
+= 11
+  注意到 $X_i - Xbar tilde N(0, (n - 1)/n sigma^2)$，因此：
+  $
+    E (sumBrN((X_i - Xbar)^2)) = sumBrN(E (X_i - Xbar)^2) = sumBrN(((n - 1)/n sigma^2)) = (n - 1) sigma^2
+  $
+  $
+    E ((lambda sumBrN((X_i - Xbar)^2) - sigma^2)^2) &= lambda^2 E (sumBrN((X_i - Xbar)^2))^2 - 2 lambda sigma^2 E (sumBrN((X_i - Xbar)^2) + sigma^4\
+    &= lambda^2 E (sumBrN((X_i - Xbar)^2))^2 - 2 (n - 1) lambda sigma^4 + sigma^4\
+  $
+  其中：
+  $
+    E (sumBrN((X_i - Xbar)^2))^2 &= E (sumBrN((X_i - Xbar)^4) + 2 sum_(i < j) (X_i - Xbar)^2 (X_j - Xbar)^2)\
+    &= sumBrN(E ((X_i - Xbar)^4)) + 2 sum_(i < j) E (X_i - Xbar)^2 (X_j - Xbar)^2\
+    &= sumBrN(3 ((n - 1)/n sigma^2)^2) + 2 sum_(i < j) E (X_i - Xbar)^2 (X_j - Xbar)^2
+  $
+  #let Xip = $X'_i$
+  #let Xjp = $X'_j$
+  为了计算 $E (X_i - Xbar)^2 (X_j - Xbar)^2$，设 $Z = 1/n sum_(k != i, j) (X_k - mu), Xip = X_i - Xbar, Xjp = X_j - Xbar$，则：
+  $
+  Xip tilde N(0, sigma^2)\
+  Xjp tilde N(0, sigma^2)\
+  Z tilde N(0, (n - 2)/n^2 sigma^2)
+  $ 
+  它们相互独立，且：
+  $
+    X_i - Xbar = (n - 1)/n Xip - 1/n Xjp - Z\
+    X_j - Xbar = (n - 1)/n Xjp - 1/n Xip - Z
+  $
+  因此：
+  $
+    E (X_i - Xbar)^2 (X_j - Xbar)^2 &= E ((n - 1)/n Xip - 1/n Xjp - Z)^2 ((n - 1)/n Xjp - 1/n Xip - Z)^2\
+    &= E (-(n-1)/n^2 (Xip^2 + Xjp^2) + (n^2 - 2 n + 2)/n^2 Xip Xjp + Z^2 - (n - 2)/n (Xip + Xjp) Z)^2\
+    &= E (-(n-1)/n^2 (Xip + Xjp)^2 + Xip Xjp + Z^2 - (n - 2)/n (Xip + Xjp) Z)^2\
+    &= (n - 1)^2/n^4 E (Xip + Xjp)^4 + E (Xip Xjp)^2 + E Z^4 + (n - 2)^2/n^2 E (Xip + Xjp)^2 Z^2 \ &- 2 (n - 1)/n^2 E(Xip Xjp (Xip + Xjp)^2)-  2 (n - 1)/n^2 E Z^2 E (Xip + Xjp)^2\
+    &= (n - 1)^2/n^4 E (Xip + Xjp)^4 + E (Xip Xjp)^2 + E Z^4 + (n^2 -6 n + 6)/n^2 E (Xip + Xjp)^2 Z^2 \ &- 4 (n - 1)/n^2 E(Xip^2 Xjp^2)   \
+    &= (n - 1)^2/n^4 (12 sigma^4) + sigma^4 + 3 ((n - 2)/n^2 sigma^2)^2 + (n^2 -6 n + 6)/n^2 dot (n - 2)/n^2 (2 sigma^4) \ &- 4 (n - 1)/n^2 sigma^4\
+    &= (12(n-1)^2 + n^4 + 3 (n - 2)^2 + 2(n-2)(n^2 -6 n + 6) - 4 n^2 (n - 1))/n^4 sigma^4\
+    &= (n^4 - 2 n^3 + 3 n^2)/n^4 sigma^4\
+    &= (n^2 - 2 n + 3)/n^2 sigma^4\
+    // &= (n - 1)^2/n^4 E (Xip^2 + Xjp^2)^2 + (n^2 - 2 n + 2)^2/n^4 E (Xip Xjp)^2 + E Z^4 + (n - 2)^2/n^2 E (Xip + Xjp)^2 Z^2 \ &- 2 (n - 1)/n^2 E Z^2 E (Xip^2 + Xjp^2)\
+    // &= (n - 1)^2/n^4 (3 sigma^4 + 3 sigma^4 + 2 sigma^4) + (n^2 - 2 n + 2)^2/n^4 sigma^4 + 3 ((n - 2)/n^2 sigma^2)^2 + (n - 2)^2/n^2 dot (n - 2)/n^2 (2 sigma^4) \ &- 2 (n - 1)/n^2 dot (n - 2)/n^2 2 sigma^4\
+    // &= (8(n-1)^2 + (n^2 - 2 n + 2)^2 + 3 (n- 2)^2 + 2 (n - 2)^3 - 2 (n - 1) (n - 2))/n^4 sigma^4\
+    // &= (9(n-1)^2  + 3 (n- 2)^2 + 2 (n - 2)^3 - 2 (n - 1) (n - 2))/n^4 sigma^4\
+    // &= (2 n^3 - 2 n^2 + 1)/n^4 sigma^4\
+    // &= (E ((n - 1)/n Xip - 1/n Xjp - Z) ((n - 1)/n Xjp - 1/n Xip - Z))^2 + var((n - 1)/n Xip - 1/n Xjp - Z) ((n - 1)/n Xjp - 1/n Xip - Z))\
+    // &= ((n - 2)/n^2 sigma^2 - (2(n - 1))/n^2 sigma^2)^2 + var((n - 1)/n Xip - 1/n Xjp - Z) ((n - 1)/n Xjp - 1/n Xip - Z)\
+    // &= (1/n sigma^2)^2 + var((n - 1)/n Xip - 1/n Xjp - Z) ((n - 1)/n Xjp - 1/n Xip - Z)\
+    // &= (1/n sigma^2)^2 + 2 (n-1)^2/n^4 2 dot sigma^4 + 2 (n-2)^2/n^4 sigma^4\
+    // &= E ((n - 1)/n Xip - 1/n Xjp - Z)^2 E (((n - 1)/n Xjp - 1/n Xip - Z)^2) \ &+ cov(((n - 1)/n Xip - 1/n Xjp - Z)^2, ((n - 1)/n Xjp - 1/n Xip - Z)^2)\
+    // &= (((n-1)^2/n^2 + 1/n^2 + (n-2)/n^2) sigma^2)^2  + cov(((n - 1)/n Xip - 1/n Xjp - Z), ((n - 1)/n Xjp - 1/n Xip - Z))\
+    // &= ((n - 1)/n sigma^2)^2  + cov(((n - 1)/n Xip - 1/n Xjp - Z)^2, ((n - 1)/n Xjp - 1/n Xip - Z)^2)\
+    // &= ((n - 1)/n sigma^2)^2  + (n - 1)/n^2 (var Xip + var Xjp) + var Z\
+    // &= ((n - 1)/n sigma^2)^2  + (2 n - 2)/n^2 sigma^2 + (n - 2)/n^2 sigma^2\
+    // &= ((n - 1)^2 + 3 n - 4)/n^2 sigma^4\
+    // 
+    // #(12 + 16 - 16)/(16)
+  $
+  综上:
+  $
+    E (sumBrN((X_i - Xbar)^2))^2 &= (3 (n-1)^2/n + (n - 1) (n^2 - 2 n + 3)/n) sigma^4\
+    &= (n-1)/n (3 (n - 1) + n^2 - 2 n + 3) sigma^4\
+    &= (n-1)/n (n^2 + n) sigma^4\
+    &= (n-1)(n + 1) sigma^4\
+  $
+  均方误差为：
+  $
+    (lambda^2 (n-1)(n + 1) - 2 (n - 1)lambda + 1) sigma^4
+  $
+  作为 $lambda$ 的二次函数，极小值点为 $1/(n + 1)$，因此 $lambda$ 越靠近 $1/(n + 1)$，均方误差越小。
+= 12
+  $
+    L = product_i beta^alpha / Gamma(alpha) x_i^(alpha - 1) e^(- beta x_i)\
+    = beta^(n alpha) / Gamma(alpha)^n (product_i x_i)^(alpha - 1) e^(- beta sum_i x_i)
+  $
+  结论是显然的
+= 8
+  设：
+  $
+    L = beta^(n alpha) / Gamma(alpha)^n A^(alpha - 1) e^(- beta B)
+  $
+  其中 $A, B$ 是上述统计量，则：
+  $
+    ln L = n alpha ln beta - n ln Gamma(alpha) + (alpha - 1) ln A - beta B
+  $
+  - 对于 $beta$，无论其他参数如何，当 $beta -> 0, +infinity$ 时上式都 $-> -infinity$，因此一定有最大值点
+  - 对于 $alpha$，无论其他参数如何，当 $alpha -> 0, +infinity$ 时上式也都 $-> -infinity$，因此一定也有最大值点
+  综上，最大似然函数一定有最大值点。
