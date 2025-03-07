@@ -75,7 +75,7 @@
   if checkNeg(y) {
     return [$#x - #(getNegPart(y))$]
   }
-  return [$#x - #autoBrace(y)$]
+  return [$#x - #autoBraceIfAddOrSub(y)$]
 }
 
 #let autoMul(x, y) = {

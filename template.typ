@@ -25,11 +25,11 @@
 #let en-font = "New Computer Modern"
 #let TODO = [#text("TODO", fill: red, font: en-font)]
 #let _der(y, x, times, sign) = {
-  if times == [$1$] {
-    [$(#sign #y) / (#sign #x)$]
+  if checkOne(times) {
+    [$(#sign #autoBraceIfAddOrSub(y)) / (#sign #x)$]
   }
   else {
-    [$(dif^#times #y) / (dif #x^#times)$]
+    [$(#sign^#times #autoBraceIfAddOrSub(y)) / (#sign #x^#times)$]
   }
 }
 #let der(y, x) = _der(y, x, $1$, $dif$)
@@ -233,8 +233,8 @@
 
 #let quadForm(x, A, y) = autoMul(
   autoPow(x, $T$),
-  autoMul(autoBrace(A),
-  autoBraceIfAddOrSub(y))
+  autoMul(A,
+  y)
 )
 #let quadFormSym(x, A) = quadForm(x, A, x)
 #let tMul(A) = autoMul(autoPow(A, $T$), A)
@@ -243,28 +243,62 @@
 #let defaultSum = (
   Var: $n$,
   Lower: $0$,
-  Upper: $+infinity$
-
+  Upper: $+infinity$,
+  Op: $sum$
 )
 #let defaultProd = (
   Var: $n$,
   Lower: $1$,
-  Upper: $+infinity$
-
+  Upper: $+infinity$,
+  Op: $product$
 )
+#let directSum = math.plus.circle
 #let defaultDirectSum = (
   Var: $n$,
   Lower: $0$,
-  Upper: $+infinity$
-
+  Upper: $+infinity$,
+  Op: $directSum$
 )
-#let directSum = math.plus.circle
 #let sumf(var: defaultSum.Var, lower: defaultSum.Lower, upper: defaultSum.Upper) = $sum_(#var = #lower)^(#upper)$
 #let prodf(var: defaultProd.Var, lower: defaultProd.Lower, upper: defaultProd.Upper) = $product_(#var = #lower)^(#upper)$
 #let directSumf(var: defaultDirectSum.Var, lower: defaultDirectSum.Lower, upper: defaultDirectSum.Upper) = $directSum_(#var = #lower)^(#upper)$
-#let sumfBr(var: defaultSum.Var, lower: defaultSum.Lower, upper: defaultSum.Upper, body) = $sum_(#var = #lower)^(#upper) #autoBraceIfAddOrSub(body)$
-#let prodfBr(var: defaultProd.Var, lower: defaultProd.Lower, upper: defaultProd.Upper, body) = $product_(#var = #lower)^(#upper) #autoBraceIfAddOrSub(Body)$
-#let directSumfBr(var: defaultDirectSum.Var, lower: defaultDirectSum.Lower, upper: defaultDirectSum.Upper, body) = $directSum_(#var = #lower)^(#upper) #autoBraceIfAddOrSub(Body)$
+
+#let bigOpBr(config, body) = $#(config.Op)_(#config.Var = #config.Lower)^(#config.Upper) #autoBraceIfAddOrSub(body)$ 
+
+#let sumfBr(config: defaultSum, body) = bigOpBr((Op: $sum$) + config, body)
+#let prodfBr(config: defaultProd, body) = bigOpBr((Op: $product$) + config, body)
+#let directSumfBr(config: defaultDirectSum, body) = bigOpBr((Op: $directSum$) + config, body)
+// #let prodfBr(config, body) = $product_(#config.var = #config.lower)^(#config.upper) #autoBraceIfAddOrSub(Body)$
+// #let directSumfBr(var: defaultDirectSum.Var, lower: defaultDirectSum.Lower, upper: defaultDirectSum.Upper, body) = $directSum_(#var = #lower)^(#upper) #autoBraceIfAddOrSub(Body)$
+
+#let config1iN = (
+  Var: $i$,
+  Lower: $1$,
+  Upper: $n$,
+)
+#let config1iinf = (
+  Var: $i$,
+  Lower: $1$,
+  Upper: $+infinity$,
+)
+#let config0iN = (
+  Var: $i$,
+  Lower: $0$,
+  Upper: $n$,
+)
+#let config0iinf = (
+  Var: $i$,
+  Lower: $0$,
+  Upper: $+infinity$,
+)
+#let sumBrN1(body) = sumfBr(body, config: config1iN)
+#let prodBrN1(body) = prodfBr(body, config: config1iN)
+#let sumBrN0(body) = sumfBr(body, config: config0iN)
+#let prodBrN0(body) = prodfBr(body, config: config0iN)
+#let sumBrN1inf(body) = sumfBr(body, config: config1iinf)
+#let prodBrN1inf(body) = prodfBr(body, config: config1iinf)
+#let sumBrN0inf(body) = sumfBr(body, config: config0iinf)
+#let prodBrN0inf(body) = prodfBr(body, config: config0iinf)
 
 
 #let emptyArrow(s, e) = arr(str(s), str(e), $$)

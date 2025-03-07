@@ -6,7 +6,7 @@
   logo: none,
   withChapterNewPage: true
 )
-#let sumBrN(body) = sumfBr(body, lower: $1$, upper: $n$)
+
 #let Xs = $autoRListN(X, n)$
 #let xs = $autoRListN(x, n)$
 = 前言
@@ -163,7 +163,7 @@
       对于 $g(theta)$ 的两个估计 $phi_1, phi_2$，若 $M_theta (phi_1) >= M_theta (phi_2)$，则称 $phi_1$ 不次于 $phi_2$。若等号不恒成立，则称 $phi_1$ 比 $phi_2$ 有效。
     ]
     #example[][
-      假设 $sumBrN(lambda_i) = 1$，则 $sumBrN(lambda_i x_i)$ 总是无偏估计。但计算均方误差不难发现，除非 $lambda_i = lambda_j$，否则 $Xbar$ 总比它有效。
+      假设 $sumBrN1(lambda_i) = 1$，则 $sumBrN1(lambda_i x_i)$ 总是无偏估计。但计算均方误差不难发现，除非 $lambda_i = lambda_j$，否则 $Xbar$ 总比它有效。
     ]
     注意通常来说，我们找不到“最好的”估计。例如我们始终使用 $theta_0$ 进行估计，则最好情况下均方误差为零，最坏情况下则可能很大。
     #definition[（一致）最小方差无偏估计（MVUE）][
@@ -194,7 +194,7 @@
       则称其服从指数族分布。指数分布族包含许多常见分布，包括两点分布，二项分布，指数分布，正态分布，泊松分布等。
     ]
     #theorem[][
-      假设 $X$ 服从指数分布族，则 $sumBrN(T_j (x_i)), forall i$ 是一个充分统计量。
+      假设 $X$ 服从指数分布族，则 $sumBrN1(T_j (x_i)), forall i$ 是一个充分统计量。
     ]
     #definition[完全统计量][
       称 $U = phi(Xs)$ 是 $theta$ 的完全统计量，如果对于任何可测函数 $u$，有：
@@ -203,13 +203,13 @@
       $
     ]
     #example[][
-      - 在两点分布中，$U := sumBrN(x_i) tilde B(n, p)$，如果：
+      - 在两点分布中，$U := sumBrN1(x_i) tilde B(n, p)$，如果：
         $
           E_p u(U) = 0, forall p
         $
         则：
         $
-          sumBrN(C_n^i p^i (1 - p)^(n - i) u(i) = 0), forall p
+          sumBrN1(C_n^i p^i (1 - p)^(n - i) u(i) = 0), forall p
         $
         前式是关于 $p$ 的多项式，如果它对所有 $p$ 都成立，则它的系数都为零，因此 $u(i) = 0$。
 
@@ -218,7 +218,7 @@
     某种意义上，充分性是保留了数据的所有特征，完全性是说没有保留更多的信息（独立性）。
 
     #theorem[][
-      设参数空间是开集，则指数分布族中 $sumBrN(T_j (x_i)), forall i$ 就是完全统计量。
+      设参数空间是开集，则指数分布族中 $sumBrN1(T_j (x_i)), forall i$ 就是完全统计量。
     ]
     #theorem[Blackwell-Lehmann-Scheffe][
       设 $phi$ 是一个完全充分统计量，$psi(phi)$ 是 $g(theta)$ 的无偏估计，那么 $psi(phi)$ 就是 $g(theta)$ 的 MVUE。同时，在几乎处处相等的意义下，它是唯一的最小方差无偏估计。
@@ -228,7 +228,7 @@
     ]
     注意无偏估计有时不存在。例如，设 $X tilde B(n, p)$，对于任意的估计 $psi$ 均有：
     $
-      E_p psi(X) = sumBrN(C_n^i p^i (1 - p)^(n - i) psi(i) )
+      E_p psi(X) = sumBrN1(C_n^i p^i (1 - p)^(n - i) psi(i) )
     $
     这是关于 $p$ 的至多 $n$ 次多项式。可见，设 $g$ 不是小于 $n$ 次的多项式，则 $g(p)$ 都不可能存在无偏估计。
 
@@ -264,28 +264,93 @@
       不妨设 $var(phi(Xs)), I(theta)$ 都有限。注意到：
       $
         partialDer(space, theta) product_i f(x_i, theta) &= sum_j (product_(i != j) f(x_i, theta) partialDer(f(x_j, theta), theta))\
-        &= 
+        &= sumBrN1(partialDer(ln f, theta)) product_i f(x_i, theta)
       $
       所以：
       $
-        g'(theta) &= integral phi sumBrN(partialDer(ln f, theta)) product_i f(x_i, theta) dif bx\
-        &= E_theta (phi sumBrN(partialDer(ln f, theta)) product_i f(x_i, theta))\
+        g'(theta) &= integral phi sumBrN1(partialDer(ln f, theta)) product_i f(x_i, theta) dif bx\
+        &= E_theta (phi sumBrN1(partialDer(ln f, theta)) )\
       $
       而：
       $
-        E_theta (sumBrN(partialDer(ln f, theta)) product_i f(x_i, theta)) = sumBrN(E_theta (partialDer(ln f, theta) product_i f(x_i, theta)))\
+        E_theta (sumBrN1(partialDer(ln f, theta)) ) = sumBrN1(E_theta (partialDer(ln f, theta) ))\
       $
       利用柯西不等式：
       $
-        (g'(theta))^2 &<= E phi E (sumBrN(partialDer(ln f, theta)))\
-        &= var(phi) var(sumBrN(partialDer(ln f, theta)))\
+        (g'(theta))^2 &<= E phi E (sumBrN1(partialDer(ln f, theta)))\
+        &= var(phi) var(sumBrN1(partialDer(ln f, theta)))\
         &= n var(phi) var(partialDer(ln f, theta))\
         &= n var(phi) I_theta\
       $
       证毕。
     ]
     #remark[][
-      - $C - R$ 不等式表明，无偏估计的方差至少也是 $1/n$ 量级，和中心极限定理的结论是一致的。
-      - 若一个估计达到了 $C - R$ 不等式的等号，则其一定为 MVUE。
-      - $C - R$ 不等式的下界未必可以取得。
+      - C - R 不等式表明，无偏估计的方差至少也是 $1/n$ 量级，和中心极限定理的结论是一致的。
+      - 若一个估计达到了 C - R 不等式的等号，则其一定为 MVUE。
+      - C - R 不等式的下界未必可以取得。
     ]
+    #example[][
+      - 两点分布 $X tilde B(1, p)$，有：
+        $
+          I(p) = E_p (X/p - (1 - X)/(1 - p))^2 = 1/(p(1 - p))
+        $
+        同时，$var(Xbar) = 1/(n I(p))$，说明 $Xbar$ 达到了 C-R 不等式的下界。
+      - 指数分布 $X tilde "Exp"(lambda)$，有：
+        $
+          I(lambda) = E_lambda (1/lambda - X)^2 = 1/lambda^2
+        $
+        同时，$var(Xbar) = 1/n 1/lambda^2$，而 C-R 不等式的右侧为：
+        $
+          (g'(lambda)^2)/(n I(lambda)) = 1/(n lambda^2)
+        $
+        达到了 C-R 不等式的下界。
+      - 正态分布 $X tilde N(mu, sigma^2_0)$，其中方差已知
+        $
+          I(mu) =  E_mu (X - mu)^2/(sigma_0^4) = sigma_0^(-2)
+        $
+        而 $Xbar$ 的方差为 $sigma_0^2/n = 1/(n I(mu))$，也达到了 C-R 不等式的下界。从表达式也可以看出，方差越小，Fisher 信息量越大，也就是每个数据带给我们的信息越多。
+      - 泊松分布中，若估计 $e^(-2lambda)$ ，可以计算得到作为指数分布族的最小方差无偏估计并不能达到 C-R 不等式的下界。
+      - 若 $X tilde U(0, theta)$，之前提过 MLE 为 $max_i X_i$，矩估计为 $2 Xbar$，两者都有不足。令 $hat(theta) = (n + 1)/n max_i X_i$，可以证明它是无偏估计，同时方差以 $O(1/n^2)$ 速度趋向于零，比 C-R 不等式的速度快。这是因为 C-R 不等式依赖于 $X$ 的支撑与 $theta$ 无关，而 $U(0, theta)$ 的支撑明显与 $theta$ 有关。
+    ]
+    C-R 不等式可以推广到多元情形，这里不再赘述。
+
+    从根本上来说，统计量并没有根本上的“最优”标准，大多时候某些标准在某种意义下更好，但在另一种意义下可能就不好了。
+  == 置信区间
+    之前考虑的都是点估计，也就是由数据只得到一个估计的数值。有时，我们要考虑区间估计，也就是找到一个区间，使得目标参数 $theta$ 以相当大的概率落在这个区间内。
+    #definition[置信区间][
+      设 $gamma in (0, 1)$，$phi_1(Xs) <= phi_2(Xs)$ 是两个统计量，$theta$ 是待估计量。称 $[phi_1(Xs), phi_2(Xs)]$ 是 $g(theta)$ 的置信水平为 $gamma$ 的置信区间，若：
+      $
+        P (phi_1(Xs) <= g(theta) <= phi_2(Xs)) >= gamma, forall theta
+      $
+      通常而言，置信区间都是有限的，但有时也可能故意取逻辑上的上下界，此时另一端的值通常称为置信上限/下限。
+
+      注意置信水平严格来说并非*参数落入区间的概率*，而是*在重复抽样的情况下，这个区间包含真实参数的概率*。
+    ]
+    通常来说置信区间没有严格的标准，但明显在相同的数据上，置信区间越窄越好。
+
+    一般的随机变量的置信区间求法可能相当复杂，这里主要介绍求正态分布的置信区间的方法，包括以下几种：
+    - 已知方差，求期望的置信区间\
+      此时，有：
+      $
+        Xbar tilde N(mu, sigma_0^2/n)\
+        eta := (Xbar - mu)/(sqrt(sigma_0^2/n)) tilde N(0, 1)
+      $ 
+      只需查标准正态分布表即可。常用的数据有：
+      $
+        P(abs(eta) <= 2.58) = 0.99\
+        P(abs(eta) <= 1.96) = 0.95\
+        P(abs(eta) <= 1.65) = 0.90\
+      $
+      注意，事实上这里取的都是对称的置信区间。原则上来说，也可以取成不对称的置信区间，不过对于正态分布这种单峰分布，采用对称型的置信区间往往是平均最窄的。
+    - 未知方差，求期望的置信区间。此时不能再采取之前的方法，思路是使用无偏估计 $S^2$ 代替 $sigma^2$，如此得到新的统计量：
+      $
+        T = (Xbar - mu)/(S^2/sqrt(n))
+      $
+      它不再服从正态分布。
+      #theorem[][
+        设 $X_i$ 独立同分布的标准正态，则 $sum_(i=1)^n X_i^2$ 服从 $Gamma(n/2, 1/2)$，或称 $n$ 个自由度的 $chi^2$ 分布，记为 $chi^2_n$。
+        
+        同时，可以得到 $E(chi^2_n) = n$ 且 $chi^2$ 分布具有可加性。
+      ]
+      $chi^2$ 分布从根本上是指 $n$ 个独立同分布的标准正态分布的平方和的分布，刻画的是样本方差的分布。历史上，Fisher 对孟德尔的豌豆实验数据进行了分析，用正态分布作为伯努利分布的近似，发现其方差的分布与 $chi^2$ 分布相比显著偏小。
+    - 未知期望，求方差的置信区间

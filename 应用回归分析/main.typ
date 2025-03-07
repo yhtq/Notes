@@ -394,8 +394,9 @@
     ]
     #corollary[][
       设 $Y tilde N(mu, Sigma), Sigma > 0$，则 $(Y - mu)^T Inv(Sigma) (Y - mu) tilde chi_n^2$
-    ]
+    ]<chi-square-cond>
 = 最小二乘法
+  #let proj(X) = $#X Inv(tMul(#X))#X^T$
   #let RSS = "RSS"
   给定模型：
   $
@@ -416,53 +417,194 @@
   $
   该方程通常被称为正则化方程。线性代数知识可以证明它一定有解，当然解未必唯一。若 $X$ 满秩，则上述方程有唯一解。
 
-  若 $X$ 满秩，则取：
-  $
-    P = X (X^T X)^(-1) X^T
-  $
-  可以验证 $P$ 就是将向量投影到 $X$ 空间的投影算子（显然是幂等/对称的，且秩就是 $X$ 的秩）。令 $hat(Y) = X hat(beta) = P Y, e = Y - hat(Y)$，则残差：
-  $
-    RSS = norm(e)^2 = (Y - P Y)^T (Y - P Y) = norm(Y)^2 - norm(hat(Y))^2
-  $
-  同时，不难发现：
-  $
-    E(hat(beta)) = E((X^T X) X^T Y) = (X^T X) X^T E Y = (X^T X) X^T X beta = beta\
-  $
-  进而，如果假设 $var(epsilon) = sigma^2 I$，则：
-  $
-    var(hat(beta)) = Inv((X^T X)) X^T var(Y) X Inv((X^T X)) = sigma^2 Inv((X^T X))
-  $
-  #theorem[][
-    设 $hat(theta)$ 是最小二乘估计，假设 $theta = X beta, $, $X$ 未必满秩。对于任意 $c in RR^n$，任意线性函数 $A$， $A c$ 是 $c^T theta$ 的无偏估计，则 $var (A c) >= var(c^T theta)$。换言之，$c^T theta$ 是最好的线性无偏估计（best linear unbiased estimator, BLUE）。
-  ]
-  #proof[
-    取 $P$ 是某个线性投影算子，则：
+  == $beta$ 的估计
+    若 $X$ 满秩 $r$，则取：
     $
-      E(hat(theta)) = P E Y = P X beta = X beta = theta
+      P = X (X^T X)^(-1) X^T
+    $<P-def>
+    可以验证 $P$ 就是将向量投影到 $X$ 空间的投影算子（显然是幂等/对称的，且秩就是 $X$ 的秩）。令 $hat(Y) = X hat(beta) = P Y, e = Y - hat(Y)$，则残差：
     $
-    当然 $c^T hat(theta)$ 是无偏的估计，也是线性的估计。
+      RSS = norm(e)^2 = (Y - P Y)^T (Y - P Y) = norm(Y)^2 - norm(hat(Y))^2
+    $
+    同时，不难发现：
+    $
+      E(hat(beta)) = E((X^T X) X^T Y) = (X^T X) X^T E Y = (X^T X) X^T X beta = beta\
+    $
+    进而，如果假设 $var(epsilon) = sigma^2 I$，则：
+    $
+      var(hat(beta)) = Inv((X^T X)) X^T var(Y) X Inv((X^T X)) = sigma^2 Inv((X^T X))
+    $
+    #theorem[][
+      设 $hat(theta)$ 是最小二乘估计，假设 $theta = X beta, $, $X$ 未必满秩。对于任意 $c in RR^n$，任意线性函数 $A$， $A c$ 是 $c^T theta$ 的无偏估计，则 $var (A c) >= var(c^T theta)$。换言之，$c^T theta$ 是最好的线性无偏估计（best linear unbiased estimator, BLUE）。
+    ]
+    #proof[
+      取 $P$ 是某个线性投影算子，则：
+      $
+        E(hat(theta)) = P E Y = P X beta = X beta = theta
+      $
+      当然 $c^T hat(theta)$ 是无偏的估计，也是线性的估计。
 
-    进一步，假设 $d^T Y$ 是一个 $c^T theta$ 的无偏线性估计，有：
+      进一步，假设 $d^T Y$ 是一个 $c^T theta$ 的无偏线性估计，有：
+      $
+        c^T theta = E(d^T Y) = d^T E Y = d^T theta\
+        (c - d)^T X = 0 => P(c - d) = 0 => P c = P d
+      $
+      因此：
+      $
+        var (d^Y) - var(c^T hat(theta))\
+        = sigma^2 d^T d - sigma^2 (P c)^T (P c)\
+        = sigma^2 d^T d - sigma^2 (P d)^T (P d)\
+        = sigma^2 d^T (I - P) d >= 0
+      $
+      若等号成立，则：
+      $
+        (I - P) d = 0, d = P d = P c, d^T Y = c^T P Y = c^T hat(theta)
+      $
+    ]
+    #remark[][
+      上面定理的限定条件很多。例如假如我们不要求无偏，可能能找到方差更小的估计。
+    ]
+  == $epsilon$ 的 RSS 估计
+    接下来，我们考虑对 $epsilon$ 的估计。注意到：
     $
-      c^T theta = E(d^T Y) = d^T E Y = d^T theta\
-      (c - d)^T X = 0 => P(c - d) = 0 => P c = P d
+      epsilon = Y - X beta = Y - P Y = (I - P) Y
     $
-    因此：
+    假设 $epsilon$ 的每个分量是独立同分布的（暂时不假设正态分布），则 $sigma^2 = E(1/n sumBrN1(epsilon_i^2))$，我们自然会考虑 $norm(Y - P Y)^2$ 是否能作为估计值。事实上，可以计算得到：
     $
-      var (d^Y) - var(c^T hat(theta))\
-      = sigma^2 d^T d - sigma^2 (P c)^T (P c)\
-      = sigma^2 d^T d - sigma^2 (P d)^T (P d)\
-      = sigma^2 d^T (I - P) d >= 0
+      E(Y - P Y)^2 = E (quadFormSym(Y, I - P))\
+      = tr((I - P) Sigma) + quadFormSym(X beta, I - P)\
+      = tr((I - P) sigma^2 I)\
+      = sigma^2 rank(I - P)
     $
-    若等号成立，则：
-    $
-      (I - P) d = 0, d = P d = P c, d^T Y = c^T P Y = c^T hat(theta)
-    $
-  ]
-  #remark[][
-    上面定理的限定条件很多。例如假如我们不要求无偏，可能能找到方差更小的估计。
-  ]
+    若设 $r = rank(X)$，最终上式就是 $(n - r) sigma^2$，很自然的：
+    #theorem[][
+      $
+        S_n^2 &:= 1/(n - r) norm(Y - htheta)^2\
+              &= 1/(n - r) sumBrN1((Y_i - htheta_i)^2)\
+              &= 1/(n - r) "RSS"\
+      $
+      就是 $sigma^2$ 的无偏估计。
+    ]
+    一个很重要的话题是，$S_n^2$ 是不是最优的估计值？一般来说可以证明，假设 $epsilon_i$ 的分布满足 $mu_4 = 3 sigma^4$，则 $S_n^2$ 是最优的。
 
+    之后，我们假设 $epsilon$ 是正态的，我们考虑估计量的概率分布：
+    - 显然有 $Y tilde N(X beta, sigma^2 I)$
+    - $hat(beta) = Inv(tMul(X)) X^T Y tilde N(beta, sigma^2 Inv(tMul(X)) X^T)$
+    - 由 @chi-square-cond，有：
+      $
+        quadFormSym(hat(beta) - beta, Inv(sigma^2 Inv(tMul(X)) X^T)) tilde chi_r^2
+      $
+    - 类似的：
+      $
+        ((n - r)S_n^2)/sigma^2 tilde chi_(n - r)^2
+      $
+    #lemma[][
+      $tilde(epsilon) = Y - hat(theta) = (I - P) Y$ 与 $hat(beta) = Inv(tMul(X)) X^T Y$ 相互独立。进而 $hat(beta)$ 与 $S_n^2$ 独立。
+    ]
+    #proof[
+      只需验证协方差为零即可。（注意到 $P$ 有表达@P-def）
+    ]
+  == 极大似然估计
+    另一种经典的估计方法就是极大似然估计：
+    $
+      L(beta, sigma^2) = NormalDisN(Y, X beta, sigma^2 I, n)\
+      ln L = - n/2 ln (w pi) - n/2 ln sigma^2 - 1/(2 sigma^2) norm(Y - X beta)^2
+    $
+    求导得：
+    $
+      partialDer(L, beta) = 1/sigma^2 X^T (Y - X beta) = 0\
+      partialDer(L, sigma^2) = - n/2 1/sigma^2 + 1/(2 sigma^4) norm(Y - X beta)^2 = 0
+    $
+    #definition[Fisher 信息][
+      设有极大似然函数 $L$，则称：
+      $
+        E (partialDerN(L, theta, 2))
+      $
+      为 Fisher 信息。
+    ]
+    在该问题的情形下，Fisher 信息事实上就是：
+    $
+      mat(1/sigma^2 tMul(X), 0;0, n/(2 sigma^4))
+    $
+    可以证明，最大似然函数在 $n -> +infinity$ 的意义上可以达到 C-R bound，因此是一定意义下方差最小的估计。
+  == forward-stagewise regression
+    有些时候，我们会遇到这样的问题：先根据一部分数据得到了估计值：
+    $
+      Y = X beta + epsilon
+    $
+    之后，数据多了一部分，希望找到更好的估计：
+    $
+      Y = X beta + Z delta + epsilon
+    $
+    如果假设 $X$ 的列向量都是正交的，将这些列向量记为 $x_i$，可以计算得：
+    $
+      hat(beta) = Inv(tMul(X))X^T Y\
+      hat(beta)_j = inner(x_j ,Y)/inner(x_j, x_j)
+    $
+    可以发现，$hat(beta)_j$ 其实只和 $x_j$ 有关，我们可以按照下面的方式逐个更新：
+    - 先只考虑 $x_0$，有：
+      $
+        hat(beta)_0 = inner(x_0, Y)/inner(x_0, x_0)\
+        e^1 = Y - x_0 hat(beta)_0
+      $
+    - 再考虑 $x_1$，有：
+      $
+        hat(beta)_1 = inner(x_1, Y)/inner(x_1, x_1) = inner(x_1, Y - x_0 hat(beta)_0)/inner(x_1, x_1) = inner(x_1, e^1)/inner(x_1, x_1)\
+        e^2 = e^1 - hat(beta)_1 x_1
+      $
+    - 该过程可以一直进行，每次只需要关于之前的残差做更新即可
+    该方法称为 forward-stagewise regression。当然，这个方法一次只更新一个向量，当然也可以一次更新多个向量，方法是类似的。
 
-    
+    一般情形下，假设有问题：
+    $
+      Y = (X, Z) vec(beta, gamma) + epsilon := W delta + epsilon
+    $
+    其中 $X, Z$ 分别是 $p, t$ 列满秩。如果之前已经做过只含 $X, beta$ 的估计，有：
+    $
+      hat(beta) = Inv(tMul(X)) X^T Y
+    $
+    同时，新模型的估计应该是：
+    $
+      hat(delta) = Inv(tMul(W)) W^T Y
+    $
+    如果假设 $X, Z$ 的列向量互相正交，就有：
+    $
+      tMul(W) = mat(tMul(X), 0;0, tMul(Z))
+    $
+    立刻可以计算得：
+    $
+      hat(delta) = Inv(tMul(X)) Y, Inv(tMul(Z)) Y)
+    $
+    一般的，设 $P$ 是 $X$ 列空间的投影算子，可以做分解：
+    $
+      Z = (I - P) Z + P Z
+    $
+    其中 $(I - P) Z$ 的列空间与 $X$ 的列空间正交，因此：
+    $
+      X beta + Z gamma = X beta + P Z gamma + (I - P) Z gamma\
+      = X beta + proj(X) Z gamma + (I - P) Z gamma\
+      = X(beta + Inv(tMul(X)) X^T Z gamma) + (I - P) Z gamma
+    $ 
+    令 $alpha := beta + Inv(tMul(X)) X^T Z gamma$，利用上面的结果可以得到：
+    $
+      hat(alpha) = Inv(tMul(X)) X^T Y\
+      hat(gamma) = Inv(tMul((I - P) Z)) Z^T (I - P)^T Y\
+      = Inv(quadFormSym(Z, I - P)) Z^T (I - P)^T Y
+    $
+    根据表达式反推得到 $beta$ 的估计值：
+    $
+      hat(beta) = hat(alpha) - Inv(tMul(X)) X^T Z hat(gamma)\
+      = Inv(tMul(X)) X^T (Y - Z hat(gamma))
+    $
+    类似于先在 $(I - P) Z$ 做回归，再对残差关于 $X$ 做回归。
+
+    如果用 $hat(beta)$ 记小模型的估计值，则大模型的残差方差为：
+    $
+      norm(Y - X hat(alpha) - (I - P) Z hat(gamma))^2 &= norm(Y - X hat(beta))^2 + norm((I - P) Z hat(gamma))^2 -2 inner(Y - X hat(beta), (I - P) Z hat(gamma))\
+      &= norm(Y - X hat(beta))^2 + norm((I - P) Z hat(gamma))^2 -2 inner((I - P) Y, (I - P) Z hat(gamma))\
+      &= norm(Y - X hat(beta))^2 + inner((I - P) Z hat(gamma), (I - P) Z hat(gamma)) -2 inner(Y, (I - P) Z hat(gamma))\
+      &= norm(Y - X hat(beta))^2 + inner(Y, (I - P) Z hat(gamma)) -2 inner(Y, (I - P) Z hat(gamma))\
+      &= norm(Y - X hat(beta))^2 - inner(Y, (I - P) Z hat(gamma))\
+      &= quadFormSym(Y - Z hat(gamma), I - P)
+    $
   
