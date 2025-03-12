@@ -144,6 +144,7 @@
 #let End = math.op("End")
 #let ReT = math.op("Re")
 #let ImT = math.op("Im")
+
 #let ignoreOne(x) = {
   if x == [1] {
     []
@@ -199,6 +200,10 @@
 // e^(- x^2/y)
 #let eNX2dY(x, y) = eNXdY(autoPow(x, 2), y)
 #let Inv(x) = autoPow(x, -1)
+// generalized inverse
+#let gInv(x) = autoPow(x, $-$)
+// Moore-Penrose inverse
+#let MPInv(x) = autoPow(x, $+$)
 #let NormalDis(x, mu, sigma) = autoMul(
   autoFraction(
     oneContent, autoMul(
@@ -227,9 +232,12 @@
   )
 )
 #let ExpDis(x, lambda) = autoMul(lambda, autoPow($e$, autoNeg(autoMul(lambda, x)))) 
-// #let WeibullDis(x, m, eta) = autoMul(
 
-// )
+#let PoissonDis(k, lambda) = autoFraction(
+  autoMul(autoPow(lambda, k),
+  autoPow($e$, autoNeg(lambda))),
+  autoFactorial(k)
+)
 
 #let quadForm(x, A, y) = autoMul(
   autoPow(x, $T$),
@@ -239,6 +247,9 @@
 #let quadFormSym(x, A) = quadForm(x, A, x)
 #let tMul(A) = autoMul(autoPow(A, $T$), A)
 #let mulT(A) = autoMul(A, autoPow(A, $T$))
+
+#let orthogonal = math.op($tack.t$)
+#let orthogonalCom(x) = autoPow(x, orthogonal)
 
 #let defaultSum = (
   Var: $n$,
@@ -319,6 +330,7 @@
 #let Mod = math.op("Mod")
 #let tensorProduct = math.times.circle
 #let generatedBy(body) = $angle.l #body angle.r$
+#let norm2(x) = $norm(#x)^2$
 #let normalSub(H, G) = $#H lt.tri.eq #G$
 #let norS = math.class("relation", math.lt.tri.eq)
 #let semiProd = math.class("relation", math.times.r)

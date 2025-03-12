@@ -21,11 +21,34 @@
 #let checkOne(x) = getBodyArr(x).at(0) == oneContent
 #let checkZero(x) = getBodyArr(x).at(0) == zeroContent
 #let checkNeg(x) = (getBodyArr(x).len() == 2 and getBodyArr(x).at(0) == subContent)
+#let checkNegOne(x) = checkNeg(x) and checkOne(getBodyArr(x).at(1))
+#let checkAttachT(x) = getBodyArr(x).len() == 1 and getBodyArr(x).at(0).has("t")
+#let getAttachT(x) = getBodyArr(x).at(0).at("t")
 #let getNegPart(x) = getBodyArr(x).at(1)
 #let checkAddOrSub(x) = getBodyArr(x).contains(addContent) or getBodyArr(x).contains(subContent)
 
+#let removeAttachT(x) = {
+  if not checkAttachT(x) {
+    return x
+  }
+  let args = getBodyArr(x).at(0).fields()
+  let _ = args.remove("t")
+  let base1 = args.at("base")
+  let _ = args.remove("base")
+  let args = args
+  math.attach(base1, ..args)
+}
 #let autoBrace(x) = {
   if getBodyArr(x).len() != 1 {
+    return [$(#x)$]
+  }
+  else {
+    return x
+  }
+}
+
+#let autoBraceOrAttachT(x) = {
+  if getBodyArr(x).len() != 1 or checkAttachT(x) {
     return [$(#x)$]
   }
   else {
@@ -114,7 +137,14 @@
   if checkOne(y) {
     return x
   }
-  return [$#autoBrace(x) ^ #y$]
+  if checkAttachT(x) {
+    for invs in ($-1$, $T$) {
+      if y == invs and getAttachT(x) == invs.body {
+        return removeAttachT(x)
+      }
+    }
+  }
+  return [$#autoBraceOrAttachT(x) ^ #y$]
 }
 
 #let autoSqrt(x) = {
@@ -136,6 +166,17 @@
   }
   return $det(autoBraceIfAddOrSub(#x))$
 }
+
+#let autoFactorial(x) = {
+  if checkZero(x) {
+    return oneContent
+  }
+  if checkOne(x) {
+    return oneContent
+  }
+  return $autoBrace(#x)!$
+}
+
 // #repr($n - (n - 1)$)
 #let evalSub(x, y) = {
 

@@ -598,7 +598,7 @@
     $
     类似于先在 $(I - P) Z$ 做回归，再对残差关于 $X$ 做回归。
 
-    如果用 $hat(beta)$ 记小模型的估计值，则大模型的残差方差为：
+    如果用 $hat(beta)$ 记小模型的估计值，则大模型的残差为：
     $
       norm(Y - X hat(alpha) - (I - P) Z hat(gamma))^2 &= norm(Y - X hat(beta))^2 + norm((I - P) Z hat(gamma))^2 -2 inner(Y - X hat(beta), (I - P) Z hat(gamma))\
       &= norm(Y - X hat(beta))^2 + norm((I - P) Z hat(gamma))^2 -2 inner((I - P) Y, (I - P) Z hat(gamma))\
@@ -607,4 +607,139 @@
       &= norm(Y - X hat(beta))^2 - inner(Y, (I - P) Z hat(gamma))\
       &= quadFormSym(Y - Z hat(gamma), I - P)
     $
-  
+    以及可以计算方差：
+    $
+      var(hat(delta)) = var(Inv(mat(I, L;0, I)) vec(hat(alpha), hat(gamma)))
+    $
+    而 $alpha, gamma$ 是相互正交的的，其方差为：
+    $
+      var(vec(hat(alpha), hat(gamma))) = sigma^2 mat(Inv(tMul(X)), 0;0, Inv(quadFormSym(Z, I - P)))
+    $
+    因此：
+    $
+      var(hat(delta)) = sigma^2 Inv(A) mat(Inv(tMul(X)), 0;0, Inv(quadFormSym(Z, I - P))) (Inv(A))^T\
+      = sigma^2 mat(Inv(tMul(X)) + L M L^T, -L M; - M^T L, M)
+    $
+    其中 $M = Inv(quadFormSym(Z, I - P)), L = Inv(tMul(X)) X^T Z$
+
+    特别的，假设只加入一个参数 $beta_p$，则由上面的公式有：
+    $
+      hat(beta)_p = quadFormSym(Z, I - P) Z^T (I - P) Y\
+      = quadForm(x_p, I - P, Y)/quadFormSym(x_p, I - P)
+    $
+    而其余的参数：
+    $
+      hat(beta)' = hat(beta) - Inv(tMul(X)) X^T x_p hat(beta)_p\
+    $
+  == 带约束的线性回归
+    #let hb = $hat(beta)$
+    #let hb0 = $hat(beta)_0$
+    有时，我们会在线性回归的基础上添加额外的形如 $A beta = c$ 的线性条件。假设 $A$ 可逆，则可以解出 $beta = Inv(A) c$，再代入回归方程，但这样的操作相对麻烦，与全局情形也不统一。因此，我们直接考虑如下的优化问题：
+    $
+      min norm(Y - X beta)^2, suchThat A beta = c
+    $
+    使用拉格朗日乘子法：
+    $
+      L = norm(Y - X beta)^2 + lambda^T (A beta - c)\
+      partialDer(L, beta) = - 2 X^T (Y - X beta) + A^T lambda = 0\
+      A beta = c
+    $
+    解出：
+    $
+      hat(beta) = Inv(tMul(X)) (X^T Y - 1/2 A lambda) = hat(beta)_0 - 1/2 Inv(tMul(X)) A^T lambda\
+      - 1/2 lambda = Inv(A Inv(tMul(X)) A^T) (A hat(beta)_0 - c)
+    $
+    其中 $hat(beta)_0$ 是不带约束条件的最小二乘估计。从形式上可以看出，它相当于对原有的最小二乘估计做出修正。
+
+    同时，注意到：
+    $
+      norm(Y - X beta)^2 = norm(Y - X hat(beta)_0)^2 + norm(X hat(beta)_0 - X beta)^2
+    $
+    其中：
+    $
+      norm(X hat(beta)_0 - X beta)^2 &= norm(X(hb - hb0))^2 + 2 (hb0 - hb)^T tMul(X) (hb - beta) + norm(X (hb0 - beta))^2\
+      &=  norm(X(hb - hb0))^2 + norm(X (hb0 - beta)) + lambda^T A Inv(tMul(X)) tMul(X)  (hb - beta)\ 
+      &=  norm(X(hb - hb0))^2 + norm(X (hb0 - beta)) + lambda^T A (hb - beta)\ 
+      &=  norm(X(hb - hb0))^2 + norm(X (hb0 - beta)) + lambda^T (c - c)\ 
+      &=  norm(X(hb - hb0))^2 + norm(X (hb0 - beta))\ 
+    $
+    可见，$hb$ 确实是原问题的最优解。同时，也得到：
+    $
+      norm(Y - X hb)^2 = norm(Y - X hb)^2 + norm(X (hb0 - hb))^2
+    $
+  == 不满秩情形的最小二乘
+    #definition[广义逆矩阵][
+      称 $gInv(A)$ 是 $A$ 的广义逆矩阵，如果它满足：
+      $
+        A gInv(A) A = A
+      $
+    ]
+    #lemma[][
+      线性方程 $A X = Y$ （若有解）的解总可以写作：
+      $
+        X = gInv(A) Y 
+      $
+    ]
+    #proof[
+      设 $X_0$ 是解，则：
+      $
+        Y = A X_0 = A gInv(A) A X_0 = A gInv(A) Y
+      $
+      - 一方面，假设 $X = gInv(A) Y$，则：
+        $
+          A X = A gInv(A) Y = A Y
+        $
+      - 另一方面略    
+    ]
+    #definition[][
+      假设 $gInv(A)$ 还满足：
+      - $gInv(A) A gInv(A) = gInv(A)$
+      - $(B gInv(B))^T = B gInv(B)$
+      - $(gInv(B) B)^T = gInv(B) B$
+      则 $gInv(A)$ 是唯一的，称为 Moore-Penrose 逆，记作 $MPInv(A)$，可以证明它是唯一的。
+    ]
+    #example[][
+      - 设 $D$ 是对角阵，则将其所有非零对角元取逆即是 $D$ 的 Moore-Penrose 逆
+      - 假设 $B$ 可以写作：
+        $
+          B = mat(B_11, B_12; B_21, B_22)
+        $
+        其中 $B_11$ 满秩，秩恰为 $B$ 的秩，则令：
+        $
+          V = mat(Inv(B_11), 0;0, 0) 
+        $  
+        计算得：
+        $
+          B V B = mat(B_11, B_12; B_21, B_21 Inv(B_11) B_12) 
+        $
+        考虑 $B$ 的行变换及秩关系可得 $B_21 Inv(B_11) B_12 = B_22$，因此 $V$ 是广义逆。
+    ]
+    假设 $X$ 不满秩，则 $beta$ 仍然存在但不再唯一。此时它仍然满足方程：
+    $
+      tMul(X) beta = X^T Y
+    $
+    往往使用广义逆（注意广义逆不唯一）写作：
+    $
+      hb = gInv(tMul(X)) X^T Y
+    $
+
+    当然，$X$ 不满秩时存在无穷多个 $beta$ 使得 $X beta$ 相等，因此 $beta$ 是不可估计的，但投影 $P$ 仍然是唯一的，$P Y = htheta$ 也是唯一的。
+    #definition[][
+      称 $a^T beta$ 是可估计的，如果存在 $a^T b$ 使得 $b^T Y$ 是 $a^T beta$ 的无偏估计。换言之：
+      $
+        a^T beta = E(b^T Y) = b^T E(Y) = b^T X beta
+      $
+      由 $beta$ 的任意性，有：
+      $
+        a = X^T b
+      $
+      事实上，$a^T beta$ 可估计当且仅当 $a in im X^T$
+    ]
+  == 其他情形
+    假设 $var(epsilon) = sigma^2 V$，可以做如下处理：
+    - $V = K K^T$
+    - $Inv(K) Y = Inv(K) X beta + Inv(K) epsilon$
+    由于 $var(Inv(K) epsilon) = sigma^2 I$，因此可以使用通常的方法估计。这个结果也等价于对 $beta$ 做最大似然估计。
+
+    此外，处理时我们往往会做中心化，也就是将数据各个分量减均值除标准差。这样在计算上会比较稳定，同时也保证不同维度的尺度一致。
+= 假设检验

@@ -515,6 +515,7 @@
       + ...
       则称 $X$ 是复内积空间
     ]
+    下面我们一般采用复内积，因为实内积是复内积的一个特例（共轭等于自身）
     #theorem[Cauthy Schwarz][
       $
         |inner(x, y)|^2 <= inner(x, x) inner(y, y)
@@ -523,8 +524,186 @@
     #proof[
       略
     ]
-    #theorem[][
-      - 内积空间上，$sqrt(inner(x, x)), sqrt(inner(x, y)^2)$ 就是自然的范数和内积定义
+    #corollary[][
+      内积空间上，$sqrt(inner(x, x)), sqrt(inner(x, y)^2)$ 就是自然的范数和内积定义
     ]
+    #lemma[][
+      $
+        norm(x) = sup_(norm(y) <= 1) abs(inner(x, y))
+      $
+    ]
+    #proof[
+      无妨设 $x != 0$，则由 Cauthy-Schwarz 不等式：
+      $
+        abs(inner(x, y)) <= norm(x) norm(y)
+      $
+      因此：
+      $
+        sup_(norm(y) <= 1) abs(inner(x, y)) <= norm(x)
+      $
+      此外，取 $y = x$，则恰有 $norm(x) = abs(inner(x, y))$
+    ]
+    #lemma[平行四边形法则][
+      $
+        norm2(x + y) + norm2(x - y) = 2(norm2(x) + norm2(y))
+      $
+    ]<law-of-parallelogram>
+    #proof[
+      展开计算即可。
+    ]
+    #theorem[][
+      设 $X$ 是赋范空间，则存在内积与其上的范数相容当且仅当范数满足平行四边形法则
+    ]
+    #proof[
+      假设有内积，则 @law-of-parallelogram 给出了平行四边形法则。反之，假设范数满足平行四边形法则，数域为 $CC$ 时定义：
+      $
+        inner(x, y) = 1/4 sum_(k=0)^3 i^(k) norm2(x + i^k y)   
+      $
+      为 $RR$ 时定义：
+      $
+        inner(x, y) = 1/4 (norm2(x + y) - norm2(x - y) )
+      $
+      我们只证明较为复杂的 $CC$ 情形：
+      + $inner(x, x) = 1/4 sum_(k=0)^3 2^(k) norm2(x + i^k x) = 1/4(4 norm2(x) + 2 i norm2(x)^2 - 2 i norm2(x)^2) = norm2(x)$
+      + $overline(inner(y, x)) = overline(1/4 sum_(k=0)^3 i^(k) norm2(y + i^k x)) = 1/4 sum_(k=0)^3 (-i)^(k) norm2((-i)^k y + x)) = inner(x, y)$
+      + 线性性：
+        $
+          inner(x_1 + x_2, y) - inner(x_1, y) - inner(x_2, y) &= 1/4 sum_(k=0)^3 i^k (norm2(x_1 + x_2 + i^k y) - norm2(x_1 + i^k y) - norm2(x_2 + i^k y))\
+          &= 1/4 sum_(k=0)^3 i^k (norm2(x_1 + x_2 + i^k y) - 1/2(norm2(x_1 + x_2 + 2 i^k) + norm2(x_1 - x_2)))\
+          &= 1/4 sum_(k=0)^3 i^k (norm2(x_1 + x_2 + i^k y) + norm2(y) - norm2(y) - 1/2(norm2(x_1 + x_2 + 2 i^k) + norm2(x_1 - x_2)))\
+          &= 1/4 sum_(k=0)^3 i^k (1/2 (norm2(x_1 + x_2 + 2 i^k) + norm2(x_1 + x_2)) - norm2(y) - 1/2(norm2(x_1 + x_2 + 2 i^k) + norm2(x_1 - x_2)))\
+          &= 1/4 sum_(k=0)^3 i^k (1/2 (norm2(x_1 + x_2) - norm2(x_1 - x_2)) - norm2(y)))\
+          &= 0
+        $
+        以及：
+        $
+          inner(i x, y) = 1/4 sum_(k=0)^3 i^k norm2(i x + i^k y) = 1/4 i sum_(k=0)^3 i^(k - 1) norm2(x + i^(k-1) y) = i inner(i x, y)
+        $
+        这些性质结合我们定义的内积的连续性，足以验证内积对于任何复系数都是线性的。
 
+    ]
+    #definition[Hilbert 空间][
+      完备的内积空间称为 Hilbert 空间。任何一个内积空间都可以进行完备化。
+    ]
+    #proof[
+      内积空间完备化的步骤是：
+      - 先对度量空间做完备化
+      - 验证范数可以诱导到完备化空间
+      - 验证完备化空间的范数满足平行四边形法则
+      - 验证完备化空间上的范数诱导内积与原内积一致
+    ]
+    // #let orthogonal = $tack.t$
+    #definition[正交][
+      - 若 $inner(x, y) = 0$，则称 $x, y$ 正交
+      - 设 $M subset X$，则定义 $M$ 的正交补 $orthogonalCom(M)$ 
+    ]
+    #lemma[][
+      - $x orthogonal M => x orthogonal span(M)$
+      - $x orthogonal y_n, y_n -> y => x orthogonal y$
+      - $orthogonalCom(M)$ 一定是闭的线性空间
+      - $y orthogonal z => norm2(y + z) = norm2(y) + norm2(z)$
+    ]
+    #lemma[][
+      设 $X$ 是 Hilbert 空间，$C$ 是闭的凸集，则存在唯一的 $X_0 in C$ 使得：
+      $
+        norm(X_0) = inf_(z in C) norm(Z)
+      $
+    ]
+    #proof[
+      假设 $inf_(z in C) norm(Z) = 0$，由 $C$ 的闭性可得 $0 in C$，因此取 $0$ 即可，否则取一列 $Z_n$ 使得 $norm(Z_n) -> inf_(z in C) norm(Z)$，有：
+      $
+        norm2(Z_n - Z_m) + norm2(Z_n + Z_m) = 2(norm2(Z_n) + norm2(Z_m))\
+        norm2(Z_n - Z_m) + 4 norm2((Z_n + Z_m)/2) = 2(norm2(Z_n) + norm2(Z_m)) >= norm2(Z_n - Z_m) + 4 inf_(z in C) norm(Z)
+      $
+      $n, m$ 充分大时，$norm2(Z_n - Z_m) -> 0$，可知 $Z_n$ 是柯西列，因此存在极限 $Z_0$，当然 $norm(Z_0) = inf_(z in C) norm(Z)$
+
+      再证明唯一性，假设 $Z_1, Z_2$ 都满足该性质，则取上面的序列为 $Z_1, Z_2, Z_1, Z_2, ...$ 显然满足上面的假设，因此收敛，继而 $Z_1 = Z_2$
+    ]
+    #corollary[][
+      设 $X$ 是 Hilbert 空间，$C$ 是闭的凸集，则对任意 $y in X$，存在唯一的 $X_0 in C$ 使得：
+      $
+        norm(X_0 - y) = inf_(Z in C) norm(Z - y) = dist(y, C)
+      $
+    ]
+    #lemma[][
+      设 $X$ 是 Hilbert 空间，$C$ 是闭的凸集，则对任意 $y in X$，$x_0 = argmin_(x in C) norm(x - y)$ 当且仅当：
+      $
+        forall z in C, Re(inner(x_0 - y, y - z)) <= 0
+      $
+    ]
+    #proof[
+      设:
+      $
+        f(t) = norm2(x - ((1 - t) y_0 + y z)), t in [0, 1]
+      $
+      可以计算得：
+      $
+        f(t) - f(x_0) = t(2 Re(inner(x_0 - y, y - z)) + t norm2(y - z)) 
+      $
+      显然 $forall t, f(t) - f(x_0) >= 0 <=> Re(inner(x_0 - y, y - z))$
+      
+      因此，我们证明了假设 $x_0$ 是逼近点，则后面的性质成立。反之，若性质总成立，利用上面的构造和计算也可以证明 $x_0$ 是逼近点
+    ]
+    #theorem[正交分解][
+      设 $M subset X$, $X$ 是 Hilbert 空间，$M$ 是闭子空间，则：
+      $
+        X = M directSum orthogonalCom(M)
+      $
+    ]
+    #proof[
+      对于任何 $x in X$，取 $y$ 是最佳逼近点（唯一），断言 $x - y orthogonal M$. 事实上，任取 $z in C$，考虑：
+      $
+        f(t) = norm2(x - y + t z), t in CC
+      $
+      由最佳逼近性，$f(t)$ 当且仅当 $t = 0$ 时取最小值。同时，有：
+      $
+        norm2(x - y + t z) = norm2(x - y) + 2 Re (overline(t) inner(x - y, 2 z)) + norm2(t) norm2(z)\
+        // = norm2(x - y) + 2 Re t inner(x - y, z) + norm2(t z)
+      $
+      讨论关于 $t$ 的最小值，可得：
+      $
+        inner(x - y, z) = 0
+      $
+      因此 $x = y + (x - y)$
+
+      另外，注意到显然有 $M inter orthogonalCom(M) = 0$，因此是直和。
+
+    ]
+    #corollary[][
+      设 $M$ 是 Hilbert 空间的闭子空间，则：
+      $
+        orthogonalCom(orthogonalCom(M)) = M
+      $
+    ]
+    #remark[][
+      之前的证明本质上只利用平行四边形法则计算了 $norm(Z_n - Z_m)$，其他性质在 Banach 空间中都能得到，因此可以适当放松范数的性质，仍然可以得到相应的结论。
+    ]
+  == 赋范空间和内积空间的基
+    #definition[Schouder 基][
+      设 $X$ 是赋范空间，$E$ 是 $X$ 的至多可数集，若对 $forall x in X$，都存在唯一的 $lambda_alpha$ 使得：
+      $
+        x = sum_(alpha in E) lambda_alpha alpha
+      $（允许无穷和）
+      则称 $E$ 是 Schouder 基
+    ]
+    然而，Schouder 基会遇到无穷求和换序的问题，将容易导致奇怪的事情发生，因此我们往往只有在换序不影响结果时，才会讨论 Schouder 基。
+    #definition[正交族][
+      设 $X$ 是内积空间，$S subset X$
+      - 若 $forall x, y in S, x orthogonal y$，则称 $S$ 是正交族
+      - 若 $S$ 是正交族，且 $forall x in S, norm(x) = 1$，则称 $S$ 是标准正交族
+      - 若 $S$ 是正交族，且 $orthogonalCom(S) = 0$，则称 $S$ 是极大的
+      - 若 $S$ 是正交族，且稠密，则称 $S$ 是完备的
+    ]
+    #lemma[][
+      正交族极大当且仅当完备
+    ]
+    #definition[Hilbert 基][
+      设 $X$ 是 Hilbert 空间，$E$ 是 $X$ 的规范正交族，若 $E$ 是完备/极大的，则称 $E$ 是 Hilbert 基
+    ]
+    #theorem[][
+      Hilbert 基总是存在的
+    ]
+    #proof[
+      利用 Zoun's lemma 即可
+    ]
 
