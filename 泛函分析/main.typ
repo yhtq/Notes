@@ -604,7 +604,7 @@
       - $y orthogonal z => norm2(y + z) = norm2(y) + norm2(z)$
     ]
     #lemma[][
-      设 $X$ 是 Hilbert 空间，$C$ 是闭的凸集，则存在唯一的 $X_0 in C$ 使得：
+      设 $X$ 是 Hilbert 空间，$C$ 是闭的凸集，则存在唯一Re inner(u_0, x)的 $X_0 in C$ 使得：
       $
         norm(X_0) = inf_(z in C) norm(Z)
       $
@@ -688,14 +688,26 @@
     ]
     然而，Schouder 基会遇到无穷求和换序的问题，将容易导致奇怪的事情发生，因此我们往往只有在换序不影响结果时，才会讨论 Schouder 基。
     #definition[正交族][
-      设 $X$ 是内积空间，$S subset X$
+      设 $X$ 是 Hilbert 空间，$S subset X$
       - 若 $forall x, y in S, x orthogonal y$，则称 $S$ 是正交族
       - 若 $S$ 是正交族，且 $forall x in S, norm(x) = 1$，则称 $S$ 是标准正交族
-      - 若 $S$ 是正交族，且 $orthogonalCom(S) = 0$，则称 $S$ 是极大的
-      - 若 $S$ 是正交族，且稠密，则称 $S$ 是完备的
+      - 若 $S$ 是正交族，且 $orthogonalCom(S) = 0$，则称 $S$ 是完备的
+      - 若 $S$ 是正交族，且稠密，则称 $S$ 是极大的
     ]
     #lemma[][
-      正交族极大当且仅当完备
+      Hilbert 空间中，正交族极大当且仅当完备
+    ]
+    #proof[
+      假设正交族极大，则任取 $x in orthogonalCom(S)$ 都有：
+      $
+        x orthogonal overline(span(S)) => x orthogonal x => x = 0
+      $
+
+      反之，假设正交族完备，则任取 $x in X$，令：
+      $
+        x = x_1 + x_2, x_1 in overline(span(S)), x_2 in orthogonalCom(S)
+      $
+      则 $x_2 orthogonal S => x_2 = 0 => x in overline(span(S))$
     ]
     #definition[Hilbert 基][
       设 $X$ 是 Hilbert 空间，$E$ 是 $X$ 的规范正交族，若 $E$ 是完备/极大的，则称 $E$ 是 Hilbert 基

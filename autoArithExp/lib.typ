@@ -22,7 +22,7 @@
 #let checkZero(x) = getBodyArr(x).at(0) == zeroContent
 #let checkNeg(x) = (getBodyArr(x).len() == 2 and getBodyArr(x).at(0) == subContent)
 #let checkNegOne(x) = checkNeg(x) and checkOne(getBodyArr(x).at(1))
-#let checkAttachT(x) = getBodyArr(x).len() == 1 and getBodyArr(x).at(0).has("t")
+#let checkAttachT(x) = getBodyArr(x).len() == 1 and type(getBodyArr(x).at(0)) == content and getBodyArr(x).at(0).has("t")
 #let getAttachT(x) = getBodyArr(x).at(0).at("t")
 #let getNegPart(x) = getBodyArr(x).at(1)
 #let checkAddOrSub(x) = getBodyArr(x).contains(addContent) or getBodyArr(x).contains(subContent)

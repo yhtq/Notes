@@ -323,7 +323,7 @@
     ]
     #theorem[][
       设 $A, B$ 对称，$Y^T A Y$ 和 $Y^T B Y$ 都服从 $chi^2$ 分布，则它们独立当且仅当 $A B = 0$
-    ]
+    ]<chi-square-indep>
     #proof[
       - 一方面，独立的 $chi^2$ 变量的和还是 $chi^2$ 变量，导出 $A + B$ 幂零，因此 $A B = 0$ 是必要条件
       - 另一方面，假设 $A B = 0$，则任取 $RR$ 中可测集 $(-infinity, x)$，有：
@@ -743,3 +743,161 @@
 
     此外，处理时我们往往会做中心化，也就是将数据各个分量减均值除标准差。这样在计算上会比较稳定，同时也保证不同维度的尺度一致。
 = 假设检验
+  #let hsigma = $hat(sigma)$
+  #let hY = $hat(Y)$
+  给定模型 $Y = X beta + epsilon$，其中 $X$ 列满秩，$epsilon$ 服从 $N(0, sigma^2 I)$. 我们有时会关心某个条件是否成立，也即：
+  $
+    H: A beta = C
+  $
+  一种标准的方法是，比较承认假设和不承认时的极大似然估计，计算得：
+  $
+    Lambda = L' / L = (hat(sigma)^2/hat(sigma)_H^2)^(n / 2)
+  $
+  其中：
+  $
+    n hsigma^2 = norm2(Y - P Y)\
+    n hsigma_H^2 = norm2(Y - P_H Y)
+  $
+  因此：
+  $
+    hsigma^2_H / hsigma^2 - 1 = (norm2(Y - P_H Y) - norm2(Y - P Y)) / norm2(Y - P Y) = norm2(P_H Y - P Y) / norm2(Y - P Y) 
+  $
+  #let RSSd = $"RSS"_H - "RSS"$
+  #let BX = $A Inv(tMul(X)) A^T$
+  可以使用上节结论得到：
+  #theorem[][
+    $
+      RSSd = norm2(P_H Y - P Y) = quadFormSym(A hbeta - c, Inv(A Inv(tMul(X)) A^T) )
+    $
+  ]
+  同时，注意到如果 $A beta = c$ 成立，则：
+  $
+    Z := A hat(beta) tilde N(A beta - c, sigma^2 A Inv(tMul(X)) A^T) = N(0, sigma^2 A Inv(tMul(X)) A^T)
+  $
+  进而：
+  $
+    RSSd / sigma^2 tilde chi_(q)^2
+  $
+  然而通常 $sigma$ 是未知的，不能采用该式作为假设检验。同时，即使假设不成立，也有：
+  #theorem[][
+    $
+      E (RSSd) = E quadFormSym(Z, Inv(BX)) \
+      = tr(Inv(BX) var Z) + quadFormSym(A beta - c, Inv(BX))
+    $
+  ]
+  #theorem[][
+    若设：
+    $
+      F := (RSSd / q) / (RSS / (n - p))
+    $
+    当假设成立时，有：
+    $
+      F tilde F_(q, (n - p))
+    $
+  ]
+  #proof[
+    前面证明了：
+    - $1/sigma^2 RSSd / q tilde chi^2_q$
+    - $1/sigma^2 RSSd / (n - p) tilde chi^2_(n - p)$
+    只需证明他们独立即可。注意到：
+    - $RSS = quadFormSym(Y, I - P)$
+    - $RSSd = quadFormSym(Y, P - P_H)$
+    而 $(I - P)(P - P_H) = P - P - P_H + P P_H$，注意到 $P_H$ 是 $P$ 投影的一部分，因此 $P P_H = P_H$，上式等于零，由 @chi-square-indep 即可得证。
+  ]
+  因此，上面的 $F$ 便可作为假设检验问题的统计量。
+  #corollary[][
+    $
+      F = (n - p)/q quadFormSym(Y, P - P_H)/quadFormSym(Y, I - P)
+    $
+  ]
+  #example[][
+    给定模型：
+    $
+      Y = beta_0 + beta_1 x_1 + beta_2 x_2 + ... + beta_(p - 1) x_(p - 1) + epsilon
+    $
+    检验假设 $H : beta_j = c, j > 0$，它也形如 $a^T beta = c$
+
+    若假设：
+    $
+      Inv(tMul(X)) = mat(l, m^T;m, D)
+    $
+    则：
+    $
+      quadFormSym(a, Inv(tMul(X))) = D_(j j)\
+      a^T hbeta = hat(beta)_j\
+      RSSd = (hbeta_j - c)^2 / D_(j j)
+    $
+    因此：
+    $
+      F = (hbeta_j - c)^2/(D_(j j))/(RSS / (n - p)) = (hbeta_j - c)^2/(S^2 d_(j j)) tilde F_(1, n - p) = t^2_(n - p)
+    $
+
+    一般的，对于任意形如 $a^T beta = c$ 的假设，可以得到：
+    $
+      F = 1/sigma^2 (a^T hbeta - c)^2 / (a^T Inv(tMul(X)) a) tilde F_(1, n - p)
+    $
+
+    注意大到，此时有：
+    $
+      a^T hbeta tilde N(0, sigma^2 a^T Inv(tMul(X)) a)
+    $
+    而 $S^2 orthogonal hbeta$，因此：
+    $
+      (a^T hbeta - c) / sqrt(sigma^2 a^T Inv(tMul(X)) a) tilde N(0, 1)
+    $ 
+    进而：
+    $
+      U := (a^T hbeta - c) / sqrt(S^2 a^T Inv(tMul(X)) a) tilde t_(n - p)
+    $
+  ]
+  #example[][
+    最简单的情形，假设：
+    $
+      Y = beta_0 + beta_1 x + epsilon \
+      H: beta_1 = c
+    $
+    则：
+    $
+      hbeta_0 = overline(Y) - hbeta_1 Xbar\
+      hbeta_1 = (sumBrN1((Y_i - overline(Y))(X_i - Xbar)))/(sumBrN1((X_i - Xbar)^2))
+    $
+    可以计算得：
+    $
+      F = (hbeta_1 - c)^2/(S^2/(sumBrN1((X_i - Xbar)^2))) tilde F_(1, n - 2)
+    $
+    以及：
+    $
+      (n - 2)S^2 = sumBrN1(Y_i - overline(Y)) - hbeta_1 sumBrN1((X_i - Xbar)^2) = sumBrN1(Y_i - overline(Y))^2 - sumBrN1(hat(Y)_i - overline(Y))
+    $
+    同时：
+    $
+      (n - 2) S^2 = sumBrN1((Y_i - hat(Y)_i)^2)
+    $
+    因此还可以得到等式：
+    $
+      sumBrN1(Y_i - overline(Y))^2 = sumBrN1((Y_i - hat(Y)_i)^2) + sumBrN1(hat(Y)_i - overline(Y))
+    $
+    往往记：
+    $
+      r^2 = (sumBrN1((hat(Y)_i - overline(Y))^2))/(sumBrN1((Y_i - overline(Y))^2)) = (hbeta_1^2 sumBrN1((x_i - Xbar)))/(sumBrN1((Y_i - overline(Y))^2)) = sumBrN1((Y_i - overline(Y))(X_i - Xbar))^2/(sumBrN1((Y_i - overline(Y))^2) sumBrN1((X_i - Xbar)^2))
+    $
+    就有：
+    $
+      RSS = (1 - r^2) sumBrN1((Y_i - overline(Y))^2)
+    $
+    显然 $r^2 = 1$ 时，$RSS = 0$，表明模型完全拟合。此外，如果假设就是 $beta_1 = 0$ 可以计算得：
+    $
+      F = (n - 2) r^2 / (1 - r^2)
+    $
+    说明 $r$ 可以判断 $X, Y$ 的线性相关性。
+    // $
+    //   sumBrN1((Y_i - hat(Y)_i)(hat(Y_i) - overline(Y))) = sumBrN1((Y_i - overline(Y)) hat(Y)_i) - n overline(Y)^2
+    // $
+  ]
+  #definition[][
+    定义：
+    $
+      R^2 = (sumBrN1((hat(Y)_i - overline(Y))^2))/(sumBrN1((Y_i - overline(Y))^2))
+    $
+    相当于预测值的方差占原始方差的比例，也是真实值 $Y$ 与预测值 $hat(Y)$ 的相关系数的平方。
+  ]

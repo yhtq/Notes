@@ -41,9 +41,9 @@
 #let autoVecN(a, n, delim: "(" ) = $vec(#a _1, #a _2,  dots.v, #a _#n, delim: delim)$
 #let autoVecNF(f, n, delim: "(" ) = $vec(#(f(1)), #(f(2)),  dots.v, #(f(n)), delim: delim)$
 #let autoRListNF(f, n) = $#(f(1)), #(f(2)),  dots, #(f(n))$
-#let autoRVecNF(f, n ) = $(autoRListNF(f, n))$
+#let autoRVecNF(f, n ) = $(autoRListNF(#f, #n))$
 #let autoRListN(a, n) = $#a _1, #a _2,  dots, #a _#n$
-#let autoRVecN(a, n) = $(autoRListN(a, n))$
+#let autoRVecN(a, n) = $(autoRListN(#a, #n))$
 #let autoMat3(delim: "(", ..var) = {
   let varList = var.pos()
   let row(n) = varList.map(v => $#v _#n$)
@@ -87,6 +87,7 @@
 #let balpha = $bold(alpha)$
 #let bgamma = $bold(gamma)$
 #let htheta = $hat(theta)$
+#let hbeta = $hat(beta)$
 #let by = $bold(y)$
 #let bx = $bold(x)$
 #let bu = $bold(u)$
@@ -212,6 +213,12 @@
   ),
   eNX2dY(autoSub(x, mu), autoMul(2, autoPow(sigma, 2)))
 )
+// $checkAttachT(sigma)$
+// #(type(repr(getBodyArr(math.sigma).at(0))) == str)
+// $eNX2dY(x, 2 )$
+// #repr(getBodyArr($e$).at(0))
+// $NormalDis(x, mu, sigma)$
+// #getBodyArr($e^(-1/2 (x - mu)^2/sigma^2)$)
 #let NormalDisN(x, mu, sigma, n) = autoMul(
   autoPow($2 pi$, autoNeg(autoFraction(n, 2))),
   autoMul(autoPow(autoDet(sigma), $- 1/2$),
