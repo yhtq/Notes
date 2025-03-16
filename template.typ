@@ -94,6 +94,10 @@
 #let bv = $bold(v)$
 #let xbar = $overline(x)$
 #let Xbar = $overline(X)$
+#let Ybar = $overline(Y)$
+#let ybar = $overline(y)$
+#let zbar = $overline(z)$
+#let Zbar = $overline(Z)$
 #let cov = "Cov"
 #let var = "Var"
 
