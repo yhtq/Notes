@@ -505,5 +505,166 @@
       + 选取 $a$ 略小于 $X_(1)$，$b$ 略大于 $X_(n)$，将 $[a, b]$ 分成 $m$ 个左开右闭（只是习惯）的区间，其内的密度函数用样本在其中的频率估计
       可以证明直方图一定条件下是相合的。它很简单，易于理解。
 
+      更加改进的方法是核估计法。使用核估计法得到的的结果有更好的数学性质，例如连续。
+      #definition[核估计][
+        - 若 $K$ 非负且 $integral_(-infinity)^(infinity) K(x) dif x = 1$，则称 $K$ 为核函数。
+        - 对于任何一个核函数 $K$ 以及窗宽 $h$，称：
+          $
+            hat(f)_n (x) = 1/(n h) sumBrN1(K((x - X_i)/h))
+          $
+          类似于数据在 $K$ 意义上的加权平均。对于通常的核函数，数据离 $x$ 越近数据贡献越大。窗宽越小，说明越重视靠近 $x$ 的数据，核估计波动较大。通常数据量小时窗宽取得较大，数据量大时窗宽取得较小。
+      ]
+      通常，$K$ 选取关于原点对称的单峰函数，常用的包括：
+      - $K_0 (x) = 1/2 1_([-1, 1])$\
+        注意到此时有：
+        $
+          f_n (x) = 1/(2 h) (F_n (x + h) - F_n (x - h))
+        $
+        其中 $F_n$ 是经验分布函数。这被称为 Rosenblatt 估计，是最早的核估计。
+      - $K_1 (x) = NormalDis(x, 0, 1)$
+      - $K_2 (x) = 1/(pi (1 + x^2))$
+      显然核函数连续时，核估计也连续。同时在一定条件下，可以证明核估计是强相合的。关于窗宽的选择，人们也已经开发了许多成熟的方法。
+      #remark[][
+        上面这些估计都是非参数估计，很难达到参数估计的 $O(n^(-1/2))$ 收敛速度
+      ]
+= 假设检验
+  == 提出问题
+    假设检验是统计学的重要问题。往往，我们结合实际情况提出一个假设（Hyphothesis）$H_0$，往往称为*零假设* /Null hypothesis），其反面称为*备择假设*（Alternative）然后根据数据来判断这个假设是否成立。
+    #example[][
+      某人声称可以判断不透明盒子中硬币正反面，做试验 $n$ 次，猜对 $m$ 次，能否认为他确实有这个能力？这就是要检验零假设 $H_0 : p = 1/2$（也就是没有这个能力）
+    ]
+    #example[][
+      用仪器间接测量温度 $n$ 次，若已知真值，能否认为仪器准确？这就是要检验零假设 $H_0 : E X = mu_0$（也就是仪器准确）
+    ]
+    #example[独立性检验][
+      研究抽烟与慢性支气管炎的关系，已知 $X, Y$ 的联合频次，检验 $X, Y$ 是否独立。
+    ]
+    #example[][
+      给定一组数据，如何判断它是否服从某一个给定的分布？
+    ]
+    解决这类问题的方法是，找到从样本空间到 $[0, 1]$ 的可测函数 $phi$，对于数据 $X$，我们以概率 $phi(X)$ 拒绝 $H_0$，以概率 $1 - phi(X)$ 接受 $H_0$。有时，$phi$ 只取 $0, 1$，此时将 $S_1 := Inv(phi) (0)$ 称为接受域，$S_2 := Inv(phi) (1)$ 称为拒绝域。 
+
+    $phi$ 不只取 $0, 1$ 时称为随机化检验法。理论上来讲，随机化检验法可能有更好的最优性，但实践中由于相同数据下可能有不同结果，因此会产生其它问题。
+
+    通常，我们称：
+    - $H_0$ 成立，但被拒绝为*第I类错误*（Type I error），以真为假
+    - $H_0$ 不成立，但被接受为*第II类错误*（Type II error），以假为真
+    通常而言，I 类错误概率低和 II 类错误概率低是矛盾的，因此我们需要权衡这两者。历史上，人们通常采用以下方法：给定检验水平 $alpha$，对于所有第 I 类错误概率小于 $alpha$ 的检验，找到第 II 类错误概率最小的检验。
+    #definition[][
+      称：
+      $
+        beta_phi (theta) = E_theta phi(X)
+      $
+      为检验法的功效函数。称 $L_phi (theta) = 1 - beta_phi (theta)$ 为检验法的操作函数。显然（在假设成立时） $beta$ 就是 I 类错误的概率，（假设不成立时）$L$ 就是 II 类错误的概率。
+    ]
+    #definition[][
+      称 $phi$ 是水平为 $alpha$ 的检验法，如果 $beta_phi (theta) <= alpha, forall theta in Theta_0$. 称 $phi$ 是水平为 $alpha$ 的一致最大功效检验法（UMP），如果其检验水平为 $alpha$，且在所有检验水平为 $alpha$ 的检验法中，其功效函数在 $Theta - Theta_0$ 中一致最大。
+    ]
+    很多时候，UMP 检验并不存在。因此我们稍微放松一些：
+    #definition[][
+      称 $phi$ 是水平 $alpha$ 的无偏检验，如果：
+      $
+        beta_phi (theta) >= alpha, forall theta in Theta - Theta_0
+      $
+      也就是：
+      - 若 $H_0$ 成立，拒绝的概率不超过 $alpha$
+      - 若 $H_0$ 不成立，拒绝的概率不小于 $alpha$
+    ]
+    #definition[一致最优无偏检验（UMPU）][
+      称 $phi$ 是水平为 $alpha$ 的一致最优无偏检验，如果它是水平为 $alpha$ 的无偏检验，且对于任何水平为 $alpha$ 的无偏检验 $phi'$，其功效函数在 $Theta - Theta_0$ 中一致最大。
+    ]
+    常见情况下，UMPU 往往是存在的。
+  == N-P 引理及似然比检验法
+    本节，我们处理参数空间只包含两点 $Theta = {theta_1, theta_2}$ 的情况，其中 $Theta_0 = {theta_1}$，$H_0 : theta = theta_1$. 不失一般性，假设两种参数下密度函数不恒等，则两种似然函数为：
+    $
+      L(x, theta) = prodBrN1(f(x_i, theta))
+    $
+    #definition[似然比][
+      称：
+      $
+        lambda(x) = L(x, theta_2)/L(x, theta_1)
+      $
+      它是一个统计量。
+    ]
+    直观上，如果似然比大，说明参数更有可能取 $theta_2$，因此我们可以拒绝 $H_0$。反之，如果似然比小，说明参数更有可能取 $theta_1$，因此我们接受 $H_0$。
+    #theorem[Neyman-Pearson (N-P)引理][
+      给定 $alpha in (0, 1)$，设：
+      $
+        W_0 := {x | lambda(x) > lambda_0}
+      $
+      取检验函数：
+      $
+        phi_0 (x) = 1_(W_0) (x)
+      $
+      其中 $lambda_0$ 满足 $integral_W_0 L(x, theta_1) dif x = E_(theta_1) phi_0 (x) = beta_(phi_0) (theta_1) = P(x in W_0) = alpha$，则对任何水平不超过 $alpha$ 的检验函数 $phi$，有：
+      $
+        beta_phi (theta_2) <= beta_(phi_0) (theta_2) 
+      $
+    ]<N-P-lemma>
+    #proof[
+      任取 $phi$ 是检验水平不超过 $alpha$ 的检验。
+      - 如果 $lambda(x) > lambda_0$，则有 $phi_0 (x) = 1$，因此 $phi_0 (x) >= phi(x)$
+      - 反之，总有 $phi_0 (x) <= phi(x)$
+      因此：
+      $
+        ((L(x, theta_2)/L(x, theta_1)) - lambda_0) (phi_0 (x) - phi(x)) >= 0\
+        L(x, theta_2) (phi_0 (x) - phi(x)) >= lambda_0 L(x, theta_1) (phi_0 (x) - phi(x))
+      $<ineq-N-P>
+      继而：
+      $
+        beta_(phi_0) (theta_2) - beta_phi (theta_2) = E_(theta_2) (phi_0 (x) - phi(x)) = integral_()^() L(x, theta_2) (phi_0 (x) - phi(x)) dif x \
+        >= lambda_0 integral_()^() L(x, theta_1) (phi_0 (x) - phi(x)) dif x = lambda_0 (beta_(phi_0) (theta_1) - beta_phi (theta_1)) >= 0
+      $<int-N-P>
+    ]
+    #remark[][
+      该引理表明，只要 $lambda_0$ 存在，似然比检验法就是 UMP，但有时 $lambda_0$ 可能不存在，例如：
+      $
+        f(x, theta_1) = cases(
+          1/3 quad x in [0, 1],
+          2/3 quad x in (1, 2]
+        )\
+        f(x, theta_2) = 1 - f(x, theta_1)
+      $
+      可计算得：
+      $
+        lambda(x) = cases(
+          2 quad x in [0, 1],
+          1/2 quad x in (1, 2]
+        )
+      $
+      此时，功效函数是阶梯的，当且仅当 $alpha = 1/3$ 时满足 N-P 引理的 $lambda_0$ 存在。如果允许使用随机化检验法，使用相应的 N-P 引理可以在此种情形下找到 UMP 检验法。
+    ]
+    #example[][
+      扔 10 次硬币，$H_0 : p = 1/2, H_1 : p = 3/4$，求检验水平为 $0.05$ 的检验法：
+
+      首先，@N-P-lemma 中我们要求的是 $lambda(x) > lambda_0$，但熟知似然函数是 $X := sumBrN1(X_i)$ 的函数，且 $X$ 越大似然比越大，因此可以将条件等价为 $X > C$. 当 $H_0$ 成立时，可以计算得：
+      $
+        P(X >= 9) approx 0.0107\
+        P(X >= 8) approx 0.0547
+      $
+      因此不存在一个 $C$ 使得 $X > C$ 的概率恰为 $alpha$，当然可以采用随机化检验得到一个 UMP 检验法。
+    ]
+    #theorem[][
+      若密度函数的支撑与 $theta$ 无关，$lambda(x)$ 在 $theta = theta_1$ 是分布函数连续，则 @N-P-lemma 中的 $lambda_0$ 存在，且（在密度函数的支集上几乎处处相等的意义下）唯一的 UMP 检验。
+    ]
+    #proof[
+      记 $S$ 是密度函数的支集，注意到 $lambda_0$ 的条件是：
+      $
+        P_(theta_1) (lambda(x) <= lambda_0) = 1 - alpha
+      $
+      由 $lambda$ 的连续性，当然能取得（不需要唯一）。
+
+      记 $D_0 = {x | lambda(x) = lambda_0} inter S$，有：
+      $
+        P_(theta_1) (X in D_0) = 0 = integral_(D_0)^() L(x, theta_1) dif x 
+      $
+      因此 $D_0$ 是零测集。假设存在水平不超过 $alpha$ 的 UMP 检验法 $phi$，利用 UMP 定义可得@int-N-P 中不等号全部取等，因此@ineq-N-P 不取等的部分零测。事实上，其不取等的部分恰为：
+      $
+        S inter {x | phi_0 (x) != phi(x)}
+      $
+      因此结论成立。
+    ]
+
+
 
     

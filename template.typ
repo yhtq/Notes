@@ -98,6 +98,7 @@
 #let ybar = $overline(y)$
 #let zbar = $overline(z)$
 #let Zbar = $overline(Z)$
+#let duelSpace(X) = $#X^*$
 #let cov = "Cov"
 #let var = "Var"
 
@@ -764,3 +765,12 @@
   body
 }
 #let prop = sym.prop
+
+#let calcSquareSum(xs) = xs.map(x => x * x).sum()
+#let calcMean(xs) = xs.sum() / xs.len()
+#let calcSampleVariance(xs) = {
+  let mean = calcMean(xs)
+  let n = xs.len()
+  let sum = xs.map(x => (x - mean) * (x - mean)).sum()
+  sum / (n - 1)
+}

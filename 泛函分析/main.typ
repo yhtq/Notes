@@ -515,6 +515,9 @@
       + ...
       则称 $X$ 是复内积空间
     ]
+    #definition[同构][
+      设 $X_1, X_2$ 是两个内积空间，称 $sigma: X_1 -> X_2$ 是内积空间的同构，如果它是保持内积的线性同构
+    ]
     下面我们一般采用复内积，因为实内积是复内积的一个特例（共轭等于自身）
     #theorem[Cauthy Schwarz][
       $
@@ -691,11 +694,11 @@
       设 $X$ 是 Hilbert 空间，$S subset X$
       - 若 $forall x, y in S, x orthogonal y$，则称 $S$ 是正交族
       - 若 $S$ 是正交族，且 $forall x in S, norm(x) = 1$，则称 $S$ 是标准正交族
-      - 若 $S$ 是正交族，且 $orthogonalCom(S) = 0$，则称 $S$ 是完备的
-      - 若 $S$ 是正交族，且稠密，则称 $S$ 是极大的
+      - 若 $S$ 满足 $orthogonalCom(S) = 0$，则称 $S$ 是完备的
+      - 若 $S$ 的张成空间稠密，则称 $S$ 是极大的
     ]
     #lemma[][
-      Hilbert 空间中，正交族极大当且仅当完备
+      Hilbert 空间中，一族函数极大当且仅当完备
     ]
     #proof[
       假设正交族极大，则任取 $x in orthogonalCom(S)$ 都有：
@@ -718,4 +721,193 @@
     #proof[
       利用 Zoun's lemma 即可
     ]
+    #lemma[Bessel 不等式][
+      设 $X$ 是内积空间，$S$ 是正交族，则任给 $x in X$ 有：
+      $
+        sum_(e in S) norm2(inner(x, e)) <= norm2(x)
+      $
+      （注意这里可能出现不可数求和，这里不可数求和的定义是所有有限求和的上确界）
+    ]<Bessel-inequality>
+    #proof[
+      设 $S' subset S$ 是有限集，则：
+      $
+        norm2(x - sum_(e in S') inner(x, e) e) = norm2(x) - sum_(e in S') norm2(inner(x, e)) >= 0
+      $
+      由无穷求和的定义结论成立。
+    ]
+    #corollary[][
+      设 $X$ 是内积空间，$S$ 是正交族，则：
+      $
+        Omega_n = {e in S | norm2(inner(x, e)) >= 1/n}
+      $
+      是有限集，进而 
+      $
+      Omega = union_n Omega_n = {e in S | inner(x, e) != 0}
+      $
+      至多可数。因此，上面引理中的不可数求和也可以换成至多可数求和。
+    ]
+    #corollary[][
+      设 $X$ 是 Hilbert 空间，$S$ 是正交族，则
+      $
+        sum_(e in S) inner(x, e) e
+      $
+      收敛，且在换序下保持不变，且：
+      $
+        norm2(x - sum_(e in S) inner(x, e) e) = norm2(x) - sum_(e in S) norm2(inner(x, e))
+      $
+    ]<cor-bessel>
+    #proof[
+      事实上，@Bessel-inequality 说明了 $sum_(e in S) inner(x, e) e$ "绝对收敛"（仿照 $RR$ 时情形，细节略去），因此收敛且经过在换序下不变。而第二个等式在任何有限子集上成立，取极限即可。
+    ]
+    #theorem[][
+      设 $X$ 是 Hilbert 空间，$S$ 是正交族，则以下说法等价：
+      -  $S$ 是 Hilbert 基
+      - 
+        $
+          forall x in X, x = sum_(e in S) inner(x, e) e
+        $
+      - Parseval 等式 $norm2(x) = sum_(e in S) norm2(inner(x, e))$ 成立
+    ]
+    #proof[
+      - $1 => 2$
+        $
+          x - sum_(e in S) inner(x, e) e orthogonal S => x - sum_(e in S) inner(x, e) e = 0
+        $
+      - $2 => 3$: @cor-bessel
+      - $3 => 1$，假设 $y in orthogonalCom(S)$，则 Parseval 等式给出：
+        $
+          norm2(y) = sum_(e in S) norm2(inner(y, e)) = 0 => y = 0
+        $
+        进而 $S$ 完备
+    ]
+    #example[][
+      - $l^2$ 空间中，$S = {e_j}$ 就是 Hilbert 基
+      - $L^2 [0, 2pi]$ 中，$K= CC$，$S = {eiB(n theta)/norm(eiB(n theta)) | n in ZZ}$，或者 $K = RR$，$S = {(sin n theta)/norm(sin n theta), (cos n theta)/norm(cos n theta) | n in NN}$
+      - $L^2 [-1, 1]$ 中，$K = RR$，考虑 $f_n (x) = x^n, n >= 0$，则 ${f_n}$ 不是正交的，但是是完备的，利用正交化过程即可得到 Hilbert 基。事实上，可以计算出一个显式结果：
+        $
+          e_n = sqrt(n + 1/2)/(2^n n!) derN(((x^2 - 1)^n), x, n)
+        $
+        这些多项式称为 Legendre 多项式
+      - $L^ [0, +infinity), K = RR, f_n = x^n e^(-x)$，可以证明这些 $f_n$ 也是完备的，正交化的结果是：
+        $
+          L_n (x) = 1/n! e^(x/2) derN((x^n e^(-x)), x, n)
+        $
+        这些函数称为 Laguerre 函数
+      - $L^2(RR), K = RR, f_n = x^n e^(-x^2/2)$，类似的可以证明完备，可以得到 Hermite 函数：
+        $
+          H_n (x) = (-1)^n 1/(2^n n! sqrt(2 pi)) e^(x^2/2) derN((e^(-x^2)), x, n)
+        $
+    ]
+  == 可分的 Hibert 空间
+    #definition[][
+      设 $X$ 是度量空间，若存在至多可数的稠密子集，则称 $X$ 是可分的
+    ]
+    #theorem[可分的 Hibert 空间][
+      设 $X$ 是 Hilbert 空间，域 $K$ 可分，则 $X$ 可分当且仅当存在至多可数的 Hilbert 基
+    ]
+    #proof[
+      - 一方面，假设有至多可数的 Hilbert 基，则它们的以 $K$ 的至多可数稠密子集为系数张成的空间当然是稠密的至多可数子集
+      - 另一方面，假设 $X$ 可分，取至多可数的稠密集，依次 Gram-Schmidt 正交化，得到的就是至多可数的 Hilbert 基
+    ]
+    #corollary[][
+      设 $X$ 是可分的 Hilbert 空间，则 $X$ 同构于 $K^n$ 或 $l^2$
+    ]
+= 线性映射和线性泛函
+  == 基础知识 
+    #lemma[][
+      设 $f : X -> Y$ 是线性的，则它点点连续当且仅当在 $0$ 处连续
+    ]
+    #proof[
+      线性函数在任何点的附近都类似在零点附近，因此结论显然
+    ]
+    #definition[有界][
+      称线性映射 $T$ 是有界的，如果 $norm(T x)/norm(x)$ 有界 
+    ]
+    #lemma[][
+      线性映射有界等价于连续
+    ]
+    #proof[
+      - 若线性映射有界，容易证明在 $0$ 处连续
+      - 若线性映射不有界，则可取一列 $x_n$ 使得 $norm(x_n) = 1$，$norm(T x_n) -> +infinity$. 取：
+        $
+          z_n = x_n/norm(T x_n)
+        $
+        显然 $z_n -> 0, norm(T z_n) = 1$，因此 $T$ 不连续
+    ]
+    #remark[][
+      有时我们也要讨论子空间上的线性函数，尤其是对于某些无界算子，它在子空间上线性，但往往不能延拓到一个完备的 Banach 空间，只能延拓到一个稠密子空间。例如求导算子只能定义在 $L^2$ 的子空间 $C^1$ 上，并且容易验证是无界的。
+    ]
+    #definition[][
+      设 $X, Y$ 是同一个域上的赋范空间，则定义：
+      $
+        L(X, Y) = {f : X -> Y mid(|) f "有界线性"}
+      $
+      线性运算定义为通常的函数运算，范数定义为：
+      $
+        norm(T) = sup_(norm(x) = 1) norm(T x) = sup_(x != 0) norm(T x)/norm(x)
+      $
+      （容易验证这是一个范数）
 
+      特别的，记 $L(X) := L(X, X), X^* ("对偶空间"):= L(X, K)$
+    ]
+    #lemma[][
+      假设 $Y$ 是 Banach 空间，则 $L(X, Y)$ 也是 Banach 空间
+    ]
+    #proof[
+      任给 $T_n$ 是柯西列，则对所有 $x, T_n x$ 是柯西列，因此可以定义极限函数 $T$
+      - $T$ 是线性的：取极限即可
+      - $T$ 是有界的：由柯西性，$norm(T_n)$ 有上界，因此可以证明 $T$ 有界
+    ]
+    #lemma[][
+      设 $T : X -> Y$ 线性，且 $X$ 有限维，则 $T$ 一定有界
+    ]
+    #proof[
+      任取 $X$ 的基，则 $T$ 等价于一个有限维矩阵
+    ]
+    #example[][
+      - 设 $X$ 是 Hilbert 空间，$M$ 是闭子空间，则 $M$ 上的正交投影就是有界线性的（事实上，模恰为 $1$）
+      - 设 $X = L^2 [0, 1], T f = integral_(0)^(x) f(t) dif t$，容易证明是线性的，且 $norm(T) = 1/2$
+    ]
+  == Riesz 表示定理
+    当 $X$ 是 Hilbert 空间时，$X^*$ 有非常好的结构。任给 $y in X, f_y (x) = inner(x, y)$ 就是一个 $X^*$ 中的算子，且柯西-施瓦茨不等式保证了它是有界的，模恰为 $norm(y)$. 可以证明，$X^*$ 中所有的元素都可以表示为这种形式。
+    #lemma[][
+      设 $X$ 是 Banach 空间，$f in duelSpace(X)$，则：
+      $
+        Inv(f) (0)
+      $
+      是闭子空间，且
+    ]
+    #theorem[][
+      设 $X$ 是 Hilbert 空间，则 $duelSpace(X)$ 中的每个元素 $f$ 都可以被唯一表示为 $f_y$ 的形式，即：
+      $
+        exists! y in X, f = inner(*, y)
+      $
+      并且 $norm(f) = norm(y)$
+    ]
+    #proof[
+      定义：
+      $
+        M = Inv(f) (0)
+      $
+      容易验证它是闭子空间，因此可设：
+      $
+        X = M directSum orthogonalCom(M)
+      $
+      若 $orthogonalCom(M)$ 为空，则 $M = X$，进而 $f = 0$，取 $y = 0$ 即可。否则，断言 $orthogonalCom(M)$ 是一维的，事实上，注意到：
+      $
+        f(z/f(z) - y/f(y)) = 0, forall z, y in orthogonalCom(M)
+      $
+      因此 $z/f(z) - y/f(y) in M => z/f(z) - y/f(y) = 0$，继而 $z, y$ 线性相关。因此取 $orthogonalCom(M)$ 的非零元 $y_0$，有：
+      $
+        x = f(x)/f(y_0) y_0 + (x - f(x)/f(y_0) y_0), forall x
+      $
+      并且：
+      $
+        inner(x, y_0) = f(x)/f(y_0) norm(y_0)
+      $
+      解得：
+      $
+        f(x) = inner(x, overline(f(y_0))/norm2(y_0) y_0)
+      $
+      存在性得证。其他性质是简单的。
+    ]
