@@ -88,6 +88,8 @@
 #let bgamma = $bold(gamma)$
 #let htheta = $hat(theta)$
 #let hbeta = $hat(beta)$
+#let hX = $hat(X)$
+#let hY = $hat(Y)$
 #let by = $bold(y)$
 #let bx = $bold(x)$
 #let bu = $bold(u)$
@@ -99,8 +101,9 @@
 #let zbar = $overline(z)$
 #let Zbar = $overline(Z)$
 #let duelSpace(X) = $#X^*$
-#let cov = "Cov"
-#let var = "Var"
+#let cov = math.op("Cov")
+#let var = math.op("Var")
+#let cor = math.op("Cor")
 
 #let inner(x, y) = $〈#x, #y〉$
 #let span(..x) = $<#(x.pos().join($, $))>$
@@ -294,6 +297,21 @@
 // #let prodfBr(config, body) = $product_(#config.var = #config.lower)^(#config.upper) #autoBraceIfAddOrSub(Body)$
 // #let directSumfBr(var: defaultDirectSum.Var, lower: defaultDirectSum.Lower, upper: defaultDirectSum.Upper, body) = $directSum_(#var = #lower)^(#upper) #autoBraceIfAddOrSub(Body)$
 
+#let all_configs = {
+  let res = ()
+  let vars = ($i$, $j$, $k$)
+  let lowers = ($0$, $1$, $2$)
+  let uppers = ($n$, $m$, $N$, $M$, $+infinity$)
+  for var in vars {
+    for lower in lowers {
+      for upper in uppers {
+        res.push((Var: var, Lower: lower, Upper: upper))
+      }
+    }
+  }
+  res
+}
+
 #let config1iN = (
   Var: $i$,
   Lower: $1$,
@@ -314,6 +332,95 @@
   Lower: $0$,
   Upper: $+infinity$,
 )
+
+#let _gen_big_expressions(configs, fBr, body_transformer) = {
+  configs.map(config => {
+    body => {
+      fBr(config: config, body_transformer(body))
+    }
+  })
+}
+
+#let (
+  sumi0n, sumi0m, sumi0N, sumi0M, sumi0inf,
+  sumi1n, sumi1m, sumi1N, sumi1M, sumi1inf,
+  sumi2n, sumi2m, sumi2N, sumi2M, sumi2inf,
+  sumj0n, sumj0m, sumj0N, sumj0M, sumj0inf,
+  sumj1n, sumj1m, sumj1N, sumj1M, sumj1inf,
+  sumj2n, sumj2m, sumj2N, sumj2M, sumj2inf,
+  sumk0n, sumk0m, sumk0N, sumk0M, sumk0inf,
+  sumk1n, sumk1m, sumk1N, sumk1M, sumk1inf,
+  sumk2n, sumk2m, sumk2N, sumk2M, sumk2inf,
+) = _gen_big_expressions(
+  all_configs,
+  sumfBr,
+  (n => n)
+)
+
+#let (
+  prodi0n, prodi0m, prodi0N, prodi0M, prodi0inf,
+  prodi1n, prodi1m, prodi1N, prodi1M, prodi1inf,
+  prodi2n, prodi2m, prodi2N, prodi2M, prodi2inf,
+  prodj0n, prodj0m, prodj0N, prodj0M, prodj0inf,
+  prodj1n, prodj1m, prodj1N, prodj1M, prodj1inf,
+  prodj2n, prodj2m, prodj2N, prodj2M, prodj2inf,
+  prodk0n, prodk0m, prodk0N, prodk0M, prodk0inf,
+  prodk1n, prodk1m, prodk1N, prodk1M, prodk1inf,
+  prodk2n, prodk2m, prodk2N, prodk2M, prodk2inf,
+) = _gen_big_expressions(
+  all_configs,
+  prodfBr,
+  (n => n)
+)
+
+#let (
+  sumi0n2, sumi0m2, sumi0N2, sumi0M2, sumi0inf2,
+  sumi1n2, sumi1m2, sumi1N2, sumi1M2, sumi1inf2,
+  sumi2n2, sumi2m2, sumi2N2, sumi2M2, sumi2inf2,
+  sumj0n2, sumj0m2, sumj0N2, sumj0M2, sumj0inf2,
+  sumj1n2, sumj1m2, sumj1N2, sumj1M2, sumj1inf2,
+  sumj2n2, sumj2m2, sumj2N2, sumj2M2, sumj2inf2,
+  sumk0n2, sumk0m2, sumk0N2, sumk0M2, sumk0inf2,
+  sumk1n2, sumk1m2, sumk1N2, sumk1M2, sumk1inf2,
+  sumk2n2, sumk2m2, sumk2N2, sumk2M2, sumk2inf2,
+) = _gen_big_expressions(
+  all_configs,
+  sumfBr,
+  (body => autoPow(body, 2))
+)
+
+#let (
+  sumi0nnr, sumi0mnr, sumi0Nnr, sumi0Mnr, sumi0infnr,
+  sumi1nnr, sumi1mnr, sumi1Nnr, sumi1Mnr, sumi1infnr,
+  sumi2nnr, sumi2mnr, sumi2Nnr, sumi2Mnr, sumi2infnr,
+  sumj0nnr, sumj0mnr, sumj0Nnr, sumj0Mnr, sumj0infnr,
+  sumj1nnr, sumj1mnr, sumj1Nnr, sumj1Mnr, sumj1infnr,
+  sumj2nnr, sumj2mnr, sumj2Nnr, sumj2Mnr, sumj2infnr,
+  sumk0nnr, sumk0mnr, sumk0Nnr, sumk0Mnr, sumk0infnr,
+  sumk1nnr, sumk1mnr, sumk1Nnr, sumk1Mnr, sumk1infnr,
+  sumk2nnr, sumk2mnr, sumk2Nnr, sumk2Mnr, sumk2infnr,
+) = _gen_big_expressions(
+  all_configs,
+  sumfBr,
+  (body => norm(body))
+)
+
+#let (
+  sumi0nnr2, sumi0mnr2, sumi0Nnr2, sumi0Mnr2, sumi0infnr2,
+  sumi1nnr2, sumi1mnr2, sumi1Nnr2, sumi1Mnr2, sumi1infnr2,
+  sumi2nnr2, sumi2mnr2, sumi2Nnr2, sumi2Mnr2, sumi2infnr2,
+  sumj0nnr2, sumj0mnr2, sumj0Nnr2, sumj0Mnr2, sumj0infnr2,
+  sumj1nnr2, sumj1mnr2, sumj1Nnr2, sumj1Mnr2, sumj1infnr2,
+  sumj2nnr2, sumj2mnr2, sumj2Nnr2, sumj2Mnr2, sumj2infnr2,
+  sumk0nnr2, sumk0mnr2, sumk0Nnr2, sumk0Mnr2, sumk0infnr2,
+  sumk1nnr2, sumk1mnr2, sumk1Nnr2, sumk1Mnr2, sumk1infnr2,
+  sumk2nnr2, sumk2mnr2, sumk2Nnr2, sumk2Mnr2, sumk2infnr2,
+) = _gen_big_expressions(
+  all_configs,
+  sumfBr,
+  (body => norm2(body))
+)
+
 #let sumBrN1(body) = sumfBr(body, config: config1iN)
 #let prodBrN1(body) = prodfBr(body, config: config1iN)
 #let sumBrN0(body) = sumfBr(body, config: config0iN)
@@ -521,7 +628,7 @@
 }
 
 #let (
-  theorem: theo, lemma: lem, corollary: cor,
+  theorem: theo, lemma: lem, corollary: cor_,
   remark: rem, proposition: prop, example:ex , definition:def,
   proof: pr, rules: thm-rules
 ) = default-theorems("thm-group", lang: "en", thm-styling: theorem-like-style, proof-styling: proof-style)
@@ -553,7 +660,7 @@
 #let (alg1, rules: alg-rules1) = new-theorems("thm-group-linear", ("alg1": "Algorithm"), thm-numbering: thm-numbering-linear, thm-styling: theorem-like-style)
 #let theorem(footer: "",name, body) = _convert(theo, footer, name, body)
 #let lemma(footer: "",name, body) = _convert(lem, footer,name, body)
-#let corollary(footer: "",name, body) = _convert(cor, footer, name, body)
+#let corollary(footer: "",name, body) = _convert(cor_, footer, name, body)
 #let proposition(footer: "",name, body) = _convert(prop, footer, name, body)
 #let definition(footer: "",name, body) = _convert(def, footer, name, body)
 #let example(footer: "",name, body) = _convert(ex, footer, name, body)
@@ -768,6 +875,7 @@
 
 #let calcSquareSum(xs) = xs.map(x => x * x).sum()
 #let calcMean(xs) = xs.sum() / xs.len()
+// S^2 = 1/(n-1) * sum((x - x_bar)^2)
 #let calcSampleVariance(xs) = {
   let mean = calcMean(xs)
   let n = xs.len()

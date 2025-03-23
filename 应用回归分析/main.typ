@@ -9,6 +9,8 @@
 #let cov = "Cov"
 #let var = "Var"
 #let approxVar(Y) = $overline(Y)$
+#let sum2 = sumi1n2
+#let sumi = sumi1n
 = 前言  
   - Instructor: Ruibin Xi
   - Office: 智华楼470
@@ -743,161 +745,529 @@
 
     此外，处理时我们往往会做中心化，也就是将数据各个分量减均值除标准差。这样在计算上会比较稳定，同时也保证不同维度的尺度一致。
 = 假设检验
-  #let hsigma = $hat(sigma)$
-  #let hY = $hat(Y)$
-  给定模型 $Y = X beta + epsilon$，其中 $X$ 列满秩，$epsilon$ 服从 $N(0, sigma^2 I)$. 我们有时会关心某个条件是否成立，也即：
-  $
-    H: A beta = C
-  $
-  一种标准的方法是，比较承认假设和不承认时的极大似然估计，计算得：
-  $
-    Lambda = L' / L = (hat(sigma)^2/hat(sigma)_H^2)^(n / 2)
-  $
-  其中：
-  $
-    n hsigma^2 = norm2(Y - P Y)\
-    n hsigma_H^2 = norm2(Y - P_H Y)
-  $
-  因此：
-  $
-    hsigma^2_H / hsigma^2 - 1 = (norm2(Y - P_H Y) - norm2(Y - P Y)) / norm2(Y - P Y) = norm2(P_H Y - P Y) / norm2(Y - P Y) 
-  $
-  #let RSSd = $"RSS"_H - "RSS"$
-  #let BX = $A Inv(tMul(X)) A^T$
-  可以使用上节结论得到：
-  #theorem[][
+  == 满秩情形
+    #let hsigma = $hat(sigma)$
+    #let hY = $hat(Y)$
+    给定模型 $Y = X beta + epsilon$，其中 $X$ 列满秩，$epsilon$ 服从 $N(0, sigma^2 I)$. 我们有时会关心某个条件是否成立，也即：
     $
-      RSSd = norm2(P_H Y - P Y) = quadFormSym(A hbeta - c, Inv(A Inv(tMul(X)) A^T) )
+      H: A_(q times p) beta = C
     $
-  ]
-  同时，注意到如果 $A beta = c$ 成立，则：
-  $
-    Z := A hat(beta) tilde N(A beta - c, sigma^2 A Inv(tMul(X)) A^T) = N(0, sigma^2 A Inv(tMul(X)) A^T)
-  $
-  进而：
-  $
-    RSSd / sigma^2 tilde chi_(q)^2
-  $
-  然而通常 $sigma$ 是未知的，不能采用该式作为假设检验。同时，即使假设不成立，也有：
-  #theorem[][
+    一种标准的方法是，比较承认假设和不承认时的极大似然估计，计算得：
     $
-      E (RSSd) = E quadFormSym(Z, Inv(BX)) \
-      = tr(Inv(BX) var Z) + quadFormSym(A beta - c, Inv(BX))
+      Lambda = L' / L = (hat(sigma)^2/hat(sigma)_H^2)^(n / 2)
     $
-  ]
-  #theorem[][
-    若设：
+    其中：
     $
-      F := (RSSd / q) / (RSS / (n - p))
-    $
-    当假设成立时，有：
-    $
-      F tilde F_(q, (n - p))
-    $
-  ]
-  #proof[
-    前面证明了：
-    - $1/sigma^2 RSSd / q tilde chi^2_q$
-    - $1/sigma^2 RSSd / (n - p) tilde chi^2_(n - p)$
-    只需证明他们独立即可。注意到：
-    - $RSS = quadFormSym(Y, I - P)$
-    - $RSSd = quadFormSym(Y, P - P_H)$
-    而 $(I - P)(P - P_H) = P - P - P_H + P P_H$，注意到 $P_H$ 是 $P$ 投影的一部分，因此 $P P_H = P_H$，上式等于零，由 @chi-square-indep 即可得证。
-  ]
-  因此，上面的 $F$ 便可作为假设检验问题的统计量。
-  #corollary[][
-    $
-      F = (n - p)/q quadFormSym(Y, P - P_H)/quadFormSym(Y, I - P)
-    $
-  ]
-  #example[][
-    给定模型：
-    $
-      Y = beta_0 + beta_1 x_1 + beta_2 x_2 + ... + beta_(p - 1) x_(p - 1) + epsilon
-    $
-    检验假设 $H : beta_j = c, j > 0$，它也形如 $a^T beta = c$
-
-    若假设：
-    $
-      Inv(tMul(X)) = mat(l, m^T;m, D)
-    $
-    则：
-    $
-      quadFormSym(a, Inv(tMul(X))) = D_(j j)\
-      a^T hbeta = hat(beta)_j\
-      RSSd = (hbeta_j - c)^2 / D_(j j)
+      n hsigma^2 = norm2(Y - P Y)\
+      n hsigma_H^2 = norm2(Y - P_H Y)
     $
     因此：
     $
-      F = (hbeta_j - c)^2/(D_(j j))/(RSS / (n - p)) = (hbeta_j - c)^2/(S^2 d_(j j)) tilde F_(1, n - p) = t^2_(n - p)
+      hsigma^2_H / hsigma^2 - 1 = (norm2(Y - P_H Y) - norm2(Y - P Y)) / norm2(Y - P Y) = norm2(P_H Y - P Y) / norm2(Y - P Y) 
     $
-
-    一般的，对于任意形如 $a^T beta = c$ 的假设，可以得到：
+    #let RSSd = $"RSS"_H - "RSS"$
+    #let BX = $A Inv(tMul(X)) A^T$
+    可以使用上节结论得到：
+    #theorem[][
+      $
+        RSSd = norm2(P_H Y - P Y) = quadFormSym(A hbeta - c, Inv(A Inv(tMul(X)) A^T) )
+      $
+    ]
+    同时，注意到如果 $A beta = c$ 成立，则：
     $
-      F = 1/sigma^2 (a^T hbeta - c)^2 / (a^T Inv(tMul(X)) a) tilde F_(1, n - p)
+      Z := A hat(beta) tilde N(A beta - c, sigma^2 A Inv(tMul(X)) A^T) = N(0, sigma^2 A Inv(tMul(X)) A^T)
     $
-
-    注意大到，此时有：
-    $
-      a^T hbeta tilde N(0, sigma^2 a^T Inv(tMul(X)) a)
-    $
-    而 $S^2 orthogonal hbeta$，因此：
-    $
-      (a^T hbeta - c) / sqrt(sigma^2 a^T Inv(tMul(X)) a) tilde N(0, 1)
-    $ 
     进而：
     $
-      U := (a^T hbeta - c) / sqrt(S^2 a^T Inv(tMul(X)) a) tilde t_(n - p)
+      RSSd / sigma^2 tilde chi_(q)^2
+    $
+    然而通常 $sigma$ 是未知的，不能采用该式作为假设检验。同时，即使假设不成立，也有：
+    #theorem[][
+      $
+        E (RSSd) = E quadFormSym(Z, Inv(BX)) \
+        = tr(Inv(BX) var Z) + quadFormSym(A beta - c, Inv(BX))
+      $
+    ]
+    #theorem[][
+      若设：
+      $
+        F := (RSSd / q) / (RSS / (n - p))
+      $
+      当假设成立时，有：
+      $
+        F tilde F_(q, (n - p))
+      $
+    ]
+    #proof[
+      前面证明了：
+      - $1/sigma^2 RSSd / q tilde chi^2_q$
+      - $1/sigma^2 RSSd / (n - p) tilde chi^2_(n - p)$
+      只需证明他们独立即可。注意到：
+      - $RSS = quadFormSym(Y, I - P)$
+      - $RSSd = quadFormSym(Y, P - P_H)$
+      而 $(I - P)(P - P_H) = P - P - P_H + P P_H$，注意到 $P_H$ 是 $P$ 投影的一部分，因此 $P P_H = P_H$，上式等于零，由 @chi-square-indep 即可得证。
+    ]
+    因此，上面的 $F$ 便可作为假设检验问题的统计量。
+    #corollary[][
+      $
+        F = (n - p)/q quadFormSym(Y, P - P_H)/quadFormSym(Y, I - P)
+      $
+    ]
+    #example[][
+      给定模型：
+      $
+        Y = beta_0 + beta_1 x_1 + beta_2 x_2 + ... + beta_(p - 1) x_(p - 1) + epsilon
+      $
+      检验假设 $H : beta_j = c, j > 0$，它也形如 $a^T beta = c$
+
+      若假设：
+      $
+        Inv(tMul(X)) = mat(l, m^T;m, D)
+      $
+      则：
+      $
+        quadFormSym(a, Inv(tMul(X))) = D_(j j)\
+        a^T hbeta = hat(beta)_j\
+        RSSd = (hbeta_j - c)^2 / D_(j j)
+      $
+      因此：
+      $
+        F = (hbeta_j - c)^2/(D_(j j))/(RSS / (n - p)) = (hbeta_j - c)^2/(S^2 d_(j j)) tilde F_(1, n - p) = t^2_(n - p)
+      $
+
+      一般的，对于任意形如 $a^T beta = c$ 的假设，可以得到：
+      $
+        F = 1/sigma^2 (a^T hbeta - c)^2 / (a^T Inv(tMul(X)) a) tilde F_(1, n - p)
+      $
+
+      注意大到，此时有：
+      $
+        a^T hbeta tilde N(0, sigma^2 a^T Inv(tMul(X)) a)
+      $
+      而 $S^2 orthogonal hbeta$，因此：
+      $
+        (a^T hbeta - c) / sqrt(sigma^2 a^T Inv(tMul(X)) a) tilde N(0, 1)
+      $ 
+      进而：
+      $
+        U := (a^T hbeta - c) / sqrt(S^2 a^T Inv(tMul(X)) a) tilde t_(n - p)
+      $
+    ]
+    #example[][
+      最简单的情形，假设：
+      $
+        Y = beta_0 + beta_1 x + epsilon \
+        H: beta_1 = c
+      $
+      则：
+      $
+        hbeta_0 = overline(Y) - hbeta_1 Xbar\
+        hbeta_1 = (sumBrN1((Y_i - overline(Y))(X_i - Xbar)))/(sumBrN1((X_i - Xbar)^2))
+      $
+      可以计算得：
+      $
+        F = (hbeta_1 - c)^2/(S^2/(sumBrN1((X_i - Xbar)^2))) tilde F_(1, n - 2)
+      $
+      以及：
+      $
+        (n - 2)S^2 = sumBrN1(Y_i - overline(Y)) - hbeta_1 sumBrN1((X_i - Xbar)^2) = sumBrN1(Y_i - overline(Y))^2 - sumBrN1(hat(Y)_i - overline(Y))
+      $
+      同时：
+      $
+        (n - 2) S^2 = sumBrN1((Y_i - hat(Y)_i)^2)
+      $
+      因此还可以得到等式：
+      $
+        sumBrN1(Y_i - overline(Y))^2 = sumBrN1((Y_i - hat(Y)_i)^2) + sumBrN1(hat(Y)_i - overline(Y))
+      $
+      往往记：
+      $
+        r^2 = (sumBrN1((hat(Y)_i - overline(Y))^2))/(sumBrN1((Y_i - overline(Y))^2)) = (hbeta_1^2 sumBrN1((x_i - Xbar)))/(sumBrN1((Y_i - overline(Y))^2)) = sumBrN1((Y_i - overline(Y))(X_i - Xbar))^2/(sumBrN1((Y_i - overline(Y))^2) sumBrN1((X_i - Xbar)^2))
+      $
+      就有：
+      $
+        RSS = (1 - r^2) sumBrN1((Y_i - overline(Y))^2)
+      $
+      显然 $r^2 = 1$ 时，$RSS = 0$，表明模型完全拟合。此外，如果假设就是 $beta_1 = 0$ 可以计算得：
+      $
+        F = (n - 2) r^2 / (1 - r^2)
+      $
+      说明 $r$ 可以判断 $X, Y$ 的线性相关性。
+      // $
+      //   sumBrN1((Y_i - hat(Y)_i)(hat(Y_i) - overline(Y))) = sumBrN1((Y_i - overline(Y)) hat(Y)_i) - n overline(Y)^2
+      // $
+    ]
+    事实上，在一元情形下，还有：
+    $
+      hat(Y) = Ybar + hbeta_1 (X - Xbar)
+    $
+    因此：
+    $
+      r = (sumBrN1((Y_i - Ybar)(X_i - Xbar)))/sqrt(sumBrN1((Y_i - Ybar)^2) sumBrN1((X_i - Xbar)^2)) = (hbeta sumBrN1((Y_i - Ybar)(X_i - Xbar)))/sqrt(hbeta^2 sumBrN1((Y_i - Ybar)^2) sumBrN1((X_i - Xbar)^2))\
+      = (sumBrN1((Y_i - Ybar)(hat(Y) - Ybar)))/sqrt(sumBrN1((Y_i - Ybar)^2) sumBrN1((hat(Y) - Ybar)^2)) = cor(Y, hat(Y))
+    $
+    #definition[coefficient of determination][
+      定义：
+      $
+        R^2 = cor(Y, hat(Y))^2 
+      $
+      是真实值 $Y$ 与预测值 $hat(Y)$ 的相关系数的平方。下面将证明它也是预测值的方差占原始方差的比例，在实际统计实践中经常用到。
+    ]
+    #theorem[][
+      一元线性回归问题中，有：
+      $
+        r = cor(X, Y) = cor(Y, hat(Y)) = R
+      $
+    ]
+    #theorem[][
+      通常线性回归中，有：
+      - 
+        $
+        sumBrN1((Y_i - Ybar)^2) = sumBrN1((Y_i - hY_i)^2) + sumBrN1((hY_i - Ybar)^2)
+        $
+      - 
+        $
+        sumi((Y_i - Ybar) (hY_i - Ybar)) = sum2(hY_i - Ybar)
+        $
+      - 
+        $
+          R^2 = = sumBrN1((hat(Y)_i - Ybar)^2)/sumBrN1((Y_i - Ybar)^2) = 1 - RSS/sumi2n2(Y_i - Ybar)
+        $
+    ]
+    #proof[
+      通常，有：
+      $
+        hY = P Y
+      $
+      令 $P_1$ 是到 $span(1_n)$ 的投影，有：
+      $
+        Ybar 1_n = P_1 Y
+      $
+      我们有：
+      $
+        sum2(Y_i - Ybar) = inner(Y - P_1 Y, Y - P_1 Y) = quadFormSym(Y, I - P_1) = quadFormSym(Y, I - P + P - P_1)\
+        = norm2((I - P) Y) + norm2((P - P_1) Y) = sum2(Y_i - hY_i) + sum2(hY_i - Ybar)
+      $
+      因此第一个等式成立。对于第二个等式，有：
+      $
+        sumi((Y_i - Ybar) (hY_i - Ybar)) 
+        &= inner(Y - P_1 Y, P Y - P_1 Y) \
+        &= inner((I - P_1) Y, (P - P_1) Y) \
+        &= inner((I - P + P - P_1) Y,  (P - P_1) Y)\
+        &= inner((I - P + P - P_1) Y,  (P - P_1) Y)\
+        &= inner((I - P) Y,  (P - P_1) Y) + inner((P - P_1) Y,  (P - P_1) Y)\
+        &= inner(Y, (I - P) (P - P_1) Y) + inner((P - P_1) Y,  (P - P_1) Y)\
+        &= inner((P - P_1) Y,  (P - P_1) Y)\
+        &= sum2(hY_i - Ybar)
+      $
+
+      将前两个等式代入 $R^2$ 定义就是第三个等式。
+    ]
+    #example[][
+      设有模型：
+      $
+        Y = beta_0 + beta_1 x_1 + ... + epsilon
+      $
+      希望检验假设：
+      $
+        H : beta_1 = beta_2 = .. = beta_(p - 1) = 0
+      $
+      它形如：
+      $
+        H : I_((p - 1) times p) beta = 0
+      $
+      假设成立时显然 $RSS_H = sum2(Y_i - Ybar)$，我们有：
+      $
+        F = (RSS_H - RSS)/(p - 1) / (RSS / (n - p)) tilde F_(p - 1, n - p)
+      $
+      同时：
+      $
+        F &= (n - p)/(p - 1) (sum2(Y - Ybar) - sum2(Y_i - hY_i))/RSS\ 
+        &= (n - p)/(p - 1) (sum2(Y - Ybar) - (1 - R^2) sum2(Y_i - Ybar))/((1 - R^2) sum2(Y_i - Ybar))\
+        &= (n - p)/(p - 1) R^2/(1 - R^2)\
+      $
+      显然，$R$ 较小时，更有道理接受原假设，也就是表明数据之间的线性关系较弱。
+    ]
+  == 非满秩情形
+    假设 $X$ 不满秩，我们也可以做类似的假设检验。先假设：
+    $
+      H : A beta = 0
+    $
+    则它等价于：
+    $
+      beta in ker A <=> theta = X beta in X ker A := omega
+    $
+    则假设成立时最优的当然就是 $P_omega Y$，因此往往使用等价的假设：
+    $
+      H : theta in omega
+    $
+    其中 $omega$ 是某个子空间。当然，有 $theta = P_omega Y$
+    // 不过，此时我们往往更加关心形如：
+    // $
+    //   H : theta = P Y in omega
+    // $
+    // 其中 $omega$ 是某个子空间
+    #definition[][
+      定义：
+      $
+        F = (RSS_H - RSS)/q / (RSS / (n - r)) = (quadFormSym(Y, I - P_omega) - quadFormSym(Y, I - P))/q / (quadFormSym(Y, I - P) / (n - r))
+      $
+      其中 $r$ 是 $X$ 的秩，$q = r - rank(omega)$
+    ]
+    #theorem[][
+      $
+        F tilde F_(q, n - r)
+      $
+    ]
+    $
+      beta in omega_A
+      X beta in X omega_A
+    $
+    #proof[
+      可以证明：
+      $
+        F = (quadFormSym(epsilon, P - P_omega))/q / (quadFormSym(epsilon, I - P) / (n - r))
+      $
+      同时：
+      $
+        rank(P - P_omega) = tr(P) - tr(P_omega) = q
+      $
+      分子分母的独立性也是容易的。
+    ]
+= 多重检验问题 
+  任取向量 $a_j$，我们希望给出一个 $a_j^T beta$ 的置信区间。熟知：
+  $
+    a_j^T hbeta tilde N(a_j^T beta, a_j^T sigma^2 Inv(tMul(X)) a_j)
+  $
+  因此：
+  $
+    (a_j^T hbeta - a_j^T beta)/sqrt(a_j^T sigma^2 Inv(tMul(X)) a_j) tilde N(0, 1)
+  $
+  然而 $sigma$ 未知，使用 $S^2 = RSS/(n - p)$ 代替 $sigma^2$，有：
+  $
+    (a_j^T hbeta - a_j^T beta)/sqrt(a_j^T S^2 Inv(tMul(X))) tilde t_(n - p)
+  $
+  因此，置信区间为：
+  $
+    (a_j^T hbeta - a_j^T beta)/sqrt(a_j^T S^2 Inv(tMul(X))) in [-t_(n - p)^(alpha/2), t_(n - p)^(alpha/2)]
+  $
+  然而，有时我们要同时对多个 $a_j$ 讨论置信区间，也就是希望：
+  $
+    P(product (a_j^T hat(beta) in I_j)) >= 1- alpha 
+  $
+  然而熟知：
+  $
+    P(product (a_j^T hat(beta) in I_j)) >= 1 - sum P(a_j^T hat(beta) in.not I_j) >= 1 - k alpha
+  $
+  因此每个独立构造置信区间是低效的。
+
+  类似的，有时我们同时给出 $k$ 个假设。当假设全部成立时，我们也会平均错误的拒绝约 $k alpha$ 个假设。
+  
+  直观上，我们应该总体控制错误率。在置信区间问题中，设：
+  $
+    E_j = {a_j^T hbeta in I_j}
+  $
+  目标是控制总体的：
+  $
+    P(prodj1n(E_j)) >= 1 - alpha
+  $
+  其中 $P(prodj1n(E_j))$ 被称为 family error rate。最保守的方法是，对每个 $j$ 使用 $1 - alpha/n$ 的置信区间，这样总体的 family error rate 就是 $alpha$。这个置信区间被称为 Bonferron 置信区间，这个方法称为 Bonferron 方法。当然，这个方法往往过于的保守。
+
+  另一种方法是 Scheffe method，首先设 $A = autoVecN(a^T, n), rank(A) = d$，则：
+  $
+    A hbeta - A beta tilde N(0, A sigma^2 Inv(tMul(X)) A^T)
+  $
+  因此可以验证：
+  $
+    (quadFormSym(A hbeta - A beta, Inv(A Inv(tMul(X)) A^T)))/(d S^2)
+  $
+  服从 $F_(d, (n - r))$
+  #lemma[][
+    设 $L$ 正定，则：
+    $
+      sup_h (h^T b)^2/(quadFormSym(h, L)) = quadFormSym(b, Inv(L))
     $
   ]
-  #example[][
-    最简单的情形，假设：
+  因此：
+  $
+    1 - alpha 
+    &= P(quadFormSym(A hbeta - A beta, Inv(A Inv(tMul(X)) A^T)) <= d S^2 F_(d, n- p)^alpha) \
+    &= P(sup_h (h^T (A hbeta - A beta))^2/(quadFormSym(h,(A Inv(tMul(X)) A^T))) <= d S^2 F_(d, n- p)^alpha)\
+    &= P(forall h, (h^T (A hbeta - A beta))^2 <= d S^2 F_(d, n- p)^alpha quadFormSym(h,(A Inv(tMul(X)) A^T)))\
+    &= P(forall h, abs(h^T (A hbeta - A beta)) <= sqrt(d S^2 F_(d, n- p)^alpha quadFormSym(h,(A Inv(tMul(X)) A^T))))\
+  $
+  注意到其中 $h$ 是任意的，只需分别代入 $h = e_j$ 就可以得到所有的置信区间。
+
+  更现代的办法是，控制 False discovery rate，也就是要求 $E_j$ 中出错的比例不超过 $alpha$，这里不再介绍。
+= 多项式回归
+  有些时候，线性模型并不能很好的拟合数据，这时我们可以考虑非线性模型，也就是：
+  $
+    E(Y | X) = f(X)
+  $
+  如果取 $f$ 是多项式，可以转换为线性模型：
+  $
+    Y = X beta + epsilon
+  $
+  其中：
+  $
+    X = mat(1, x, x^2, ..., x^p)
+  $
+  然而，如果假设 $x$ 被正规化到 $0, 1$ 之间，上面矩阵的奇异值可能变得非常小，导致数值计算上极其不稳定，方法也会变得很大。接下来，我们定义多项式的内积：
+  $
+    inner(f, g) = sumi(f(x_i) g(x_i)) 
+  $
+  假如能找到一组正交基 $p_i$ ，则：
+  $
+    X = (p_j (x_i))
+  $
+  就有：
+  $
+    X^T X = diag(sumj1n(p_j (x_i)^2))
+  $
+  这样还有一个好处，可以直接求得 $gamma_k$ 的估计值：
+  $
+    hat(gamma)_j = inner(Y, p_j)/norm2(p_j)
+  $
+  不妨假设 $x in [-1, 1], phi_0 = 0$，则有：
+  #theorem[][
     $
-      Y = beta_0 + beta_1 x + epsilon \
-      H: beta_1 = c
+       phi_1 = 2(x - Xbar)\
+      phi_(r + 1) = 2(x - a_(r + 1)) phi_r (x) - b_r phi_(r - 1) (x)\
+      where a_(r + 1) = inner(x phi_r, phi_r)/norm2(phi_r)\
+      b_r = norm2(phi_r)/norm2(phi_(r - 1))
     $
-    则：
+    就确定了这样一组正交基。
+  ]
+  #proof[
+    之前已经确定了 $phi_0$，设：
     $
-      hbeta_0 = overline(Y) - hbeta_1 Xbar\
-      hbeta_1 = (sumBrN1((Y_i - overline(Y))(X_i - Xbar)))/(sumBrN1((X_i - Xbar)^2))
+      psi_1 = 2 x phi_0
     $
-    可以计算得：
+    取 $P_0$ 是到 $span(phi_0)$ 的投影，则：
     $
-      F = (hbeta_1 - c)^2/(S^2/(sumBrN1((X_i - Xbar)^2))) tilde F_(1, n - 2)
-    $
-    以及：
-    $
-      (n - 2)S^2 = sumBrN1(Y_i - overline(Y)) - hbeta_1 sumBrN1((X_i - Xbar)^2) = sumBrN1(Y_i - overline(Y))^2 - sumBrN1(hat(Y)_i - overline(Y))
-    $
-    同时：
-    $
-      (n - 2) S^2 = sumBrN1((Y_i - hat(Y)_i)^2)
-    $
-    因此还可以得到等式：
-    $
-      sumBrN1(Y_i - overline(Y))^2 = sumBrN1((Y_i - hat(Y)_i)^2) + sumBrN1(hat(Y)_i - overline(Y))
-    $
-    往往记：
-    $
-      r^2 = (sumBrN1((hat(Y)_i - overline(Y))^2))/(sumBrN1((Y_i - overline(Y))^2)) = (hbeta_1^2 sumBrN1((x_i - Xbar)))/(sumBrN1((Y_i - overline(Y))^2)) = sumBrN1((Y_i - overline(Y))(X_i - Xbar))^2/(sumBrN1((Y_i - overline(Y))^2) sumBrN1((X_i - Xbar)^2))
+      phi_1 := (I - P_0) psi_1 
     $
     就有：
     $
-      RSS = (1 - r^2) sumBrN1((Y_i - overline(Y))^2)
+      inner(phi_1, phi_0) = 0
     $
-    显然 $r^2 = 1$ 时，$RSS = 0$，表明模型完全拟合。此外，如果假设就是 $beta_1 = 0$ 可以计算得：
+    同时：
     $
-      F = (n - 2) r^2 / (1 - r^2)
+      P_0 phi_1 = inner(psi_1, phi_0)/norm2(phi_0) phi_0 = 2 Xbar
     $
-    说明 $r$ 可以判断 $X, Y$ 的线性相关性。
-    // $
-    //   sumBrN1((Y_i - hat(Y)_i)(hat(Y_i) - overline(Y))) = sumBrN1((Y_i - overline(Y)) hat(Y)_i) - n overline(Y)^2
-    // $
+    立刻就有：
+    $
+      phi_1 = 2 (x - Xbar)
+    $
+
+    一般的，假设已经确定 $autoRListN(phi, r)$，做施密特正交化：
+    $
+      psi_(r + 1) = 2 x phi_r \
+      phi_(r + 1) = psi_(r + 1) - sum_(i = 0)^(r) inner(psi_(r + 1), phi_i)/norm2(phi_i) phi_i\
+      = 2 x phi_r - sum_(i = 0)^(r) inner(2 x phi_r, phi_i)/norm2(phi_i) phi_i\
+      = 2 x phi_r - sum_(i = 0)^(r) inner(2 phi_r, x phi_i)/norm2(phi_i) phi_i\
+    $
+    注意到有：
+    $
+      x phi_i in span(autoRListN(phi, i + 1))
+    $
+    因此当 $i < r - 1$ 时内积全为零，继而上式恰为：
+    $
+      phi_(r + 1)
+      &= 2 x phi_r - inner(2 x phi_r, phi_r)/norm2(phi_r) phi_r - inner(2 phi_r, x phi_(r - 1))/norm2(phi_(r - 1)) phi_(r - 1)\
+      &= 2(x - a_(r + 1)) phi_r - inner(phi_r, 2 x phi_(r - 1))/norm2(phi_(r - 1)) phi_(r - 1)\
+      &= 2(x - a_(r + 1)) phi_r - inner(phi_r, phi_r + 2 a_r phi_(r - 1) + b_r phi_(r - 2))/norm2(phi_(r - 1)) phi_(r - 1)\
+      &= 2(x - a_(r + 1)) phi_r - inner(phi_r, phi_r)/norm2(phi_(r - 1)) phi_(r - 1)\
+      &= 2(x - a_(r + 1)) phi_r - b_r phi_(r - 1)\
+    $
+    得证。
   ]
-  #definition[][
-    定义：
+  #theorem[][
+    上面定义的多项式满足：
     $
-      R^2 = (sumBrN1((hat(Y)_i - overline(Y))^2))/(sumBrN1((Y_i - overline(Y))^2))
+      phi_r (x) = 1/2 C_0^1 T_0 (x) + sumi(C_1^(r) T_i (x))
     $
-    相当于预测值的方差占原始方差的比例，也是真实值 $Y$ 与预测值 $hat(Y)$ 的相关系数的平方。
+    其中：
+    $
+      T_(0) (x) = 1\
+      T_(1) (x) = x\
+      T_(r + 1) (x) = 2 x T_r (x) - T_(r - 1) (x)\
+      C_j^(r + 1) = C_(j + 1)^r + C_(j - 1)^r - 2 a_(r + 1) C_j^r - b_r C_(j )^(r - 1)
+    $
   ]
+= Analysis of variance (ANOVA) model
+  假如我们想研究小鼠的饮食对凝血时间的影响，实验得到了表格：
+  #table(
+  columns: 2,
+  stroke: none,
+  inset: 10pt,
+  align: horizon,
+  table.header(
+    [*Diet*], [*Coagulation Time*],
+  ),
+  table.hline(),
+  [A], table.vline(), [#grid(column-gutter: 10pt, columns: 4, [62], [60], [63], [59])],
+  [B],  [#grid(column-gutter: 10pt, columns: 6, [63], [67], [71], [67], [68], [68])],
+  [C],  [#grid(column-gutter: 10pt, columns: 6, [68], [66], [71], [67], [68], [68])],
+  [D],  [#grid(column-gutter: 10pt, columns: 8, [56], [62], [60], [61], [63], [64], [63], [59])],
+  // [A],
+  // $ pi h (D^2 - d^2) / 4 $,
+  // [
+  //   $h$: height \
+  //   $D$: outer radius \
+  //   $d$: inner radius
+  // ],
+  // [B],
+  // $ sqrt(2) / 12 a^3 $,
+  // [$a$: edge length]
+)
+  如果设 $Y$ 是凝血时间，则 $Y$ 可以分解为基础平均凝血时间，治疗效果和误差。也即：
+  $
+    Y_i = mu + alpha_i + epsilon_i
+  $
+  其中 $mu$ 是基础平均凝血时间，$alpha_i$ 是治疗效果（通常我们需要  $sumi(alpha_i)= 0$）。这种问题被称为 one-way ANOVA model。
+
+  再例如，研究新鲜猪油和变质猪油对小鼠的影响，实验得到了表格：
+  #table(
+    columns: 3,
+    stroke: none,
+    inset: 10pt,
+    align: horizon,
+    table.header(
+      [], align(center)[*新鲜*], align(center)[*变质*],
+    ),
+    [雄性], grid(column-gutter: 10pt, columns: 3, [709], [679], [649]), table.vline(),
+    grid(column-gutter: 10pt, columns: 4, [592], [538], [476]),
+    table.hline(),
+    [雌性], grid(column-gutter: 10pt, columns: 3, [687], [597], [677]), grid(column-gutter: 10pt, columns: 4, [508], [605], [539]),
+    )
+  此时，模型受到了两个因素的影响，这种问题被称为 two-way ANOVA model。这种模型可以有两种选择：
+  $
+    Y_(i j) = mu + alpha_i + beta_j + epsilon_(i j)
+  $
+  或者：
+  $
+    Y_(i j) = mu_(i j) + epsilon_(i j)
+  $
+  注意到下面的写法考虑了两个因素的交互作用，因此更复杂一些。
+  == One-way anova
+    我们设：
+    - $I$ 为影响因素的所有可能取值
+    - $J_i$ 是每组实验的样本个数
+    - $Y_(i j)$ 是第 $i$ 组第 $j$ 个样本的观测值，我们假设 $Y_(i j) tilde N(mu_i, sigma^2)$ 且 $epsilon_(i j)$ 之间相互独立。
+    我们往往将模型写作：
+    $
+      Y = theta + epsilon
+    $
+    其中 $theta = (mu_i 1_(J_i))$，取：
+    $
+      X = diag(1_(J_i))
+    $
+    则模型形如：
+    $
+      Y = X mu + epsilon
+    $
+    其中 $mu$ 是我们关心的值。检验这些方案有没有效果相当于检验：
+    $
+      H : mu_1 = mu_2 = ... = mu_I
+    $

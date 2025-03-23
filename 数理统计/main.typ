@@ -345,7 +345,7 @@
         注意，事实上这里取的都是对称的置信区间。原则上来说，也可以取成不对称的置信区间，不过对于正态分布这种单峰分布，采用对称型的置信区间往往是平均最窄的。
       - 未知方差，求期望的置信区间。此时不能再采取之前的方法，思路是使用无偏估计 $S^2 = 1/(n - 1) sumBrN1((Xbar - X_i)^2)$ 代替 $sigma^2$，如此得到新的统计量：
         $
-          T = (Xbar - mu)/(S^2/sqrt(n))
+          T = (Xbar - mu)/sqrt(S^2/n)
         $
         它不再服从正态分布。
         #theorem[][
@@ -529,7 +529,7 @@
       ]
 = 假设检验
   == 提出问题
-    假设检验是统计学的重要问题。往往，我们结合实际情况提出一个假设（Hyphothesis）$H_0$，往往称为*零假设* /Null hypothesis），其反面称为*备择假设*（Alternative）然后根据数据来判断这个假设是否成立。
+    假设检验是统计学的重要问题。往往，我们结合实际情况提出一个假设（Hyphothesis）$H_0$，往往称为*零假设* /Null hypothesis），其反面称为*备择假设*（Alternative）然后根据数据来判断这个假设是否成立。事实上，假设检验的思想有点类似反证法，只是因为随机性的存在，并不能导出绝对的矛盾。因此，往往思路是先假设零假设成立，检查某些小概率事件是否发生，如果发生，则拒绝零假设。
     #example[][
       某人声称可以判断不透明盒子中硬币正反面，做试验 $n$ 次，猜对 $m$ 次，能否认为他确实有这个能力？这就是要检验零假设 $H_0 : p = 1/2$（也就是没有这个能力）
     ]
@@ -664,7 +664,146 @@
       $
       因此结论成立。
     ]
-
+    #lemma[][
+      UMP 检验总是无偏的
+    ]
+    #proof[
+      考虑随机化检验法 $phi_0(x) = alpha$，利用 UMP 的定义与其比较即可
+    ]
+  == 单参数检验
+    假设参数空间 $Theta$ 是一维的，假设检验往往有以下四种类型：
+    - $H_0: theta <= theta_1, H_1 : theta > theta_1$
+    - $H_0 : theta in.not (theta_1, theta_2), H_1 : theta in (theta_1, theta_2)$
+    - $H_0 : theta in [theta_1, theta_2], H_1 : theta in.not [theta_1, theta_2]$
+    - $H_0 : theta = theta_0, H_1 : theta != theta_0$
+    通常，零假设的区域都是闭的，这只是一个数学习惯。
+    #definition[单参数指数分布][
+      设分布函数形如：
+      $
+        f(x, theta) = S(theta) h(x) e^(Q(theta) T(x))
+      $
+      其中 $Q$ 是严格增函数，则称该分布为单参数指数分布。其中 $T$ 就是一个完全充分统计量。
+    ]
+    回顾 @N-P-lemma，事实上可以发现得到的检验法与根本与 $theta_2$ 无关。直觉上，该检验法应该可以直接用于检验：
+    $
+      H_0 : theta = 0, H_1 : theta > 0
+    $
+    再复杂一点，也可以用于检验：
+    $
+      H_0 : theta <= theta_0, H_1 : theta > theta_0
+    $
+    #theorem[][
+      设 $X$ 的分布是单参数指数型，检验问题为：
+      $
+        H_0 : theta <= theta_0, H_1 : theta > theta_0
+      $
+      若检验水平 $alpha in (0, 1)$，且存在 $C$ 使得 $P_(theta_0) (sumBrN1(T(X_i)) > C) = alpha$，则此问题的水平为 $alpha$ 的 UMP 检验法为：
+      $
+        phi_0 (x) = 1_(sumBrN1(T(x_i)) > C) (x)
+      $
+    ]
+    #proof[
+      尽管 $Theta_0 ,Theta_1$ 中均有无穷多点，但实际验证定义时只需要比较两点，利用 @N-P-lemma 即可。
+    ]
+    #remark[][
+      如此构造的检验法，第 II 类错误的概率的上确界高达 $1 - alpha$，所幸实际问题中遇到这种极端情况的机会很小。同时，从构造方法也能看出，统计上对于第 I 类错误和第 II 类错误的权衡是不对称的，往往更重视第 I 类错误的概率不要过大。换言之，对于相同的问题，将零假设和备择假设互换可能会得到不同的结果。
+    ]
+    #example[][
+      - 已知方差的正态分布 $N(mu, sigma^2_0)$，可以验证 $Q(mu) = mu/(sigma_0^2), T(x) = x$，则检验法为：
+        $
+          phi_0 (x) = 1_(sumBrN1(x_i) > C) (x)
+        $
+        其中：
+        $
+          P_(mu_0) (sumBrN1(X_i) > C) = alpha
+        $
+        注意到 $sumBrN1(X_i)$ 服从正态分布，因此这样的 $C$ 是容易查表得到的。例如 $alpha = 0.05$ 时，查表可得：
+        $
+          C = n(mu_0 + 1.65/sqrt(n) sigma_0)
+        $
+      - 已知期望的正态分布，检验方差：
+        $
+          H_0 : sigma^2 <= sigma^2_0, H_1 : sigma^2 > sigma^2_0
+        $
+        此时熟知 $Q(sigma^2) = -1/sigma^2 "单调增加，" T(x) = (x - mu_0)^2$，因此可以构造检验法：
+        $
+          phi_0 (x) = 1_(sumBrN1((X_i - mu_0)^2) > C) (x)
+        $
+        其中:
+        $
+          P_(sigma^2_0) (sumBrN1((X_i - mu_0)^2)/sigma^2 > C/sigma^2) = alpha
+        $
+        而 $sumBrN1((X_i - mu_0)^2)/sigma^2$ 服从 $chi^2(n)$ 分布，因此可以查表得到 $C$。
+    ]
+    #theorem[][
+      设 $X$ 是单参数指数型，对于检验问题：
+      $
+        H_0 : theta in.not (theta_1, theta_2), H_1 : theta in (theta_1, theta_2)
+      $
+      若存在常数 $C_1, C_2$ 使得 $beta_(phi_0) (theta_i) = alpha, i = 1, 2$，而：
+      $
+        phi_0 (x) = 1_(sumBrN1(T(x_i)) in (C_1, C_2)) (x)
+      $
+      则 $phi_0$ 就是 UMP 检验法。
+    ]
+    #theorem[][
+      设 $X$ 是单参数指数型，对于检验问题：
+      $
+        H_0 : theta in [theta_1, theta_2], H_1 : theta in.not [theta_1, theta_2]
+      $
+      若存在常数 $C_1, C_2$ 使得 $beta_(phi_0) (theta_i) = alpha, i = 1, 2$，而：
+      $
+        phi_0 (x) = 1_(sumBrN1(T(X_i)) < C_1 or sumBrN1(T(X_i)) > C_2) (x)
+      $
+      则它是该问题的 UMPU 检验。注意此时 UMP 检验是不存在的，因为总可以在一侧抬高功效函数，在另一侧降低功效函数。
+    ]
+    #theorem[][
+      设 $X$ 是单参数指数型，其中 $Q'(theta) > 0$，对检验问题：
+      $
+        H_0 : theta = theta_0, H_1 : theta != theta_0
+      $
+      若存在常数 $C_1, C_2$ 使得：
+      - $beta_(phi_0) (theta_0) = alpha$
+      - $E_(theta_0) (phi_o (X) sumBrN1(T(X_i))) = alpha E_(theta_0) sumBrN1(T(X_i))$
+      其中：
+      $
+        phi_0 (x) = 1_(sumBrN1(T(X_i)) < C_1 or sumBrN1(T(X_i)) > C_2) (x)
+      $
+      则 $phi_0$ 是该问题的 UMPU 检验。直观上，这类似于之前的情景将 $theta_1, theta_2$ 靠近。类似之前的情形，此时的 UMP 检验也不存在。
+    ]<eq-testing>
+    #remark[][
+      @eq-testing 讨论的是很理论的情形。事实上可以证明，样本量无穷大时我们将概率为 $1$ 地否定 $H_0$，这就产生了悖论！不过实际情境中许多时候人们确实比较关心这样的结果。
+    ]
+    #example[][
+      方差已知的正态分布，在 @eq-testing 中的情形中，直观上 $C_1, C_2$ 应该以 $mu_0$ 对称。可以证明，由对称性和条件 1 求出的 $C_1, C_2$ 也符合条件 2。
+    ]
+    #remark[][
+      事实上，上面几种方法给出的肯定域都是某种意义上的置信区间，也就是说，对于某个参数的目标值（或者目标的上下确界），做假设检验等价于目标值是否落入当前数据下，给定水平的置信区间。
+    ]
+  == 广义似然比检验法
+    在复杂的假设检验问题中，功效函数可能很复杂，因此统计学家往往会优先考虑广义似然比检验法。
+    #definition[][
+      假设似然函数为 $L(x, theta)$，则广义似然比统计量为：
+      $
+        lambda(X) = (sup_(theta in Theta) L(x, theta))/(sup_(theta in Theta_0) L(x, theta))
+      $
+      显然 $lambda(X) >= 1$. 理论上往往需要 $lambda$ 可测，实践上一般忽略。
+    ]
+    计算上，广义似然比的计算归结于带约束的最大似然估计问题。直观上，$lambda$ 太大时，$Theta_0$ 不太合理，应该否定 $H_0$。同时，假设 $t(x)$ 是 $theta$ 的充分统计量，则广义似然比就是充分统计量的函数。
+    #definition[][
+      给定检验水平 $alpha > 0$，若存在 $lambda_0 > 0$，使得 $sup_(theta in Theta_0)(beta_(phi_0) (theta)) = alpha$，其中：
+      $
+        phi_0 (x) = 1_(lambda(x) > lambda_0) (x)
+      $
+      则称 $phi_0$ 是水平为 $alpha$ 的广义似然比检验法。
+    ] 
+    #definition[相合][
+      称检验法 $phi$ 是相合的，若 $theta in Theta - Theta_0$，有：
+      $
+        lim_(n -> +infinity) beta_phi (theta) = 1
+      $
+    ]
+    
 
 
     

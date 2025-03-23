@@ -8,6 +8,8 @@
   withChapterNewPage: true
 )
 #let complete(x) = $tilde(#x)$
+#let Re = math.op("Re")
+#let Im = math.op("Im")
 = 前言  
   - 教师：刘保平 baoping\@math.pku.edu.cn
   - 教材：张恭庆《泛函分析讲义》
