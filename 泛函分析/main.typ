@@ -913,3 +913,459 @@
       $
       存在性得证。其他性质是简单的。
     ]
+    #corollary[][
+      定义：
+      $
+        funcDef(sigma, duelSpace(X), X, f, y_f)
+      $
+      则 $sigma$ 是线性/共轭线性的双射。
+    ]
+    #corollary[][
+      设 $X$ 是 Hibert 空间，则 $duelSpace(X)$ 也是，内积定义为：
+      $
+        inner(f, g) = overline(inner(sigma(f), sigma(g)))
+      $
+      并且有
+      $duelSpace(X) eqv X$
+    ]
+    #proof[
+      有：
+      $
+        inner(f + g, h) = overline(inner(sigma(f + g), sigma(h))) = overline(inner(sigma(f), sigma(h)) + inner(sigma(g), sigma(h))) = inner(f, h) + inner(g, h)\
+        inner(h, f + g) = overline(inner(sigma(h), sigma(f + g))) = overline(inner(sigma(h), sigma(f)) + inner(sigma(h), sigma(g))) = inner(h, f) + inner(h, g)\
+        inner(lambda f, g) = overline(inner(sigma(lambda f), g)) = overline(inner(overline(lambda) sigma(f), g)) = lambda inner(f, g)\
+        inner(f, lambda g) = overline(inner(sigma(f), overline(lambda) sigma(g))) = overline(lambda) inner(f, g)
+      $
+      内积的其他性质是显然的，并且 $overline(*) compose sigma$ 是双射，因此 $duelSpace(X) eqv X$
+    ]
+    #theorem[Lax-Milgram][
+      设 $X$ 是 Hilbert 空间，$a$ 是 $X$ 上的 sesquilinear form，且满足：
+      - $|a(x, y)| <= M norm(x) norm(y)$
+      那么就存在唯一的 $A in L(X)$ 使得：
+      $
+        a(x, y) = inner(A x, y)
+      $
+      以及：
+      $
+        norm(A) = sup_(x, y !=0) norm(a(x, y))/(norm(x) norm(y))
+      $
+      若还有：
+      - $norm(a(x, x)) >= b norm2(x)$
+      则 $A$ 可逆，$norm(A) <= 1/b$
+    ]<Lax-Milgram>
+    #proof[
+      有：
+      $
+        Hom(X tensorProduct Y, KK) eqv Hom(X, Hom(Y, KK)) = Hom(X, Y^*) eqv Hom(X, Y)
+      $
+      最后一项是因为 Risez 表示定理。事实上，有显式表达式：
+      $
+        a(x, y) = inner(x, A y)
+      $
+      其中 $A in Hom(X, Y)$，还要验证有界，这是因为：
+      $
+        norm2(A y) = norm(inner(A y, A y)) = norm(a(A y, y)) <= M norm(A y) norm(y) => norm(A y) <= M norm(y)
+      $
+      此外，有：
+      $
+        norm(a(x, y)) = inner(x, A y) <= norm(x) norm(A y) <= norm(x) norm(A) norm(y)
+      $
+      因此：
+      $
+        norm(A) >= norm(a(x, y))/(norm(x) norm(y))
+      $
+      同时：
+      $
+        norm(a(A y, y))/(norm(A y) norm(y)) = norm(A y)/norm(y) 
+      $
+      取上确界就有：
+      $
+        sup_(x, y !=0 ) norm(a(x, y))/(norm(x) norm(y)) >= sup_(y != 0) norm(a(A y, y))/(norm(A y) norm(y)) = sup_(y != 0) norm(A y)/norm(y) = norm(A)
+      $
+      这就证明了：
+      $
+        norm(A) = sup_(x, y !=0) norm(a(x, y))/(norm(x) norm(y))
+      $
+
+      若假设后面的条件成立，往证 $A$ 可逆：
+      - $A x = 0 => a(x, x) = inner(x, A x) = 0 => 0 >= b norm2(x) => x = 0$
+      - $im A$ 是闭的：注意到：
+        $
+          b norm2(x) <= norm(inner(x, A x)) <= norm(x) norm(A x) => norm(A x) >= b norm(x)
+        $
+        因此设 $x_n -> x_0$，则：
+        $
+          norm(A x_n - A x_m) = norm(A (x_n - x_m)) >= b norm(x_n - x_m)
+        $
+        表明 $A x_n$ 是柯西列，进而收敛，极限当然就是 $A x_0$
+      - $orthogonalCom(im A) = {0}$：任给 $x in orthogonalCom(im A)$，则有：
+        $
+          0 = inner(x, A x) = a(x, x) => b norm2(x) = 0 => x = 0
+        $
+      这就表明 $A$ 可逆，而 $norm(A) <= Inv(b)$ 是容易的。
+    ]
+    #corollary[Lax-Milgram2][
+      设 $X$ 是 Hilbert 空间，$a$ 是 $X$ 上的 sesquilinear form，且满足：
+      - $|a(x, y)| <= M norm(x) norm(y)$
+      - $norm(a(x, x)) >= b norm2(x)$
+      那么对任何 $f in duelSpace(X)$，存在唯一的 $Z_f in X$ 使得：
+      $
+        f(x) = a(x, Z_f)
+      $
+    ]<Lax-Milgram2>
+    #proof[
+      可设 $f(x) = inner(x, y)$，则：
+      $
+        f(x) = inner(x, y) = inner(x, A Inv(A) y) = a(x, Inv(A) y)
+      $
+    ]
+    #example[][
+      设 $Omega subset RR^n$ 是开区域，函数 $u$ 满足：
+      $
+        cases(
+          - Delta u = f,
+          u|_(diff Omega) = 0 
+        )
+      $
+      其中 $f in L^2(Omega)$。为了判断该方程是否有解，可以考虑：
+      - 设 $C^M_0 (Omega) = {u in C^m (closure(Omega)) | u = 0 "in a neighborhood of" diff u}$
+      - 假设 $u in C^2(Omega)$ 符合方程，则任取 $v$ 都有：
+        $
+          integral_(Omega)^() (Delta u - f) v dif x = 0
+        $
+        而分部积分可以将上式重写成：
+        $
+          integral_Omega (Delta u Delta v - f v) dif x = 0
+        $
+        我们检查该积分方程是否有解。该积分方程的解称为*弱解*，现代偏微分方程中，我们往往先找出弱解，再将弱解的性质转化为强解的性质。我们在这里只证明弱解存在。
+      - 设：
+        $
+          H_0^m (Omega)
+        $
+        是在模为：
+        $
+          norm2(u) = sum_(abs(alpha) <= m) integral_()^() norm2(diff^alpha u) dif x` 
+        $
+        的 $C_0^m (Omega)$ 的完备化空间。
+      - 定义：
+        $
+          X = H_0^1 (Omega), inner(f, g) = sum_(abs(alpha <=1)) integral_Omega diff^2 f diff^2 g dif x
+        $
+        以及双线性函数：
+        $
+          a(f, g) = sum_(abs(alpha = 1)) integral_Omega diff^alpha f diff^alpha g dif x = integral_()^() nabla f nabla g dif x
+        $
+        我们验证 $a$ 满足之前的条件。条件 1 是显然的，条件 2 相当于：
+        $
+          integral_(Omega)^() norm2(nabla f) dif x >= C integral_(Omega)^() norm2(f) + norm2(nabla f) dif  
+        $
+        也就是 $norm(f)$ 是否能被 $norm(nabla f)$ 控制，之后我们会证明它成立。
+      - 取：
+        $
+          F(v) = integral_Omega f v dif x
+        $
+        它是线性泛函，由 Lax-Milgram 定理，存在唯一的 $u in X$ 使得：
+        $
+          integral_Omega f v dif x = F(v) = a(v, u) = sum_(abs(alpha) = 1) integral_Omega diff^alpha v diff^alpha u dif x  = integral_Omega nabla v nabla u dif x
+        $
+    ]
+    #lemma[Poincare's 不等式][
+      设 $Omega subset RR^n$ 是有界开区域，$f in C_0^m (Omega)$，则：
+      $
+        norm(u) <= C norm(nabla u)
+      $
+      （范数是前面定义的范数）
+    ]
+    #proof[
+      只证 $m = 1$ 情形，其他的递推即可。也就是：
+      $
+        integral_(Omega)^() abs(f)^2 dif x <= C integral_(Omega)^() abs(nabla f)^2 dif x
+      $
+      由有界性，可设：
+      $
+        Omega subset D(a)
+      $
+      其中 $D(a)$ 是各个分量由 $[-a, a]$ 组成的立方体。同时，由 $f$ 的性质，$f$ 可以零延拓到 $D$ 上。有：
+      #let x2n = $x_2, x_3, ..., x_n$
+      $
+        f(autoRListN(x, n)) = f(-a, x2n) + integral_(-a)^(x_1) diff_1 f(t, x2n) dif t\
+        = integral_(-a)^(x_1) diff_1 f(t, x2n) dif t
+      $
+      （这里由延拓的性质，一定有 $f(-a, x2n) = 0$），因此：
+      $
+        abs(f(x))^2 <= integral_(-a)^(x_1) (diff_1 f(t, x2n))^2 dif t integral_(-a)^(x_1) 1 dif t \
+        <= abs(x_1 + a) integral_(-a)^(a) (diff_1 f(t, x2n))^2 dif t
+      $
+      进而：
+      $
+        integral_(Omega)^() abs(f)^2 dif x = integral_()^() integral_(-a)^(a) abs(f)^2 dif x_1 dif x2n\
+        <= integral integral_(-a)^(a) abs(x_1 + a) integral_(-a)^(a) (diff_1 f(t, x2n))^2 dif t dif x_1 dif x2n\
+        <= integral integral_(-a)^(a) abs(x_1 + a) dif x_1 integral_(-a)^(a) (diff_1 f(t, x2n))^2 dif t dif x2n\
+        = (integral_(-a)^(a) abs(x + a) dif x) integral_(Omega)^() abs(diff_1 f)^2 dif x 
+      $
+      证毕。
+    ]
+    #remark[][
+      - 显然上面的不等式依赖于 $f$ 在边界上取零，否则 $f$ 取 $1$ 即可得到反例
+      - 结论对 $H_0^m$ 也成立，取极限即可。
+    ]
+    #theorem[Hahn-Banach][
+      设 $X$ 是 Hibert 空间，$X_0$ 是闭子空间，设 $f_0 : X_0 -> KK$ 是有界线性泛函，则存在唯一的 $f : X -> KK$ 是有界线性泛函，满足它是 $f_0$ 的延拓，且：
+      $
+        norm(f)_(duelSpace(X)) = norm(f_0)_(duelSpace(X_0))
+      $
+    ]
+    #proof[
+      设 $P = P_(X_0)$，则令：
+      $
+        f(x) = f_0(P x)
+      $
+      由定义，性质的验证都是简单的。
+
+      接下来证明唯一性：假设 $g$ 也满足条件，设：
+      $
+        g(x) = inner(x, z), norm(g) = norm(z)
+      $
+      则：
+      $
+        g(x) = inner(x, z) = f_0 (x)
+      $
+      同时：
+      $
+        inner(x, z) = inner(P x, z) = inner(x, P z), forall x in X_0
+      $
+      因此显然：
+      $
+        norm(z) = norm(g) = norm(f_0)_(duelSpace(X_0)) = norm(P z)
+      $
+      说明 $z = P z$，因此：
+      $
+        g(x) = inner(x, z) = inner(x, P z) = inner(P x, z) = f_0 (P x) = f(x)
+      $
+      证毕。
+    ]
+    #remark[][
+      - $X_0$ 放松到一般子空间是容易的，既然有界线性泛函可以很容易的延拓到闭包上
+      - 一般而言，$X$ 是 Banach 空间时存在性也是正确的，但这个定理的证明更具有构造性
+    ]
+  == The great theorems in linear functional analysis I(Baire Category Thm)
+    #definition[][
+      设 $X$ 是度量空间，称 $E subset X$ 是无处稠密/疏集/nowhere dense，如果 $closure(E)$ 的内部为空（等价于 $closure(E)$ 的补集稠密）
+    ]
+    #example[][
+      - 有限集都是无处稠密的
+      - 康托集是无处稠密的
+    ]
+    #lemma[][
+      $E$ 无处稠密当且仅当对于任意 $B(x_0, r_0)$，其中都存在 $B(x_1, r_1)$ 使得：
+      $
+        closedBall(x_1, r_1) inter closure(E) = emptyset
+      $
+    ]
+    #proof[
+      假设 $closure(E)$ 有内点，则内点附近找到的球就不符合条件，因此右推左显然。
+
+      对于左推右，由定义有：
+      $
+        B(x_0, r_0) subset.not closure(E)
+      $
+      也就是：
+      $
+        B(x_0, r_0) inter X - closure(E) != emptyset
+      $
+      而上面的集合是两个开集的交，当然也是开集，在其中找一个开球即可。
+    ]
+    #theorem[Baire Category Theorem v1][
+      设 $X$ 是完备度量空间，则 $X$ 不能写成可数个无处稠密集的并
+    ]
+    #proof[
+      反证法，假设 $X = Union E_n$，其中 $E_n$ 是无处稠密集，无妨设 $E_n$ 是闭的（否则取闭包即可）。任取 $B(x_0, r_0)$，由 $E_1$ 无处稠密有：
+      $
+        exists x_1, r_1, B(x_1, r_1) subset B(x_0, r_0) inter X - E_1 and r_1 < 1/2 r_0
+      $
+      类似的，有：
+      $
+        exists x_2, r_2, B(x_2, r_2) subset B(x_1, r_1) inter X - E_2 and r_2 < 1/2 r_1
+      $
+      不断进行下去，得到一列 $x_n$，它是柯西列，因此收敛到 $x$，而不难验证 $x$ 不在任何 $E_n$ 之中，矛盾！
+    ]
+    #theorem[Baire Category Theorem v2][
+      设 $X$ 是完备度量空间，$u_n$ 是开的稠密集，则它们的 $Inter u_n$ 也是稠密的
+    ]
+    #proof[
+      任给 $B(x, epsilon)$，往证 $B(x, epsilon) inter Inter u_n != emptyset$. 由 $u_1$ 的稠密性，有：
+      $
+        B(x, epsilon) inter u_1 != emptyset
+      $
+      因此：
+      $
+        exists x_1, epsilon_1 < epsilon/2, B(x_1, epsilon_1) subset closure(B(x_1, epsilon_1)) subset B(x, epsilon) inter u_1
+      $
+      类似的，有：
+      $
+        exists x_2, epsilon_2 < epsilon/2, B(x_2, epsilon_2) subset closure(B(x_2, epsilon_2)) subset B(x_1, epsilon_1) inter u_2
+      $
+      不断进行下去，得到一列 $x_n$，它是柯西列，因此收敛到 $x$，不难验证 $x in B(x, epsilon) inter Inter u_n$，证毕。
+    ]
+    #theorem[Baire Category Theorem v3][
+      设 $X$ 是完备度量空间，$E_n$ 是无处稠密集，则 $Union E_n$ 也是无处稠密的
+    ]
+    #definition[][
+      设 $X$ 是度量空间，称 $E subset X$ 是第一纲集/first category set，如果 $E$ 可以写成可数个无处稠密集的并。如果 $X$ 不是第一纲集，则称其是第二纲集/second category set
+    ]
+    #corollary[][
+      完备度量空间都是第二纲的
+    ]
+    #example[][
+      - $RR^n$ 不能写成可数个超平面的并
+      - 若 $X$ 是无穷维 Banach 空间，则 Hamel 基不可能是可数的。否则，前 $n$ 个 Hamel 基的张成空间是闭的无处稠密集，这些集合的并是全空间，矛盾！
+    ]
+    #theorem[][
+      设 $X = C[0, 1], E subset X$ 是无处可导函数，则 $X - E$ 是第一纲集（可数个无处稠密集合的并），进而 $E$ 是稠密集。
+    ]
+    #proof[
+      考虑：
+      $
+        A_n = {f in X | exists x in [0, 1], sup_(h != 0) abs((f (x + h) - f(x))/h) <= n}
+      $
+      显然 $A_n$ 单调增加，且若 $f$ 在某点可导，则 $f in lim A_n = union.big A_n$，换言之：
+      $
+        X - E subset union.big A_n
+      $
+      + $A_n$ 是闭集：对于 $f_k -> f$，它们都有对应的一点 $a_k$，不妨设 $a_k$ 收敛于 $a$，则：
+        $
+          abs((f_k (a_k + h) - f_k (a_k))/h) -> abs((f (a + h) - f(a))/h)
+        $
+        （一致收敛性保证上式成立）\
+        而上式左端 $<= n$，右端也 $<= n$，因此 $f in A_n$
+      + $A_n$ 是无处稠密的。只需证明 $A_n$ 不是内点，任取 $f in A_n$，取多项式 $p$ 使得 $norm(p - f) <= epsilon$，再取 $M_0 = sup_(x in [0, 1]) abs(p' (x))$，接下来只需构造一个函数 $R(x)$ 与 $p$ 很近但差分很大即可。事实上，取 $r(x)$ 使得：
+        - $norm(r(x)) < epsilon$
+        - $forall x, sup_h abs((r(x + h) - r(x))/h) > n + 1 + M_0$
+        即可，这样的函数很好取得，只需取波动很大的折线即可。
+        接下来：
+        $
+          norm(p + r - f) <= 2 epsilon
+        $
+        以及：
+        $
+          sup_h abs(((r + p)(x + h) - (r + p)(x))/h) >= n + 1 + M_0 - M_0 = n + 1
+        $
+        因此这就找到了 $f$ 附近的一个不在 $A_n$ 中的点。
+      因此可设 $X - E subset F$，其中 $F$ 是第一纲集。然而显然 $F inter E = emptyset$，因此 $F = X - E$，故 $X - E$ 是第一纲集。
+    ]
+  == BCT 定理的应用：重要定理
+    设 $X, Y$ 都是 Banach 空间，假设 $T in L(X, Y)$，并且 $T$ 是双射，则可以定义 $Inv(T)$，然而 $Inv(T)$ 是否有界是一个问题。注意到 $Inv(T)$ 有界等价于 $Inv(T)$ 连续，等价于 $T$ 是开映射/闭映射。因此只需要研究有界线性函数是否是开映射/闭映射即可。
+    #theorem[开映射定理][
+      设 $X, Y$ 是 Banach 空间，$T in L(X, Y)$ 是满射，则 $T$ 是开映射。
+    ]<open-mapping-theorem>
+    #proof[
+      记 $B_n = B(0, n) subset X$
+      #lemmaLinear[][
+        存在 $delta > 0$ 使得 $B(0, delta) subset closure(T(B_1))$
+      ]
+      #proof[
+        因为 $T$ 是满射，故：
+        $
+          Y = union.big T(B_n) subset union.big closure(T(B_n)) subset Y
+        $
+        因此 $Y = closure(T(B_n))$. 注意到 $T(B_n)$ 是闭的，由 BCT 定理它们中至少有一个是有内点的，因此可设：
+        $
+          B(y_0, delta_0) subset closure(T(B_n))
+        $
+        进而：
+        $
+          B(0, delta_0) subset B(y_0, delta_0) - B(y_0, delta_0) subset closure(T(B_n)) - closure(T(B_n)) subset closure(T(B_(2 n))))
+        $
+        由定义，显然有：
+        $
+          B(0, (delta_0)/(2 n)) subset closure(T(B_1))
+        $
+        证毕
+      ]
+      #lemmaLinear[][
+        存在 $delta > 0$ 使得 $B(0, delta) subset closure(T(B_1))$
+      ]
+      #proof[
+        先取 $delta$ 是之前引理的 $delta$，因此任取 $y in B(0, delta)$，可以找到 $x_1$ 使得：
+        $
+          norm(T x_1 - y) < delta/2
+        $
+        然而我们有：
+        $
+          B(0, delta/2) subset closure(T(B_(1/2)))
+        $
+        因此可以找到 $x_2$ 使得：
+        $
+          norm(T x_2 - (y - T x_1)) < delta/2^2
+        $ 
+        反复进行，可以得到 $x_i in B_(1/2^i)$，并且：
+        $
+          norm(T(sumi1n(x_i)) - y) <= delta/(2^n)
+        $
+        注意到 $norm(x_i) < norm(1/(2^n))$，因此 $sumi1inf(x_i)$ 存在，因此取极限即有：
+        $
+          T(sumi1inf(x_i)) = y
+        $
+        同时：
+        $
+          norm(sumi1inf(x_i)) <= 2
+        $
+        故：
+        $
+          y in T(B_3)
+        $
+        由 $y$ 的任意性就有 $B(0, delta) subset T(B_3)$，也即 $B(0, delta/3) subset T(B_1)$，证毕
+      ]
+      有了之前的引理，假设 $Omega$ 是开集，任取 $y_0 = T x_0 in T(Omega)$，将前面的结论平移得到：
+      $
+        B(y_0, delta) subset T(B(x_0, 1))
+      $
+      由于 Omega 是开集，由伸缩性无妨设 $B(x_0, 1) subset Omega$，就有：
+      $
+        B(y_0, delta) subset T(B(x_0, 1)) subset T(Omega)
+      $
+      证毕。
+    ]
+    之后的几个定理也非常重要，且与开映射定理也都是等价的。
+    #theorem[Banach 逆算子定理][
+      设 $T in L(X, Y)$，$X, Y$ 是 Banach 空间，$T$ 是双射，则 $Inv(T) in L(X, Y)$ 
+    ]<Banach-inverse-operator>
+    #theorem[等价范数][
+      设 $X$ 上有两个范数，它们构成 Banach 空间。只要一个范数控制另一个范数，那么它们是等价的。
+    ]<equivalent-norm>
+    #proof[
+      条件意味着 $id$ 映射是有界线性双射，则 @Banach-inverse-operator 给出逆映射也是。
+    ]
+    #definition[图像][
+      设 $T$ 是线性算子，它的图像定义为：
+      $
+        G(T) = {(x, T x) | x in X} subset X times Y
+      $
+      若 $G(T)$ 是闭的，则称 $T$ 是闭算子
+    ]
+    #theorem[闭图像定理/closed graph][
+      Banach 空间之间的闭算子就是有界算子
+    ]
+    #proof[
+      在 $X$ 上可以定义额外的范数：
+      $
+        norm(x)_T = norm(x) + norm(T x)
+      $
+      被称为图模。只要图模是完备的，而通常的模显然被图模控制，由 @equivalent-norm 立刻得到结论。
+
+      然而不难注意到，若设 $i: X -> G(T)$，则：
+      $
+        norm(i x) = norm(x)_G
+      $
+      同时，$i$ 是线性的双射，$G(T) subset X times Y$ 是完备空间的闭子集，当然也是完备的，因此 $i$ 构成赋范空间的同构，当然就有图模完备。
+    ]
+    #theorem[Banach-Steinhaus][
+      设 $T_n in L(X, Y)$，$X, Y$ 都是 Banach 空间，若：
+      $
+        forall x in X, sup_n norm(T_n x) < +infinity
+      $
+      则：
+      $
+        sup_n norm(T_n) < +infinity
+      $
+    ]

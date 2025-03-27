@@ -1249,8 +1249,9 @@
   $
     Y_(i j) = mu_(i j) + epsilon_(i j)
   $
-  注意到下面的写法考虑了两个因素的交互作用，因此更复杂一些。
+  注意到下面的写法考虑了两个因素的交互作用，因此参数更多，更复杂一些。
   == One-way anova
+    #let sumJi(x) = $sum_(j = 1)^(J_i) autoBraceIfAddOrSub(#x)$
     我们设：
     - $I$ 为影响因素的所有可能取值
     - $J_i$ 是每组实验的样本个数
@@ -1265,9 +1266,113 @@
     $
     则模型形如：
     $
-      Y = X mu + epsilon
+      Y = X mu + epsilon\
+      rank(X) = I
     $
     其中 $mu$ 是我们关心的值。检验这些方案有没有效果相当于检验：
     $
       H : mu_1 = mu_2 = ... = mu_I
     $
+    使用之前的方法，就有：
+    $
+      F = (RSS_H - RSS)/(I - 1) / (RSS / (n - I)) tilde F_(I - 1, n - I)
+    $
+    注意到我们的模型事实上是：
+    $
+      Y_i = mu_i + epsilon_i
+    $
+    显然无约束时，$mu_i$ 的最优值就是 $Ybar_i$，因此：
+    $
+      RSS = sumi(sumJi((Y_(i j) - Ybar_i)^2))
+    $
+    类似的，假设成立时，$mu$ 的最优值应该就是 $Ybar := sumi(Ybar_i)$，因此：
+    $
+      RSS_H = sumi(sumJi((Y_(i j) - Ybar)^2))
+    $
+    前面提到过有：
+    $
+      RSS_H - RSS &= norm2(P_H Y - P Y)\
+      &= norm2(hY_H - hY)\
+      &= sumi(J_i (Ybar_i - Ybar)^2)\
+    $
+    故：
+    $
+      F = (sumi(J_i (Ybar_i - Ybar)^2) / (I - 1)) / (sumi(sumJi((Y_(i j) - Ybar)^2)) / (n - I))
+    $
+    注意到分子上的项类似于每组之间的方差，分母上类似于组内方差的和，不难想象 $H$ 成立时组间方差应该和组内方差是比较接近的。
+
+    然而，这个问题还有其他的参数化方式。例如：
+    - 将第 $I$ 个均值作为基准，也即令：
+      $
+        mu = mu_I\
+        alpha_i = mu_i - mu_I
+      $
+      模型写出：
+      $
+        Y_i = (mu + alpha_i) 1 + epsilon_i
+      $
+      当然，我们要求 $alpha_I = 0$，它也可以写成矩阵形式：
+      $
+        Y = (1, diag(1_(J_i))) vec(mu, alpha_1, alpha_2, dots.v, alpha_(I - 1)) + epsilon
+      $
+      此时：
+      $
+        H: alpha_1 = alpha_2 = ... = alpha_(I - 1) = 0 
+      $
+    - 将 $mu = 1/I sumi(mu_i)$ 作为基准，令 $alpha_i = mu_i - mu$，其他的和上面情况类似。
+    - 将全局的均值 $Ybar$ 作为基准，令 $alpha_i = mu_i - mu$，其他的和上面情况类似。
+
+    有些时候，我们也会对下面的形式：
+    $
+      theta = sumi(c_i mu_i)
+    $
+    估计置信区间。事实上有：
+    $
+      E(htheta) = sumi(c_i Ybar_i)\
+      var(htheta) = sigma^2 sumi(c_i^2/J_i)
+    $
+    用：
+    $
+      S^2 = 1/(n - I) sumi(sumJi((Y_(i j) - Ybar_i)^2))
+    $
+    替代 $sigma^2$，得到统计量：
+    $
+      (htheta - theta)/sqrt(S^2 sumi(c_i^2/J_i)) tilde t_(n - I)
+    $
+    类似的，也可以使用 Scheffe method 同时得到多个置信区间。
+
+    #definition[][
+      设 $Y_i tilde N(0, sigma^2), w = min_j Y_j - max_j Y_j$，$S^2$ 与 $Y_i$ 独立，是 $sigma^2$ 的无偏估计，且：
+      $
+        (nu S^2)/sigma^2 tilde chi^2_nu
+      $
+      则有：
+      $
+        w/S tilde q_(n, nu)
+      $
+    ]
+    用上面这个分布，就可以得到一种假设均值相同时，估计 $mu_i - mu_j$ 的置信区间的方法，这种方法被称为 Tukey method。对于那些 $|mu_i - mu_j| > w/S$ 的 $i, j$，我们就可以拒绝假设。
+  == two-way ANOVA
+    两因素 ANOVA 模型是：
+    $
+      Y_(i j) = (mu + alpha_i + beta_j + gamma_(i j)) 1 + epsilon_(i j), i in I, j in J
+    $
+    往往令：
+    $
+      k_(i j) = rank(Y_(i j))
+    $
+    类似的，我们有 $mu_(i j)$ 的最佳值就是 $Ybar_(i j)$，而全局的 $mu$ 最优值就是 $Ybar$，因此：
+    $
+      RSS/sigma = 1/sigma^2 sum_(i j k) (Y_(i j k) - Ybar)^2\ tilde chi^2_(n - abs(I) abs(J))
+    $
+    当然也可以将模型写作：
+    $
+      Y_(i j) = mu + alpha_i + beta_j + gamma_(i j)
+    $
+    其中 $alpha, beta$ 将满足若干约束条件。通常而言对于对称的参数，$alpha$ 的自由度为 $I - 1$，$beta$ 的自由度为 $J - 1$，$gamma$ 的自由度为 $(I - 1)(J - 1)$，最后恰有 $1 + (I - 1) + (J - 1) + (I - 1)(J - 1) = I J$ 个自由度。
+
+    一个很有实际意义的问题是因素之间是否有相互作用，也就是检验：
+    $
+      H: gamma_(i j) = 0, forall i, j
+    $
+    

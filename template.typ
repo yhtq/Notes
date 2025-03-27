@@ -147,12 +147,16 @@
 #let sgn = math.op("sgn")
 #let arctanh = math.op("arctanh")
 #let Res(f, i) = $op("Res") (#f \; #i)$
+#let closure(X) = $overline(#X)$
 #let lcm = math.op("lcm")
 #let Der = math.op("Der")
 #let Arg = math.op("Arg")
 #let End = math.op("End")
 #let ReT = math.op("Re")
 #let ImT = math.op("Im")
+#let eqv = sym.tilde.equiv
+#let Inter = math.inter.big
+#let Union = math.union.big
 
 #let ignoreOne(x) = {
   if x == [1] {
