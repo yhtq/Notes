@@ -400,6 +400,54 @@
       - 除输入层外，每层都通过激活函数处理输入
     ]
     通常而言，宽度和深度都能增加神经网络的表达能力，但深度往往更加经济。
+    
+    对于最简单的单层前馈神经网络，可以写出模型的表达式：
+    $
+      Y = sigma(V sigma(W X + gamma) + theta)
+    $
+    可以计算得，单隐藏层前馈网络的参数集为：
+    $
+      (Union_(t = 1)^m {w_(j t)}_(j = 1)^n) union Union_(l=1)^k {v_(t l)}_(t = 1)^m union {theta_l}_(l=1)^k union {gamma_t}_(t = 1)^m
+    $
+    其中 $gamma, theta$ 分别是隐藏层，输出层的偏置。
+
+    对于损失函数，经典的经验风险最小化策略是，用平方误差度量输出层在数据集上的损失，也就是：
+    $
+      R(Theta) = norm2(Y - hY)
+    $
+    训练时，往往采用梯度下降策略，有：
+    $
+      der(R(Theta), hY) = 2 (hY - Y)^T \
+    $
+    如果使用 Sigmoid 函数作为激活函数，则：
+    $
+      der(sigma(y), y) = sigma(y) (1 - sigma(y))\
+    $
+    因此：
+    $
+      der(hY, V sigma(W X +gamma) + theta) = (sigma(V sigma(W X +gamma) + theta) (1 - sigma(V sigma(W X +gamma) + theta))) dot *\
+    $ 
+    通常记 $delta = 2(hY - Y) dot (sigma(V sigma(W X +gamma) + theta) (1 - sigma(V sigma(W X +gamma) + theta)))$，被称为误差项。
+
+    给定学习率 $eta$，标准的梯度下降算法如下：
+    $
+      x = x - eta der(R(x), x)\
+    $
+    同时，通常选择参数时，不会选择零值而是靠近零的随机值作为参数初始值，避免所有信号全为零。从根本上，这是因为 Sigmoid 函数具有某种饱和性，因此现代神经网络往往不再使用 Sigmoid 函数，而是使用其他激活函数。
+    #example[常用激活函数][
+      - 整流线性函数 RELU:
+        $
+          f(x) = max(0, x)
+        $
+      - 带泄漏的整流线性函数 Leaky RELU:
+        $
+          f(x) = max(0, x) + alpha min(0, x)
+        $
+    ]
+
+    实际训练时，往往采用*批量*随机下降法，也就是将数据分成不同的部分，每次使用一个批量进行参数更新。
+= 集成学习
+  有时，单个的学习器未必效果较好。通过将相对比较容易构建但泛化能力一般的多个学习器进行结合，可能得到更好的泛化能力，这种思想称为*集成学习*。
 
 
 

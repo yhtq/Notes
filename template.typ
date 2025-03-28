@@ -157,6 +157,7 @@
 #let eqv = sym.tilde.equiv
 #let Inter = math.inter.big
 #let Union = math.union.big
+#let arrowb = $arrow.bar$
 
 #let ignoreOne(x) = {
   if x == [1] {
@@ -604,6 +605,7 @@
 #let theorem-like-style(thm-type, name, number, body) = {
   showybox(
     body,
+    breakable: true,
     title: [#strong(thm-type) #number #if name != none [ (#name) ]],
     frame: frame-map.at(thm-type),
     footer: ""
