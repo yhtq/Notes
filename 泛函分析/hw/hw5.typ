@@ -177,24 +177,41 @@
   
   同时有 $X - E = Union_((p, q) in S) U_(p q)$，因此 $X - E$ 作为无处稠密集的可数并是无处稠密的，继而 $E$ 稠密 
 = 3
-  // #let f1 = $overline(f)$
-  // 任取 $f in Omega$，逆算子定理给出 $f$ 诱导 $L(X quo ker f, Y)$ 中的同胚 $f1$
-  // $
-  //   norm(A x - x) <= delta norm(x)
-  // $
-  取 $T in Omega$，若其不是内点，则存在一列 $T_n$ 不是满射使得 $T_n -> T$，考虑：
+  任取 $A$ 是有界满线性算子，不妨设 $B(0, 1) subset A(B(0, 1))$，进而对于任意 $r$ 均有 $B(0, r) subset A(B(0, r))$. 再取 $B in B(A, 1), y in Y with norm(y) < 1, A x_1 = y with norm(x) < 1$，有：
   $
-    // S := liminf_n (Y - im T_n) = Inter_(n = 1)^(+infinity) Union_(k = n)^(+infinity) (Y - im T_k) \
-    // T := limsup_n (Y - im T_n) = Union_(n = 1)^(+infinity) Inter_(k = n)^(+infinity) (Y - im T_k) \
-    S = Inter_(n = 1)^(+infinity) Union_(k = n)^(+infinity) im T_k
+    norm(y - B x_1) <= norm(A - B) norm(x) < norm(A - B) < 1
   $
+  因此再设 $A x_2 = y - B x_1 with norm(x_2) < norm(A - B)$，有：
+  $
+    norm(y - B x_1 - B x_2) = norm((A - B) x_2) < norm(A - B)^2
+  $
+  不断进行下去，可以得到 $x_n$ 使得：
+  $
+    y = sumi1inf(B x_i)
+  $
+  而 $norm(x_i) < norm(A - B)^(i - 1)$，可以证明 $sumi1inf(x_i)$ 存在，因此：
+  $
+    y = B sumi1inf(x_i)
+  $
+  证毕。
+  // // #let f1 = $overline(f)$
+  // // 任取 $f in Omega$，逆算子定理给出 $f$ 诱导 $L(X quo ker f, Y)$ 中的同胚 $f1$
+  // // $
+  // //   norm(A x - x) <= delta norm(x)
+  // // $
+  // 取 $T in Omega$，若其不是内点，则存在一列 $T_n$ 不是满射使得 $T_n -> T$，考虑：
+  // $
+  //   // S := liminf_n (Y - im T_n) = Inter_(n = 1)^(+infinity) Union_(k = n)^(+infinity) (Y - im T_k) \
+  //   // T := limsup_n (Y - im T_n) = Union_(n = 1)^(+infinity) Inter_(k = n)^(+infinity) (Y - im T_k) \
+  //   S = Inter_(n = 1)^(+infinity) Union_(k = n)^(+infinity) im T_k
+  // $
 
-  - $Union_(k = n)^(+infinity) im T_k$ 是稠密集：事实上，任取 $y in Y$，设 $A x = y$，则显然有：
-    $
-      norm(A_n x - y) -> 0
-    $
-    换言之，$y in closure(Union_(k = n)^(+infinity) im T_k)$
-  - 由 BCT 定理，$S$ 也是稠密集
-  - 事实上，$S$ 就是全集         
+  // - $Union_(k = n)^(+infinity) im T_k$ 是稠密集：事实上，任取 $y in Y$，设 $A x = y$，则显然有：
+  //   $
+  //     norm(A_n x - y) -> 0
+  //   $
+  //   换言之，$y in closure(Union_(k = n)^(+infinity) im T_k)$
+  // - 由 BCT 定理，$S$ 也是稠密集
+  // - 事实上，$S$ 就是全集         
 
 

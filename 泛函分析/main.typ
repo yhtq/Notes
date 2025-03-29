@@ -1,5 +1,5 @@
 #import "../template.typ": *
-#import "@local/fletcher:0.5.5" as fletcher: diagram, node, edge
+#import "@preview/fletcher:0.5.7" as fletcher: diagram, node, edge
 #show: note.with(
   title: "泛函分析/Functional Analysis",
   author: "YHTQ",
@@ -1359,8 +1359,8 @@
       $
       同时，$i$ 是线性的双射，$G(T) subset X times Y$ 是完备空间的闭子集，当然也是完备的，因此 $i$ 构成赋范空间的同构，当然就有图模完备。
     ]
-    #theorem[Banach-Steinhaus][
-      设 $T_n in L(X, Y)$，$X, Y$ 都是 Banach 空间，若：
+    #theorem[Banach-Steinhaus / Uniform boundedness][
+      设 $T_n in L(X, Y)$，$X$ 是 Banach 空间，若：
       $
         forall x in X, sup_n norm(T_n x) < +infinity
       $
@@ -1368,4 +1368,210 @@
       $
         sup_n norm(T_n) < +infinity
       $
+    ]<uniform-boundedness>
+    #proof[
+      - 一种证明是直接使用 BCT，考虑：
+        $
+          X_n = {x in X | norm(T_k x) <= n, forall k}
+        $
+        可以证明 $X_n$ 是闭的（连续性），设：
+        $
+          X = Union_(k = 1)^(+infinity) X_k
+        $
+        由 BCT，可设：
+        $
+          B(x_0, delta) subset X_(k_0)
+        $
+        因此若设 $norm(x) = 1$ 就有：
+        $
+          norm(T_n (x_0 + delta/2 x)) <= k_0, forall n
+        $
+        继而：
+        $
+          norm(T_n (delta/2 x)) <= k_0 + sup_n norm(T_n (x_0)), forall n
+        $
+        由 $x$ 的任意性立刻得到结论
+      - 另一种证明是使用等价范数定理：在 $X$ 上定义额外的范数：
+        $
+          norm(x)_2 = norm(x) + sup_n norm(T_n x)
+        $
+        显然新范数更强。如果证明了完备性，等价范数定理给出两个范数等价，因此就有：
+        $
+          norm(x) + sup_n norm(T_n x) <= M norm(x)
+        $
+        因此只要证明完备性。任取新范数的柯西列，也就是：
+        $
+          norm(x_n - x_m) + sup_k norm(T_k (x_n - x_m)) < epsilon 
+        $
+        显然在原范数下是柯西的，因此在原范数下有极限 $x_0$，而新范数下，注意到有：
+        $
+          norm(T_k (x_n - x_m)) < epsilon, forall k
+        $
+        令 $m -> +infinity$ 就是：
+        $
+          norm(T_k (x_n - x_0)) <= epsilon, forall k
+        $
+        因此在新范数下当然也以 $x_0$ 为极限。
     ]
+    #theorem[Banach-Steinhaus][
+      设 $X, Y$ 是 Banach 空间，$T_n in L(X, Y)$，以下说法等价：
+      + $forall x, T_n x$ 收敛
+      + $sup_n norm(T_n) < +infinity$ 并且 $T_n x$ 对于某个稠密子集上的 $x$ 收敛
+      + $sup_n norm(T_n) < +infinity$ 并且存在 $T in L(X, Y)$ 使得：
+        $
+          T_n x -> T x, forall x\
+          norm(T) <= lim inf norm(T_n)
+        $
+      事实上，$1 <=> 3$ 只需要 $Y$ 的完备性，$2 <=> 3$ 只需要 $X$ 的完备性
+    ]
+    #proof[
+      - $3 => 1, 2$ 是平凡的
+      - $1 => 3$：由 @uniform-boundedness 就有 $sup norm(T_n) < +infinity$，记 $T$ 是 $T_n$ 的极限算子，不难证明它是线性的，同时：
+        $
+          norm(T x) &= lim_(n -> +infinity) norm(T_n x) \
+          &= liminf_(n -> +infinity) norm(T_n x) \
+          &<= liminf_(n -> +infinity) norm(T_n) norm(x)
+        $
+        这就证明了结论
+      - $2 => 1$：任取 $x in X$，往证 $T_n x$ 是柯西的。事实上，有：
+        $
+          norm(T_n x - T_m x) <= norm((T_n - T_m) (x - x')) + norm(T_n x' - T_m x')\
+          <= norm((T_n - T_m)) norm(x - x') + norm(T_n x' - T_m x')\
+        $
+        其中 $x'$ 是任何属于 $M$ 的点。由稠密性，$x - x'$ 任意小，因此上式当 $n, m$ 充分大时趋于零，证毕。
+    ]
+    #remark[][
+      该定理还有另一种表述：
+      
+      设 $A_n, A in L(X, Y)$，则 $A_n x -< A x, forall x$ 当且仅当 存在稠子集 $M$ 使得 $sup norm(A_n) < +infinity$ 并且 $A_n x -> A x, forall x in M$
+
+      证明和上面是类似的，不过这里不需要 $Y$ 的完备性，只需要 $X$ 的完备性。
+    ]
+    #remark[][
+      $X$ 上仍然可能找到不等价的范数，使得两个范数都是完备的。这个例子并不好构造。取 $X = l^1$，第一个范数就是 $l^1$ 范数；对于第二个，有如下事实：
+      #lemma[][
+        $l^1$ 空间的 Hamel 基与 $l^infinity$ 空间的 Hamel 基是等势的
+      ]
+      #proof[
+        - $x : l^1 arrowb x : l^infinity$ 是线性的单射
+        - $(x_i) : l^1 arrowb (x_i/i^2) : l^infinity$ 也是线性的单射
+      ]
+      如此，就有基之间的双射，延拓到向量空间的同构，使用该同构将 $l^infinity$ 范数迁移过来（由于 $l^infinity$ 是完备的，该范数下的空间等距同构于 $l^infinity$，因此当然完备） ，此外，可以证明 $l^1$ 有可数稠子集（取所有位置都是有理数即可），但 $l^infinity$ 没有（任何两个 $0, 1$ 列的距离都是 $1$，但 $0, 1$ 列有 $alef^1$ 个），因此两个空间的拓扑不同，范数当然不可能等价。
+      
+      这个例子也提供了一个无界线性算子，但它的 $ker = {0}$ 是闭的。
+    ]
+    #remark[][
+      从非完备空间出发，可能得到无界的闭算子。例如取 $X = C^1[0, 1], Y = C[0, 1] $，求导算子就是无界的：
+      $
+        norm(x^n) = 1\
+        norm(T x^n) = norm(n x^(n - 1)) = n\
+        norm(T x^n) = n norm(x^n) 
+      $
+      因此无界，但是其图像为：
+      $
+        (f, f')
+      $
+      假设 $(f_n, f'_n) -> (g, h)$，这里都收敛对应一致收敛，数学分析的结论表明此时一定有 $h = g'$，因此 $(g, h) in G(T)$
+    ]
+    #theorem[][
+      设 $X$ 是 Banach 空间，$X_1, X_2$ 是闭子空间，且：
+      $
+        X = X_1 directSum X_2
+      $
+      则 $norm(x_1) + norm(x_2) <= c norm(x_1 + x_2)$
+    ]
+    #proof[
+      由条件，在 $X$ 上可以使用 $norm(x_1) + norm(x_2)$ 作为另一个完备的范数（乘积范数），且：
+      $
+        norm(x_1 + x_2) <= norm(x_1) + norm(x_2)
+      $
+      由等价范数定理，两个范数等价，就有：
+      $
+        norm(x_1) + norm(x_2) <= c norm(x_1 + x_2)
+      $
+    ]
+    #theorem[Helly-Toeplitz][
+      设 $X$ 是 Hibert 空间，$T : H -> H$ 线性且：
+      $
+        inner(T x, y) = inner(x, T y), forall x, y in H
+      $
+      则 $T$ 是有界线性算子
+    ]
+    #proof[
+      只需证明 $T$ 是闭算子，设 $(x_n, T x_n) -> (a, b)$，则：
+      $
+        inner(b - T a, z) 
+        &= inner(b, z) - inner(T a, z)\
+        &= inner(b, z) - inner(a, T z)\
+        &= lim_(n -> +infinity) inner(T x_n, z) - inner(x_n, T z)\
+        &= 0
+      $
+      因此 $b - T a = 0$，证毕
+    ]
+    #theorem[Douglas Factorization][
+      设 $X, Y, Z$ 是 Banach 空间，$A in L(X, Y), B in L(Z, Y)$ 且 $A$ 是单射，则以下说法等价：
+      - $im B subset im A$
+      - 
+        #diagram(cell-size: 15mm, $
+          X edge(A, "hook->")  & Y\
+          Z edge("u", exists T, "-->") edge("ur", B, ->)
+        $)
+        其中 $T in L(X, Y)$
+    ]
+    #proof[
+      $2 => 1$ 是平凡的，对于 $1 => 2$，考虑：
+
+      #align(center)[#diagram(
+        $
+          X edge(A, <->) &im A  edge(i, ->>) &Y \
+          Z edge("ur", exists B', "-->") edge("urr", B, ->) edge("u", Inv(A) B', "->", label-side: #left)
+        $
+      )]
+
+      只需证明 $Inv(A) B$ 有界。利用闭算子定理，假设：
+      $
+        x_n -> x, Inv(A) B x_n -> y
+      $
+      则当然有 $B x_n -> A y$，但 $B x_n -> B x$，因此 $A y = B x, y = Inv(A) B x$，证毕
+    ]
+  == Banach-Steinhaus 定理应用：Fourier 级数
+    熟知 ${sin n x, cos n x}$ 是 $L^2[-pi, pi]$ 的一组正交基，任取 $f$ 它的 Fourier 级数是：
+    $
+      1/(2 pi) integral_(-pi)^(pi) f(s) dif s \
+      + sumi1inf(
+        1/pi integral_(-pi)^(pi) f(s) cos(i s) dif s cos(i x) + 1/pi integral_(-pi)^(pi) f(s) sin(i s) dif s sin(i x)
+      )
+    $
+    我们知道它在 $L^2$ 意义下收敛，但是是否能在 $L^infinity$ 意义下逼近？然而结论是，存在连续的函数 $f$ 使得它的三角级数在 $L^infinity$ 意义下不收敛。我们来证明这个结论。
+
+    下面取范数都是 $L^+infinity$ 范数。设 $S_N : C[-pi, pi] -> C[-pi, pi]$ 是把函数变成其三角级数的前 $N$ 项算子，不难证明它是有界线性的，Banach-Steinhaus 定理给出如果 $forall f, S_N f -> f$，则 $sup_N norm(S_N) < +infinity$，接下来，我们做一些繁琐的计算：
+    $
+      S_N (f) (x) &= 1/pi integral_(-pi)^(pi) f(y) (1/2 + sumi1N(sin i x sin i y + cos i x cos i y)) dif y \
+      &= 1/pi integral_(-pi)^(pi) f(y) (1/2 + sumi1N(cos (i(x - y)))) dif y\
+      &= 1/pi integral_(-pi)^(pi) f(y) (sin (N + 1/2) (x - y))/(2 sin (x - y)/2 ) dif y\
+      &= 1/pi integral_(-pi)^(pi) f(y) D_N (x - y) dif y\
+    $ 
+    因此：
+    $
+      abs(S_N (f) (x)) <= norm(f) 1/pi integral_(-pi)^(pi) abs(D_N (x - y)) dif y = norm(f) 1/pi integral_(-pi)^(pi) abs(D_N (y)) dif y\
+    $
+    并且有：
+    $
+      S_N f(0) = 1/pi integral_(-pi)^(pi) f(y) D_N (-y) dif y
+    $
+    设 $h = sgn D_N (y)$ 就有：
+    $
+      1/pi integral_(-pi)^(pi) h(y) D_N (-y) dif y = 1/pi integral_(-pi)^(pi) abs(D_N (y)) dif y
+    $
+    当然 $h$ 不是连续函数，但它可以被连续函数 $L^1$ 逼近，因此：
+    $
+      norm(S_N (f)) = 1/pi integral_(-pi)^(pi) abs(D_N (y)) dif y
+    $
+    只需要计算上式即可，有：
+    $
+      integral_(-pi)^(pi) abs(D_N (y)) dif y 
+      &= integral_(-pi)^(pi) abs((sin (N + 1/2) z)/(2 sin z/2)) dif z\
+      &>= C  integral_(-pi)^(pi) abs((sin (N + 1/2) z)/z) dif z\
+      &>= C  integral_(-(N + 1/2) pi)^((N + 1/2) pi) abs((sin z)/z) dif z\
+    $
+    根据数学分析结论，$N$ 充分大时上式充分大。
