@@ -59,3 +59,73 @@ p139 1 2 3 5\*
   $
     a alpha + b beta >= a alpha^* + b beta^* 
   $
+p139 4 6 7 14^\*
+= 4
+  由 N-P 引理，使用似然比检验法即可。计算：
+  $
+    lambda(X) = (L_2 (x))/(L_1 (x)) = prodi0n(2 X_i)
+  $
+  临界值满足：
+  $
+    P_(f_0 (x)) (prodi0n(2 X_i) > lambda_0) = alpha\
+    P_(f_0 (x)) (sumi0n(-ln X_i) <= C) = alpha\
+  $
+  而 $- ln X_i tilde "Exp"(1), sumi0n(-ln X_i) tilde Gamma(n, 1)$，根据 $Gamma$ 分布找到临界值即可。
+= 6
+  这些问题都是单参数指数型检验，且 $S^2 = sumi1n2(X_i - mu_0)$ 是一个完全充分统计量
+  == (1)
+    只需求临界值使得：
+    $
+      P_(sigma_0) (S^2 > C) = alpha\
+      P_(sigma_0) (S^2/sigma_0^2 > C/sigma_0^2) = alpha\
+    $
+    而 $S^2/sigma_0^2 tilde chi^2(n)$，因此可以求得 $C$，检验法为：
+    $
+      phi(X) = 1_(S^2(X) > C) (X) 
+    $
+  == (2)
+    只需求临界值使得：
+    $
+      P_(sigma_1) (S^2 in (C_1, C_2)) = alpha\
+      P_(sigma_2) (S^2 in (C_1, C_2)) = alpha\
+    $
+    取 $X tilde chi^2(n)$，则上面的方程等价于：
+    $
+      P(X in (C_1/sigma_1^2, C_2/sigma_1^2)) = alpha\
+      P(X in (C_1/sigma_2^2, C_2/sigma_2^2)) = alpha\
+    $
+    找到临界值，得到的检验法为：
+    $
+      phi(X) = 1_(S^2(X) in (C_1, C_2)) (X)
+    $
+= 7
+  这是单参数指数型检验问题，$Xbar$ 是一个充分统计量。只需求临界值使得：
+  $
+    P_(mu_1) (Xbar in (C_1, C_2)) = alpha\
+    P_(mu_2) (Xbar in (C_1, C_2)) = alpha\
+  $
+  取 $Z tilde N(0, 1)$，上面的方程等价于：
+  $
+    P(Z in ((C_1 - mu_1)/sqrt(n), (C_2 - mu_1)/sqrt(n))) = alpha\
+    P(Z in ((C_1 - mu_2)/sqrt(n), (C_2 - mu_2)/sqrt(n))) = alpha\
+  $
+  找到临界值，得到的检验法为：
+  $ 
+    phi(X) = 1_(Xbar(X) in (C_1, C_2)) (X)
+  $
+= 14
+  
+  根据 $Gamma$ 函数的性质有：
+  $
+    limn(Gamma((n + 1)/2)/(Gamma(n/2) sqrt(n / 2))) = 1\
+    limn(Gamma((n + 1)/2)/(Gamma(n/2) sqrt(n))) = 1/sqrt(2)\
+  $
+  而：
+  $
+    limn((1 + x^2/n)^(- (n + 1)/2)) = e^(-x^2/2)
+  $
+  因此：
+  $
+    limn(f_n (x)) = NormalDis(x, 0, 1)\
+    si1N
+  $

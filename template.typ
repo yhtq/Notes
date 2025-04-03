@@ -435,6 +435,9 @@
 #let sumBrN0inf(body) = sumfBr(body, config: config0iinf)
 #let prodBrN0inf(body) = prodfBr(body, config: config0iinf)
 
+#let limn(body) = $lim_(n -> +infinity) autoBraceIfAddOrSub(#body)$
+#let liminfn(body) = $liminf_(n -> +infinity) autoBraceIfAddOrSub(#body)$
+#let limsupn(body) = $limsup_(n -> +infinity) autoBraceIfAddOrSub(#body)$
 
 #let emptyArrow(s, e) = arr(str(s), str(e), $$)
 #let coker = math.op("coker")

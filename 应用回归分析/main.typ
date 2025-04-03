@@ -1369,10 +1369,77 @@
     $
       Y_(i j) = mu + alpha_i + beta_j + gamma_(i j)
     $
-    其中 $alpha, beta$ 将满足若干约束条件。通常而言对于对称的参数，$alpha$ 的自由度为 $I - 1$，$beta$ 的自由度为 $J - 1$，$gamma$ 的自由度为 $(I - 1)(J - 1)$，最后恰有 $1 + (I - 1) + (J - 1) + (I - 1)(J - 1) = I J$ 个自由度。
+    其中 $alpha, beta$ 将满足若干约束条件（否则会过参数化）。通常而言对于对称的参数，也即满足：
+    $
+      sum alpha_i = 0\
+      sum beta_j = 0\
+      sum_i gamma_(i j) = sum_j gamma_(i j) = 0
+    $
+    $alpha$ 的自由度为 $I - 1$，$beta$ 的自由度为 $J - 1$，$gamma$ 的自由度为 $(I - 1)(J - 1)$，最后恰有 $1 + (I - 1) + (J - 1) + (I - 1)(J - 1) = I J$ 个自由度。
 
     一个很有实际意义的问题是因素之间是否有相互作用，也就是检验：
     $
-      H: gamma_(i j) = 0, forall i, j
+      H_(A B)(H_1): gamma_(i j) = 0, forall i, j\
+      mu_(i j) = mu + alpha_i + beta_j
     $
-    
+    有时，还会额外考虑：
+    $
+      H_A (H_(1 3)) : alpha_i = 0, gamma_(i j) = 0\
+      mu_(i j) = mu + beta_j
+    $
+    对称的：
+    $
+      H_B (H_(1 3)) : beta_j = 0, gamma_(i j) = 0\
+      mu_(i j) = mu + alpha_i
+    $
+    继而：
+    $
+      H_(123) (H_1) : alpha_i = 0, beta_j = 0, gamma_(i j) = 0\
+    $
+    令 $gamma = vec(mu 1^T, alpha^T, beta^T, gamma^T)$ 是所有参数构成的矩阵。检验 $H_1$ 是标准的，计算标准的 $F-$ 检验即可。然而对于其他的检验，自然的会产生如何选择基底的模型的问题。
+
+    最简单的，对于 $H_1$，检验统计量就是：
+    $
+      F = ((RSS_1 - RSS) / ((I - 1) (J - 1)))/(RSS / (n - I J ))
+    $
+    对于其他的检验，有如下几种方法：
+    === Type I procedure
+      我们可以递归的进行假设检验，也就是：
+      - 检验 $H_1$
+      - 在 $H_1$ 下检验 $H_(1 2)$，此时：
+        $
+          F_(1 2) = ((RSS_12 - RSS_1)/(J - 1))/(RSS_1 / (n - I - J + 1))\
+        $
+      - 在 $H_(1 2)$ 下检验 $H_(1 2 3)$，此时：
+        $
+          F_(1 2 3) = ((RSS_(1 2 3) - RSS_1)/(I - 1))/(RSS_1 / (n - I))\
+        $
+      #lemma[][
+        $
+          RSS_(123) = RSS + (RSS_1 - RSS) + (RSS_12 - RSS_1) + (RSS_123 - RSS_12)\
+          = RSS + R(gamma | mu, alpha, beta) + R(beta | mu, alpha) + R(alpha | mu)
+        $
+        并且 $RSS, RSS_1, RSS_(12), RSS_(123)$ 相互独立
+      ]
+      #proof[
+        分解是显然的。对于独立性，将三个问题的投影算子依次记作 $P_omega, P_1, P_(12), P_(123)$，简单计算即可
+      ]
+    === Type II procedure
+      对于 $H_(12), H_(123)$，都直接与 $H_1$ 做比较。此时就没有上面分解式的性质了
+    === Type III procedure
+      #let lH = $overline(H)$
+      令：
+      $
+        lH_A : mu_(1 *) = mu_(2 *) = ... = mu_(I *)\
+        lH_B : mu_(* 1) = mu_(* 2) = ... = mu_(* J)\
+      $
+      用 $lH$ 替代原先的 $H$ 做检验。在对称约束下，等价于 $alpha_i = 0$，统计量为：
+      $
+        F = (R(alpha | mu, beta, gamma)/(I - 1))/(RSS/(n - I J))\
+      $
+    #theorem[][
+      如果每组的样本数 $k_(i j)$ 全部相等，则三种方法的结果是一样的，也即：
+      $
+       R(alpha | mu, beta, gamma) = R(alpha | mu, beta) = R(alpha | mu) 
+      $
+    ]

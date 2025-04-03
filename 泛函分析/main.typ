@@ -1114,7 +1114,7 @@
       $
         norm(f)_(duelSpace(X)) = norm(f_0)_(duelSpace(X_0))
       $
-    ]
+    ]<Hahn-Banach-Hilbert>
     #proof[
       设 $P = P_(X_0)$，则令：
       $
@@ -1575,3 +1575,256 @@
       &>= C  integral_(-(N + 1/2) pi)^((N + 1/2) pi) abs((sin z)/z) dif z\
     $
     根据数学分析结论，$N$ 充分大时上式充分大。
+  == The great theorems in linear functional analysis II(Hahn-Banach Thm)
+    在有限维的 Banach 空间中，显然可以很容易的构造足够多（可分离）的线性泛函。对于无穷维的 Banach 空间，我们仍然希望讨论类似的事实，然而在无穷维空间中，我们还希望构造的线性泛函是有界/连续的，这带来了额外的麻烦。
+
+    下面的定理告诉我们，如何将子空间的线性泛函延拓到全空间中：
+    #theorem[Hahn-Banach for real vector space][
+      设 $X$ 是 $RR$ 上的线性空间，$p : X -> RR$ 是 sublinear 的，也即：
+      - $p(x + y) <= p(x) + p(y)$
+      - $p(alpha x) = alpha p(x), forall alpha > 0$
+      （有时也称这样的 $p$ 是 quasi-norm）\
+      设 $X_0$ 是 $X$ 子空间，$l_0 : X_0 -> RR$ 是线性泛函，且：
+      $
+        l_0 (x) <= p(x), forall x in X_0
+      $
+      则存在 $l : X -> RR$ 是线性泛函，且：
+      - $l|_(X_0) = l_0$
+      - $l(x) <= p(x), forall x in X$
+    ]
+    #proof[
+      不妨设 $X_0 != X$。我们的思路是先证明可以进行一维延拓，再利用 Zoun 引理。
+      
+      任取 $z in X - X_0$，设 $X_1 = span(X, z)$，我们来讨论是否存在满足要求的到 $X_1$ 上的延拓。注意到 $X_1 = X directSum span(z)$ 任取 $y in X_1$，可设：
+      $
+        y = x + lambda z
+      $
+      因此：
+      $
+        f(y) = f(x) + lambda f(z)
+      $
+      若 $f$ 就是满足要求的线性泛函，则：
+      $
+        f(y) = l_0 (x) + lambda f(z)
+      $
+      以及范数条件：
+      $
+        l_0 (x) + lambda f(z) <= p(x + lambda z)
+      $
+      意味着：
+      - $lambda > 0$ 时:
+        $
+          f(z) <= (p(x + lambda z) - l_0 (x))/lambda
+        $
+      - $lambda < 0$ 时:
+        $
+          f(z) >= (p(x + lambda z) - l_0 (x))/lambda
+        $
+      断言：
+      $
+        sup_(x in X_0, lambda < 0) (p(x + lambda z) - l_0 (x))/lambda <= inf_(
+      x in X_0, lambda > 0) (p(x + lambda z) - l_0 (x))/lambda
+      $
+      进而 $f(z)$ 是可以选出的。
+
+      注意到：
+      $
+        (p(x + lambda z) - l_0 (x))/lambda = p(x/lambda + z) - l_0 (x/lambda) := p(y + z) - l_0(y) "when" lambda > 0
+      $
+      $
+        (p(x + lambda z) - l_0 (x))/lambda = l_0 (x/(-lambda)) - p(x/(-lambda) - z) := l_0(w) - p(w - z) "when" lambda < 0
+      $
+      而条件保证了：
+      $
+        l_0 (y) + l_0 (w) = l_0 (y + w) <= p(y + w) <= p(y + z) + p(-z + w)\
+        l_0(w) - p(w - z) <= p(y + z) - l_0 (y), forall w, y in X_0
+      $
+      因此断言是正确的。
+
+      接下来，利用 Zoun 引理，定义：
+      $
+        cal(F) = {(X', f') | X_0 subset X' subset X, f' : X' -> RR with f'|_(X_0) = l_0, f'(x) <= p(x), forall x in X'}
+      $
+      定义偏序关系：
+      $
+        (X_1, f_1) <= (X_2, f_2) <=> X_1 subset X_2 and f_2|_(X_1) = f_1
+      $
+      对于全序子集 $X_(Lambda)$，定义：
+      $
+        Y = Union_(alpha in Lambda) X_alpha\
+        f(x) = f_alpha (x) "if" x in X_alpha\ 
+      $
+      可以验证它确实是上界。Zoun's lemma 保证 $cal(F)$ 有极大元 $(X^*, f^*)$，而之前的步骤表明有限步的延拓总可以进行，因此 $X^*$ 一定就是 $X$，对应的 $f^*$ 就是我们要找的延拓，证毕。
+    ]
+    许多时候，我们就取上面的 $p$ 是 $X$ 上的范数。
+    #remark[][
+      回顾 @Hahn-Banach-Hilbert，当空间是 Hilbert 空间时，证明更具有构造性，并且有唯一性保证。一般来说，没有唯一性保证，例如 $X = C[0, 1], X_0 = {f in X | f(0) = f(1)}$，设 $l_0(f) = f(0), l_1(f) = f(1)$，不难验证 $l_0$ 和 $l_1$ 在 $X_0$ 上有相同的限制，且范数条件也成立。
+    ]
+    #theorem[Hahn-Banach for complex vector space][
+      设 $X$ 是 $CC$ 上的线性空间，$p : X -> RR$ 是 semi-norm，也即满足：
+      - $p(x + y) <= p(x) + p(y)$
+      - $p(x) >= 0$
+      - $p(alpha x) = norm(alpha) p(x), forall alpha in CC$
+      设 $X_0$ 是 $X$ 子空间，$l_0 : X_0 -> CC$ 是线性泛函，且：
+      $
+        norm(l_0 (x)) <= p(x), forall x in X_0
+      $
+      则存在 $l : X -> CC$ 是线性泛函，且：
+      - $l|_(X_0) = l_0$
+      - $norm(l(x)) <= p(x), forall x in X$
+    ]
+    #proof[
+      注意到复线性空间也是实线性空间，而 $l_0$ 的实部是实泛函，用上面的结论可以得到 $l_0$ 的实部的延拓。
+
+      同时，事实上复的线性泛函可以被实部唯一确定。假设 $T$ 是线性泛函，则：
+      $
+        T (a + b i) = T a + i (T b)
+      $
+      其中 $a, b$ 都是实数，因此上式的值被 $T$ 的实部唯一决定了。只需要验证模的控制，注意到可设：
+      $
+        l(x) = e^(i theta) r\
+        l(e^(-i theta) x) = r in RR => l(e^(-i theta) x) <= p(e^(-i theta) x) = p(x) => r <= p(x) => norm(l(x)) <= p(x)\
+      $
+    ]
+    #corollary[Hahn-Banach in normed space][
+      设 $X$ 是赋范空间，$X_0$ 是子空间，$f_0 in duelSpace(X_0)$，则存在 $f in duelSpace(X)$ 使得：
+      - $f|_(X_0) = f_0$
+      - $norm(f) = norm(f_0)$
+    ]<Hahn-Banach-B>
+    #proof[
+      在之前的空间中取 $p(x) = norm(f_0) norm(x)$，利用之前的结论存在 $f$ 使得：
+      - $f|_(X_0) = f_0$
+      - $norm(f (x)) <= norm(f_0) norm(x) => norm(f) <= norm(f_0)$
+      但另一方面，一定有：
+      $
+        norm(f (x)) >= sup_(x in X_0, x != 0) norm(f (x))/norm(x)  = norm(f_0)
+      $
+      因此就有：
+      $
+        norm(f) = norm(f_0)
+      $
+    ]
+    #theorem[分离性][
+      设 $X$ 是赋范空间，$X_0$ 是非空子空间，则任取 $x in X$，存在 $f in duelSpace(X)$ 使得 $norm(f) = 1, norm(f(x)) = norm(x)$
+    ]<separation>
+    #proof[
+      在 $span(x)$ 上定义泛函 $f(lambda x) = lambda norm(x)$，显然 $norm(f) = 1$ ，利用 @Hahn-Banach-B 做延拓即可
+    ]
+    #corollary[][
+      设 $X$ 是赋范空间，对于任意的 $x != y in X$ 存在有界泛函 $f$ 使得 $f(x) != f(y)$
+    ]
+    #proof[
+      对 $x - y$ 利用上面的结论，得到 $f(x - y) = norm(x - y) != 0 => f(x) != f(y)$
+    ]
+    #corollary[Characterization norm][
+      设 $X$ 是赋范空间，则：
+      $
+        norm(x) = sup_(f in duelSpace(X), norm(f) = 1) norm(f(x))
+      $
+    ]
+    #proof[
+      显然有：
+      $
+        norm(f(x)) <= norm(f) norm(x) = norm(x)
+      $
+      而取等由 @separation 保证。
+    ]
+    #lemma[Vanishing functional][
+      设 $X$ 是赋范空间，$X_0$ 是闭子空间，则任取 $z in.not X_0$，则存在 $f in duelSpace(X)$ 使得：
+      - $f|_(X_0) = 0$
+      - $norm(f) = 1$
+      - $f(z) = dist(z, X_0)$
+    ]
+    #proof[
+      设 $X_1 = span(z, X_1) = span(z) directSum X_1$，定义：
+      $
+        f_1 (x + lambda z) = lambda dist(z, X_0)\
+      $
+      不难验证：
+      - $f_1|_(X_0) = 0$
+      - $f_1 (z) = dist(z, X_0)$
+      - $norm(f_1) = sup_(x in X_0, lambda) norm(f_1(x + lambda z))/norm(x + lambda z) = sup_(x in X_0, lambda) (lambda dist(z, X_0))/norm(x + lambda z) = sup_(x in X_0, lambda) (dist(z, X_0))/norm(x/lambda + z) = (dist(z, X_0))/(inf_(x in X_0, lambda) norm(x/lambda + z))\
+      = (dist(z, X_0))/(inf_(x in X_0) norm(x + z)) = 1
+      $
+      利用 @Hahn-Banach-B 做延拓即可。
+    ]
+    如果在 Hilbert 空间中，上面的函数就是在 $orthogonalCom(X_0)$ 上的投影。
+    #corollary[][
+      设 $X$ 是赋范空间，$Y$ 是子空间，则 $closure(Y) = X$ 当且仅当 $forall f in duelSpace(X), f|_Y = 0 <=> f = 0$
+    ]
+    #proof[
+      - 若 $closure(Y) = X$，后面的性质显然成立（用连续性即可）
+      - 若后面的性质成立，假设 $z in.not closure(Y)$，前面的引理给出泛函 $f$ 在 $Y$ 上为零，在 $z$ 上不为零，矛盾！
+    ]
+    有时，我们希望讨论延拓的唯一性，当然这并不容易
+    #theorem[Taylor-Foguel][
+      设 $X$ 是赋范空间，则：
+      #align(center)[任何从子空间到全空间的保范延拓是唯一的]
+      当且仅当：
+      #align(center)[$duelSpace(X)$ 是严格凸的]
+
+      其中严格凸的含义是 $norm(x) = norm(y) = 1 and x != y => norm((x + y)/2) < 1$
+    ]
+    #proof[
+      一方面，假如严格凸成立，设 $l_1, l_2$  是 $X_0$ 上 $l_0$ 的延拓，无妨设 $l_0$ 范数为 $1$，条件给出：
+      $
+        norm((l_1 + l_2)/2) < 1
+      $
+      然而，不难验证 $(l_1 + l_2)/2$ 也是 $l_0$ 的延拓，就有：
+      $
+        norm((l_1 + l_2)/2) >= norm(l_0) = 1
+      $
+      矛盾！
+
+      另一方面，假设 $norm(l_1) = norm(l_2) = 1, l_1 != l_2$，考虑：
+      $
+        X_0 = ker (l_1 - l_2)
+      $
+      由条件，它不是全空间，且是闭子空间。在 $X_0$ 上定义 $l_0 (x) = l_1 (x)$，则有 $norm(l_0) <= norm(l_1)$，并且不可能 $norm(l_0) = 1$，因为 $l_1, l_2$ 都是 $l_0$ 的延拓，由条件不可能都是保范延拓，因此不能有 $norm(l_0) = 1$
+
+      #lemma[][
+        $l$ 是 $l_0$ 的延拓当且仅当 $l = lambda l_1 + (1 - lambda) l_2$
+      ]
+      #proof[
+        注意到:
+        $
+          X = (ker (f_1 - f_2)) directSum span(x_0)
+        $
+        显然可设：
+        $
+          l(x_0) = lambda l_1 (x_0) + (1 - lambda) l_2 (x_0)
+        $
+        而在 $ker (f_1 - f_2)$ 当然也成立上式，因此就有：
+        $
+          l(x) = lambda l_1 (x) + (1 - lambda) l_2 (x), forall x in X\
+        $
+      ]
+      简单期间，下面假设 $KK = RR$。若假设 $l_0$ 保距延拓 $l$ 得到现在就有 $l, l_1, l_2$ 三点共线。同时，注意到：
+      $
+        norm(lambda a + (1 - lambda) b) <= lambda norm(a) + (1 - lambda) norm(b)\
+      $
+      可以断言 $l$ 一定位于 $l_1, l_2$ 之间（否则与范数条件矛盾），换言之：
+      $
+        l = lambda l_1 + (1 - lambda) l_2, 0 < lambda < 1
+      $
+      接下来，无妨假设 $(l_1 + l_2)/2 in (l_1, l]$，立刻就有：
+      $
+        norm(l_1 + l_2)/2) <= theta norm(l_1) + (1 - theta) norm(l_2) < 1
+      $
+
+      对于 $K = CC$ 需要采用其他方法证明：假设 $norm((x + y)/2) = 1$，由 Hahn-Banach 定理的推论，构造线性泛函 $f$ 使得 $norm(f) = 1, f((x + y)/2) = 1$，进而：
+      $
+        norm(f x) <= norm(f) norm(x) = 1\
+        norm(f y) <= norm(f) norm(y) = 1\
+        1 = norm((f x)/2 + (f y)/2) <= (norm(f x) + norm(f y))/2 = 1
+      $
+      因此不等式全部取等，同时由于 $CC$ 是严格凸的，若 $f x != f y$ 应该有 $norm((f x)/2 + (f y)/2) < 1$，进而只能有 $f x = f y = 1$，因此：
+      $
+        f(lambda x + (1 - lambda) y) = lambda f x + (1 - lambda) f y = 1
+      $
+      就有：
+      $
+        1 = norm(f(lambda x + (1 - lambda) y)) <= norm(f) norm(lambda x + (1 - lambda) y) < 1
+      $
+      矛盾！
+    ]
