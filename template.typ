@@ -158,6 +158,7 @@
 #let Inter = math.inter.big
 #let Union = math.union.big
 #let arrowb = $arrow.bar$
+#let ite(cond, r1, r2) = $"if" autoBraceIfAddOrSub(#cond) "then" autoBraceIfAddOrSub(#r1) "else" autoBraceIfAddOrSub(#r2) $
 
 #let ignoreOne(x) = {
   if x == [1] {
