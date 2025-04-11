@@ -129,6 +129,7 @@
 #let diag = math.op("diag")
 #let rank = math.op("rank")
 #let dist = math.op("dist")
+#let convexHull = math.op("co")
 #let approxVar(R) = $tilde(R)$
 
 #let GL = math.op("GL")
@@ -708,7 +709,7 @@
   set document(author: (author, ), title: title)
   show list: set align(top + left)
   show list: set block(breakable: true)
-  show block: set align(top + left)
+  // show block: set align(top + left)
   set block(breakable: true)
   show enum: set block(breakable: true)
   set page(

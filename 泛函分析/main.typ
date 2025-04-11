@@ -1591,7 +1591,7 @@
       则存在 $l : X -> RR$ 是线性泛函，且：
       - $l|_(X_0) = l_0$
       - $l(x) <= p(x), forall x in X$
-    ]
+    ]<Hahn-Banach-Basic>
     #proof[
       不妨设 $X_0 != X$。我们的思路是先证明可以进行一维延拓，再利用 Zoun 引理。
       
@@ -1827,4 +1827,243 @@
         1 = norm(f(lambda x + (1 - lambda) y)) <= norm(f) norm(lambda x + (1 - lambda) y) < 1
       $
       矛盾！
+    ]
+    上面都是从分析的角度来讨论 Hahn-Banach 定理，它在几何上也有重要的意义。
+    #lemma[][
+      设 $I$ 是一族凸集，则 $Inter I$ 也是凸集
+    ]
+    #definition[凸包/Convex hull][
+      设 $A subset X$，记 $A$ 的凸包是所有包含 $A$ 的凸集的交集。事实上，有：
+      $
+        convexHull(A) = {sum_(i=1)^n lambda_i a_i mid(|)  a_i in A, lambda_i >= 0, sum_(i=1)^n lambda_i = 1}
+      $
+    ]
+    #proposition[][
+      设 $X$ 是赋范空间，$A$ 是凸的，则：
+      - $A^o, closure(A)$ 都是凸的
+      - $closure(convexHull(A)) = Inter_(B supset A, B "闭且凸") B$
+    ]
+    #proof[
+      仅有 $A^o$ 的证明比较复杂：设 $x, y in A^o$，设 $B(x, delta), B(y, delta) subset A$，可以证明 $B(t x + (1 - t) y, delta) subset A, forall t in [0, 1]$，进而结论显然
+    ]
+    #definition[Minkowski funtional][
+      设 $X$ 是赋范空间，$C$ 是凸的且 $0 in C$，定义：
+      $
+        funcDef(p, X, [0, +infinity], x, inf {lambda | lambda > 0, x/lambda in C})
+      $
+    ]
+    #lemma[][
+      + $p(0) = 0$
+      + $p(lambda x) = lambda p(x), forall lambda > 0$
+      + $forall lambda > p(x), x/lambda in C$
+      + $p(x + y) <= p(x) + p(y)$
+      + $x in C^0 => p(x) < 1$
+      + 若 $C$ 是闭的，则 $C = Inv(p)([0, 1])$
+      + 若 $C$ 是开的，则 $C = Inv(p)([0, 1))$
+      + 若 $0$ 是内点，则存在 $M$ 使得 $p(x) <= M norm(x)$
+      + 若 $C$ 是有界的，则 $p(x) = 0 <=> x = 0$，事实上有存在 $delta > 0$，$p(x) >= delta norm(x)$
+    ]
+    #proof[
+      + 显然
+      + 显然
+      + 任取一列 $lambda_n$ 使得 $lambda_n < lambda, lambda_n -> p(x), x / lambda_n in C$，我们有：
+        $
+          x/lambda = lambda_n/lambda x/lambda_n + (1 - lambda_n/lambda) 0
+        $
+        而 $0 < lambda_n/lambda < 1, x/lambda_n in C, 0 in C$，继而 $x/lambda in C$，证毕
+      + 注意到：
+        $
+          (x + y)/(lambda_1 + lambda_2) = lambda_1/(lambda_1 + lambda_2) x/lambda_1 + (1 - lambda_1/(lambda_1 + lambda_2)) y/(lambda_2)\
+        $
+        显然，若设 $x/lambda_1 in C, y/lambda_2 in C$，就有：
+        $
+          (x + y)/(lambda_1 + lambda_2) in C
+        $
+        表明：
+        $
+          lambda_1 + lambda_2 >= p(x + y)\
+        $
+        对 $lambda_1, lambda_2$  取下确界即由：
+        $
+          p(x + y) <= p(x) + p(y)
+        $
+      + 显然
+      + 不难证明若 $C$ 是闭的则：
+        $
+          x/p(x) in C
+        $
+        因此 $x in C <=> p(x) <= 1$
+      + 一方面已经证明 $C subset Inv(f)([0, 1))$，另一方面设 $x/lambda in C, lambda < 1$，则前面的结论表明：
+        $
+          x/1 = x in C
+        $
+      + 显然
+      + 显然
+    ]
+    #definition[][
+      当 $K = RR$ 时，称 $C$ 是对称的，如果：
+      $
+        x in C <=> -x in C
+      $
+      当 $K = CC$ 时，称 $C$ 是平衡的，如果：
+      $
+        forall norm(alpha) = 1, alpha x in C <=> x in C
+      $
+    ]
+    #lemma[][
+      设 $C$ 是对称的/平衡的，就有：
+      $
+        p(alpha x) = norm(alpha) p(x), forall alpha in K, x in X
+      $
+    ]
+    #definition[超平面/Hyper plane][
+      对于任意 $f in duelSpace(X), r in RR$，称：
+      $
+        H_f^r = Inv(f)(r) 
+      $
+      为一个超平面。同时，将超平面的两侧定义为：
+      $
+        Inv(f)((r, +infinity))\
+        Inv(f)((-infinity, r))\
+      $
+      （取 $[r, +infinity)$ 也可）
+    ]
+    #definition[可分离][
+      称 $A, B in X$ 是可被超平面分离的，如果存在 $f in duelSpace(X)$ 使得：
+      $
+        exists r in RR, Re f(A) <= r <= Re f(B)
+      $
+    ]
+    #theorem[][
+      设 $X$ 是 $RR$ 上的赋范空间，$A, B$ 是两个凸集：
+      - 若 $A^o != emptyset, A inter B = emptyset$，则 $A, B$ 可被超平面分离
+      - 若还有 $A$ 是闭的，$B$ 是紧的，则存在 $r, delta$ 使得：
+        $
+          f(A) <= r - delta < r + delta <= f(B)
+        $
+    ]
+    #proof[
+      无妨设 $0$ 是 $A$ 的内点（否则平移即可）
+      #lemmaLinear[][
+        设 $y_0 in.not A$，则 $y_0$ 和 $A$ 可被超平面分离
+      ]
+      #proof[
+        设 $p$ 是关于 $A$ 的 Minkowski 泛函，则 $p(y_0) >= 1$ 且由前面的性质，$p$ 满足 @Hahn-Banach-Basic 中的控制函数的要求。在 $span(y_0)$ 上可以定义泛函使得 $l_0 (y_0) = 1$，可以验证 $p(y) >= l(y)$， @Hahn-Banach-Basic 给出 $l_0$ 的延拓 $l$，并且：
+        $
+          l(x) <= p(x)
+        $
+        前面的性质表明 $p(x) <= M norm(x)$，因此 $l(x) <= M norm(x), - l(x) = l(- x) <= M norm(x)$，进而 $l in duelSpace(X)$
+        显然 $l(y_0) = 1$，而 $l(A) <= p(A) <= 1$，因此：
+        $
+          l(A) <= 1 <= l(y_0)
+        $
+        证毕。
+      ]
+      一般的，显然 $A - B$ （集合元素做差）有内点 $x_0$ 且 $0 in.not A - B$，令：
+      $
+        C = A - B - {x_0}
+      $
+      则 $-x_0 in.not C, 0$ 是 $C$ 的内点，立刻有存在 $f in duelSpace(X)$ 使得：
+      $
+        f(C) <= r <= f(-x_0)\
+        f(A) - f(B) - f(x_0) <= r <= -f(x_0)\
+        f(A) - f(B) <= r + f(x_0) <= 0
+      $
+      这就表明：
+      $
+        sup f(A) <= inf f(B)
+      $
+      取 $r in [sup f(A), inf f(B)]$ 立刻有：
+      $
+        f(A) <= r <= f(B)
+      $
+      因此第一个结论成立。
+
+      对于第二个结论，熟知可以定义：
+      $
+        dist(x, A)
+      $
+      并且 $dist(x, A) = 0 <=> x in A$，熟知 $dist(x, A)$ 在紧集 $B$ 上有最小值 $delta$，必须有 $delta > 0$. 定义：
+      $
+        A' = {x in X | dist(x, A') <= delta/3}\
+        B' = {x in X | dist(x, B') <= delta/3}\
+      $
+      可以证明 $A', B'$ 都是凸的且不交，因此可以找到 $f, r$ 使得：
+      $
+        f(A') <= r <= f(B')
+      $
+      任取 $w, w'$ 使得 $norm(w) <= 1, norm(w') <= 1$，就有：
+      $
+        f(A + w/(delta/3)) <= r <= f(B + w'/(delta/3))\
+        f(A) + 3/delta f(w) <= r <= f(B) + 3/delta f(w')\
+      $
+      由 $w, w'$ 的任意性就有：
+      $
+        f(A) + 3/delta norm(f) <= r <= f(B) - 3/delta norm(f)
+      $
+      证毕
+    ]
+    #corollary[][
+      设 $E$ 是凸的闭集，则任取 $x_0 in.not E$，存在 $f, r$ 使得：
+      $
+        f(E) < r < f(x_0)
+      $
+    ]
+    #proof[
+      显然 ${x_0}$ 是紧的凸集，因此显然。
+    ]
+  == 对偶空间和对偶算子
+    #theorem[][
+      设 $X$ 是赋范空间，则 $duelSpace(X)$ 是 Banach 空间
+    ]
+    回顾 Hibert 空间的情形，对偶空间与原空间是同构的。对于一般的赋范空间，$duelSpace(X)$ 和 $X$ 之间的关系就没有那么简单了。然而，在某些特例下仍然有这样好的性质：
+    #theorem[][
+      $duelSpace(l^p) = l^q, forall p in [1, +infinity), 1/p + 1/q = 1$
+    ]
+    #proof[
+      先设 $p > 1$，任取 $y in l^q$，定义:
+      $
+        f_y (x) = sumi0inf(x_i y_i)\
+      $
+      Holder 不等式（及取等条件）给出：
+      $
+        norm(f_y) = norm(y)_q
+      $
+      取：
+      $
+        T := y arrowb f_y\
+      $
+      则有 $norm(T) = 1, T$ 是单射，同时对于任何 $f in duelSpace(l^p)$，不难验证：
+      $
+        f = T (i arrowb f(e_i))\
+        i arrowb f(e_i) in l^q
+      $
+
+      对于 $p = 1$ 情形，证明是类似的，只需要一些小修改
+    ]
+    #remark[][
+      当 $p = infinity$ 时，上面的 $T$ 仍然可以定义，性质也是类似的，但并不是满射
+    ]
+    #theorem[][
+      设：
+      $
+        C_0 = {x in l^infinity | limn(x_n) = 0}
+      $
+      则 $duelSpace(C_0) = l^1$
+    ]
+    #proof[
+      事实上，之前定义的 $T$ 的值域就是 $C_0$，这是因为任取 $f in duelSpace(C_0)$，总有：
+      $
+        f = T(i arrowb f(e_i))\
+      $
+      只需要验证 $i arrowb f(e_i) in l^1$，注意到：
+      $
+        sumi0M(abs(y_i)) = sumi0M(y_i sgn(y_i)) = 
+      $
+    ]
+    #theorem[][
+      $duelSpace(L^p) = L^q, forall p in [1, +infinity)$
+    ]
+    #proof[
+      思路类似，但涉及一些实变的知识，在此略过。
     ]
