@@ -246,6 +246,9 @@
             integral_()^() partialDer(f, theta) dif x = partialDer(integral_()^() f dif x, theta) = 0 
           $
         - $
+            integral_()^() partialDer(prodi1n(f(x_i)), theta) dif x = 0 
+          $
+        - $
             partialDer(
               integral phi product_i f(x_i, theta) dif bx, theta 
             ) = 
@@ -271,15 +274,17 @@
       $
         g'(theta) &= integral phi sumBrN1(partialDer(ln f, theta)) product_i f(x_i, theta) dif bx\
         &= E_theta (phi sumBrN1(partialDer(ln f, theta)) )\
+        &= E_theta ((phi - E phi) sumBrN1(partialDer(ln f, theta)) ) + E phi E_theta (sumBrN1(partialDer(ln f, theta))) \
+        &= E_theta ((phi - E phi) sumBrN1(partialDer(ln f, theta)) )\
       $
       而：
       $
-        E_theta (sumBrN1(partialDer(ln f, theta)) ) = sumBrN1(E_theta (partialDer(ln f, theta) ))\
+        E_theta (sumBrN1(partialDer(ln f, theta)) ) = sumBrN1(E_theta (partialDer(ln f, theta) )) = 0\
       $
       利用柯西不等式：
       $
-        (g'(theta))^2 &<= E phi E (sumBrN1(partialDer(ln f, theta)))\
-        &= var(phi) var(sumBrN1(partialDer(ln f, theta)))\
+        (g'(theta))^2 &<= E (phi - E phi)^2 E (sumBrN1(partialDer(ln f, theta)))^2\
+        &= var(phi) var (sumBrN1(partialDer(ln f, theta)))\
         &= n var(phi) var(partialDer(ln f, theta))\
         &= n var(phi) I_theta\
       $
@@ -983,7 +988,7 @@
   - 判断哪些 $X$ 与 $Y$ 相关和相关性强弱（检验）
   - 找出 $Y$ 与 $X$ 的近似关系式（估计）
   - 从新的 $X$ 预测 $Y$ 的值（预测）
-  - 控制
+  - 控制，给定 $y$ 的值，找到 $x$ 的控制
   == 一元线性回归
     一元模型为：
     $
@@ -999,7 +1004,7 @@
     - $cov(epsilon_i, epsilon_j) = 0, i != j$
     - $epsilon tilde N(0, sigma^2 I)$
     这些假设根据需要选择即可。
-    === 最小二乘估计
+    === 一元最小二乘估计
       如果采用残差平方和 RSS 作为度量，就有：
       $
         RSS = norm2(Y - a 1_n - b X)
@@ -1039,5 +1044,82 @@
       $
         F = (U)/(Q/(n - 2)) tilde F(1, n - 2)
       $
-      用该统计量即可检验原假设。
+      用该统计量即可检验原假设。通常记：
+      $
+        l_(x x) = sumi1n2(x_i - xbar)\
+        l_(x y) = sumi1n((x_i - xbar)(y_i - ybar))\
+        l_(y y) = sumi1n2(y_i - ybar)\
+      $
+      则易知：
+      $
+        hat(b) = l_(x y)/l_(x x)\
+        U = l_(x y)^2/l_(x x)\
+        Q = l_(y y) - U\
+      $
+      可以证明， $hat(a), hat(b)$ 是 $a, b$ 的无偏估计。当误差是正态时，它们也是最大似然估计，
+      #definition[相关系数][
+        仿照概率论，定义：
+        $
+          r = l_(x y)/sqrt(l_(x x) l_(y y))\
+        $
+        易知 $abs(r) <= 1$，它表示了 $x, y$ 的线性相关程度的强弱。
+      ]
+      #lemma[][
+        - $r^2 = U / (U + Q) = 1 - Q/l_(y y)$
+        - $F = r^2/((1 - r^2)/(n - 2))$
+      ]
+      得到模型后，对于新数据的预测当然就是：
+      $
+        hy_0 = hat(a) + hat(b) x_0\
+      $
+      为了得到置信区间，我们有：
+      $
+        T = (y_0 - hy_0)/sqrt(d Q quo (n - 2) ) tilde t(n - 2) where d = 1 + 1/n + (x_0 - xbar)^2/l_(x x)\
+      $
+      最终可以得到置信区间：
+      $
+        [hy_0 - lambda sqrt(d Q quo (n - 2)), hy_0 + lambda sqrt(d Q quo (n - 2))]
+      $
+      事实上，如此构造的置信区间的上下限构成一个双曲线，但一般来说回归直线不是双曲线的对称轴。
+
+      对于控制问题，可以对置信区间反解。给定置信水平 $alpha$，不妨设 $hb > 0$，则通过：
+      $
+        hy_0 - lambda sqrt(d Q quo (n - 2)) >= A
+      $
+      解出 $x_0 >= C_1$，同时：
+      $
+        hy_0 + lambda sqrt(d Q quo (n - 2)) <= B
+      $
+      解出 $x_0 <= C_2$，因此可以得到控制区间 $[C_1, C_2]$，$x_0$ 以不低于 $1 - alpha$ 的机会落在该区间内。注意有时可能解出 $C_1 > C_2$，就导致控制区间不存在。
+
+      当然，线性回归也可以采取其他度量，得到其他估计。例如，可以使绝对值之和最小，则可以得到最小一乘估计，它比最小二乘估计稳健。
+    === 一元齐次线性回归
+      有时，我们认为截距为零，建立模型：
+      $
+        y = beta x + epsilon\
+      $
+      可以容易解得：
+      $
+        hb = (sumi1n(x_i y_i))/(sumi1n2(x_i))\
+      $
+      以及可以验证：
+      $
+        (hb^2 sumi1n2(x_i))/(Q quo (n - 1)) tilde F(1, n - 1)
+      $
+    === 多元线性模型的参数估计
+      通常来说，记多元的线性回归模型为：
+      $
+        Y = X_(n, p) beta + epsilon\
+      $
+      古典回归中，往往希望 $n >= p$，然而现代统计中有时确实会出现 $n < p$ 的情形。这里我们也都假设 $n >= p$. 可以证明，正规方程：
+      $
+        X^T X beta = X^T Y
+      $
+      有解，且其解都是原模型的最小二乘估计。
+      #theorem[][
+        - $E(hb) = beta$
+        - $var(hb) = sigma^2 Inv(tMul(X))$
+        - $E(Q(hbeta)) = (n - p) sigma^2$
+      ]
+    
     

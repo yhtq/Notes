@@ -2012,7 +2012,7 @@
     #proof[
       显然 ${x_0}$ 是紧的凸集，因此显然。
     ]
-  == 对偶空间和对偶算子
+  == 对偶空间
     #theorem[][
       设 $X$ 是赋范空间，则 $duelSpace(X)$ 是 Banach 空间
     ]
@@ -2056,10 +2056,16 @@
       $
         f = T(i arrowb f(e_i))\
       $
-      只需要验证 $i arrowb f(e_i) in l^1$，注意到：
+      只需要验证 $i arrow_C_0b f(e_i) in l^1$，注意到：
       $
         sumi0M(abs(y_i)) = sumi0M(y_i sgn(y_i)) = 
       $
+    ]
+    #corollary[][
+      上面诱导了映射 $l^1 -> duelSpace(l^infinity)$，这个映射不是满射
+    ]
+    #proof[
+      前面证明了 $duelSpace(C_0) eqv l_1$，使用 Hahn-Banach 定理，可以构造泛函 $f != 0$ 使得 $f|_C_0 = 0$，使用该 $f$ 即产生矛盾
     ]
     #theorem[][
       $duelSpace(L^p) = L^q, forall p in [1, +infinity)$
@@ -2067,3 +2073,169 @@
     #proof[
       思路类似，但涉及一些实变的知识，在此略过。
     ]
+    #theorem[][
+      给定测度空间 $L^p (X, Omega, mu)$，则：
+      $
+        duelSpace(L^p (X, Omega, mu)) = L^q (X, Omega, mu), 1/p + 1/q = 1, p in (1. +infinity)
+      $
+    ]
+    #proof[
+      略
+    ]
+    #remark[][
+      $L^infinity$ 空间的对偶空间会变得比较复杂。事实上，可以证明 $L^infinity (X, Omega, mu)$ 的对偶空间是所有有限可加的，绝对连续的（将零测集映为零测集）的测度所构成的集合。
+    ]
+  == 自反空间
+    #definition[bi-duel space][
+      设 $X$ 是赋范空间，称 $duelSpace(duelSpace(X))$ 称为 $X$ 的 bi-duel space（第二共轭空间）
+    ]
+    #lemma[][
+      定义典范的映射：
+      $
+        funcDef(tau, X, duelSpace(duelSpace(X)), x, (f arrowb f x))
+      $
+      则：
+      - $tau$ 是线性的单射
+      - $norm(tau(x)) = x$
+    ]
+    #proof[
+      - Hahn-Banach 定理的分离性给出单射
+      - Hahn-Banach 定理的推论
+    ]
+    #definition[][
+      设 $X$ 是赋范空间，称 $X$ 是自反空间，如果 $tau$ 是满射（此时 $tau$ 是保距双射，显然 $X$ 是 Banach 空间）
+    ]
+    #remark[][
+      存在一个空间 $X$，使得 $duelSpace(duelSpace(X))$ 与 $X$ 同构，但并不是通过 $tau$ 同构
+    ]
+    #example[][
+      - Hibert 空间是自反空间
+      - $l^p, L^p$ 对于 $p in (1, +infinity)$ 都是自反的
+    ]
+    #definition[][
+      记：
+      $
+        inner(f, x) -> f x
+      $
+      也即 $inner(-, -)$ 是 $duelSpace(X) times X -> KK$ 的双线性映射
+    ]
+    #theorem[][
+      设 $X$ 是 Banach 空间，则：
+      - $X$ 是自反空间 当且仅当 $duelSpace(X)$ 也是
+      - 若 $X$ 是自反空间，$Y$ 是闭子空间，则 $Y, X quo Y$ 都是自反空间
+    ]
+    #proof[
+      - 先假设 $X$ 是自反空间，只需任取 $z in duelSpace(duelSpace(duelSpace(X)))$，将其拉回到 $duelSpace(X)$ 上。考虑：
+        $
+          z compose (tau : X -> duelSpace(duelSpace(X))) : X -> K
+        $
+        不难验证它是有界线性泛函，且：
+        $
+          (tau : duelSpace(X) -> duelSpace(duelSpace(duelSpace(X)))) (z compose (tau : X -> duelSpace(duelSpace(X)))) = (x : duelSpace(duelSpace(X))) arrowb (x (z compose (tau : X -> duelSpace(duelSpace(X))))) 
+        $
+        只需证明：
+        $
+          (x : duelSpace(duelSpace(X))) arrowb (x (z compose (tau : X -> duelSpace(duelSpace(X))))) = z
+        $
+
+        再考虑 $duelSpace(X)$ 是自反空间，如果 $tau(X) != duelSpace(duelSpace(X))$，则利用 Hahn-Banach 定理，可以找到 $z in duelSpace(duelSpace(duelSpace(X)))$ 使得 $z != 0, z|_tau(X) = 0$，利用 $duelSpace(X)$ 的自反性可设：
+          $
+            tau(y : duelSpace(X)) = z
+          $
+          则任给 $x in X$，有：
+          $
+            inner(y, x) = inner(tau(x), y) = inner(tau(y), tau(x)) = inner(z, tau(x)) = 0\
+          $
+          换言之，$y = 0 => z = 0$，矛盾！
+      - 首先证明 $Y$ 是自反的。显然有 $duelSpace(duelSpace(Y)) subset duelSpace(duelSpace(X))$，任取 $z in duelSpace(duelSpace(Y))$，则当然有 $Inv(tau)(z) : X$，只需证明 $Inv(tau)(z) : Y$，如若不然，利用 Hahn-Banach 定理，可以找到 $f : duelSpace(X), f(Inv(tau) (z)) != 0, f |_Y = 0$，将有：
+        $
+          inner(f, Inv(tau) (z)) = inner(z, f)  = 0
+        $
+        矛盾！
+
+        再证明 $X quo Y$ 是自反的，注意到有典范映射 $pi : X -> X quo Y$，定义：
+        $
+          orthogonalCom(Y) = {f : duelSpace(X) | f |_Y = 0}
+        $
+        则可以证明 $orthogonalCom(Y)$ 是 $duelSpace(X)$ 的闭子空间。事实上，可以验证 $duelSpace(pi) : duelSpace((X quo Y)) -> duelSpace(X)$ 是 $duelSpace((X quo Y)) -> orthogonalCom(Y)$ 之间的双射，因此对 $orthogonalCom(Y) -> duelSpace((X quo Y))$ 取共轭就得到 $duelSpace(duelSpace((X quo Y))) -> duelSpace(orthogonalCom(Y))$，利用 Hahn-Banach 定理得到 $duelSpace(orthogonalCom(Y)) -> duelSpace(duelSpace(X))$，最后得到：
+        $
+          duelSpace(duelSpace((X quo Y))) -> duelSpace(orthogonalCom(Y)) -> duelSpace(duelSpace(X)) -> X -> X quo Y\
+        $
+        以及：
+        $
+          inner(tau((duelSpace(duelSpace((X quo Y))) -> X quo Y) z), f : duelSpace(X quo Y))
+        $
+    ]
+  == 可分空间
+    #theorem[][
+      设 $X$ 是赋范空间：
+      - 若 $duelSpace(X)$ 是可分的，则 $X$ 是可分的
+      - 若 $X$ 是可分且自反的，则 $duelSpace(X)$ 是可分的
+    ]
+    #proof[
+      - 任取 $f_n$ 是 $duelSpace(X)$ 的稠密子集，则可取得 $x_n : X, norm(x_n) = 1, norm(f_n x_n) > 1/2 norm(f_n)$，设 $Q$ 是 $KK$ 的可数稠密子集，考虑：
+        $
+          Omega = directSum_n Q x_n
+        $
+        断言它是可数稠子集，否则由 Hahn-Banach 定理，可设 $f != 0, f |_(closure(Omega)) = 0$，由条件，设 $f_(n_k) -> f$，则：
+        $
+          inner(f_(n_k) - f, x_(n_k)) = inner(f_(n_k), x_(n_k)) >= 1/2 norm(f_(n_k))\
+        $
+        但另一方面：
+        $
+          inner(f_(n_k) - f, x_(n_k)) <= norm(f_(n_k) - f) -> 0
+        $
+        这意味着 $f_(n_k) -> 0$，因此 $f = 0$，矛盾！
+      - 条件给出 $duelSpace(duelSpace(X))$ 可分，继而由上面的结论 $duelSpace(X)$ 可分
+    ]
+    #example[][
+      注意到 $l^1$ 是可分的，$l^+infinity$ 不是可分的，因此不可能有 $duelSpace(l^infinity) = l^1$，进而 $C_0, l^1, l^infinity$ 都不是自反的。
+    ]
+    #example[][
+        设 $M$ 是无穷的紧集，则 $C(M)$ 不是自反的。以 $X = C[0, 1]$ 为例，考虑：
+        $
+          X_0 = {f in X | f(1/n) = 0, forall n in NN^+}
+        $
+        显然 $X_0$ 是闭子空间，设：
+        $
+          C = {l in l^infinity | lim l exists}
+        $
+        构造映射：
+        $
+          funcDef(pi, X quo X_0, C, f, (f(1/i)))
+        $
+        可以验证 $pi$ 是双射，但 $C$ 是 $C_0$ 的闭子集，因此 $C$ 不是自反的， $X quo X_0$ 也不是自反的，继而 $X$ 也不是自反的。这里的构造中，$1/n$ 的选择当然是可以推广的，一般来说只要取一个互不相等的柯西列即可。
+    ]
+  == 对偶算子
+    #definition[][
+      设 $A : L(X, Y)$，算子 $B : L(duelSpace(Y), duelSpace(X))$ 称为 $A$ 的对偶，如果：
+      $
+        inner(B y, x) = inner(y, A x), forall y in duelSpace(Y), x in duelSpace(X)
+      $
+    ]
+    #theorem[][
+      对偶算子是存在唯一的，且：
+      $
+        norm(duelSpace(A)) = norm(A)
+      $
+    ]
+    #proof[
+      事实上，定义式已经给出了存在性（除了范数条件）和唯一性，至于范数，有：
+      $
+        norm(duel(A)) = sup (norm(duel(A) y))/norm(y) = sup_(x, y) inner(duel(A) y, x)/(norm(x) norm(y)) = sup_(x, y) inner(y, A x)/(norm(x) norm(y)) 
+      $
+      由 Hahn-Banach 定理的推论，有：
+      $
+        norm(A x) = sup_y inner(y, A x)/norm(y)
+      $
+      因此：
+      $
+        sup_(x, y) inner(y, A x)/(norm(x) norm(y)) = sup_x norm(A x)/norm(x) = norm(A)
+      $
+      证毕
+    ]
+    $
+      #(17 * 131)\
+
+    $
+    $#(2 * 139 * 4 * 4)$

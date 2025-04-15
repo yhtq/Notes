@@ -1443,3 +1443,79 @@
        R(alpha | mu, beta, gamma) = R(alpha | mu, beta) = R(alpha | mu) 
       $
     ]
+    期中考试内容到此为止
+= 其他误差项
+  之前的讨论，我们总是基于 $epsilon$ 的某些良好性质。有时，这些性质是不存在的
+  == underfitting 
+    典型的情形是，真实的关系形如：
+    $
+      Y = X beta + Z gamma + epsilon
+    $
+    但测量时，我们只测量了 $X$，没有测量 $Z$，假设 $(X, Z)$ 是满秩的。此时，按照之前方法估计得到的 $hb$ （通常）不再是 $beta$ 的无偏估计，$S^2$ 也（通常）不再是 $sigma^2$ 的无偏估计。可以计算得：
+    $
+      E hb = Inv(tMul(X)) X^T (X beta + Z gamma) = beta + Inv(tMul(X)) X^T Z gamma\
+      E S^2 = sigma^2 + (quadFormSym(Z gamma, I - P))/(n - p)\
+      E (Y - hY) = (I - P) Z gamma\
+      var (Y - hY) = sigma^2 (I - P)
+    $
+  == overfitting
+    另一种情形是，我们考虑的模型是：
+    $
+      Y = (X_1, X_2) vec(beta_1, beta_2) + epsilon = X beta + epsilon
+    $
+    然而真实的关系只是：
+    $
+      Y = X_1 beta_1 + epsilon
+    $
+    换言之，$beta$ 的后半部分全为零，此时：
+    $
+      E hb = Inv(tMul(X)) X^T X_1 beta_1 = Inv(tMul(X)) X^T X beta = beta
+    $
+    也就是 $hb$ 仍然是无偏的，同时：
+    $
+      var(hb) = var(hb_1) + L M L^T [j; j] >= var(hb_1) 
+    $
+    表明方差可能增大了。
+  == 误差不同方差
+    如果真实情形是 $var(epsilon) = sigma^2 V$，仍按照标准的方法估计，可以计算得：
+    $
+      E(hb) = beta\
+      var(hb) != Inv(tMul(X)) sigma^2
+    $
+    导致假设检验等就失效了。以及：
+    $
+      E S^2 = sigma^2/(n - p) tr((I - p) V)
+    $
+  == 误差非正态 
+    如果误差项不是正态的，则参数估计不会出现问题，但 F-检验就不再成立。不过可以证明：
+    $
+      F = ((RSS_H - RSS)/(q - 1))/(RSS/(n - p))\
+    $
+    在一些条件下（例如 $n$ 较大时），仍然近似服从 $F$ 分布（但自由度可能变化）
+  == $X$ 有随机性
+    之前的讨论中，我们认为对 $X$ 的观察都是准确且无随机性的。然而许多情况下，$X$ 是带有随机性或者噪声的。此时，设：
+    $
+      V = U beta, U "有随机性但可观测"\
+      Y = V + epsilon\
+      E (Y | U) = V
+    $
+    将之前所有推断换成 $| U$ 下的条件推断，则结论都是不变的。在做统计推断时，可能对结果产生一些影响，但影响很小。
+
+    另外，如果认为 $X$ 不能精确测量，也即设：
+    $
+      U = E X\
+      Y = (E X) beta + epsilon = X beta + epsilon + delta beta where delta = X - E X\
+    $
+    如果假设 $var(delta) = sigma_1^2 I$，此时：
+    $
+      hb = Inv(tMul(X)) X^T Y = Inv(tMul(X)) X^T (X beta + epsilon + delta beta)\
+      E hb = E (E (hb | X)) = E (Inv(tMul(X)) X^T (X - delta) beta) = beta - E_delta (Inv(tMul(X)) X delta beta)
+    $ 
+    可以证明：
+    $
+      E_delta (Inv(tMul(X)) X delta beta) approx n Inv(tMul(U) + n D) D beta\
+      E (tMul(X)) = tMul(U) + n D
+      where D = tMul(delta)
+    $
+    进而可以利用其他统计量做一些校正。不过实际的线性回归中，很少考虑这种情形。
+  == 异常值
