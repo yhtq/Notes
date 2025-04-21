@@ -101,11 +101,13 @@
 #let ybar = $overline(y)$
 #let zbar = $overline(z)$
 #let Zbar = $overline(Z)$
-#let duelSpace(X) = $#X^*$
-#let duel(X) = $#X^*$
+#let duel(X) = autoPow(X, $*$)
+#let duelSpace(X) = duel(X)
 #let cov = math.op("Cov")
 #let var = math.op("Var")
 #let cor = math.op("Cor")
+#let weakConverge = $limits(harpoon)^w$
+#let weakSConverge = $limits(harpoon)^(w*)$
 
 #let inner(x, y) = $〈#x, #y〉$
 #let span(..x) = $<#(x.pos().join($, $))>$

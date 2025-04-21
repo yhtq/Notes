@@ -1423,7 +1423,7 @@
           norm(T) <= lim inf norm(T_n)
         $
       事实上，$1 <=> 3$ 只需要 $Y$ 的完备性，$2 <=> 3$ 只需要 $X$ 的完备性
-    ]
+    ]<Banach-Steinhaus>
     #proof[
       - $3 => 1, 2$ 是平凡的
       - $1 => 3$：由 @uniform-boundedness 就有 $sup norm(T_n) < +infinity$，记 $T$ 是 $T_n$ 的极限算子，不难证明它是线性的，同时：
@@ -2234,8 +2234,136 @@
       $
       证毕
     ]
-    $
-      #(17 * 131)\
+    #lemma[][
+      - $duel(B compose A) = duel(A) duel(B)$
+      - $duel(id) = id$
+      - 有交换图表：
+        #align(center, diagram(
+          $
+          X edge("d", ->, A) edge(->, tau) & duelSpace(duelSpace(X))  edge("d", ->, duel(duel(A)))\
+          Y edge(->, tau) edge(->, tau) & duelSpace(duelSpace(Y))
+          $
+        ))
+    ]
+  == 弱/弱\*拓扑（Weak & Weak\* toplogy）
+    在经典情形下，紧性/列紧性是非常好用的性质，然而在无穷维空间中，这么好的性质通常是不成立的。一个思想是，换用一个更粗的拓扑，这个做法需要一定时间的铺垫。我们在这里采用一种简便的方法，直接定义什么是新拓扑意义下的收敛。
+    #definition[][
+      设 $X$ 是赋范空间，称 $x_n$ 弱收敛于 $x$，如果任给 $f in duelSpace(X)$ 都有 $f x_n -> f x$，记作 $x_n weakConverge x$
+    ]
+    #lemma[][
+      - 有穷维空间中，强收敛等价于弱收敛
+      - 弱极限是唯一的
+      - 在 Hibert 空间中，若 $x_n weakConverge x, norm(x_n) -> norm(x)$，则 $x_n -> x$
+      - $x_n weakConverge x$ 当且仅当 $x_n$ 有界，且 $f x_n -> f x$ 对于 $f$ 属于某个稠密子集都成立。进一步，有 $norm(x) <= liminf f norm(x_n)$
+    ]
+    #proof[
+      - 只需证明弱收敛保证强收敛，事实上取 $duel(e_i)$ 就有：
+        $
+          duel(e_i) (x_n) -> duel(e_i) x
+        $
+        换言之，$x_n$ 的每个分量都收敛于 $x$ 的这个分量，当然就有 $x_n -> x$
+      - 熟知只要 $x != y$，就存在 $f$ 使得 $f x != f y$，取该 $f$ 即可得到矛盾
+      - 注意到：
+        $
+          norm(x_n - x)^2 = norm(x_n)^2 + norm(x)^2 - inner(x_n, x) - inner(x, x_n)
+        $
+        注意到弱收敛保证 $inner(x_n, x) -> inner(x, x) = norm(x)^2$，因此显然上式趋于零
+      - 取 $T_n = tau(x_n)$，利用 @Banach-Steinhaus 即可
+    ]
+    #lemma[Mazur][
+      设 $x_n weakConverge x$，则任意 $epsilon > 0$，存在 $N$，以及 $lambda_i in [0, 1], sumi1N(lambda_i) = 1$ 使得：
+      $
+        norm(x - sumi1N(lambda_i x_i)) < epsilon
+      $
+    ]
+    #proof[
+      设 $S = {x_1, ..., x_n, ...}$，结论等价于：
+      $
+        x in closure(cov(S))
+      $
+      如若不然，则由 Hahn-Banach 定理的几何版本，就存在 $f$ 使得：
+      $
+        f(x) < a - delta < a + delta < f(y), forall y in closure(cov(S))
+      $
+      然而，由定义 $f(x) in closure(f(S))$，导致矛盾！
+    ]
+    #definition[][
+      考虑 $duelSpace(X)$，我们有不同的收敛性：
+      - $f_n -> f$
+      - $f_n weakConverge f <=> forall z in duelSpace(duelSpace(X)), z f_n -> z f$
+      还可以定义更弱的收敛：
+      $
+        f_n weakSConverge f := forall z in tau(X), z f_n -> z f
+      $
+      它也等价于：
+      $
+        forall x in X, f_n x -> f x
+      $
+      或者利用 @Banach-Steinhaus，等价于：
+      $
+        f_n x -> f x , forall x in "某个稠子集" and norm(f_n) "有界"
+      $
+    ]
+    #definition[][
+      考虑 $L(X, Y)$，我们也有不同的收敛性：
+      - $T_n -> T$，也就是一致收敛
+      - $T_n x -> T x, forall x$，通常会称强收敛，有时也记 $T_n -> x$
+      - $z T_n x -> z T x, forall x in X, y in duelSpace(Y)$
+    ]
+    #example[][
+      在 $X = l^2$ 中，令：
+      $
+        T x = (0, x_1, x_2, ...)\
+        S x = (x_2, x_3, ...)\
+        T_n = T^n, S_n = S^n
+      $
+      - 注意到 $norm(S_n x) -> 0 => forall x, S_n x -> 0$，也即 $S$ 强收敛到 $0$，但不难验证 $norm(S_n) = 1$，因此并不一致收敛
+      - 注意到 $norm(T_n x) = norm(x)$，但：
+        $
+          abs(inner(y, T_n x)) = abs(sum_k y_(n + k) x_k) ->^("Cauthy-Schwarz") 0
+        $
+        因此 $T_n$ 弱收敛于零，但并不强收敛于零
+    ]
+    之前提到，引入收敛性是为了获得更好的紧性，下面是两个非常重要的定理，但它们的证明非常复杂，接下来只会证明简单的版本，完整证明可以参考 Salamon。
+    #let weakS = [弱\*]
+    #let weakCompact = [弱紧]
+    #let weakSCompact = [弱\*紧]
+    #theorem[Banach-Alaeslu][
+      设 $X$ 是赋范数空间，则 $duelSpace(X)$ 中的单位球#weakSCompact
+    ]<Banach-Alaeslu>
+    #proof[
+      我们只证明一种特殊情况：
+      #align(center)[
+        若 $X$ 可分，则 $duelSpace(X)$ 中的单位球弱\*列紧
+      ]
+      取 $x_n$ 是可数稠密集，$f_i : duelSpace(X) in B(0, 1)$
+      - 首先：
+        $
+          f_n (x_1)
+        $
+        是有界的，因此有收敛子列，找出一个收敛子列
+      - 重复该步骤不断构造，取对角线，即可得到在 $x_n$ 上收敛的子列，由 Banach-Steinhaus 就有该子列#weakS\收敛
 
-    $
-    $#(2 * 139 * 4 * 4)$
+    ]
+    #theorem[][
+      $X$ 自反当且仅当  $duelSpace(X)$ 中的单位球#weakCompact
+    ]
+    #proof[
+      我们只证明左推右的单边情形，并且只证明列紧性。取 $x_n : duelSpace(X) in B(0, 1)$，设 $X_0 = closure(span(x_n))$，这是自反空间的闭子空间，因此 $X_0$ 也是自反的。同时，显然 $X_0$ 是可分的，因此 $duelSpace(duelSpace(X_0))$ 也是可分的，进而 $duelSpace(X_0)$ 是可分的。由前面的 @Banach-Alaeslu，我们就有 $duelSpace(duelSpace(X_0))$ 中的有界列#weakS\收敛，因此对于 ${x_n}$，可设 $forall f, tau(x_(n_k)) f -> tau(x) f$，也即 $forall f : duelSpace(X_0), f x_(n_k) -> f x$
+
+      最后，对于任何 $f : duelSpace(duelSpace(X))$，只需要做限制得到 $duelSpace(X_0)$，不难证明有 $f x_(n_k) -> f x$，这就表明 $x_(n_k) weakConverge x$，证毕。 
+    ]
+    #example[][
+      - 当 $X = L^2[0, 1]$，$f_n (x) = sin n x$，可以证明：
+        - $f_n$ 没有极限
+        - $f_n weakConverge 0$（就是 R-L 引理）
+      - 当 $X = L^2(RR^n)$ 或者 $L^p (RR^n), f_n (x) = f(x - n)$，可以证明：
+        - $f_n$ 保持范数，没有极限
+        - $f_n weakConverge 0$，注意到可设：
+          $
+            inner(z, f_n) = integral_()^() g(x) f_n (x) dif x
+          $
+          假设 $f$ 有紧支集（一般的可以逼近），则 $n$ 充分大时上式分成 $f$ 较小和 $g$ 较小的两部分，因此趋于零
+      - 当 $X = L^2(RR^n)$ 或者 $L^p (RR^n), f_n (x) = f(x/n) n^(-n/p)$，可以证明：
+        - $f_n weakConverge 0$
+    ]
