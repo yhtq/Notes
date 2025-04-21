@@ -476,7 +476,9 @@
 #let seqLimit(n) = $lim_(#n -> +infinity)$
 #let seqLimitn = $seqLimit(n)$
 #let inj_str = "inj"
+#let inja = math.arrow.hook
 #let surj_str = "surj"
+#let surja = math.arrow.twohead
 #let bij_str = "bij"
 #let fourierTrans(f) = $hat(#f)$
 #let def_str = "def"

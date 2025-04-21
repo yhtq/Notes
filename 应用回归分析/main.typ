@@ -88,17 +88,17 @@
     #theorem[][
       设 $A$ 是对称常矩阵，则：
       $
-        E(x^T A x) = tr(A var(X)) + E(x)^T A E(x)
+        E(X^T A X) = tr(A var(X)) + E(X)^T A E(X)
       $
       进一步，若 $var(X) = sigma^2 I$（例如 $X$ 是独立同分布的正态随机变量），则上式等于：
       $
-        sigma^2 tr(A) + E(x)^T A E(x)
+        sigma^2 tr(A) + E(X)^T A E(X)
       $
     ]
     #proof[
       $
-        E(x^T A x) = E(tr(x^T A x)) = E(tr(A x x^T)) = tr(A E(x x^T)) \
-        = tr(A(var(X) + E(X) E(X)^T)) = tr(A var(X)) + E(x)^T A E(x)
+        E(X^T A X) = E(tr(X^T A X)) = E(tr(A X X^T)) = tr(A E(X X^T)) \
+        = tr(A(var(X) + E(X) E(X)^T)) = tr(A var(X)) + E(X)^T A E(X)
       $
     ]
     #example[][
@@ -328,19 +328,7 @@
     ]<chi-square-indep>
     #proof[
       - 一方面，独立的 $chi^2$ 变量的和还是 $chi^2$ 变量，导出 $A + B$ 幂零，因此 $A B = 0$ 是必要条件
-      - 另一方面，假设 $A B = 0$，则任取 $RR$ 中可测集 $(-infinity, x)$，有：
-      $
-        (Y^T A Y)^(-1) ((-infinity, x)) = {Y | norm(A Y) < sqrt(x)} = Inv(A) ({Y | norm(Y) < sqrt(x)})\
-        (Y^T B Y)^(-1) ((-infinity, y)) = Inv(B) ({Y | norm(Y) < sqrt(y)})
-      $
-      由于 $A B = B A = 0$，我们有：
-      $
-        im B subset ker A, im A subset ker B\
-      $
-      因此：
-      $
-        Inv(A) ({Y | norm(Y) < sqrt(x)}) inter Inv(B) ({Y | norm(Y) < sqrt(y)})
-      $
+      - 另一方面，假设 $A B = 0$，则有 $A Y$ 与 $B Y$ 独立，当然就有 $norm(A Y) = quadFormSym(Y, A)$ 与 $norm(B Y) = quadFormSym(Y, B)$ 独立。
 
       // $
       //   phi (t) = E eXi(t_1 Y^T A Y + t_2 Y^T B Y) = E eXi((Y^T (t_1 A + t_2 B) Y))
@@ -453,7 +441,7 @@
       $
       因此：
       $
-        var (d^Y) - var(c^T hat(theta))\
+        var (d^T Y) - var(c^T hat(theta))\
         = sigma^2 d^T d - sigma^2 (P c)^T (P c)\
         = sigma^2 d^T d - sigma^2 (P d)^T (P d)\
         = sigma^2 d^T (I - P) d >= 0
@@ -660,10 +648,10 @@
     其中：
     $
       norm(X hat(beta)_0 - X beta)^2 &= norm(X(hb - hb0))^2 + 2 (hb0 - hb)^T tMul(X) (hb - beta) + norm(X (hb0 - beta))^2\
-      &=  norm(X(hb - hb0))^2 + norm(X (hb0 - beta)) + lambda^T A Inv(tMul(X)) tMul(X)  (hb - beta)\ 
-      &=  norm(X(hb - hb0))^2 + norm(X (hb0 - beta)) + lambda^T A (hb - beta)\ 
-      &=  norm(X(hb - hb0))^2 + norm(X (hb0 - beta)) + lambda^T (c - c)\ 
-      &=  norm(X(hb - hb0))^2 + norm(X (hb0 - beta))\ 
+      &=  norm(X(hb - hb0))^2 + norm2(X (hb0 - beta)) + lambda^T A Inv(tMul(X)) tMul(X)  (hb - beta)\ 
+      &=  norm(X(hb - hb0))^2 + norm2(X (hb0 - beta)) + lambda^T A (hb - beta)\ 
+      &=  norm(X(hb - hb0))^2 + norm2(X (hb0 - beta)) + lambda^T (c - c)\ 
+      &=  norm(X(hb - hb0))^2 + norm2(X (hb0 - beta))\ 
     $
     可见，$hb$ 确实是原问题的最优解。同时，也得到：
     $
@@ -696,8 +684,8 @@
     #definition[][
       假设 $gInv(A)$ 还满足：
       - $gInv(A) A gInv(A) = gInv(A)$
-      - $(B gInv(B))^T = B gInv(B)$
-      - $(gInv(B) B)^T = gInv(B) B$
+      - $(A gInv(A))^T = A gInv(A)$
+      - $(gInv(A) A)^T = gInv(A) A$
       则 $gInv(A)$ 是唯一的，称为 Moore-Penrose 逆，记作 $MPInv(A)$，可以证明它是唯一的。
     ]
     #example[][
@@ -727,7 +715,7 @@
 
     当然，$X$ 不满秩时存在无穷多个 $beta$ 使得 $X beta$ 相等，因此 $beta$ 是不可估计的，但投影 $P$ 仍然是唯一的，$P Y = htheta$ 也是唯一的。
     #definition[][
-      称 $a^T beta$ 是可估计的，如果存在 $a^T b$ 使得 $b^T Y$ 是 $a^T beta$ 的无偏估计。换言之：
+      称 $a^T beta$ 是可估计的，如果存在 $b$ 使得 $b^T Y$ 是 $a^T beta$ 的无偏估计。换言之：
       $
         a^T beta = E(b^T Y) = b^T E(Y) = b^T X beta
       $
@@ -870,7 +858,7 @@
       $
       以及：
       $
-        (n - 2)S^2 = sumBrN1(Y_i - overline(Y)) - hbeta_1 sumBrN1((X_i - Xbar)^2) = sumBrN1(Y_i - overline(Y))^2 - sumBrN1(hat(Y)_i - overline(Y))
+        (n - 2)S^2 = sumBrN1((Y_i - overline(Y))^2) - hbeta_1 sumBrN1((X_i - Xbar)^2) = sumBrN1(Y_i - overline(Y))^2 - sumBrN1(hat(Y)_i - overline(Y))
       $
       同时：
       $
@@ -882,7 +870,7 @@
       $
       往往记：
       $
-        r^2 = (sumBrN1((hat(Y)_i - overline(Y))^2))/(sumBrN1((Y_i - overline(Y))^2)) = (hbeta_1^2 sumBrN1((x_i - Xbar)))/(sumBrN1((Y_i - overline(Y))^2)) = sumBrN1((Y_i - overline(Y))(X_i - Xbar))^2/(sumBrN1((Y_i - overline(Y))^2) sumBrN1((X_i - Xbar)^2))
+        r^2 = (sumBrN1((hat(Y)_i - overline(Y))^2))/(sumBrN1((Y_i - overline(Y))^2)) = (hbeta_1^2 sumBrN1((x_i - Xbar)))/(sumBrN1((Y_i - overline(Y))^2)) = (sumBrN1((Y_i - overline(Y))(X_i - Xbar)))^2/(sumBrN1((Y_i - overline(Y))^2) sumBrN1((X_i - Xbar)^2))
       $
       就有：
       $

@@ -1917,7 +1917,7 @@
       $
     ]
     #definition[超平面/Hyper plane][
-      对于任意 $f in duelSpace(X), r in RR$，称：
+      对于任意 $f != 0 in duelSpace(X), r in RR$，称：
       $
         H_f^r = Inv(f)(r) 
       $
@@ -1929,13 +1929,13 @@
       （取 $[r, +infinity)$ 也可）
     ]
     #definition[可分离][
-      称 $A, B in X$ 是可被超平面分离的，如果存在 $f in duelSpace(X)$ 使得：
+      称 $A, B in X$ 是可被超平面分离的，如果存在 $f != 0 in duelSpace(X)$ 使得：
       $
         exists r in RR, Re f(A) <= r <= Re f(B)
       $
     ]
     #theorem[][
-      设 $X$ 是 $RR$ 上的赋范空间，$A, B$ 是两个凸集：
+      设 $X$ 是 $RR$ 上的赋范空间，$A, B$ 是两个非空凸集：
       - 若 $A^o != emptyset, A inter B = emptyset$，则 $A, B$ 可被超平面分离
       - 若还有 $A$ 是闭的，$B$ 是紧的，则存在 $r, delta$ 使得：
         $
