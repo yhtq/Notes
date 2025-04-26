@@ -1121,5 +1121,55 @@
         - $var(hb) = sigma^2 Inv(tMul(X))$
         - $E(Q(hbeta)) = (n - p) sigma^2$
       ]
+    === 线性模型的假设检验
+      一般的假设检验形如：
+      $
+        H_0 : H beta = 0 <-> H_1 : H beta != 0
+      $
+      例如 $H = (0, 1, 0, ...)$，则假设相当于 $beta_2 = 0$，也就是检验结果与协变量 $x_2$ 是否有相关关系。假设 $hb, hb_0$ 分别是无约束情况下以及满足约束时 $beta$ 的最小二乘估计（可以不唯一），熟知：
+      $
+        hY = P_(im X) Y = X hb\
+        hY_0 = P_(im X inter ker H) Y = X hb_0
+      $
+      可以计算得，广义似然比是：
+      $
+        F = (norm2(hY - hY_0) \/ (r - q))/(norm2(Y - hY) \/ (n - r))
+      $
+      的单调增函数，因此检验法是 $F$ 较大时否定假设，否则不否定。
+      #theorem[][
+        若误差项是正态的，则 $F tilde F_(r - q, n - r)$
+      ]
+      为了构造 $c beta$ 的置信区间，首先要考虑 $c^T beta$ 是可估计的。
+      #definition[][
+        设 $a in im X, a^T Y$ 是 $c^T beta$ 的无偏估计，则称 $a$ 是 $c$ 的伴随元 
+      ]
+      #lemma[][
+        $
+          norm(Y - hY)^2/sigma^2 tilde chi^2(n - r)
+        $
+        且上式左侧总是与 $hY$ 独立
+      ]
+      #theorem[估计情形][
+        设 $c^T beta$  可估计，$a$ 是 $c$ 的伴随元，如此：
+        $
+          (c^T (hb - beta))/(norm(a) sqrt(norm2(Y - hY)/(n - r))) tilde t(n - r)
+        $
+        就是自然的 $t$ 统计量。特别的，若 $X$ 满秩，则：
+        $
+          a = X Inv(tMul(X)) c
+        $
+        上式可以化简为：
+        $
+          (c^T (hb - beta))/(sqrt(quadFormSym(c, Inv(tMul(X)))) sqrt(norm2(Y - hY)/(n - r))) tilde t(n - r)
+        $
+      ]
+      #theorem[预测问题][
+        在预测问题中，假如给定新的自变量 $x_0$ 并设 $x_0^T beta$ 可估计，则 $Y_0 = x_0^T beta + epsilon'$。若设 $epsilon'$ 与 $epsilon$ 相互独立，取 $a$ 是 $x_0$ 的伴随元，就有：
+        $
+          T = (x_0^T - Y_0)/(sqrt(norm2(Y - hY)/(n - r)) sqrt(norm2(a) + 1)) tilde t(n - r)
+        $
+      ]
+      由上面两个定理，我们就可以得到之前一元回归情形的结果。
+      
     
     

@@ -9,6 +9,36 @@
   withTitle : false,
   withHeadingNumbering: false
 )
+P140 12 13 15 16\*
+= 12
+  == (1)
+    这是单参数检验，由熟知结论 UMP 检验法为：
+    $
+      1_(S^2 > C)
+    $
+    其中：
+    $
+      P_(X tilde chi^2(n - 1)) (X > C / sigma^2) = alpha
+    $
+  == (2)
+    这是单参数检验，由熟知结论 UMP 检验法为：
+    $
+      1_(S^2 < C)
+    $
+    其中：
+    $
+      P_(X tilde chi^2(n - 1)) (X < C / sigma^2) = alpha
+    $
+  == (3)
+    注意到：
+    $
+      phi_(C_1, C_2) = 1_(X > C_2 or X < C_1)
+    $
+    只要满足：
+    $
+      P_(X tilde chi^2(n - 1)) (C_2/sigma^2 <= X <= C_1/sigma^2) >= 1 - alpha 
+    $
+    则都是水平为 $alpha$ 的检验法。
 P141 17 18 20 24\*
 = 17
   #let data = (
