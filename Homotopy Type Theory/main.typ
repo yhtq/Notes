@@ -27,7 +27,7 @@
 #let hasType(tm, ty) = $#tm \: #ty$
 #let formula(x) = $#x$
 #let evalTo = math.arrow.squiggly
-= Martin-Löf Type Theory
+= 
   == 形式系统
     作为例子，我们定义最简单的自然数的形式系统：
     $
@@ -295,7 +295,41 @@
     #lemma[][
       在 Homotopy type theory 中，宇宙不是 Set
     ]
+  == Computation & Cubical Type Theory
+    常见的自然数构造是所谓的 unary 模型，它在逻辑上很简单，但是计算效率很低。更有效率的是二进制模型：
+    ```haskell
+    data Bin := 
+      zero
+    | bin0 Bin
+    | bin1 Bin
+    ```
+    尽管在 `Bin` 上做证明也是可能的，但更经济的做法是，使用 univalence 将 $NN$ 的性质转移过来。
 
+    然而，使用 univalence axiom 进行 transport 通常会阻碍计算，因为验证器通常不可能穿过 ua 进行化简。一种解决方法是所谓的 Cubical Type Theory。它的基本思想是：
+    - 新的 type $I$ ，称作 cubic interval，类似于闭区间 $[0, 1]$
+    - 每个道路 $"Path" sep(x, y)$ 将看作一个在 $I$ 上参数化的函数 $f : I -> A$ ，满足 $sep(f, 0) = x, sep(f, 1) = y$
+    Hoffman 通过模型论证明了，Function Extensionality 在通常的 Martin-Löf Type Theory 中是不可证明的（事实上存在一个 Martin-Löf Type Theory 的模型，称作 Setoid 模型，其中的函数相等当且仅当它们是完全相等的函数），在 HoTT 中常常被当作公理使用，但在 Cubical Type Theory 中是成立的。事实上：
+    $
+      "funExt" : {sep(A, B) : u} {sep(f, g) : A -> B} (p : (x : A) -> f x = g x) -> (f = g)\
+      "funExt" sep(p, i, x) := sep(p, x, i)
+    $
+    这是因为，在 Cubical Type Theory 中，上面的签名可以重写成：
+    $
+      "funExt" : {sep(A, B) : u} {sep(f, g) : A -> B} (p : (x : A) -> (I -> B)) -> (I -> A -> B)\
+      "funExt" sep(p, i, x) := sep(p, x, i)
+    $
+    以及：
+    $
+      "funExt" sep(p, 0) := lambda x. sep(p, x, 0) = lambda x. f x = f\
+      "funExt" sep(p, 1) := lambda x. sep(p, x, 1) = lambda x. g x = g
+    $
+  == Higher inductive type
+    通常的 inductive type 给出了数据的构造方法，而 Higher inductive type 则给出了数据的构造方法和它们之间的同伦关系。典型的，可以定义：
+    ```haskell
+    data Circle := 
+      base :: Circle
+    | path :: base = base
+    ```
   == Curry-Howard correspond
     HOTT 为通常的 Curry-Howard correspond 提供了新的拓扑的视角。
     #align(center, table(

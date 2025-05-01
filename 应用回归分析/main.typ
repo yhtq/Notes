@@ -1474,6 +1474,7 @@
     $
       E S^2 = sigma^2/(n - p) tr((I - p) V)
     $
+
   == 误差非正态 
     如果误差项不是正态的，则参数估计不会出现问题，但 F-检验就不再成立。不过可以证明：
     $
@@ -1507,3 +1508,193 @@
     $
     进而可以利用其他统计量做一些校正。不过实际的线性回归中，很少考虑这种情形。
   == 异常值
+  == Residuels and hat matrix diagonal
+    有时，我们也把投影矩阵 $P$ 记作 hat matrix $H$，熟知：
+    $
+      e = Y - hY = (I - H) Y\
+      E e = 0\
+      var(e) = sigma^2 (I - H)\
+      E hY = X beta\
+      var(hY) = sigma^2 H\
+      cov(e, hY) = 0\
+    $
+    这些等式表明，$var(e_i) = sigma^2 (1 - H_i)$，表明 $e$ 不再是同方差的。
+    #definition[internally studentized residuals][
+      定义：
+      $
+        r_i = e_i/(S sqrt(1 - H_i))\
+      $
+      其中 $S^2 = RSS/(n - p)$ 是 $sigma^2$ 的无偏估计。
+    ]
+    #lemma[][
+      $
+        H_i = x_i^T Inv(tMul(X)) x_i
+      $
+    ]
+    #lemma[][
+      $
+        r_i^2/(n - p) tilde B(1/2, 1/2 (n - p - 1))
+      $
+    ]
+    #definition[externally studentized residuals][
+      定义：
+      $
+        t_i = e_i/(S_i sqrt(1 - H_i))\
+      $
+      其中 $S_i^2 = RSS_i/(n - p - 1)$，$RSS_i$ 是去掉第 $i$ 个观测值，使用其他数据做拟合计算得到的残差平方和。
+    ]
+    #theorem[][
+      记 $hbeta$ 是全模型拟合的参数，$hbeta_i$ 是去掉第 $i$ 个分量拟合得到的参数，则：
+      $
+        hbeta - hbeta_i = (Inv(tMul(X)) X_i e_i)/(1 - h_i)
+      $
+    ]
+    #proof[
+      设 $X(i)$ 是 $X$ 去掉第 $i$ 行 ，就有：
+      $
+        hbeta_i = Inv(tMul(X(i))) X(i)^T Y(i)\
+      $
+      以及（做矩阵计算可得）：
+      $
+        tMul(X(i)) = tMul(X) - x_i x_i^T\
+        X(i)^T Y(i) = X^T Y - x_i Y_i 
+      $
+      #lemma[Sherman-Morision-Woodbury][
+        $
+          Inv(A + U B V) = Inv(A) - Inv(A) U B Inv(B + B V Inv(A) U B) B U Inv(A)
+        $
+      ]
+      就有：
+      $
+        Inv(tMul(X) - x_i x_i^T) = Inv(tMul(X)) + (Inv(tMul(X)) x_i x_i^T Inv(tMul(X)))/(1 - x_i^T Inv(tMul(X)) x_i) 
+      $
+      代入计算得：
+      $
+        hbeta(i) 
+        &= hbeta - Inv(tMul(X)) x_i Y_i + (Inv(tMul(X)) x_i x_i^T hbeta)/(1 - h_i) - (Inv(tMul(X)) mulT(x_i) Inv(tMul(X)) x_i)/(1 - H_i) Y_i\
+        &= hbeta - (Inv(tMul(X)) x_i)/(1 - H_i) ((1 - H_i) Y_i - x_i^T hbeta + h_i Y_i)\
+        &= hbeta - (Inv(tMul(X)) x_i)/(1 - H_i) (Y_i - x_i^T hbeta)\
+        &= hbeta - (Inv(tMul(X)) x_i)/(1 - H_i) e_i\
+      $
+    ]
+    有时，我们会考虑如下的量：
+    $
+      Y_i - hY(i) 
+      &= Y_i - x_i^T beta + quadFormSym(x_i, Inv(tMul(X)))/(1 - h_i) e_i\
+      &= e_i + h_i/(1-h_i) e_i\
+      &= 1/(1 - h_i) e_i\
+    $
+    同时，注意到 $Y_i$ 和 $hY(i)$ 是独立的，因此：
+    $
+      var(Y_i - hY(i)) = var(Y_i) + var(hY(i)) = sigma^2 + sigma^2 quadFormSym(x_i, Inv(tMul(X(i))))
+    $
+    #definition[Jack knife studentized residuals][
+      定义：
+      $
+        t_i = (Y_i - hY(i))/(S(i) sqrt(1 + quadFormSym(x_i, Inv(tMul(X(i))))))
+      $
+    ]
+    #lemma[][
+      $
+        quadFormSym(x_i, Inv(tMul(X(i)))) = H_i / (1 - H_i)
+      $
+    ]
+    #proof[
+      $
+        quadFormSym(x_i, Inv(tMul(X(i)))) = quadFormSym(x_i, Inv(tMul(X))) + (quadFormSym(x_i, Inv(tMul(X))))^2/(1 - H_i) = H_i + H_i^2/(1 - H_i)= H_i / (1 - H_i)
+      $
+    ]
+    此外：
+    $
+      (n - p - 1) S(i)^2 = norm(Y(i) - X(i)^T hbeta(i))^2\
+      = norm2(Y - X^T hbeta(i)) - (Y_i - x_i^T hbeta(i))^2\
+      = norm2(Y - X^T hbeta + (X^T Inv(tMul(X)) x_i e_i)/(1 - h_i)) - (Y_i - x_i^T hbeta(i))^2\
+      = norm2(e + ((Y_i - x_i^T hbeta(i))^2 Inv(tMul(X)) x_i e_i)/(1 - h_i)) - (Y_i - x_i^T hbeta(i))^2\
+    $
+    与此同时：
+    $
+      (n - p - 1) S(i)^2 
+      &= sum_(j != i) (y_i - x_i^T hbeta(i))^2\
+      &= sum_(j != i) (y_i - x_i^T (hbeta - (Inv(tMul(X) )x_i e_i)/(1 - h_i))))^2\
+      &= sum_(j != i) (e_j + ( x_j^T Inv(tMul(X)) x_i e_i)/(1 - h_i))^2\
+      &= sum_(j != i) (e_j + (H_(j i) e_i)/(1 - h_i))^2\
+      &= sum_(j) (e_j + (H_(j i) e_i)/(1 - h_i))^2 - e_i^2/(1 - h_i)^2\
+      &= sum_(j) e_j^2 + sum_j 2 (H_(j i) e_i e_j)/(1 - h_i) +  sum_j (H_(j i) e_i)^2/(1 - h_i)^2 - e_i^2/(1 - h_i)^2\
+    $
+    注意到：
+    $
+      H e = H (I - H) Y = 0\
+      H^2 = H\
+      sum_j H_(j i) e_j = 0\
+      sum_j H_(i j)^2 = H_i\
+      tr(H) = sum_j H_j
+    $
+    因此上式等于：
+    $
+      RSS_i 
+      &= sum_(j) e_j^2 + (H_I e_i^2)/(1 - h_i)^2 - e_i^2/(1 - h_i)^2\
+      &= RSS  - e_i^2/(1 - H_i)\
+      &= RSS - S^2 r_i^2\
+      &= (n - p - r_i^2) S^2
+    $
+    综上：
+    $
+      t_i = e_i/(S sqrt((n - p - r_i^2)/(n - p - 1)) (1 - h_i) sqrt(1 + h_i/(1 - h_i)))
+    $
+    化简后就有：
+    #lemma[][
+      $
+        (n - p - 1) S(i)^2 = (n - p - r_i^2) S^2\
+        t_i = r_i sqrt((n - p -1)/(n - p - r_i^2))
+      $
+    ]
+    注意到 $r_i$ 是同分布的，因此 $t_i$ 也是同分布的。
+  == 错误的线性回归
+    #let he = $hat(e)$
+    假设真实的关系形如：
+    $
+      E (Y | X) = beta_0 + beta_1 g(x_1) + beta x_2
+    $
+    其中 $g(x_1)$ 是非线性项。如果拟合得到线性模型：
+    $
+      Y = hbeta_0 + hbeta_1 x_1 + hbeta_2 x_2 + he\
+    $
+    其中：
+    $
+      he approx hbeta_1 (g(x_i) - x_i) + epsilon
+    $
+    因此一种想法是，检查 $he$ 与 $x_i$ 的相关性。如果相关，则说明其中蕴含非线性关系，否则若不相关，则说明 $x_i$ 与 $g(x_i)$ 之间可能没有非线性关系。有时，也可以观察：
+    $
+      e^* = he + hbeta_1 x_1 approx hbeta_1 g(x_1)
+    $
+    与 $x_1$ 的相关性。
+    #definition[Box-Cox transforamation][
+      假设 $X$ 都非负，下面一类变换：
+      $
+        g(x, lambda) = cases(
+          (x^lambda - 1)/lambda "if" lambda != 0,
+          ln (x) "if" lambda = 0
+        )
+      $
+      称为 Box-Cox 变换。通常而言，数据取对数之后往往会变得更加正态/线性。
+    ]
+  == 误差不同方差的检测 
+    假设 $var(epsilon_i) = sigma^2$，下面我们讨论如何检测这种现象：此时我们有：
+    $
+      var(e) = (I - H) Sigma (I - H)\
+      var(e_i) = (1 - h_i)^2 sigma_i^2 + sum_(k != i) H_(i k)^2 sigma_k^2
+    $
+    如果设：
+    $
+      b_i = e_i^2/(1 - h_i)
+    $
+    可以计算得，当 $epsilon_i$ 同方差时，有：
+    $
+      E b_i = sigma^2
+    $
+    因此可以利用 $b_i$ 检测是否同方差，当然也可以利用前面提到的 $r_i, t_i$ 等
+
+    如果检查出异方差，常见做法是选取核函数 $w$，设：
+    $
+      sigma_i^2 = w(z_i, lambda)
+    $

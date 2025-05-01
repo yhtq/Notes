@@ -136,3 +136,49 @@ p142 21 22 25 26\*
     rank(1/n 1_x 1_x^T + 1/m 1_y 1_y^T - 1/(m + n) 1 1^T) = tr(1/n 1_x 1_x^T + 1/m 1_y 1_y^T - 1/(m + n) 1 1^T) = 1
   $
   继而 $F_2$ 分子服从 $chi^2(1)$，分母服从 $chi^2(n + m -2)$ 且前面已经说明相互独立，因此 $(n + m - 2) F_2 tilde F(1, n + m - 2)$，由此构造检验法即可。
+p143 28 29\*
+p219 1 2
+= 28
+  #let data = (74, 92, 83, 79, 80, 73, 77, 75, 76, 91)
+  #let calcT(data) = {
+      let n = data.sum()
+      data.map(
+        v => calc.pow(v / n - 1 / data.len(), 2) * (n / (1 / data.len()))
+      ).sum()
+  }
+  这是均匀分布的拟合优度检验，使用 $chi^2$ 检验法，计算：
+  $
+    T = calcT(data)
+  $
+  它近似服从 $chi^2 (9)$，因此取临界值 $C$ 使得：
+  $
+    P_(X tilde chi^2(9)) (X > C) = 0.05
+  $
+  查表得 $C = 16.9$，因此不拒绝原假设，认为是匀称的。
+= 1
+  == (1)
+    有熟知的恒等式：
+    $
+      inner(X - Xbar 1, Y - Ybar 1) = inner(X, Y) - n Xbar Ybar\
+    $
+    代入即得两式相等
+  == (2)
+    注意到：
+    $
+      inner(X - Xbar 1, Y - Ybar 1) = inner(X - Xbar 1, Y) - Ybar  inner(X - Xbar 1, 1) = inner(X - Xbar 1, Y) - Ybar  (n Xbar - n Xbar) \
+      = inner(X - Xbar 1, Y)
+    $
+    因此结论成立
+  == (3)
+    与 (2) 同理
+= 2
+  #let ha = $hat(a)$
+  #let hb = $hat(b)$
+  $
+    inner(1, Y - hY) = inner(1, Y - ha 1 - hb X) = inner(1, Y - (Ybar - hb Xbar) 1 - hb X)\
+    = inner(1, (Y - Ybar 1) - hb (X - Xbar 1)) = inner(1, Y - Ybar 1) - hb inner(1, X - Xbar 1) = 0
+  $
+  $
+    inner(X, Y - hY) = inner(X, (Y - Ybar 1) - hb (X - Xbar 1)) =^("前面结论") inner(X - Xbar 1, (Y - Ybar 1) - hb (X - Xbar 1))\
+    = inner(X - Xbar 1, (Y - Ybar 1) - (inner(X - Xbar 1, Y - Ybar 1))/norm2(X - Xbar 1) (X - Xbar 1)) = 0
+  $

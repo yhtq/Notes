@@ -2367,3 +2367,167 @@
       - 当 $X = L^2(RR^n)$ 或者 $L^p (RR^n), f_n (x) = f(x/n) n^(-n/p)$，可以证明：
         - $f_n weakConverge 0$
     ]
+  == 谱
+    #definition[][
+      设 $X$ 是 Hibert 空间，$A in L(X)$ 满足 $duel(A) A = A duel(A)$，则称 $A$ 为正规算子
+    ]
+    #lemma[][
+      设 $A$ 是正规算子，则：
+      - $norm(A x) = norm(duel(A) x)$
+      - $r(A) = norm(A)$
+      - $sigma (A) = emptyset$
+    ]
+    #proof[
+      - 
+        $
+          inner(A x, A x) = inner(duel(A) A x, x) = inner(A duel(A) x, x) = inner(duel(A) x, duel(A) x)\
+        $
+      - 
+        $
+          norm(A x)^2 = inner(duel(A) A x, x) <= norm(duel(A) A x) norm(x) = norm(A A x) norm(x) <= norm(A^2) norm(x)^2
+        $
+        但显然有 $norm(A^2) <= norm(A)^2$，因此 $norm(A^2) = norm(A)^2$，因此：
+        $
+          r(A) = limn(norm(A^n)^(1/n)) = limn(norm(A^(2^n))^(1/2^n)) = norm(A)\
+        $
+    ]
+    #example[][
+      设 $X$ 是 Hibert 空间：
+      - 称 $A$ 是自伴算子，如果 $A = duel(A)$，则显然 $A$ 是正规算子，前面的性质都成立。特别的，设 $lambda = a + b i, b != 0$，则可以计算得：
+        $
+          norm((lambda I - A) x)^2 = norm((a I - A) x)^2 + b^2 norm(x)^2
+        $
+        我们立刻有：
+        - $ker(lambda I - A) = 0$
+        - $im (lambda I - A)$ 是闭的
+        - 设 $y in orthogonalCom(im (lambda I - A))$，则：
+          $
+            inner(y, (lambda I - A) x) = inner((overline(lambda) I - A) y, x) = 0, forall x\
+          $
+          这表明 $y in ker ((overline(lambda) I - A) = 0$，继而 $lambda I - A$ 是满的
+        上面的事实表明，其谱中的元素都是实数
+      - 称 $u$ 是酉（unitary）算子，如果 $duel(u) u = u duel(u) = I$，则：
+        - $u$ 是可逆的正规算子
+        - $inner(u x, u y) = inner(x, y)$
+        - $norm(u x) = norm(x) => norm(u) = 1$
+        - 设 $lambda != 0 in sigma(u)$，也即 $lambda I - u$ 不可逆，注意到：
+          $
+            lambda I - u = (Inv(u) - Inv(lambda) I) lambda u
+          $
+          因此 $Inv(lambda)$ 也在 $Inv(u)$ 的谱之中，而 $Inv(u)$ 也是正交的，表明 $norm(lambda) <= 1$ 且 $norm(Inv(lambda)) <= 1$，继而 $norm(lambda) = 1$
+    ]
+    #example[][
+      设 $X = l^2, A (x_1, x_2, ...) = (0, x_1, ...)$，则有：
+      - $norm(A^n) = 1 => r(A) = 1$
+      - 若 $(lambda I - A) x = 0$，则：
+        $
+          lambda x_1 = 0\
+          lambda x_(n + 1) = x_n
+        $
+        显然 $lambda = 0$ 时 $x = 0$，因此 $ker(lambda I - A) = 0$，因此 $sigma_P (A) = emptyset$
+      - 任取 $y in orthogonalCom(closure(im (lambda I - A)))$，则：
+        $
+          inner(y, (lambda I - A) x) = inner((overline(lambda) I - duel(A)) y, x) = 0, forall x\
+        $
+        这表明 $y in ker ((overline(lambda) I - duel(A)) = 0$，事实上可以直接验证，$duel(A)$ 就是左平移，此时可以计算得：
+        $
+          y = y_1 (overline(lambda), overline(lambda^2), ...)
+        $
+        若设 $L_x = span((overline(lambda), overline(lambda^2), ...))$，则当 $norm(lambda) < 1$ 时 $L_x$ 确实是 $L^2$ 的子空间，且可以验证 $L_x = orthogonalCom(closure(im (lambda I - A)))$。而当 $norm(lambda) = 1$ 时，上面的结果表明 $orthogonalCom(closure(im (lambda I - A))) = 0$
+      - 若 $norm(lambda) = 1, z = (lambda I - A) x$，可以计算得：
+        $
+          sumi1N(lambda^(i - 1) z_i) = lambda^N x^N 
+        $
+        继而 $sumi1N(lambda^(i - 1) z_i) -> 0$，因此不难验证 $(1/(i lambda^(i - 1)))$ 不在 $im (lambda I - A)$ 之中   
+    ]
+  == Holomorphic functional calculus\*
+    设 $X$ 是 $CC$ 上的 Banach 空间，$A in L(x)$，任取函数 $f$，能否定义 $f(A)$? 熟知 $f$ 是多项式时结果是自然的，这里我们将推广到 $f$ 是解析函数的情形，事实上之后还可以推广到 $f$ 是可测函数的情形。
+    #definition[][
+      设 $g(t) : [0, 1] -> X$ 是连续函数，则可以仿照黎曼积分定义：
+      $
+        integral_0^1 g(t) dif t
+      $
+      且可以利用 Hahn-Banach 定理证明它是唯一的。
+    ]
+    #definition[Dunfod Integral][
+      设 $u subset CC$ 是开集，且 $sigma(A) subset u$，记：
+      $
+        gamma = (gamma_1, gamma_2, ..., gamma_m)
+      $
+      为 loops，如果 $gamma_i$ 是 $u - sigma(A)$ 上的曲线，且 $gamma_i (0) = gamma_i (1)$，以及：
+      $
+        omega(gamma, lambda) = 1 ,forall lambda in sigma(A)\
+        omega(gamma, lambda) = 0 ,forall lambda in CC - u\
+      $
+      其中 $omega(gamma, lambda)$ 是所有 $gamma_i$ 到 $lambda$ 的缠绕数之和。
+
+      设 $f$ 是 $u -> CC$ 的全纯函数，定义：
+      $
+        f(A) = 1/(2 pi i) integral_(gamma)^() f(z) Inv(z I - A) dif z 
+      $
+      这里，$f(z) Inv(z I - A)$ 是 $gamma -> L(X)$ 的连续函数（注意到 $gamma$ 中的曲线到 $sigma(A)$ 存在最小距离，因此逆是有界的），利用上面所叙述的积分定义得到
+    ]
+    #lemma[][
+      + 上面定义的积分不依赖于 $gamma$
+      + $(f + g) (A) = f(A) + g(A)$
+      + $(lambda f)(A) = lambda f(A)$
+      + $(f g) (A) = f(A) g(A)$
+      + 若 $f$ 是多项式，则 $f(A)$ 就是符合直观定义的 $f(A)$
+      + $(g compose f) (A) = g(f(A
+      ))$
+    ]
+    #proof[
+      + 假设 $gamma, gamma'$ 都符合之前的条件，则：
+        $
+          f_gamma (A) - f_gamma' (A) = 1/(2 pi i) integral_(gamma - gamma') f(z) Inv(z I - A) dif z 
+        $
+        利用 Hahn-Banach 定理，任取 $duel(y) in duelSpace(L(X))$，则：
+        $
+          inner(duel(y), f_gamma (A) - f_gamma' (A)) = 1/(2 pi i) integral_(gamma - gamma') f(z) inner(duel(y), Inv(z I - A)) dif z 
+        $
+        这是标准的复函数积分，而被积函数非解析部分曲线的缠绕数为零，进而上式总是零，得证。
+      + ...
+      + ...
+      + ...
+      + 由前面的性质，只需验证 $f = 1, z$ 即可
+        - 对于 $f= 1$ 只需计算：
+          $
+            integral_(norm(z) = r)^() Inv(z I - A) dif z = integral_(0)^(2pi) Inv(r e^(i theta) I - A) r e^(i theta)  dif theta = integral_(0)^(2pi) I + Inv(r e^(i theta) I - A) A dif theta
+          $
+          事实上，有：
+          $
+            norm(1/(2 pi) integral_(0)^(2pi) Inv(r e^(i theta) - A) A dif theta) <= 1/(2 pi) integral_0^(2 pi) norm(Inv(r e^(i theta) - A)) norm(A) dif theta\
+            <= 1/(2pi) integral_0^(2 pi) norm(A)/(r - norm(A)) dif theta = norm(A) / (r - norm(A))
+          $
+          令 $r -> +infinity$ 上式 $-> 0$，而定义不依赖于 $r$，因此上式就是零
+    ]
+    #theorem[Spectral Mapping][
+      $
+        f(sigma(A)) = sigma(f(A))
+      $
+    ]
+    #proof[
+      任取 $lambda in sigma(A)$，注意到：
+      $
+        g(z) = (f(z) - f(lambda)).(z - lambda)
+      $
+      在 $u$ 上是全纯的，因此：
+      $
+        f(z) - f(lambda) = (z - lambda) g(z)
+      $
+      继而：
+      $
+        f(A) - f(lambda I) = (A - lambda I) g(A)
+      $
+      表明 $f(A) - f(lambda I) = f(A) - f(lambda) I$ 不可逆，因此 $f(lambda) in sigma(A)$
+
+      另一方面，设 $mu in.not f(sigma(A))$，注意到 $f(sigma(A))$ 是紧的，因此可设 $dist(u, f(sigma(A))) = delta > 0$，此时 $g(z) = 1/(f(z) - u)$ 在包含 $sigma(A)$ 的某个开集上良定义，进而解析，因此：
+      $
+        1 = g(z) (f(z) - u)
+      $ 
+      进而：
+      $
+        1 = g(A) (f(A) - u I)
+      $
+      表明 $f(A) - u I$ 可逆，这就证明了 $mu in.not sigma(f(A))$
+    ]
