@@ -2368,6 +2368,274 @@
         - $f_n weakConverge 0$
     ]
   == 谱
+    对于有限维空间上的自线性映射（方阵），我们有特征值、特征向量的概念。这个概念可以被推广到无穷维空间上。这里，我们只处理有界线性算子。
+    #definition[特征值][
+      设 $X$ 是 $CC$ 上的赋范空间，$A : L(X)$ 是有界线性算子，定义：
+      $
+        rho(A) = {lambda in CC | lambda I - A "可逆"}}\
+      $
+      称 $rho(A)$ 为预解集(resolvent set)，$sigma (A) = CC - rho(A)$ 称为谱（spectrum），更准确的，定义：
+      $
+        sigma_p (A) = {lambda in CC | lambda I - A "不是单射"}\
+      $
+      称为点谱（point spectrum），以及：
+      $
+        sigma_c (A) = {lambda in CC | lambda I - A "是单射，不是满射，但" closure(im (lambda I - A)) = X}\
+      $
+      称为连续谱（continuous spectrum），以及：
+      $
+        sigma_r (A) = {lambda in CC | lambda I - A "是单射，不是满射，且" closure(im (lambda I - A)) != X}\
+      $
+      称为剩余谱（residual spectrum）
+    ]
+    #remark[][
+      - Banach 逆算子定理保证了，只要 $lambda I - A$ 可逆，其逆算子当然也是有界算子
+      - 对于一大类算子，例如自伴算子，$sigma_r (A) = emptyset$，因此它被称为剩余谱
+    ]
+    #lemma[][
+      在有限维空间中，$sigma(A) = sigma_p (A)$
+    ]
+    #proof[
+      注意到 $X -> X$ 的单射就是满射，因此 $sigma_c (A) = sigma_r (A) = emptyset$
+    ]
+    #example[][
+      - $X = C[0, 1], A f(t) = t f(t)$，计算 $sigma(A)$ 也即：  
+        $
+          (lambda I - A) f(t) = (lambda - t) f(t) 
+        $
+        如果 $lambda in.not [0, 1]$，就有：
+        $
+          f(t) = 1/(lambda - t) (lambda I - A) f(t)
+        $
+        继而 $lambda I - A$ 可逆，因此：
+        $
+          sigma(A) subset [0, 1]
+        $
+        另一方面，任取 $lambda in [0, 1]$，注意到若：
+        $
+          (lambda I - A) f(t) = (lambda - t) f(t) = 0\
+        $
+        由连续性可以证明 $f = 0$，因此算子 $lambda I - A$ 是单射。然而，任取 $g in im (lambda I - A)$，一定有 $g(lambda) = 0$，进而对于 $g in closure(im (lambda I - A))$ 也有 $g(lambda) = 0$，故：
+        $
+          sigma(A) = sigma_r (A) = [0, 1]
+        $
+      - 在 $L^2 [0, 1]$ 中讨论上述问题，大部分讨论是一样的，包括：
+        $
+          sigma(A) subset [0, 1]\
+          sigma_p (A) = emptyset\
+          forall g in im (lambda I - A), g(lambda) = 0\
+        $
+        然而任取 $g in L^2 [0, 1]$，定义：
+        $
+          g_n (t) = cases(
+            0 "if" t in [lambda - 1/n, lambda + 1/n],
+            g(t) "otherwise"
+          )
+        $
+        可以验证 $g_n in im (lambda I - A)$，进而我们有：
+        $
+          X = closure(im (lambda I - A))\
+          sigma(A) = sigma_c (A) = [0, 1]\
+        $
+      - $X = l^2, A x = (lambda_i x_i)$ 以及 $sup abs(lambda_i) < +infinity$，设 $Lambda = closure({lambda_i})$:
+        - 对于 $lambda in.not Lambda$，可设 $abs(lambda - lambda_i) > d > 0$，进而：
+          $
+            1/(lambda - lambda_i) (A x) (i) = x (i)
+          $
+          因此 $lambda in rho(A)$，这表明 $sigma(A) subset Lambda$. 事实上，$lambda I - A$ 可逆当且仅当 $forall x in l^2, i arrowb 1/(lambda - lambda_i) x (i) in l^2$，因此就有 $CC - Lambda = rho(A), Lambda = sigma(A)$
+        - 对于 $lambda in Lambda$：
+          - 若 $lambda = lambda_i$，显然 $lambda in sigma_p (A)$，因此 $(lambda_i I - A) e_i = 0$
+          - 否则，容易验证 $(lambda I - A) x = 0 => x = 0$，因此是单射
+
+          进一步，设：
+          $
+            I_n = {i mid(|) abs(lambda_i - lambda) < 1/n}
+          $
+          任取 $y in l^2$，设：
+          $
+            y_n (j) = cases(
+              0 "if" j in I_n,
+              y(j) "otherwise"
+            ) 
+          $
+          可以验证 $y_n in im (lambda I - A)$ 以及 $y_n -> y$，进而 $closure(im (lambda I - A)) = l^2$，因此 $sigma(A) = sigma_p (A) union sigma_c (A) = Lambda$，也即：
+    ]
+    #definition[][
+      设 $lambda in rho(A)$，称：
+      $
+        R_lambda (A) = Inv(lambda I - A)
+      $
+      为 $A$ 的 resolvent
+    ]
+    #lemma[第一预解式恒等式][
+      $
+        R_lambda (A) - R_mu (A) = (mu - lambda) R_lambda (A) R_mu (A)
+        = (mu - lambda) R_mu (A) R_lambda (A)\
+      $
+    ]
+    #definition[全纯函数][
+      设 $Omega$ 是 $CC$ 中开集，$f : Omega -> X$ 是连续的，定义：
+      $
+        f' (z) = lim_(lambda -> z) (f(lambda) - f(z))/(lambda - z)
+      $
+      若 $f' (z)$ 处处存在且连续，则称 $f$ 是全纯（holomorphic）的
+    ]
+    #theorem[][
+      $R_lambda : rho(A) -> L(X)$ 是全纯的
+    ]
+    #proof[
+      首先证明它是连续的。事实上，有：
+      $
+        norm(R_lambda (A) - R_lambda_0 (A)) = norm(lambda_0 - lambda) norm(R_lambda (A) R_lambda_0 (A))\
+      $
+      只要证明上式后项有界即可。注意到：
+      $
+        lambda I - A = (lambda_0 I - A) + (lambda - lambda_0) I = Inv(lambda_0 I - A) (I + ((lambda - lambda_0) I) R_lambda (A))\
+        Inv(lambda I - A) = Inv(I + ((lambda - lambda_0) )I R_lambda (A))\
+        = norm(sumi0inf((-1)^n (((lambda - lambda_0) I) R_lambda (A))^n))\
+        <= sumi0inf((norm(lambda - lambda_0) norm(R_lambda (A)))^n)\
+      $
+      只要 $lambda - lambda_0$ 充分小，显然上式有界
+      计算得：
+      $
+        (R_lambda (A) - R_lambda_0 (A))/(lambda - lambda_0) = - R_lambda (A) R_lambda_0 (A) -> - R_lambda_0 (A)^2\
+      $
+      这也表明导数也是连续的。
+    ]
+    #theorem[][
+      $R_lambda$ 是有界的
+    ]
+    #proof[
+      当 $abs(lambda) > 2 norm(A)$ 时：
+      $
+        R_lambda (A) = Inv(lambda I - A) = 1/lambda Inv(I - 1/lambda A)\
+        norm(R_lambda (A)) <= 1/abs(lambda) norm(Inv(I - 1/lambda A)) = 1/abs(lambda) norm(sumi0inf(A^n/lambda^n))\
+      $
+      显然上式有界。而 $abs(lambda) <= 2 norm(A)$ 是紧集，连续函数在其上也有界。
+    ]
+    #theorem[Liouville][
+      设 $f : CC -> X$ 是全纯的，且在 $CC$ 上有界，则 $f$ 是常函数
+    ]
+    #proof[
+      注意到任取 $h in duelSpace(L(X))$，有：
+      $
+        g(x) = inner(h, f(x)) : CC -> CC
+      $
+      可以证明：
+      - $g$ 是全纯的
+      - $g$ 是有界的，因为 $norm(g(x)) <= norm(h) norm(f(x))$
+      由复变函数的 Liouville 定理，$g$ 是常函数。为了导出矛盾，假设 $f$ 不是常函数，则可设 $f (x) != f(y)$，由 Hahn-Banach 定理的推论，存在有界泛函 $h$ 将 $f(x)$ 与 $f(y)$ 分开，此时 $g$ 不是常数，矛盾！
+    ]
+    #theorem[Cauthy-Hadamard][
+      设 $X$ 是 Banach 空间，$A_k in X$：
+      - 若 $limsup norm(A_n)^(1/n) = c < 1$ 则 $sumk0inf(A_k)$ 收敛
+      - 若 $limsup norm(A_n)^(1/n) = c > 1$ 则 $sumk0inf(A_k)$ 发散
+    ]<Cauthy-Hadamard>
+    #proof[
+      - 将 $norm(A_k)$ 与 $norm(c^k)$ 作比较即可得到绝对收敛，进而收敛
+      - 取上极限的子列，与 $norm(c^k)$ 作比较即可得到单项的模不趋于零
+    ]
+    #theorem[][
+      设 $X$ 是 $CC$ 上的 Banach 空间，$A in L(X)$，则：
+      - $rho(A)$ 是开集
+      - $sigma(A) subset closure(B(0, norm(A)))$
+      - $sigma(A)$ 是非空紧集
+      - $r_sigma (A) = sup {abs(lambda) mid(|) lambda in sigma(A)}$ 称为谱半径，有：
+        $
+          r_sigma (A) = limn(norm(A^n))^(1/n)
+        $
+    ]
+    #proof[
+      这个定理的结论非常简洁，但证明十分繁琐。
+      #lemma[][
+        $norm(A) < 1 => I - A$ 可逆
+      ]<norm_lt_one_then_inv>
+      #proof[
+        注意到 $sumi0inf(A^n)$ 收敛，并且容易验证：
+        $
+          (I - A) sumi0inf(A^n) = sumi0inf(A^n) (I - A) = I\
+        $
+      ]
+      #corollary[][
+        $sigma(A) subset closedBall(0, norm(A))$
+      ]
+      #proof[
+        若 $abs(lambda) > norm(A)$，上面的引理给出 $lambda I - A$ 可逆，因此 $lambda$ 不在谱中
+      ]
+      上面的事实表明，$sigma(A)$ 是有界的。接下来，我们证明它是闭的，也即 $rho(A)$ 是开的。
+      #lemma[][
+        $rho(A)$ 是开的
+      ]
+      #proof[
+        设 $lambda_0 in rho(A), norm(lambda - lambda_0) < epsilon$，则：
+        $
+          lambda I - A = (lambda I - lambda_0 I) + (lambda_0 I - A) = Inv(lambda_0 I - A) (I + (lambda_0 I - A) (lambda I - lambda_0 I) )\
+        $
+        注意到：
+        $
+          norm((lambda_0 I - A) (lambda I - lambda_0 I)) <= norm(lambda_0 I - A) epsilon\
+        $
+        取 $epsilon$ 足够小，上式小于 $1$，由 @norm_lt_one_then_inv 可知上式可逆，证毕。
+      ]
+      这就意味着 $sigma(A)$ 是有界闭集，接下来，我们证明它非空。事实上，如果 $sigma(A) = emptyset$，则 $rho(A) = CC$，继而 $R_lambda$ 是 $CC$ 上的有界全纯函数，由 Liouville 定理可得 $R_lambda$ 是常函数，这是荒谬的。
+
+      接下来，考虑谱半径公式：
+      #lemma[][
+        设 $A in L(X)$，则 $limn(norm(A^n)^(1/n))$ 存在且恰为 $inf_n norm(A^n)^(1/n)$
+      ]
+      #proof[
+        取 $r = inf_(n >= 1) norm(A^n)^(1/n)$，设 $N$ 满足：
+        $
+          r(A) <= norm(A^N)^(1/N) < r + epsilon\
+        $
+        对于任何 $n$，做整除设 $n = q_n N + r_n$，就有：
+        $
+          norm(A^n)^(1/n) = norm(A^(q_n N + r_n))^(1/n) <= norm(A^(q_n N))^(1/n) norm(A^(r_n))^(1/n)\
+          <= norm(A^N)^(q_n/n) norm(A^(r_n))^(1/n)\
+          <= (norm(A^N)^(1/N))^((q_n N)/(q_n N + r_n)) norm(A^(r_n))^(1/n)\
+        $
+        由于 $r_n$ 有界，不难证明 $n$ 充分大时上式 $<= r + 2 epsilon$，由 $epsilon$ 任意性即可得到结论。
+      ]
+      回到谱半径公式，设 $r(A) = limn(norm(A^n)^(1/n))$：
+      - 若 $abs(lambda) > r(A)$，则：
+        $
+          limsup norm(A^n/lambda^(n + 1))^(1/n) < 1
+        $
+        由 @Cauthy-Hadamard 可知 $sumk0inf(A^k/lambda^(k + 1))$ 收敛，进而 $lambda I - A$ 可逆，表明 $sigma(A) subset B(0, r(A)) => r_sigma (A) <= r(A)$
+      - 另一方面，前面提到 $R_lambda (A)$ 是 $rho(A)$ 上的全纯函数，特别的，它是 $CC - closedBall(0, r_sigma (A))$ 上的全纯函数。任取 $f in duelSpace(L(X))$，就有 $inner(f, R_lambda (A))$ 在 $CC - closedBall(0, r_sigma (A))$ 上解析，因此有唯一的 Laurent 展开：
+        $
+          R_lambda (A) = sum_(n = -infinity)^(+infinity) 1/lambda^n a_n
+        $
+        而前面提到过，在 $lambda > norm(A) + 1$ 时有：
+        $
+          R_lambda (A) = sumi0inf(A^n/lambda^(n + 1))\
+          inner(f, R_lambda (A)) = sumi0inf(inner(f, A^n)/lambda^(n + 1))\
+        $
+        由 Laurent 级数的唯一性，两个级数是相同的，进而也表明 $sumi0inf(inner(f, A^n)/lambda^(n + 1))$ 在 $CC - closedBall(0, r_sigma (A))$ 上都收敛。进而有：
+        $
+          abs(inner(f, A^n)/lambda^(n + 1)) <= M
+        $
+        取 $lambda = r_sigma (A) + epsilon$，就有：
+        $
+          abs(inner(f, A^n /(r(A) + epsilon)^n)) = abs(inner(tau(A^n /(r(A) + epsilon)^(n + 1)), f)) <= M
+        $
+        这表明，对于任何 $f in duelSpace(L(X))$，一族算子 $tau(A^n /(r(A) + epsilon)^n)$ 作用在 $f$ 上都有界，由 Banach-Steinhaus 定理可知：
+        $
+          norm(A^n /(r(A) + epsilon)^(n + 1)) < K\
+        $
+        也即：
+        $
+          norm(A^n)^(1/n) <= K^(1/n) (r_sigma (A) + epsilon)^((n + 1)/n)
+        $
+        令 $n -> +infinity$ 即得：
+        $
+          r(A) <= r_sigma (A) + epsilon\
+        $
+        再由 $epsilon$ 任意性可得 $r(A) <= r_sigma (A)$
+
+
+
+    ]
     #definition[][
       设 $X$ 是 Hibert 空间，$A in L(X)$ 满足 $duel(A) A = A duel(A)$，则称 $A$ 为正规算子
     ]
