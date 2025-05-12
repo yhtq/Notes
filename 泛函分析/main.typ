@@ -126,7 +126,7 @@
         + $E$ 紧致
         + $E$ 列紧
         + $E$ 是完备的并且完全有界
-      ]
+      ]<compact-condition>
       #proof[
         #lemmaLinear[][
           - 设 $A$ 列紧，则 $A$ 完备且完全有界
@@ -222,7 +222,7 @@
       ]
       #lemma[Arzala-Asali][
         设 $X$ 紧，则 $F subset C(X, RR)$ 预紧当且仅当 $F$ 一致有界且等度连续
-      ]
+      ]<Arzela-Ascoli>
       #proof[
         由 @precompact-lemma，只需证明 $F$ 完全有界当且仅当 $F$ 一致有界且等度连续。
         - 设 $F$ 完全有界，则对于任何 $epsilon > 0$，存在 $f_1, f_2, ..., f_n in F$ 使得 $F subset union_i B (f_i, epsilon)$. 可以看出：
@@ -2708,6 +2708,20 @@
         $
         继而 $sumi1N(lambda^(i - 1) z_i) -> 0$，因此不难验证 $(1/(i lambda^(i - 1)))$ 不在 $im (lambda I - A)$ 之中   
     ]
+    #lemma[][
+      设 $P$ 是投影算子，则：
+      $
+        sigma(A P) = sigma(A|_(im P)) union {0}
+      $
+    ]<projection-sigma>
+    #proof[
+      设 $X_1 = im P, X_2 = ker P, i : im P -> X$，注意到：
+      $
+        lambda I - A P = lambda I_(X_2) directSum lambda I_(X_1) - A|_(X_1)\
+      $
+      - 假设 $lambda in.not sigma(A P)$，则上式可逆，当然有分量可逆，因此 $lambda I_(X_1) - A|_(X_1)$ 可逆，$lambda in sigma(A_X_1)$
+      - 反之，假设 $lambda in.not sigma(sigma(A|_(im P)))$ 且 $lambda != 0$，就可以得到 $lambda I - A P$ 可逆，故 $lambda in sigma(A P)$
+    ]
   == Holomorphic functional calculus\*
     设 $X$ 是 $CC$ 上的 Banach 空间，$A in L(x)$，任取函数 $f$，能否定义 $f(A)$? 熟知 $f$ 是多项式时结果是自然的，这里我们将推广到 $f$ 是解析函数的情形，事实上之后还可以推广到 $f$ 是可测函数的情形。
     #definition[][
@@ -2768,12 +2782,13 @@
             <= 1/(2pi) integral_0^(2 pi) norm(A)/(r - norm(A)) dif theta = norm(A) / (r - norm(A))
           $
           令 $r -> +infinity$ 上式 $-> 0$，而定义不依赖于 $r$，因此上式就是零
+      + 稍后证明
     ]
     #theorem[Spectral Mapping][
       $
         f(sigma(A)) = sigma(f(A))
       $
-    ]
+    ]<spectral-mapping>
     #proof[
       任取 $lambda in sigma(A)$，注意到：
       $
@@ -2798,4 +2813,197 @@
         1 = g(A) (f(A) - u I)
       $
       表明 $f(A) - u I$ 可逆，这就证明了 $mu in.not sigma(f(A))$
+    ]
+    回到 $g(f(A)) = (g compose f)(A)$ 的证明：
+    #proof[
+      设 $f: u -> v, g : v -> CC$， 我们需要 @spectral-mapping 保证 $sigma(f(A)) = f(sigma(A))$，因此 $g(f(A))$ 是良定义的。考虑 $sigma(A)$ 的一个 cycles $beta$，令：
+      $
+        K = beta union {lambda in U mid(|) omega(beta, lambda) != 0}\
+      $
+      由定义，$K$ 是紧的，且包含 $sigma(A)$，因此 $f(K)$ 也是紧的且包含 $f(sigma(A))$。在 $v - f(K)$ 上取 cycles $gamma$，就有：
+      $
+        g(f(A)) = 1/(2 pi i) integral_(gamma)^() g(z) Inv(z I - f(A)) dif z\
+        = 1/(2 pi i) integral_(gamma)^() integral_(beta) g(z) 1/(z - f(lambda)) Inv(lambda I - A) dif lambda dif z
+      $ 
+      注意到此时 $1/(z - f(lambda))$ 是全纯的，因此可以换序，就有：
+      $
+        = 1/(2 pi i) integral_(beta) integral_(gamma)^() g(z) 1/(z - f(lambda)) Inv(lambda I - A) dif z dif lambda\
+        = 1/(2 pi i) integral_(beta) g(f(lambda)) Inv(lambda I - A) dif lambda\
+      $
+    ]
+    #theorem[][
+      设 $sigma(A) = Sigma_1 union Sigma_2$，$Sigma_i$ 是不交的紧集。若 $u_i$ 是包含 $Sigma_i$ 的不交开集，定义：
+      $
+        funcDef(f, u_1 union u_2, CC, z, cases(
+          1 "if " z in u_1,
+          0 "if" z in u_2
+        ))
+      $
+      则 $P = f(A)$ 就是投影算子，进一步，设：
+      $
+        X_1 = ker P\
+        X_2 = im P
+      $
+      则 $X = X_1 directSum X_2$，我们有：
+      $
+        sigma(A|_X_2) = sigma(A P) = Sigma_1\
+        sigma(A|_X_1) = sigma(A (I - P)) = Sigma_2\
+      $
+    ]
+    #proof[
+      设 $f' = 1 - f$，容易验证：
+      $
+        f^2 = f\
+        f'^2 = f'\
+        f f' = f' f = 0\
+      $
+      提升后就有：
+      $
+        P^2 = P\
+        P A = A P("由定义")\
+        P'^2 = P'\
+        P' A = A P'\
+        P P' = P' P = 0\
+      $
+      这足以表明 $P, P'$ 就是一对投影算子，以及：
+      $
+        sigma(A P) = sigma((id * f) (A)) = (id * f) (sigma(A)) = Sigma_1 union {0}
+      $
+      只需证明：
+      $
+        sigma(A|_X_0) = sigma(A P)
+      $
+      @projection-sigma 给出：
+      $
+        sigma(A|_X_0) union {0} = sigma(A P) union {0}
+      $
+      然而这不能给出最终的结论。我们转而考虑：
+      $
+        A|_X_1 directSum c id_X_2 = A P + c (I - P) = (id * f + c f') (A)
+      $
+      因此：
+      $
+        sigma(A|_X_1 directSum c id_X_2) = Sigma_1 union {c}
+      $
+      现在，对于任何 $lambda in.not Sigma_1$，取 $c != lambda$，利用 @projection-sigma 相同的技巧可以得到 $lambda I - A_X_2$ 可逆，表明 $sigma(A_X_2) subset Sigma_1$。反之，若 $lambda in.not sigma(A_X_2)$，取 $c != lambda$，我们可以得到 $lambda in CC - (Sigma_0 union {c}) => lambda in Sigma_0$，这就得到了结论
+    ]
+= 紧算子和 Fredholm 算子
+  == 紧算子
+    #definition[紧算子][
+      设 $X, Y$ 是 Banach 空间，$A$ 是线性算子，称 $A$ 为紧算子，如果 $A$ 将任何有界集映为预紧集。记 $C(X, Y)$ 为 $X -> Y$ 所有紧算子的集合
+    ]
+    #lemma[][
+      紧算子一定是有界算子
+    ]
+    #proof[
+      设 $B_1 = closedBall(0, 1)$，则它有界，$A(B_1)$ 预紧，因此由 @compact-condition 它完全有界，进而有界，相当于 $A$ 是有界算子。   
+    ]
+    #example[][
+      - $A$ 是有界算子，且 $im A$ 有限维，则 $A$ 把有界集映为有界集，而有限维空间中有界集当然就是预紧的，因此 $A$ 是紧算子。后面会证明，所有紧算子都接近于这种算子
+      - $X = C(Omega), Omega$ 是 $RR^n$ 中紧集，$K(x, y) in C(Omega times Omega)$，定义：
+        $
+          T f (x) = integral_Omega K(x, y) f(y) dif y\
+        $
+        这是一个紧算子。这是因为由 @Arzela-Ascoli，只要证明对于有界集 $F, T F$ 等度连续，一致有界：
+        - 一致有界：
+          $
+            abs(T f(x)) <= norm(K) norm(f) abs(Omega) <= M norm(K) abs(Omega)
+          $
+          这是一与 $f$ 无关的常数
+        - 等度连续：利用 $K$ 的一致连续性：
+          $
+            abs(T f(x) - T f(x')) = abs(integral_Omega (K(x, y) - K(x', y)) f(y) dif y) <= epsilon M abs(Omega)
+          $
+          这表明 $T f$ 是一致连续的
+      - 类似的，可以证明：
+        $
+          T f (x) = integral_0^x f(y) dif y\
+        $
+        是紧算子
+    ]
+    #proposition[][
+      设 $B_1 = B(0, 1)$， 以下事实等价：
+      + $closure(A(B_1))$ 是紧的
+      + $A$ 是紧算子
+      + 对于 $x_n$ 有界，$A x_n$ 总有收敛子列 
+    ]
+    #proof[
+      注意到度量空间中紧和列紧等价，推理是容易的
+    ]
+    #proposition[][
+      $C(X, Y)$ 是 $L(X, Y)$ 的闭线性子空间
+    ]
+    #proof[
+      线性性是显然的，只证明闭性。设 $A_n -> A$ 且 $A_n$ 是紧算子，任取 $epsilon$，设 $norm(A_n - A) < epsilon$，而 $A_n (B_1)$ 预紧，因此完全有界，可设：
+      $
+        A_n (B_1) subset union_(i = 1)^z B(x_i, epsilon)\
+      $
+      显然就有：
+      $
+        A (B_1) subset union_(i = 1)^z B(x_i, 2 epsilon)\
+      $
+      由 $epsilon$ 任意性，$A(B_1)$ 也完全有界，因此预紧。
+    ]
+    #proposition[][
+      设 $A in C(X, Y), X_0 subset X$ 是闭子空间，则 $A|_X_0 subset C(X_0, Y)$
+    ]
+    #theorem[][
+      设 $A$ 是紧算子，则 $im A$ 可分
+    ]
+    #proof[
+      注意到：
+      $
+        im A = union_(n = 1)^(+infinity) A (closedBall(0, n))\
+      $
+      而 $A (closedBall(0, n))$ 总是完全有界的，进而是可分的，可分空间的可数并当然也是可分的。
+    ]
+    #theorem[][
+      设 $X ->^A Y ->^B Z$ 且 $A, B$ 是有界算子，则只要 $A, B$ 其中之一是紧算子，则 $B A$ 是紧算子。特别的，$C(X)$ 是 $L(X)$ 中的闭理想。
+    ]
+    #proposition[][
+      $A$ 是紧算子当且仅当 $duel(A)$ 是紧算子
+    ]
+    #proof[
+      - 设 $A$ 是紧算子，$y_n in duel(Y)$ 是有界集合。注意到 $closure(A(B_1))$ 是紧的，取 $i : closure(A(B_1)) -> Y$，则 $duel(i) y_n$ 是紧集上的连续函数，往证：
+        - $duel(i) z$ 一致有界：
+          $
+            abs(inner(duel(i) y_n, z)) = inner(y_n, i z) <= norm(y_n) norm(z) <= norm(y_n) <= M
+          $
+        - $duel(i) z$ 等度连续：
+          $
+            abs(inner(duel(i) y_n, z - z')) <= norm(y_n) norm(z - z') <= M norm(z - z')\
+          $
+        由 @Arzela-Ascoli，$duel(i) y_n$ 有收敛子列。不妨就设 $duel(i) y_n$ 收敛。注意到我们有：
+        $
+          norm(duel(A) y_n - duel(A) y_m) 
+          &= sup_(norm(x) <= 1) abs(inner(duel(A) y_n - duel(A) y_m, x))\
+          &= sup_(norm(x) <= 1) abs(inner(y_n - y_m, A x))\
+          &= sup_(y in closure(A(B_1))) abs(inner(y_n - y_m, i y))\
+          &= sup_(y in closure(A(B_1))) abs(inner(duel(i) y_n - duel(i) y_m, y))\
+          &= norm(duel(i) y_n - duel(i) y_m)\
+        $
+        由前面的假设，当然就有 $duel(A) y_n$ 收敛
+      - 设 $duel(A)$ 是紧算子，前面的结论给出 $duel(duel(A))$ 也是，而 $A$ 无非是 $duel(duel(A))$ 在闭子空间上的限制，因此也是紧算子
+    ]
+  == 全连续算子
+    #definition[][
+      设 $A in L(X, Y)$，称 $A$ 是全连续的，如果：
+      $
+        x_n weakConverge x => A x_n -> A x\
+      $
+    ]
+    #lemma[][
+      - 紧算子都是全连续的
+      - 若 $A$ 是全连续的，且 $X$ 是自反的，则 $A$ 是紧算子
+    ]
+    #proof[
+      - 如若不然，设 $x_n weakConverge x, norm(A x_n - A x) >= epsilon_0$，前面已经证明 $x_n$ 一定有界，因此 $A x_n$ 有收敛子列，不妨设其收敛于 $z$，然而显然有 $A x_n weakConverge A x$，因此 $A x = z$，这是荒谬的。
+      - 任取 $x_n$ 有界，前面证明了自反空间中单位球是弱紧的，因此 $x_n$ 有弱收敛子列，设 $x_n_k weakConverge x$，前面证明了 $A x_n_k -> A x$，因此 $A x_n$ 有收敛子列。由 $x_n$ 的任意性，$A$ 是紧算子。 
+    ]
+  == 有限秩算子
+    #definition[][
+      设 $X, Y$ 是 Banach 空间，$A in L(X, Y)$，称 $A$ 是有限秩算子，如果 $im A$ 是有限维的。记有限秩算子的全体为 $F(X, Y)$
+    ]
+    #lemma[][
+      $A in F(X, Y)$ 当且仅当 $A = sum_(i = 1)^N y_i tensorProduct f_i <=> A x = sum_(i = 1)^N f_i (x) y_i$ 
     ]

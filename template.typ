@@ -87,6 +87,7 @@
 #let balpha = $bold(alpha)$
 #let bgamma = $bold(gamma)$
 #let htheta = $hat(theta)$
+#let halpha = $hat(alpha)$
 #let hbeta = $hat(beta)$
 #let hX = $hat(X)$
 #let hY = $hat(Y)$
