@@ -690,7 +690,7 @@
         x = sum_(alpha in E) lambda_alpha alpha
       $（允许无穷和）
       则称 $E$ 是 Schouder 基
-    ]
+    ]<schouder-basis>
     然而，Schouder 基会遇到无穷求和换序的问题，将容易导致奇怪的事情发生，因此我们往往只有在换序不影响结果时，才会讨论 Schouder 基。
     #definition[正交族][
       设 $X$ 是 Hilbert 空间，$S subset X$
@@ -2245,6 +2245,42 @@
           $
         ))
     ]
+    #let leftOrthogonal(x) = $attach(#x, tl: orthogonal)$
+    #definition[][
+      定义：
+      $leftOrthogonal(M) = {f in duelSpace(X) | inner(f, x) = 0, forall x in M}$\
+      对于 $N subset duelSpace(X)$，定义：
+      $
+        orthogonalCom(N) = {x in X | inner(f, x) = 0, forall f in N}\
+      $
+    ]
+    #lemma[][
+      设 $T in L(X)$，则 $closure(im T) = orthogonalCom(ker(duel(T)))$
+    ]<im-equal-orthogonalCom-ker-duel>
+    #proof[
+      任取 $T x in im T$，有：
+      $
+        forall f in ker(duel(T)), inner(f, T x) = inner(duel(T f), x) = 0
+      $
+      因此 $im T subset orthogonalCom(ker(duel(T))) => closure(im T) subset orthogonalCom(ker(duel(T)))$，假设它们不相等，设 $y in orthogonalCom(ker(duel(T)))- closure(im T)$，由 Hahn-Banach 定理，设 $f$ 满足 $f(y) != 0, f|_(closure(im T)) = 0$，因此：
+      $
+        0 = inner(f, T x) = inner(duel(T f), x)
+      $
+      这对任何 $x$ 都成立，因此 $f in ker duel(T) => inner(f, y) = 0$，矛盾！
+    ]
+    #lemma[][
+      设 $A in L(X, Y)$，则 $A$ 可逆当且仅当 $duel(A)$ 可逆
+    ]
+    #proof[
+      左推右显然成立，至于右推左，我们有 $duel(duel(T))$ 可逆，交换图表：
+      #align(center, diagram(
+          $
+          X edge("d", ->, A) edge(->, tau) & duelSpace(duelSpace(X))  edge("d", ->, duel(duel(A)))\
+          Y edge(->, tau) edge(->, tau) & duelSpace(duelSpace(Y))
+          $
+      ))
+      给出 $A$ 是单射。只要证明 $A$ 是满射，根据 @im-equal-orthogonalCom-ker-duel 只要证明 $im  A$ 是闭的，这也直接由交换图表给出。
+    ]
   == 弱/弱\*拓扑（Weak & Weak\* toplogy）
     在经典情形下，紧性/列紧性是非常好用的性质，然而在无穷维空间中，这么好的性质通常是不成立的。一个思想是，换用一个更粗的拓扑，这个做法需要一定时间的铺垫。我们在这里采用一种简便的方法，直接定义什么是新拓扑意义下的收敛。
     #definition[][
@@ -2890,7 +2926,7 @@
 = 紧算子和 Fredholm 算子
   == 紧算子
     #definition[紧算子][
-      设 $X, Y$ 是 Banach 空间，$A$ 是线性算子，称 $A$ 为紧算子，如果 $A$ 将任何有界集映为预紧集。记 $C(X, Y)$ 为 $X -> Y$ 所有紧算子的集合
+      设 $X, Y$ 是 Banach 空间，$A$ 是线性算子，称 $A$ 为紧算子，如果 $A$ 将任何有界集映为预紧集。记 $C(X, Y)$ 为 $X -> Y$ 所有紧算子的集合（有时也用 $K(X, Y)$）
     ]
     #lemma[][
       紧算子一定是有界算子
@@ -3006,4 +3042,111 @@
     ]
     #lemma[][
       $A in F(X, Y)$ 当且仅当 $A = sum_(i = 1)^N y_i tensorProduct f_i <=> A x = sum_(i = 1)^N f_i (x) y_i$ 
+    ]
+    显然，我们有 $closure(F(X, Y)) subset C(X, Y)$，那么是否有 $closure(F(X, Y)) = C(X, Y)$ 呢？1932 年 Banach 提出了这个问题，1973年，人们才给出了最终的结论：答案是否定的。但是，人们发现该性质只依赖于 $Y$ 的性质，而在许多相对简单的情况下，答案是肯定的。
+    #lemma[][
+      设 $Y$ 是 Hilbert 空间，则 $closure(F(X, Y)) = C(X, Y)$
+    ]
+    #proof[
+      任取 $A$ 是紧算子，$epsilon > 0$，注意到 $A(B(0, 1))$ 预紧，因此完全有界，可设：
+      $
+        A(B(0, 1)) subset union_(i = 1)^z B(x_i, epsilon)\
+      $
+      记 $E_epsilon = span(z_i), B_epsilon = orthogonalCom(E_epsilon), A_epsilon = P_epsilon A$. 显然 $A_epsilon$ 是有限秩的，而：
+      $
+        norm(A - A_epsilon) = sup_(x in B(0, 1)) norm(A x - A_epsilon x)\
+      $
+      设 $norm(A x - z) <= epsilon, z in E_epsilon$，就有上式:
+      $
+        <= norm(A x - z) + norm(z - A_epsilon x)\
+        <= epsilon + norm(P_epsilon z - P_epsilon A x)\
+        <= epsilon + norm(P_epsilon) norm(z - A x)\
+        <= 2 epsilon\
+      $
+    ]
+    对于一般的 Banach 空间，如果它可分，我们可以考虑 @schouder-basis（对于不可分情形，也许也可以使用类似的方法研究，不过基本不会碰到）
+    #definition[][
+      称一个 Schouder 基是无条件 Schouder 基，如果其中任何求和都是可换序的。
+    ]
+    #example[][
+      - 在 $l^p, p < +infinity$ 中，$e_n = i arrowb ite(i = n, 1, 0)$ 就是一个无条件 Schouder 基（注意在 $l^infinity$ 中它不再是 Schouder 基了）
+      - 在 $C_0 = {x in l^(+infinity) | limn(x(n)) = 0}$ 中，上面定义的 $e_n$ 也是一个（无条件？） Schouder 基
+      - 在 $C = {x in  l^(+infinity) | limn(x(n)) exists}$ 中，$f_n = i arrowb ite(i <= n, 0, 1)$ 是 Schouder 基，但不是无条件的 Schouder 基
+    ]
+    人们自然会考虑，是否每个可分空间都有 Schouder 基呢？答案也是否定的。
+    #lemma[][
+      设 $X$ 是 Banach 空间，$e_n$ 是一个 Schouder 基，则取坐标映射 $C_i := sum c_n e_n -> c_i$ 是有界线性算子
+    ]<coordinate-bounded>
+    #proof[
+      线性是显然的。对于有界性，定义：
+      $
+        norm(x)_1 = sup_N norm(sum_(i = 1)^N c_i (x) e_i)\
+      $
+      可以验证，$norm(x)_1$ 也是一个范数，且 $norm(x) <= norm(x)_1$。为了利用等价范数定理，验证它也是完备的。任取柯西列 $x_n, epsilon > 0$，可设：
+      $
+        sup_N (S_N (x_n - x_m)) < epsilon
+      $
+      显然这表明对于每个 $i$ 都有 $norm(c_i (x_n - x_m)) < epsilon$，因此每个系数都构成柯西列，定义系数的极限，可以验证这就是原序列的极限。
+
+      利用等价范数定理，就有：
+      $
+        norm(x)_1 <= M norm(x)\
+      $
+      表明 $norm(S_i) <= M, norm(S_(i + 1)) <= M, norm(c_i) <= 2/norm(e_i) M$，证毕
+    ]
+    #theorem[][
+      设 $Y$ 是有 Schouder 基的 Banach 空间，则 $closure(F(X, Y)) = C(X, Y)$
+    ]
+    #proof[
+      设 $A$ 是紧算子，$epsilon > 0$，仿照之前在 Hilbert 空间的证明，依旧设 $A(B(0, 1)) subset union_(i = 1) B(z_i, epsilon)$，取 $K$ 足够大使得：
+      $
+        norm(z_i - sum_(k = 1)^K c_k (z_i) e_k) < epsilon 
+      $
+      考虑 $S_K (x) = sum_(k = 1)^K c_k (x) e_k, A_epsilon = S_K A$，注意到 $S_K$ 是有限秩的，因此 $A_epsilon$ 也是，而：
+      $
+        norm(A - A_epsilon) = sup_(x in B(0, 1)) norm(A x - A_epsilon x)\
+      $
+      仍取 $z$ 使得 $norm(A x - z) <= epsilon$，就有上式：
+      $
+        &<= norm(A x - z) + norm(z - A_epsilon x)\
+        &<= epsilon + norm(z - S_K z) + norm(S_K z - A_epsilon x)\
+        &<= epsilon + norm(z - S_K z) + norm(S_K z - S_K A x)\
+        &<= 2 epsilon + norm(S_K) norm(z - A x)\
+        &<= 2 epsilon + norm(S_K) epsilon\
+      $
+      （@coordinate-bounded 给出 $norm(S_K)$ 有限）因此结论成立
+    ]
+  == Risez-Fredholm 理论
+    在有限维空间中，我们有若 $A in L(X)$，则 $ker A = 0 <=> im A = X$，将它推广到 $I - A$ 其中 $A$ 是紧算子，就得到了 Risez-Fredholm 理论
+    #lemma[][
+      设 $A$ 是紧算子，$T = I - A$，则 $ker T, ker duel(T)$ 都是有限维空间
+    ]
+    #proof[
+      考虑空间 $ker T$ 中的单位球 $B$，任取 $x_n in B$，将有：
+      $
+        T x_n = x_n - A x_n = 0 => A x_n = x_n\
+      $
+      由 $A$ 是紧算子，$A x_n$ 有收敛子列，$x_n$ 就有收敛子列，进而 $B$ 预紧，由 Risez 引理 $ker T$ 是有限维的。
+
+      对于第二个结论，注意到 $duel(T) = I - duel(A)$，而 $duel(A)$ 也是紧算子，因此结论成立
+    ]
+    #lemma[][
+      设 $A$ 是紧算子，$T = I - A$，则 $im T$ 是闭的 
+    ]
+    #proof[
+      #let tildeT = $tilde(T)$
+      设 $tildeT : X quo ker T -> Y$ 是 $T$ 的诱导算子，只需证明 $im tildeT$ 是闭的。只需证明 $exists c, norm(tildeT(x)) >= c norm(x)$，如若不然，则存在序列 $x_n, norm(pi x_n) = 1$ 使得 $norm(tildeT(pi x_n)) < 1/n$，事实上，可以假设 $norm(pi x_n) <= norm(x_n) <= 2 norm(pi x_n)$，则 $x_n$ 有界，$A x_n$ 有收敛子列，不妨设 $A x_n -> w$，注意到 $tildeT(pi x_n) -> 0$
+    ]
+    #lemma[][
+      设 $A$ 是紧算子，$T = I - A$，则 $ker T = 0 => im T = X$
+    ]
+    #proof[
+      假设 $im T != X$，断言 $im T > im T^2 > ...im T^n > ...$，且它们都是闭的，之后，由 Risez Lemma，取 $x_m in im T^m - T^(m - 1)$ 使得 $norm(x_m) = 1, d(x_m, T^(m + 1)) > 1/2$，
+    ]
+    #theorem[Fredholm 二择一律][
+      设 $A$ 是紧算子，$T = I - A$，则：
+      - $T$ 是单的当且仅当是满的
+      - $sigma(T) = sigma(duel(T))$
+      - $im(duel(T)) = leftOrthogonal(ker T), im T = orthogonalCom(ker T)$
+      - $dim X quo (im T) = dim ker T$
     ]

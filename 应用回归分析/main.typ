@@ -1508,6 +1508,118 @@
     $
     进而可以利用其他统计量做一些校正。不过实际的线性回归中，很少考虑这种情形。
   == 异常值
+    距离其他数据较远的点称为*异常点*。有些点的 $x$ 值正常，但 $y$ 值偏离回归曲线，这种点称为 $y-$ 异常点。也有些点的 $x$ 值脱离其他数据，这种点称为 $x-$ 异常点。还有一些点的 $x$ 和 $y$ 都偏离其他数据，这种点称为*双异常点*或者*高杠杆点*。异常点的存在会影响线性回归的结果，导致 $hb$ 和 $S^2$ 的估计不准确。本节中，我们往往假设 $X$ 是列中心化的，也即：
+    #let tildeX = $tilde(X)$
+    $
+      X = (1, tilde(X))
+    $
+    此时:
+    $
+      P = X Inv(tMul(X)) X^T\
+      = (1, tildeX) mat(1/n, 0; 0, Inv(tMul(tildeX))) (1, tildeX)^T\
+      = 1/n 1 1^T + tildeX Inv(tMul(tildeX)) tildeX^T\
+    $
+    可以计算得：
+    $P_(i i) = 1/n + quadFormSym(X^i - Xbar_i 1, Inv(tMul(tildeX)))$，（$X^i$ 指 $X$ 的第 $i$ 行的转置）上式第二项实际上是用正定矩阵 $Inv(tMul(tildeX))$ 度量的，$X_i$ 与 $Xbar_i 1$ 的距离。此外，$P$ 是对称的投影矩阵，就有：
+    $
+      P^2 = P\
+      P_(i i)  = P_(i i)^2 + sum_(j != i) P_(i j)^2\
+      P_(i i) >= P_(i i)^2 => P_(i i) <= 1\
+    $
+    注意到：
+    $
+      hY_i = P_(i i) Y_i + sum_(j != i) P_(i j) Y_j\
+    $
+    假如第 $i$ 个数据是异常值，则 $X_i$ 前面提到的它与平均值的偏离就会很大，$P_(i i)$ 也会很大，导致 $hY_i$ 的预测值很大程度上就是 $Y_i$ 本身。
+
+    接下来，考虑 $Y$ 方向的异常值，假设真实的情形是：
+    $
+      Y_i = X_i^T beta + Delta_i + epsilon_i\
+    $
+    也就是真实模型为：
+    $
+      Y = X^T beta + Delta + epsilon\
+    $
+    其中 $Delta$ 仅有第 $i$ 个分量非零。此时：
+    $
+      E hY = P E Y = P(X^T beta + Delta) = X^T beta + P Delta\
+      E hY_i = X_i^T beta + P_(i i) Delta_i\
+    $
+    可以看出，如果异常点不是高杠杆点，$P_(i i)$ 相对较小，即使 $Y$ 方向出现了异常造成的影响相对较小。
+  == 病态矩阵
+    #let Rxx = $R_(x x)$
+    有时，尽管 $X$ 是满秩的，但列之间的线性相关性很强，导致 $X^T X$ 相当病态，计算上会造成困难。线性回归中有：
+    $
+      var hY = sigma^2 Inv(tMul(X))\
+    $
+    因此 $tMul(X)$ 奇异时，$hY$ 的方差可能会相当大。假设数据是列中心化，标准化的，此时：
+    $
+      X = (1, tildeX)\
+      Y = (1, tildeX) vec(gamma_0, gamma) + epsilon 
+    $
+    熟知：
+    $
+      var(vec(gamma_0, gamma)) = sigma^2 Inv(tMul(X))\
+      = sigma^2 mat(1/n, 0; 0, Inv(tMul(tildeX)))
+    $
+    因此：
+    $
+      var hgamma = sigma^2 Inv(tMul(tildeX)) := sigma^2 Inv(Rxx)
+    $
+    事实上，$Rxx$ 就是样本之间的相关系数组成的矩阵，$Rxx (i, j) = inner(X_i, X_j)$
+    若设：
+    $
+      Rxx = mat(1, r^T; r, Rxx')\
+    $
+    则有：
+    $
+      Inv(Rxx) = mat(1/(1 - quadFormSym(r, Inv(Rxx'))), ...;..., ...)
+    $
+    进而：
+    $
+      var(hgamma_1) = sigma^2/(1 - quadFormSym(r, Inv(Rxx')))\
+    $
+    若设 $X(-j)$ 是 $X$ 去掉第 $j$ 列的矩阵，$P(-j)$ 是相应的投影矩阵（相当于去掉第 $j$ 个变量做回归），此时用其他列线性逼近 $X_j$ 的 RSS 为：
+    $
+      quadFormSym(X_j, I - P(-j)) = tMul(X_j) - quadFormSym(X_j, X(-j) Inv(tMul(X(-j))) X(-j)^T)\
+      = 1 - quadFormSym(X_j, X(-j) Inv(tMul(X(-j))) X(-j)^T)
+    $
+    若 $j = 1$ 就有上式：
+    $
+      = 1 - r^T Inv(Rxx') r\
+    $
+    两式结合，一个变量如果能被其他变量很好的线性逼近，对应参数的拟合方差就会极为严重。此时：
+    $
+      R_j^2 = 1 - RSS_j/(sum_i (X_j (i) - Xbar_j)^2) = 1 - RSS_j
+    $
+    #let VIF = $"VIF"$
+    我们定义 #VIF (varience inflation factor) 为：
+    $
+      VIF_j = 1/(1 - R_j^2)\
+    $
+    则 $var(hgamma_j) = sigma^2 VIF_j$
+
+    另一方面，$Rxx$ 可以对角化，设：
+    $
+      Rxx = T Lambda T^T\
+    $
+    则：
+    $
+      var(hgamma_j) = sigma^2 (T Inv(Lambda) T^T)_(j j)\
+      = sigma^2 sum_i T_(j i)^2 / lambda_i\
+    $
+    如果有 $lambda_i$ 很小，就会导致 $var(hgamma)$ 可能很大。
+
+    上面表明，数据的线性相关性对于参数估计有着很大的影响。然而，接下来会说明，它对预测的影响相对而言是较小的。当 $X$ 中心化后，一定有：
+    $
+      Y = Ybar + (X_0 - Xbar 1) gamma + epsilon
+    $
+    前面计算过， $cov(Ybar, gamma) = 0$，因此：
+    $
+      var(hY) = var(Ybar) + var((X_0 - Xbar_0 1) gamma)\
+      = sigma^2 (1/n +  quadFormSym(X_0 - Xbar 1, Inv(tMul(tildeX))) ) 
+    $
+    只要 $X_0$ 偏离数据较小，$hY$ 的方差就不会很大。也即 $X$ 的线性相关性对 $hY$ 的影响是相对较小的。
   == Residuels and hat matrix diagonal
     有时，我们也把投影矩阵 $P$ 记作 hat matrix $H$，熟知：
     $
@@ -1531,7 +1643,7 @@
         H_i = x_i^T Inv(tMul(X)) x_i
       $
     ]
-    #lemma[][
+    #lemma[Kook 1983][
       $
         r_i^2/(n - p) tilde B(1/2, 1/2 (n - p - 1))
       $

@@ -89,6 +89,7 @@
 #let htheta = $hat(theta)$
 #let halpha = $hat(alpha)$
 #let hbeta = $hat(beta)$
+#let hgamma = $hat(gamma)$
 #let hX = $hat(X)$
 #let hY = $hat(Y)$
 #let hy = $hat(y)$
@@ -487,6 +488,7 @@
 #let fourierTrans(f) = $hat(#f)$
 #let def_str = "def"
 #let nat_str = "nat"
+#let sep(..xs) = xs.pos().join($space$)
 // Theorem and definition environments.
 #let base_env(type: "Theorem", numbered: true, fg: black, bg: white, name, body) = locate(
     location => {
@@ -894,10 +896,26 @@
 
 #let calcSquareSum(xs) = xs.map(x => x * x).sum()
 #let calcMean(xs) = xs.sum() / xs.len()
-// S^2 = 1/(n-1) * sum((x - x_bar)^2)
-#let calcSampleVariance(xs) = {
+
+// sum((x - x_bar) (y - ybar))
+#let calcCov(xs, ys) = {
+  let mean_x = calcMean(xs)
+  let mean_y = calcMean(ys)
+  xs.zip(ys).map(
+    x => {
+      let (x, y) = x
+      (x - mean_x) * (y - mean_y)
+    }
+  ).sum()
+}
+
+// sum((x - x_bar)^2)
+#let calcBiasSquareSum(xs) = {
   let mean = calcMean(xs)
   let n = xs.len()
   let sum = xs.map(x => (x - mean) * (x - mean)).sum()
-  sum / (n - 1)
+  sum 
 }
+
+// S^2 = 1/(n-1) * sum((x - x_bar)^2)
+#let calcSampleVariance(xs) = calcBiasSquareSum(xs) /(xs.len() - 1)
