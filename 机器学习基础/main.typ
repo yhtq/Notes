@@ -800,5 +800,251 @@
           则称所有 $x_i$ 都是 $x$ 的密度可达点
         - 称 $x, y$ 是密度相连的，如果存在 $z in D$，使得 $x, y$ 与 $z$ 分别是密度可达的
         - 容易验证，密度
-= 机器学习理论
-  == PAC Learnability
+= PAC 理论
+  == 可实现性假设
+    #let ERM = "ERM"
+    本节中，我们假设 $X$ 服从某个固定的未知分布 $D$，并记：
+    - 泛化误差：
+      $
+        L_(D, f) (h) = P_(x tilde D) (h(x) != f(x))
+      $
+    - 训练误差：
+      $
+        L_S (h) = 1/m sum_(i = 1)^m 1_(y_i != h(x_i))\
+      $
+    - Hypothesis class: 一类假设函数的集合
+    最普遍的想法是，给定一个函数类 $H$ 和训练集 $S$，找出其中训练误差最小的函数作为模型，这种方法称为 ERM 学习器，也即：
+    $
+      ERM_H (S) = argmin_(h in H) L_S (h)\
+    $
+    当然，上面的方程可能有多个解，我们往往用 $h_S$ 记某个符合最优化条件的解。
+    #definition[Realizability Assumption][
+      若 $H$ 满足：
+      $
+        exists h^* in H, L_(D, f) (h^*) = 0
+      $
+      则称可实现性假设成立。
+    ]
+    #corollary[][
+      若可实现性假设成立，则以概率一有：
+      - $L_S (h^*) = 0$
+      - $L_S (h_s) = 0$
+    ]
+    #proof[
+      注意到以概率 $1$ 有：
+      $
+        h^* (x_i) = y_i, forall i = 1, ..., m\
+      $
+      换言之，$L_S (h^*) = 0$，而 $L_S (h_s) <= L_S (h^*)$
+      因此结论显然
+    ]
+    #theorem[][
+      假设 $H$ 是有限假设类，设 $delta in (0, 1), epsilon > 0, m$ 是一整数满足：
+      $
+        m >= (ln (abs(H) / delta)) / epsilon
+      $
+      则对于任何函数 $f$，任何分布 $D$ 满足可实现性假设成立，假设样本集是规模为 $m$ 的独立同分布样本 $S$，我们有：
+      $
+        P_S (L_(D, f) (h_S) <= epsilon) >= 1 - delta
+      $
+    ]
+    #proof[
+      记：
+      $
+        H_B = {h in H | L_(D, f) (h) > epsilon}\
+        M = {S | exists h in H_B, L_S (h) = 0}
+      $
+      注意到：
+      $
+        {S | L_(D, f) (h_S) > epsilon} subset M = union_(h in H_B) {S | L_S (h) = 0}\
+      $
+      因此：
+      $
+        P_S (L_(D, f) (h_S) > epsilon) 
+        &<= P_S (exists h in H_B, L_S (h) = 0)\ 
+        &= P_S (sum_(h in H_B) L_S (h_S) = 0) \
+        &<= sum_(h in H_B) P_S (L_S (h_S) = 0)\
+        &= sum_(h in H_B) product_(i = 1)^m P_(x_i tilde D) (h(x_i) = f(x_i))\
+        &= sum_(h in H_B) product_(i = 1)^m P_(x tilde D) (h(x) = f(x))\
+        &= sum_(h in H_B) product_(i = 1)^m (1 - L_(D, h) (h))\
+        &<= sum_(h in H_B) product_(i = 1)^m (1 - epsilon)\
+        &<= sum_(h in H_B) (1 - epsilon)^m\
+        &<= abs(H) (1 - epsilon)^m\
+        &<= abs(H) e^(-m epsilon)\
+        &<= delta\
+        \
+      $
+      证毕
+    ]
+  == PAC 可学习性
+    #definition[PAC 可学习性][
+      称一个假设类 $H$ 是 PAC 可学习的，如果存在一个函数 $m_H : (0, 1) -> (0, 1) -> NN$ 以及一个学习算法满足：
+      #align(center)[
+        对于任何 $delta, epsilon in (0, 1)$，任何 $X$ 上的分布 $D$ 以及标签函数 $f : X -> {0, 1}$，只要 $H, D, f$ 满足可实现性假设，则选择任何样本数量 $m >= m_H (epsilon, delta)$ 独立同分布训练集，算法会给出一个假设 $h$ 使得 $P_S (L_(D, f) (h) <= epsilon) >= 1- delta$
+      ]
+    ]
+    大致来讲，一个 PAC(Probably Approximately Correct) 可学习类是指存在一个算法，对于任何满足可实现性的 $D, f$，只要样本数量充分大，算法会训练得到一个模型使得该模型泛化误差较大的可能性充分小。
+    #definition[Sample complexity][
+      对于一个 PAC 可学习性中的算法，称 $m_H (epsilon, delta)$ 为该算法的样本复杂度，它度量了我们至少需要多少样本才能达到充分近似。对于同一个算法显然存在多个样本复杂度，我们称最小的样本复杂度为所有可能选择中的最小值
+    ]
+    #corollary[][
+      设 $H$ 是有限假设类，则它是 PAC 可学习的，且其样本复杂度:
+      $
+        m_H (epsilon, delta) <= (ln (abs(H) / delta)) / epsilon
+      $
+    ]
+    需要注意的是，并非所有 PAC 可学习性都是有限的。
+  == 不可知 PAC 可学习性
+    之前我们都是在可实现性假设下讨论问题。然而在实际的学习任务中，可实现性假设往往是过强的。为了放弃可实现性假设，我们引入了不可知 PAC 可学习性(Agnostic PAC Learning)的概念。同时，我们也放松标签函数的要求，不要求每个 $x$ 唯一确定一个 $y$，而是假设存在 $x, y$ 的联合分布，用 $P(y | x)$ 表示对某个 $x$ 取 $y$ 标签的概率。自然的，重新定义泛化误差为：
+    $
+      L_D (h) = P_((x, y) tilde D) (h(x) != y)
+    $
+    目标仍是选择一个函数 $h : X -> Y$ 使得泛化误差最小。
+    #theorem[Bayes Optimal Predictor][
+      假设 $Y = {0, 1}$，则最优预测函数就是：
+      $
+        f_D (x) = cases(
+          1 "if" P(y = 1 | x) >= 1/2,
+          0 "else"
+        )
+      $
+      它被称为*贝叶斯最优预测器*
+    ]
+    注意通常来说，$D$ 是未知的，因此无法计算 $f_D$，目标转而变为选择一个预测器，其性能尽可能接近 $f_D$。
+    #definition[不可知 PAC 可学习性][
+      称一个假设类 $H$ 是不可知 PAC 可学习的，如果存在一个函数 $m_H : (0, 1) -> (0, 1) -> NN$ 以及一个学习算法满足：
+      #align(center)[
+        对于任何 $delta, epsilon in (0, 1)$，任何 $X times Y$ 上的分布 $D$，选择任何样本数量 $m >= m_H (epsilon, delta)$ 独立同分布训练集，算法会给出一个假设 $h$ 使得 $P_S (L_D (h) <= min_(h' in H) L_D (h') + epsilon) >= 1- delta$
+      ]
+    ]
+    不可知 PAC 可学习性是 PAC 可学习性的推广。在可实现性假设成立时，它和通常的 PAC 可学习性是等价的。
+
+    接下来，我们把结论推广到一般的损失函数：
+    #definition[损失函数][
+      对于 $H, X$，称 $l$ 是一个损失函数，如果 $l(h, x) >= 0$
+    ]
+    以及：
+    - 风险函数：
+      $
+        L_D (h) = E_(x tilde D) (l(h, x))\
+      $
+    - 经验风险函数：
+      $
+        L_S (h) = 1/m sum_(i = 1)^m l(h, x_i)\
+      $
+    #definition[一般损失函数的不可知 PAC 可学习性][
+      称一个假设类 $H$ 是使用损失函数 $l$ 的意义下不可知 PAC 可学习的，如果存在一个函数 $m_H : (0, 1) -> (0, 1) -> NN$ 以及一个学习算法满足：
+      #align(center)[
+        对于任何 $delta, epsilon in (0, 1)$，任何 $Z$ 上的分布 $D$，选择任何样本数量 $m >= m_H (epsilon, delta)$ 独立同分布训练集，算法会给出一个假设 $h$ 使得 $P_S (L_D (h) <= min_(h' in H) L_D (h') + epsilon) >= 1- delta$，其中 $L_D (h) = E_(z tilde D) l(h, z)$ 是损失函数
+      ]
+    ]
+  == 一致收敛性
+    #definition[$epsilon-$ representative][
+      称一个训练集 $S$ 是 $epsilon-$ representative，如果对于任意的 $h$，都有：
+      $
+        abs(L_S (h) - L_D (h)) <= epsilon
+      $
+    ]
+    #lemma[][
+      设训练集 $S$ 是 $epsilon/2-$ representative，则：
+      $
+        L_D (h_S) <= min_(h in H) L_D (h) + epsilon
+      $
+    ]
+    #proof[
+      $
+        L_D (h_S) 
+        &<= L_S (h_S) + epsilon/2\
+        &<= min_h L_S (h) + epsilon/2\
+        &<= min_h L_D (h) + epsilon\
+      $
+    ]
+    #definition[一致收敛性][
+      称一个假设类 $H$ 是有一致收敛性质的，如果存在一个函数 $m_H : (0, 1) -> (0, 1) -> NN$ 满足：
+      #align(center)[
+        对于任何 $delta, epsilon in (0, 1)$，任何 $Z$ 上的分布 $D$，对于样本数量 $m >= m_H (epsilon, delta)$ 独立同分布训练集，它至少 $1 - delta$ 的概率是 $epsilon-$ representative 的
+      ]
+    ]
+    #lemma[][
+      设 $H$ 是一致收敛的，对应函数为 $M_H^("UC")$，则 $H$ 是不可知 PAC 可学习的，且其样本复杂度：
+      $
+        m_H (epsilon, delta) <= ceil(M_H^("UC") (epsilon/3, delta))
+      $
+      并且此时，ERM 就是不可知 PAC 可学习中一个可选择的算法
+    ]
+    #lemma[][
+      设 $H$ 是有限假设类，则 $H$ 是具有一致收敛性的，其样本复杂度：
+      $
+        m_H^("UC") (epsilon, delta) <= ceil((ln (2 abs(H) / delta)) / (2 epsilon^2))
+      $
+      进而，它是不可知 PAC 可学习的，且其样本复杂度：
+      $
+        m_H (epsilon, delta) <= ceil((ln (2 abs(H) / delta)) / (epsilon^2))
+      $
+    ]
+    #proof[
+      我们需要利用下面的不等式：
+      #theorem[Hoeffding's inequality][
+        设 $X_1, X_2, ..., X_m$ 是 $[a, b]$ 上的独立同分布随机变量，$mu = E(X_i)$，则对于任意 $epsilon > 0$，都有：
+        $
+          P(abs(1/m sum_(i = 1)^m X_i - mu) > epsilon) <= 2 e^(-(2 m epsilon^2)/(b - a^2))
+        $
+      ]
+      任取 $epsilon, delta$，我们只要找到对应的 $m$ 即可。注意到：
+      $
+        P_S (exists h in H, abs(L_S (h) - L_D (h)) > epsilon) <= sum_(h in H) P_S (abs(L_S (h) - L_D (h)) > epsilon)\
+      $
+      Hoeffding's inequality 给出：
+      $
+        P_S (abs(L_S (h) - L_D (h)) > epsilon) <= 2 e^(-2m epsilon^2)
+      $
+      因此上式：
+      $
+        <= 2 abs(H) e^(-2m epsilon^2)\
+      $
+      因此只要：
+      $
+        m >= (ln (2 abs(H) / delta)) / (2 epsilon^2)\
+      $
+      就有结论成立。
+    ]
+== Bias-Complexity Tradeoff
+  #theorem[No-Free-Lunch][
+    设 $A$ 是任何 $X$ 上二分类问题的学习算法，$m <= abs(X) / 2$ 作为训练样本数量，则存在 $X times {0, 1}$ 上一个分布 $D$ 使得：
+    - 存在函数 $f : X -> {0, 1}$ 使得 $L_D (f) = 0$
+    - $P_S (L_D (A(S)) >= 1/8) >= 1/7$
+  ]
+  #corollary[][
+    设 $X$ 是无穷集，$H = X -> {0, 1}$，则 $H$ 不是 PAC 可学习的
+  ]
+  #proof[
+    如若不然，选择 $epsilon < 1/8, delta < 1/7$，则存在学习算法 $A$，整数 $m$ 使得任何 $X times {0, 1}$ 上分布 $D$ 都有：
+    $
+      P_S (L_D (A(S)) >= 1/8) < 1/7 + min_(h in H) L_D (h) + epsilon\
+    $
+    然而，选择 No-Free-Lunch 定理中的分布 $D$ 和函数 $f$，注意到：
+    $
+      min_(h in H) L_D (h) <= L_D (f) = 0 => min_(h in H) L_D (h) = 0\
+      P_S (L_D (A(S)) >= 1/8) >= 1/7\
+    $
+    矛盾！
+  ]
+  通常来说，我们会对泛化误差考虑分解：
+  $
+    L_D (h_S) = (L_D (h_S) - min_(h in H) L_D (h)) + (min_(h in H) L_D (h))\
+  $
+  或者对于二分类问题：
+  $
+    L_D (h_S) - L_D (f_D) = (L_D (h_S) - min_(h in H) L_D (h)) + (min_(h in H) L_D (h) - L_D (f_D))
+  $
+  通常记:
+  $
+  epsilon_("app") = min_(h in H) L_D (h)
+  $（或者 $(min_(h in H) L_D (h) - L_D (f_D))$），称为*近似误差*，它度量了我们选择的假设类 $H$ 和真实的标签函数 $f_D$ 之间的差距。而：
+  $
+    epsilon_("est") = L_D (h_S) - min_(h in H) L_D (h)
+  $
+  称为估计误差，它度量了训练集导致的最优损失函数的偏差。对于有限的 $H$，$epsilon_("est")$ 关于 $abs(H)$ 对数增加，关于 $m$ 减少。
+
+  上面的分解表明，当 $H$ 选择的足够大时，近似误差很小，但可能导致估计误差很大，此时称为*过拟合*；当 $H$ 选择的足够小，估计误差很小，但可能导致近似误差很大，此时称为*欠拟合*。因此，选择一个合适的假设类 $H$ 是非常重要的。
+
