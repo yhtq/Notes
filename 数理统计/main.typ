@@ -1262,6 +1262,65 @@
       #proof[
         注意到这本质是线性回归的假设检验问题，套用之前结论即可。
       ]
+    === 两因素试验的方差分析
+      设 $A$ 有 $s$ 个水平，$B$ 有 $t$ 个水平，每个水平均安排 $r$ 次试验，构造模型：
+      $
+        Y_(i j k) = mu_(i j) + epsilon_(i j k)\
+      $
+      此时考虑的问题通常是：
+      + 因素 $A$ 对 $Y$ 是否有影响
+      + 因素 $B$ 对 $Y$ 是否有影响
+      + 是否存在 $A, B$ 的交互作用
+      为了便于研究，常常使用如下的模型：
+      $
+        Y_(i j k) = mu + alpha_i + beta_j + lambda_(i j) + epsilon_(i j k)\
+        where sum_i alpha_i = 0, sum_j beta_j = 0, sum_(i) lambda_(i j) = 0, sum_(j) lambda_(i j) = 0
+      $
+      其中 $alpha, beta, lambda$ 分别称为 $A, B$ 主效应和交互效应。新参数空间的维数为：
+      $
+        1 + s - 1 + t - 1 + (s - 1)(t - 1) = s t
+      $
+      待检验假设为：
+      + $H_1 : alpha_i = 0$
+      + $H_2 : beta_j = 0$
+      + $H_3 : lambda_(i j) = 0$
+      类似的，我们有平方和分解公式：
+      $
+        S_T = sum_(i j k) norm2(Y_(i j k) - Ybar) \
+        = 
+        sum_(i j k) norm2(Y_(i j k) - Ybar_(i j)) + r sum_(i j) norm2(Ybar_(i j) - Ybar_i - Ybar_j + Ybar) \
+        + t r sum_i norm2(Ybar_i - Ybar) + s r sum_j norm2(Ybar_j - Ybar) \
+        := S_e + S_(A times B) + S_A + S_B
+      $
+      直观上看，$S_e$ 总是随机误差的影响，$S_(A times B), S_A, S_B$ 分别应该是交互作用、$A$ 主效应和 $B$ 主效应的影响。因此，统计量分别为：
+      + 
+        $
+          F_1 = (S_A quo (s - 1)) / (S_e quo s t (r - 1)) tilde F(s - 1, s t (r - 1))\
+        $
+      +
+        $
+          F_2 = (S_B quo (t - 1)) / (S_e quo s t (r - 1)) tilde F(t - 1, s t (r - 1))\
+        $
+      +
+        $
+          F_3 = (S_(A times B) quo ((s - 1)(t - 1))) / (S_e quo s t (r - 1)) tilde F((s - 1)(t - 1), s t (r - 1))\
+        $
+      且三个统计量是独立的，三个检验可以独立进行。对于这类统计问题，实践上常用的方法是绘制方差分析表（ANOVA）
+  == 正交设计\*
+    假设共有 $m$ 个因素，第 $i$ 个因素 $F_i$ 有 $s_i$ 个水平，几乎不可能安排全面试验。可行的方案是，通过额外的模型假设，从所有可能中挑选一部分安排试验。通常而言，正交设计基于可加模型：
+    $
+      Y_(lambda_1, lambda_2, ...,lambda_m) = beta_0 + sum_(i = 1)^m beta_i (lambda_i) + epsilon\
+      where sum_(lambda_i) beta_i (lambda_i) = 0\
+    $
+    总参数数量为：
+    $
+      sum_(i = 1)^m s_i - m + 1
+    $
+    通常关心的问题是：
+    + 哪些因素对指标的影响大？哪种不显著？
+    + 如某因素显著，其哪个水平最好？
+    + （若不假设可加模型）哪种因素组合最佳？
+    正交设计的基本思想是，两两因素间的试验次数是搭配均衡的，也就是每种组合出现的次数应该相等。满足这种条件的试验次数设计构成*正交表*。正交表的设计是组合问题，
 
     
     

@@ -1490,6 +1490,9 @@
         norm(x_1) + norm(x_2) <= c norm(x_1 + x_2)
       $
     ]
+    #corollary[][
+      设 $X = X_1 directSum X_2$，则 $X -> X_1, X -> X_2$ 的投影算子是有界的。
+    ]
     #theorem[Helly-Toeplitz][
       设 $X$ 是 Hibert 空间，$T : H -> H$ 线性且：
       $
@@ -3139,14 +3142,170 @@
     ]
     #lemma[][
       设 $A$ 是紧算子，$T = I - A$，则 $ker T = 0 => im T = X$
-    ]
+    ]<Fredholm-1>
     #proof[
       假设 $im T != X$，断言 $im T > im T^2 > ...im T^n > ...$，且它们都是闭的，之后，由 Risez Lemma，取 $x_m in im T^m - T^(m - 1)$ 使得 $norm(x_m) = 1, d(x_m, T^(m + 1)) > 1/2$，
+    ]
+    #lemma[][
+      设 $X$ 是 Banach 空间，$X_0$ 是有限维子空间，则存在 $X_1$ 是闭子空间使得：
+      $
+        X = X_1 directSum X_0
+      $
+    ]<finite-space-orthogonal-complement>
+    #proof[
+      设 $x_i$ 是 $X_0$ 的一组基，构造 $f_i in duel(X_0)$ 使得 $f_i (x_j) = delta_(i j)$，由 Hahn-Banach 定理它们可以延拓到 $X$ 中得到 $tilde(f)_i$。设：
+      $
+        X_1 = inter ker(tilde(f)_i)
+      $
+      显然 $X_1$ 是闭子空间，$X_1 inter X_0 = 0$，以及对于任何 $x in X$，设：
+      $
+        y = x - sum_i tilde(f)_i (x) x_i\
+      $
+      则可以验证 $tilde(f)_i (y) = 0, forall i => y in X_1$，进而 $x in X_0 + X_1 => X_0 + X_1 = X$，这就验证了直和成立。
+    ]
+    #lemma[][
+      设 $X$ 是 Banach 空间，$f_i in duelSpace(X)$ 线性无关，则存在 $y_i in X$ 使得 $f_i (y_j) = delta_(i j)$
+    ]<duel-basis>
+    #proof[
+      用归纳法，$n = 1$ 时显然，假设 $n = m$ 时成立，熟知 $"codim" ker f_(m + 1) = 1$，也即可设：
+      $
+        X = {z} directSum ker f_(m + 1)\
+      $
+      将 $f_1, f_2, ..., f_m$ 限制在 $ker f_(m + 1)$. 断言它们的限制也是线性无关的，否则存在线性组合 $f$ 使得 $f|_(ker f_(m + 1)) = 0$，此时 $f, f_(m + 1)$ 的值只由在 $z$ 上的值确定，它们必然线性相关，与线性无关性矛盾！由归纳假设存在 $y_1, y_2, ..., y_m in ker f_(m + 1)$ 使得 $f_i (y_j) = delta_(i j)$
+
+      最后，取：
+      $
+        y_(m + 1) = (z - sum_(i = 1)^m f_i (z) y_i)/(f_(m + 1) (z))\
+      $
+      可以验证就有 $y_i$ 满足条件。
+    ]
+    #lemma[][
+      设 $A$ 是紧算子，$T = I - A$，则 $dim ker T = dim ker duel(T)$
+    ]
+    #proof[
+      前面已经证明两个空间都是有限维的，设：
+      $
+        ker T = span(x_1, x_2, ..., x_n)\
+        ker duel(T) = span(f_1, f_2, ..., f_m)\
+      $
+      由 @finite-space-orthogonal-complement 可设：
+      $
+        X = ker T directSum X_1\
+      $
+      由 @duel-basis 可设：
+      $
+        f_i (y_j) = delta_(i j)\
+      $
+      断言：
+      $
+        X = span(y_1, ..., y_m) directSum orthogonalCom(ker duel(T))\
+      $
+      这是因为：
+      - 任取 $x in X$，考虑：
+        $
+          y = x - sum_i f_i (x) y_i\
+        $
+        则可以验证 $f_i (y) = 0$，因此 $y in ker duel(T)$，因此 $x in ker duel(T) + orthogonalCom(ker duel(T))$
+      - 显然 $span(y_1, ..., y_m) inter orthogonalCom(ker duel(T)) = 0$
+      注意到 @im-equal-orthogonalCom-ker-duel 给出 $im T = orthogonalCom(ker duel(T))$，而 $X_1$ 与 $im T$ 之间应该有双射。假设 $m > n$，设：
+      $
+        funcDef(tilde(T), X, X, sum c_i x_i + z, sum c_i y_i + T z)
+      $
+      则可以验证：
+      $
+        tilde(T) (sum c_i x_i + z) = sum c_i x_i + z - A z + sum_i c_i (y_i - x_i)\
+      $
+      注意到：
+      - $sum c_i x_i + z arrowb A z$ 是紧算子
+      - $sum c_i x_i + z arrowb sum_i c_i (y_i - x_i)$ 是有限秩算子
+      因此 $tilde(T)$ 形如 $I -$紧算子，由 @Fredholm-1 以及不难验证它是单射，则它是满射，然而这与 $m > n$ 矛盾！这就证明了：
+      $
+        dim ker T >= dim ker duel(T) >= dim ker duel(duel(T)) 
+      $
+      然而熟知 $dim ker duel(duel(T)) >= dim ker T$，因此上面的式子全部取等。
+    ]
+    #lemma[][
+      设 $A$ 是紧算子，$T = I - A$，则 $im duel(T) = leftOrthogonal(ker T)$
+    ]
+    #proof[
+      容易验证：
+      - $ker T subset ker duel(duel(T))$
+      - $dim ker T = dim ker duel(duel(T)) < +infinity$
+      表明 $ker T = ker duel(duel(T))$，接下来验证定义即可。
+    ]
+    #lemma[][
+      设 $A$ 是紧算子，$T = I - A$，则 $im T = X => ker T = 0$
+    ]
+    #proof[
+      此时，$im T = X => "codim" im T = 0 => dim ker T = 0 => ker T = 0$
     ]
     #theorem[Fredholm 二择一律][
       设 $A$ 是紧算子，$T = I - A$，则：
       - $T$ 是单的当且仅当是满的
       - $sigma(T) = sigma(duel(T))$
+      - $dim ker T = dim ker duel(T) < +infinity$
       - $im(duel(T)) = leftOrthogonal(ker T), im T = orthogonalCom(ker T)$
-      - $dim X quo (im T) = dim ker T$
+      - $"codim" im T =  dim (X quo (im T)) = dim ker T$
+    ]
+  == Riesz-Schauder Theory
+    #theorem[][
+      设 $X$ 是 Banach 空间，$A in C(X)$，则：
+      - 只要 $X$ 是无穷维的，则 $0 in sigma(A)$
+      - $sigma(A) - {0} = sigma_p (A) - {0}$
+      - $sigma(A)$ 的聚点只能是 $0$（$0$ 未必是聚点）
+      - $sigma(A)^1 subset {0}$
+    ]
+    #proof[
+      - 若 $A$ 可逆，$I = Inv(A) A$ 是紧算子，表明单位球预紧，导致有限维
+      - 设 $lambda in sigma(A) - {0}$，则 $I - A / lambda$ 是不可逆的，由 Risez-Fredholm 理论，$I - A / lambda$ 单当且仅当满，而它已经不可逆，因此一定既不单又不满
+      - 假设 $lambda$ 是非零聚点，$lambda_n in sigma(A) - {0} -> lambda$，则 $lambda_n$ 都是特征值，可设特征向量分别为 $x_n$ 且 $norm(x_n) = 1$. 设：
+      $
+        E_n = span(x_1, x_2, ..., x_n)
+      $
+      由 Risez 引理，可以找到 $y_(n + 1) in E_(n + 1) - E_n, norm(y_(n + 1)) = 1, dist(y_(n + 1), E_n) >= 1/2$，由 $A$ 是紧的，$A y_n$ 有收敛子列，然而 $m >n$ 时：
+      $
+        (A y_(m))/lambda_(m) - (A y_n)/lambda_n in y_m + E_n
+        => norm((A y_m)/lambda_m - (A y_n)/lambda_n) >= 1/2
+      $
+      表明 $(A y_n)/lambda_n$ 不可能有收敛子列，矛盾！
+    ]
+    #corollary[][
+      设 $X$ 无穷维，$A$ 是紧算子，则 $sigma(A)$ 只有以下几种可能：
+      - $sigma(A) = {0}$
+      - $sigma(A)$ 有限
+      - $sigma(A) = {0} union {lambda_n}, lambda_n -> 0$
+    ]
+    #example[][
+      - 设 $X = C[0, 1], T f = integral_(0)^(x) f(t) dif t$，则 $T$ 是紧算子，设 $lambda$ 是非零特征值，就有：
+        $
+          integral_(0)^(x) f(t) dif t = lambda f(x)\
+        $ 
+        解微分方程就有 $f(x) = C e^(1/lambda x)$，然而结合 $f(0) = 0$ 就有 $f(x) = 0$，表明它的谱就是 ${0}$（当然，也可以计算谱半径 $= 0$）
+      - $X = l^2, A x = (lambda_1 x_1, lambda_2 x_2, ..., lambda_n x_n, 0, 0, ...)$，显然 $A$ 是有限秩算子，$sigma(A) = {0, lambda_1, ..., lambda_n}$
+      - 对于任何 $lambda_n -> 0, X = l^2, (A x)(i) = lambda_i x(i)$，前面证明过 $sigma(A) = closure({lambda_n}) = {0} union {lambda_i}$，且它可被上面的有限秩算子逼近，因此是紧算子。
+    ]
+  == 紧算子的结构
+    对于有限维线性变换，我们有 Jordan 标准形唯一描述了线性变换的结构。对于紧算子，我们也可以做出类似的结果。
+    #proposition[][
+      对于 $T in L(X)$，我们有：
+      $
+        ker T <= ker T^2 <= ... <= ker T^n <= ...\
+        im T >= im T^2 >= ... >= im T^n >= ...\
+      $
+      并且若其中某两项相等，则后面的都相等。
+    ]
+    #proof[
+      序关系是显然的。
+      - 假设 $ker T^p = ker T^(p + 1)$，任取 $x in ker T^(p + 2)$ 也即 $T^(p + 2) x = 0 => T^(p + 1) T x = 0 => T^p T x = 0 => T^(p + 1) x = 0 => x in ker T^(p + 1)$
+      - $im$ 的证明也是类似的。
+    ]
+    #lemma[][
+      假设 $ker, im$ 链都在有限步终止，则它们在相同的步数 $p$ 终止，且：
+      $
+        X = ker T^p directSum im T^p\
+      $
+    ]
+    #proof[
+      设 $ker T^p = ker T^(p + 1), im T^(q) = im T^(q + 1)$ 且 $p, q$ 都是最小的
+      - 假设 $p < q$，则 $forall y in X, T^q y = T^(q + 1) z => T^q (y - T z) = 0 => T^p (y - T z) = 0 => T^p y = T^(p + 1) z$，由任意性就有 $im T^p = im T^(p + 1)$，矛盾！
     ]
