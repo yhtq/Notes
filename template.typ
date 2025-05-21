@@ -416,7 +416,7 @@
 ) = _gen_big_expressions(
   all_configs,
   sumfBr,
-  (body => norm(body))
+  (body => $norm(#body)$)
 )
 
 #let (
