@@ -1876,3 +1876,243 @@
       E X hgamma' = (I + k Inv(Rxx)) hgamma
     $
     其中 $hgamma$ 是标准的最小二乘估计，这意味着 ridge regression 不是无偏估计。
+= 模型选择和变量选择
+  很多时候，我们可选择的变量数目非常多。理论上，变量越多回归的效果越好，但会导致模型更加复杂，可解释性更差，预测效果可能往往变差。因此，我们常常希望从中只选出一部分有效的变量。假设协变量数目为 $p$ ，我们往往有如下几种思路：
+  - 穷举 $2^p$ 种选择，选出某种标准下最好的模型。显然在 $p$ 较大时，这种方法是不可行的。
+  - 贪婪方法，有多种变种，大致思想是每次添加（或删去）若干变量，逐步进行。
+  - Shrinkage 方法：在标准的最小二乘回归中增加某种惩罚项。包括 ridge regression 和 LASSO 等方法。
+  为了衡量变量选择的好坏，当然不能使用通常的 RSS。一个常见的想法是，考虑模型在新数据上预测的好坏。
+  == 预测误差
+    #definition[（平方）预测误差][
+      设有独立于训练数据的 $m$ 个独立新数据 $Y', X'$，以及 $E Y' = mu = X' beta$，则模型的预测误差定义为：
+      $
+        E_Y' norm2(Y' - X' hbeta)  = E norm2(Y' - E Y' + E Y' - X' hbeta) = E norm2(Y' - mu) + norm2(mu - X' hbeta)\
+        = m sigma^2 + norm2(mu - X' hbeta)\
+      $  
+      其中 $norm2(mu - X' hbeta)$ 称为模型误差（ME）。有时，我们考虑的是 $X = X'$ 的情形，就有：
+      $
+        "ME" = norm2(mu - hY) = norm2((I - P)mu - P epsilon) = quadFormSym(mu, I - P) + quadFormSym(epsilon, P)\
+      $
+      此时：
+      $
+        E "ME" = quadFormSym(mu, I - P) + sigma^2 tr(P) =  quadFormSym(mu, I - P) + sigma^2 p\
+        E "PE" = (n + p) sigma^2 + quadFormSym(mu, I - P)\
+      $
+      可以看到，$p$ 变大时，上式第一项相对变小，但第二项变大，这体现了参数数量不能过多也不能变少之间的权衡。
+    ]
+    #definition[][
+      我们称：
+      - $quadFormSym(mu, I - P)$ 为模型的 total bias
+      - $sigma^2 tr(P) = p sigma^2$ 为模型的 total variance
+    ]
+    假设：
+    $
+      Y = (X_1, X_2) vec(beta_1, beta_2) + epsilon\
+    $
+    其中 $X$ 有 $k + 1$ 列，$X_1$ 有 $p$ 列。我们希望讨论是否可能通过去掉 $X_2$ 得到更好的预测误差。简单起见，设 $m = 1$，新数据为 $X'^T = (X_1'^T, X_2'^T)$ 则有：
+    $
+      E "PE" = sigma^2 + E norm2(X'^T beta - X_1'^T hbeta_1)\
+      = sigma^2 + var(X_1'^T hbeta_1) + (X'^T beta - X_1'^T E hbeta_1)^2
+    $
+    假设 $hbeta_1$ 是只用 $X_1$ 估计得到的参数，之前章节给出：
+    $
+      E hbeta_1 = beta_1 + L beta_2 where L = Inv(tMul(X_1)) X_1^T X_2\
+    $
+    因此可以计算得：
+    $
+      X'^T beta - X_1'^T E hbeta_1 = (L^T X_1' - X_2')^T beta_2\
+      E "PE" = sigma^2 + var(X_1'^T hbeta_1) + (L^T X_1' - X_2')^T beta_2 := sigma^2 + var(X_1'^T hbeta_1) + h^T beta_2
+    $
+    同时，如果采用全模型，就有：
+    $
+      E "PE" = sigma^2 + E norm2(X'^T beta - X'^T hbeta) = sigma^2 + var(X'^T hbeta)
+    $
+    由前面的结果：
+    $
+      var(X'^T hbeta) = var(X'^T hbeta_1) + sigma^2(L^T X'_1 - X'_2)^T M (L^T X'_1 - X'_2) \
+      where M = Inv(quadFormSym(X_2, I - P_1)), P_1 = X_1 Inv(tMul(X_1)) X_1^T\
+    $
+    因此，只要：
+    $
+      (h^T beta_2)^2 < sigma^2 quadFormSym(h, M)
+    $
+    就有去掉一部分变量后，模型的预测误差方而更小了。可以证明：
+    $
+      (h^T beta_2)^2 <= quadFormSym(h, M) quadFormSym(beta_2, M)
+    $
+    因此，只要：
+    $
+      sigma^2 > quadFormSym(beta_2, M)
+    $
+    就足以保证去掉 $X_2$ 后，模型的预测误差更小。简单来说，就是当 $sigma^2$ 很大或者某些变量对 $Y$ 的影响很小时，可以考虑去掉这些变量。
+  == 模型的评估准则
+    实践上，前面提到的预测误差通常是不可计算的。常常会采用以下的指标：
+    #definition[Adjusted $R^2$][
+      定义：
+      $
+        overline(R)^2 = 1 - (1 - R^2) n/(n - p)
+      $
+      称为 *调整后的 $R^2$*，它是对 $R^2$ 的一种修正，不会随着变量数目的增加而增加。
+    ]
+    它的想法来自于对只采用 $X_1$ 做回归是否显著做假设检验，就有：
+    $
+      F = ((RSS_H - RSS) quo (k + 1 - p))/(RSS quo (n - k - 1))\
+      R^2_p = 1 - RSS_p/(sum (Y_i - Ybar)^2)\
+      F =  (sum (Y_i - Ybar)^2 (R^2_(k + 1) - R^2_p)) / (sum (Y_i - Ybar)^2 (1 - R^2_(k + 1))) dot (n - k -1) / (k + 1 - p)\
+      = (R^2_(k + 1) - R^2_p) / (1 - R^2_(k + 1)) dot (n - k -1) / (k + 1 - p)
+    $
+    就可以计算得：
+    $
+      overline(R)^2 = 1 - (1 - R_(k + 1)^2) n/(n - k - 1) ((k + 1 - p) F + n - k - 1)/(n - p)
+    $
+    若 $F$ 检验显著，例如 $F > 1$，就有 $overline(R)_p^2 <= overline(R)_(k + 1)^2$
+
+    另一种想法是，我们确实收集 $m$ 个测试数据，用 $norm2(Y' - X' hbeta)$ 做评估。然而有时，我们不能收集新的数据，就可以采用*交叉验证方法*，也就是轮流在数据中选出一部分作为训练数据，剩下的作为测试数据。
+    #let CV = "CV"
+    #definition[n-fold cross validation/Jackknife/leave-one-out][
+      定义：
+      $
+        CV(1) = 1/n sum_(i = 1)^n (Y_i - hY(i)_i)^2\
+      $
+      是留一法交叉验证产生的测试误差。
+    ]
+    前面计算过：
+    $
+      hbeta - hbeta(i) = (Inv(tMul(X)) x_i)/(1 - h_i) e_i\
+    $
+    因此可以计算得：
+    $
+      Y - hY(i) = (Y_i - x_i^T hbeta) 1/(1 - h_i)
+    $
+    （这里 $x_i^T$ 是 $X$ 的第 $i$ 行）最终就有：
+    $
+      CV(1) = 1/n sum_(i = 1)^n ((Y_i - hY_i)/(1 - h_i))^2
+    $
+    然而，可以证明，$CV$ 往往会高估误差。事实上：
+    $
+      E n CV(1) 
+      &= sum_(i = 1)^n E ((Y_i - hY_i)/(1 - h_i))^2 \
+      &= sum_(i = 1)^n E ((I - P) Y)_i^2/(1 - h_i)^2\
+      &= sum_(i = 1)^n E ((I - P) (mu + epsilon))_i^2/(1 - h_i)^2\
+      &= sum_(i = 1)^n ((I - P) mu)_i^2/(1 - h_i)^2 + E ((I - P) epsilon)_i^2/(1 - h_i)^2\
+      &= sum_(i = 1)^n ((I - P) mu)_i^2/(1 - h_i)^2 + E (quadFormSym(epsilon, (I - P) D_i (I- P)))/(1 - h_i)^2\
+      &= sum_(i = 1)^n ((I - P) mu)_i^2/(1 - h_i)^2 + (sigma^2 tr((I - P) D_i (I - P)))/(1 - h_i)^2\
+      &= sum_(i = 1)^n ((I - P) mu)_i^2/(1 - h_i)^2 + (sigma^2 tr((I - P) D_i))/(1 - h_i)^2\
+      &= sum_(i = 1)^n ((I - P) mu)_i^2/(1 - h_i)^2 + (sigma^2 (1 - h_i))/(1 - h_i)^2\
+      &= sum_(i = 1)^n ((I - P) mu)_i^2/(1 - h_i)^2 + (sigma^2)/(1 - h_i)\
+      &>= sum_(i = 1)^n ((I - P) mu)_i^2 + (1 + h_i) (sigma^2)\
+      &= norm2((I - P) mu) + (n + p) sigma^2\
+      &= E "PZ"\
+
+      where D_i &= diag(0, 0, ..., 1, ..., 0)\
+    $
+    #definition[Mellow's CP][
+      对于线性模型，选择 $X' = X$ 就有：
+      $
+        RSS_p = Y^T (I - P) Y\
+        E RSS_p = quadFormSym(mu, I - P) + (n - p) sigma^2\
+        = E "ME" + (n - 2 p) sigma^2
+      $
+      因此：
+      $
+        (E "ME")/sigma^2 = (E RSS_p)/sigma^2 + (2 p - n)\
+      $
+      受此启发，假设 $htheta^2$ 是 $sigma^2$ 的估计值，定义：
+      $
+        C_p := RSS_p/htheta^2 + 2 p - n\
+      $
+    ]
+    显然，若 $mu in im X$ 就有：
+    $
+      C_p approx p
+    $
+    #definition[K-L 散度][
+      定义：
+      $
+        "KL"(f, g) = integral_()^() ln f(y)/g(y) f(y) dif y
+      $
+      常常用来度量两个分布之间的相似性。
+    ]
+    假设有一族函数 $g(y, theta)$，我们有：
+    $
+      "KL"(f, g(y, theta)) = C - E_(x tilde f) ln g(x, theta)
+    $
+    其中 $C$ 与 $theta$ 无关。如果我们的目标是找到最优的 $theta$，则可以直接考虑 $-E ln g(x, theta)$
+    #let AIC = $"AIC"$
+    #let BIC = $"BIC"$
+    #definition[Akaike information criterion/Bayesian information criterion][
+      定义：
+      $
+        AIC = -2 ln g(Y, htheta(Y)) + 2 r
+      $
+      其中 $r$ 是 $theta$ 的维数，$htheta(Y)$ 是根据 $Y$ 估计的参数的值。如果将 $2 r$ 换成 $a_n r$ 常见的 $a_n = ln n$，则称为 BIC(Bayesian information criterion)。
+    ]
+    在线性模型中，$Y tilde N(X beta, sigma^2 I)$，就有：
+    $
+      - ln g(Y, theta) = n/2 ln(2 pi sigma^2) + 1/(2 sigma^2) tMul(Y - X beta)\
+    $
+    如果使用极大似然估计 $hsigma^2 = RSS/n$：
+    $
+      htheta(Y) = P Y\
+      Delta := - E_(Y_0 tilde f) ln g(Y_0, hbeta(Y)) = n/2 ln(2 pi hsigma^2) + 1/(2 hsigma^2) E_(Y_0) tMul(Y_0 - X hbeta(Y))\
+      = n/2 ln(2 pi hsigma^2) + 1/(2 hsigma^2) (n sigma^2 + norm2(mu - X hbeta(Y)))\
+      E_Y (2 Delta) = n E ln(2 pi hsigma^2) + (n sigma^2) E 1/hsigma^2 + E norm2(mu - X hbeta(Y)) dot 1/hsigma^2\
+      =^"独立性" n E ln(2 pi hsigma^2) + (n sigma^2) E 1/hsigma^2 + E norm2(mu - X hbeta(Y)) E 1/hsigma^2\
+      = n E ln(2 pi hsigma^2) + (n sigma^2) E 1/hsigma^2 + E "ME" E 1/hsigma^2\
+      = n E ln(2 pi hsigma^2) + (n sigma^2) E 1/hsigma^2 + (lambda + p) sigma^2 E 1/hsigma^2\
+      = n E ln(2 pi hsigma^2) + (n + lambda + p) E sigma^2/hsigma^2\
+      where lambda = quadFormSym(mu, I - P)/sigma^2
+    $
+    比照 $E (2 Delta)$ 和 $AIC$，主要差别在于将 $lambda + p$ 换成 $2(p + 1)$，其余部分都是比较接近的。进一步，如果假设 $mu in im X$，则 $(n hsigma^2)/sigma^2 tilde chi^2(n - p). E sigma^2/hsigma^2 = n/(n - p - 2)$，此时：
+    $
+      E 2 Delta = n E ln(2 pi hsigma^2) + (n (n + p))/(n - p -2)\
+      E (AIC - 2 Delta) = 2 (p + 1) - (2 n (p + 1))/(n - p - 2) approx^(n "充分大") 2
+    $
+    虽然它仍然并不是零，然而我们可以可以采用以下修正的 AIC:
+    $
+      AIC_c = n ln (2 pi hsigma^2) + (n(n - p))/(n - p -2)
+    $
+    立刻就有 $E AIC_c = E 2 Delta$
+
+    假设 $sigma^2$ 是已知的，则：
+    $
+      AIC = RSS/sigma^2 + 2 p\
+      BIC = RSS/sigma^2 + a_n p\
+    $
+  == Shrinkage 方法
+    前面提到过，可以通过增加正则项来降低预测误差。
+    == Stein shrinkage
+      假设 $Z in P(RR^p) tilde N(mu. sigma^2 I)$，如果要找 $mu$ 的估计值，在无偏估计中 $Z$ 本身当然就是最好的，然而事实上，可能找到更好的有偏估计。事实上：
+      $
+        E norm2(Z) = p sigma^2 + norm2(mu) > norm2(mu)
+      $
+      这表明估计值的模和真实值的模可能有相当大的偏差。如果使用 $c Z$ 做 $mu$ 的估计值，其平方损失：
+      $
+        E norm2(c Z - mu) = tr(var(c Z)) + norm2(E(C Z - mu))\
+        = c^2 p sigma^2 + (1 - c)^2 norm2(mu)\
+      $
+      求导可得，$c - norm2(mu)/(p sigma^2 + norm2(mu))$ 时上式最小，且：
+      $
+        tilde(mu) = (1 - (p sigma^2)/(p sigma^2 + norm2(mu))) Z\
+      $
+      然而 $p sigma^2 + norm2(mu)$ 是未知的，之前已经计算得到 $norm2(Z)$ 是它的无偏估计，因此可以采用：
+      $
+        tilde(mu) = (1 - (p sigma^2)/(norm2(Z))) Z\
+      $
+      作为估计。可以证明，它比选择 $Z$ 的平方误差更小。同时，可以证明，在一族预测值：
+      $
+        tilde(mu) = (1 - b/(norm2(Z))) Z\
+      $
+      中：
+      $
+        tilde(mu) = (1 - (p - 2)/(norm2(Z))) Z\
+      $
+      是平方误差最优的。这也可以从贝叶斯的角度理解，如果：
+      $
+        Z_i tilde N(mu_i, sigma^2), mu_i tilde N(0, sigma_0^2)
+      $
+      则：
+      $
+        mu | Z tilde N((1 - w) Z, w sigma_0^2 I)\
+        where w = sigma^2/(sigma^2 + sigma_0^2)
+      $
