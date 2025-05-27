@@ -134,4 +134,107 @@
     A^2 x = f(x) A x_0 = f(x) f(x_0) x_0 = f(x) x\
   $
   从而 $A = A^2$，进而 $T = I - A$ 也是幂等的，当然 $p = 1$
-
+= 1.
+  首先，不难发现：
+  $
+    I = {f in CC[x] | f(A) "是紧算子"}
+  $
+  是非空理想，因此是主理想，可设 $I = (m(x))$，其中：
+  $
+    m(x) = prodi1n(x - lambda_i)
+  $
+  #lemmaLinear()[][
+    设 $lambda != lambda_i, forall i$，则 $dim ker (lambda I - A) < +infinity$ 且 $im (lambda I - A)$ 是闭的
+  ]
+  #proof[
+    设：
+    $
+      m(x) = (lambda - x) p(lambda - x) + C 
+    $
+    由条件，$C != 0$，以及：
+    $
+      m(A) = (lambda I - A) p(lambda I - A) + C I\
+      - 1/C (lambda I - A) p(lambda I - A) = I - 1/C m(A)
+    $
+    而 $m(A)$ 是紧算子，这表明：
+    $
+      dim ker (lambda I - A) p(lambda I - A) < +infinity
+    $
+    同时显然：
+    $
+      ker (lambda I - A) subset ker (lambda I - A) p(lambda I - A)
+    $
+    因此结论成立。
+    
+    再证明 $im (lambda I - A)$ 是闭的。设 $tilde(T)$ 是 $X quo (ker (lambda I - A)) -> X$ 的诱导映射，只需证明 $inf norm(T x)/norm(x) > 0$；否则，不妨设 $x_n$ 满足：
+    - $norm(pi x_n) = 1$
+    - $tilde(T) pi x_n = lambda x_n - A x_n -> 0$
+    - $1 <= norm(x_n) <= 2$
+    - $m(A) x_n -> omega$
+    则有：
+    $
+      m(A) x_n = p(lambda I - A) (lambda x_n - A x_n) + C x_n -> omega\
+      p(lambda I - A) (lambda x_n - A x_n) -> 0\
+      x_n -> omega / C\
+      A omega = lambda omega\
+      omega in ker (lambda I - A)\
+      pi omega = 0
+    $
+    显然，这已经与 $norm(pi x_n) = 1$ 相矛盾！
+  ]
+  接下来，假设 $lambda != lambda_i$ 证明之后的命题：
+  == (2)
+    === $->:$
+      假设 $ker (lambda I - A) = 0$，由算子升降链的性质，只需证明降链 $im (lambda I - A) >= im (lambda I - A)^2 >= ...$ 在有限步终止，立刻就有 $X = 0 directSum im (lambda I - A)$ 表明结论成立。事实上，设 $p(x)$ 是 $n$ 次多项式，
+      我们有：
+      $
+        im (lambda I - A) >= im (lambda I - A) p(lambda I - A) >= im (lambda I - A)^(n + 1)
+      $
+      立刻就有：
+      $
+        im (lambda I - A)^r >= im ((lambda I - A) p(lambda I - A))^r >= im (lambda I - A)^(r (n + 1))
+      $
+      由紧算子性质，不妨假设 $im ((lambda I - A) p(lambda I - A))^r$ 已经终止，就有：
+      $
+        im (lambda I - A)^(r (n + 2)) >= im ((lambda I - A) p(lambda I - A))^(r (n + 2)) = im (lambda I - A)^(r) >= im (lambda I - A)^(r (n + 1))
+      $
+      继而 $im (lambda I - A)^(r (n + 2)) = im (lambda I - A)^(r (n + 1))$，表明结论成立。
+    === $<-:$
+      假设 $im (lambda I - A) = X$，而 $ker lambda I - A$ 有限维，升链一定终止，因此升降链同时在 $1$ 处终止，也即：
+      $
+        X = im (lambda I - A) directSum ker (lambda I - A)\
+      $
+      当然就有 $ker (lambda I - A) = 0$
+  == (3)
+    熟知：
+    $
+      im (lambda I - A) eqv^f orthogonalCom(ker (lambda I - duel(A)))
+    $
+    以及：
+    $
+      X = ker (lambda I - A) directSum im (lambda I - A)\
+      ker (lambda I - A) = span(autoRListN(x, n))
+    $
+    由与书上类似的证明，可设：
+    $
+      ker (lambda I - duel(A)) = span(autoRListN(f, n))\
+      X = span(autoRListN(y, m)) directSum orthogonalCom(ker (lambda I - duel(A)))\
+      f_i (y_j) = delta_(i j)\
+    $
+    假设 $m > n$，类似构造：
+    $
+      funcDef(T', X, X, sum_i c_i x_i + z, sum_i c_i y_i + (lambda I - A) z)
+    $
+    就有：
+    $
+      T' (sum_i c_i x_i + z) = lambda (sum_i c_i x_i + z) - A z + sum_i c_i (y_i - lambda x_i) 
+    $
+    由于 $sum_i c_i x_i + z arrowb sum_i c_i (y_i - lambda x_i)$ 是有限秩算子，不难验证存在多项式 $q(x)$ 使得：
+    $
+      q (sum_i c_i x_i + z arrowb A z - sum_i c_i (y_i - lambda x_i)) "是紧算子"
+    $
+    结合不难验证 $T'$ 是单射，则 $T'$ 是满射，矛盾！因此 $m <= n$ 也即 $dim ker (lambda I - duel(A)) <= dim ker (lambda I - A)$，进一步有：
+    $
+      dim ker (lambda I - A) <= dim ker (lambda I - duel(duel(A))) <= dim ker (lambda I - duel(A)) <= dim ker (lambda I - A)
+    $
+    因此全部取等。

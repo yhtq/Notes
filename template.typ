@@ -894,6 +894,7 @@
 }
 #let prop = sym.prop
 
+// sum(x^2)
 #let calcSquareSum(xs) = xs.map(x => x * x).sum()
 #let calcMean(xs) = xs.sum() / xs.len()
 

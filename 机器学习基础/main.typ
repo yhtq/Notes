@@ -1048,3 +1048,190 @@
 
   上面的分解表明，当 $H$ 选择的足够大时，近似误差很小，但可能导致估计误差很大，此时称为*过拟合*；当 $H$ 选择的足够小，估计误差很小，但可能导致近似误差很大，此时称为*欠拟合*。因此，选择一个合适的假设类 $H$ 是非常重要的。
 
+= 奇异值分解和主成分分析
+  == 奇异值分解
+    对于任何实矩阵，我们从 $A^T A$ 是实对称矩阵，进而可正交对角化出发。熟知 $ker A^T A = ker A$，因此我们可取得 $ker A$ 的正交补空间 $M$，设 $v_1, v_2, ... v_r$ 是$M$ 的一组标准正交基，使得 $A^T A$ 在其上是对角的。令：
+    $
+      u_i = (A v_i) / norm(A v_i)
+    $ 
+    则：
+    $
+      inner(u_i, u_j) = inner(A v_i, A v_j) / (norm(A v_i) norm(A v_j)) = inner(v_i, A^T A v_j) / (norm(A v_i) norm(A v_j)) = lambda_j inner(v_i, v_j) / (norm(A v_i) norm(A v_j))\
+    $
+    再注意到：
+    $
+      norm(A v_i) = sqrt(quadFormSym(v_i, A^T A)) = sqrt(lambda_i)
+    $
+    因此：
+    $
+      lambda_j inner(v_i, v_j) / (norm(A v_i) norm(A v_j)) = delta_(i, j)
+    $
+    因此 $u_i in im A$ 非零且标准正交，再由维数可知它们构成了 $im A$ 的一组标准正交基。同时，熟知：
+    $
+      orthogonalCom(im A) = ker A^T
+    $
+    因此，再取 $u_(r + 1), ..., u_m$ 构成 $ker A^T$ 的正交基，就有：
+    $
+      A (v_1, v_2, ..., v_r, v_(r + 1), ..., v_n) = (sqrt(lambda_i) u_i)_(i <= r) directSum 0\
+      = ((directSum_(i = 1)^r sqrt(lambda_i) I) directSum 0) (u_1, u_2, ..., u_r, u_(r + 1), ..., u_m)\
+    $
+    换言之：
+    $
+      A = U Sigma V^T
+    $
+    其中， $U, V$ 是正交阵，$Sigma = diag(sqrt(lambda_i))_(m times n)$. 这里，$sqrt(lambda_i)$ 称为 $A$ 的奇异值，$U$ 的列向量称为 $A$ 的左奇异向量，$V$ 的列向量称为 $A$ 的右奇异向量。
+    #lemma[][
+      $
+        A = sum_(i = 1)^r sigma_i u_i v_i^T
+      $
+    ]
+    #proof[
+      任取 $x = sum_(i = 1)^n v_i v_i^T x = sum_(i = 1)^n (v_i^T x) v_i$，我们有：
+      $
+        A x = sum_(i = 1)^n (v_i^T x) (A v_i)\
+        = sum_(i = 1)^r (v_i^T x) (A v_i)\
+        = sum_(i = 1)^r sigma_i (v_i^T x) u_i\
+        = sum_(i = 1)^r sigma_i (u_i v_i^T) x\
+        = (sum_(i = 1)^r sigma_i u_i v_i^T) x\
+      $
+    ]
+    #definition[][
+      设：
+      $
+        U_r = (u_1, u_2, ..., u_r)_(m times r)\
+        V_r = (v_1, v_2, ..., v_r)_(n times r)\
+        Sigma_r = diag(sqrt(lambda_i))_(r times r)\
+      $
+      则引理给出：
+      $
+        A = U_r Sigma_r V_r^T = sum_(i = 1)^r sigma_i u_i v_i^T\
+      $
+      这被称为紧奇异值分解。若将 $r$ 换成 $< r$ 的 $k$，就得到了 $A$ 的截断奇异值分解。
+    ] 
+  == 矩阵近似
+    #lemma[][
+      $
+        norm(A)_F = sqrt(sum_(i = 1)^n sigma_i^2)\
+      $
+    ]
+    #proof[
+      $
+        norm(A)_F = norm(U Sigma V^T)_F = norm(Sigma)_F = sqrt(sum_(i = 1)^n sigma_i^2)\
+      $
+    ]
+    #definition[][
+      设 $rank(A) = r$，对于 $k < r$，定义 $A$ 的以 $k$ 为秩的最优近似是所有 $rank(M) <= k$ 的矩阵 $M$ 中：
+      $
+        norm(A - M)_F
+      $
+      取最小的矩阵。
+    ]
+    #lemma[][
+      设 $u_i$ 是一组标准正交的向量，$lambda_i > 0$ 依次增加，$alpha_i in M$ 是秩为 $k$ 的子空间，则：
+      $
+        sum_(i = 1)^n norm2(lambda_i u_i - alpha_i) >= sum_(i = k + 1)^n lambda_i^2 
+      $
+    ]
+    #proof[
+      设 $P$ 是到 $span(u_i)$ 的投影，就有：
+      $
+        sum_(i = 1)^n norm2(lambda_i u_i - alpha_i) >= sum_(i = 1)^n norm2(lambda_i u_i - P alpha_i)
+      $
+      因此，不妨设 $alpha_i in span(u_i)$. 定义变换：
+      $
+        P_(i j) x = x + (inner(x, u_i) - inner(x, u_j)) u_j + (inner(x, u_j) - inner(x, u_i)) u_i\
+        S_t^(i j) x = x + t inner(x, u_i) u_j\
+      $
+      则不难验证 $P_(i j), S_k^(i j)$ 是可逆变换。
+      
+      注意到目标函数恰为：
+      $
+        sum_(i = 1)^n lambda_i^2 + sum_(i = 1)^n norm2(alpha_i) - 2 lambda_i inner(u_i, alpha_i)\
+        = sum_(i = 1)^n lambda_i^2 + sum_(i = 1)^n sum_(j = 1)^n inner(alpha_i, u_j)^2 - 2 lambda_i inner(u_i, alpha_i)
+      $
+      可不妨设：
+      $
+        sum_(i = 1)^n norm2(lambda_i u_i - P_(s t) alpha_i) >= sum_(i = 1)^n norm2(lambda_i u_i - alpha_i)
+      $
+      也即：
+      $
+        lambda_s inner(u_s, alpha_s) + lambda_t inner(u_t, alpha_t) >= lambda_t inner(u_s, alpha_t) + lambda_s inner(u_t, alpha_s)
+      $
+      由 $lambda$ 的顺序，这表明：
+      $
+        i > j => inner(u_i, alpha_i) <= inner(u_j, alpha_j)
+      $
+      另外，考虑：
+      $
+        sum_(i = 1)^n norm2(lambda_i u_i - S_k^(s t) alpha_i) = sum_(i = 1)^n k^2 inner(alpha_i, u_s) + 2 k inner(alpha_i, u_s) inner(alpha_i, u_t) - 2 lambda_t k inner(u_t, alpha_s) + C
+      $
+      不妨设上式在 $k = 0$ 取得最小（否则对 $alpha$ 进行变换使得原式变小），也即：
+      $
+        sum_(i = 1)^n inner(alpha_i, u_s) inner(alpha_i, u_t) = lambda_t inner(u_s, alpha_t)\
+        sum_(s = 1)^n inner(alpha_s, u_i) inner(alpha_s, u_j) = lambda_j inner(u_i, alpha_j)\
+      $
+      类似的，考虑：
+      $
+        norm2(lambda_i u_i - (alpha_i + t alpha_j)) = t^2 norm2(alpha_j) + 2 t inner(lambda_i u_i - alpha_i, alpha_j) + norm2(lambda_i u_i - alpha_i)\
+      $ 
+      不妨设 $t = 0$ 时取最小值，就有：
+      $
+        inner(lambda_i u_i - alpha_i, alpha_j) = 0, forall i, j\
+      $
+      因此：
+      $
+        lambda_i inner(u_i, alpha_j) = inner(alpha_i, alpha_j) = sum_(s = 1)^n inner(u_s, alpha_i) inner(u_s, alpha_j)\
+      $
+      换言之，设有矩阵 $A = (inner(alpha_i, u_j))$，则：
+      $
+        A A^T = (lambda_i inner(alpha_j, u_i)) = Sigma A^T \
+        A^T A = (lambda_j inner(u_i, alpha_j)) = A^T Sigma
+      $
+      其中 $Sigma = {lambda_i}$. 将有：
+      $
+        A A^T = Sigma A^T = A Sigma 
+      $
+      
+      根据奇异值分解，设：
+      $
+        A = U Lambda V^T
+      $
+      则：
+      $
+        U Lambda^2 U^T = Sigma V Lambda U^T\
+        (U Lambda - Sigma V) Lambda = 0\
+        (A - Sigma) V Lambda = 0\
+        V Lambda^2 V^T = V Lambda U^T Sigma\
+        Lambda (U^T Sigma - Lambda V^T) = 0\
+        Lambda U^T (A - Sigma) = 0
+      $
+      换言之，可设：
+      $
+        Lambda - U^T Sigma V =  U^T (A - Sigma) V = mat(0_k, 0;0, C)\
+        U^T Sigma V = Lambda - mat(0_k, 0;0, C) = mat(Lambda_k, 0;0, C)
+      $
+      同时，回顾目标式恰为：
+      $
+        norm(A - Sigma)_F = norm(U^T (A - Sigma) V)_F = norm(C)_F
+      $
+      检查奇异值，就有：
+      $
+        norm(C)_F >= sum_(i = k + 1)^n lambda_i^2
+      $
+      证毕
+    ]
+    #theorem[][
+      设 $A = sum_(i = 1)^r sigma_i u_i^T v_i$，其中 $sigma_i$ 按从大到小排序，则 $k$ 最优近似恰为：
+      $
+        A_k = sum_(i = 1)^k sigma_i u_i v_i^T
+      $
+    ]
+    #proof[
+      任取 $M$ 满足 $rank(M) <= k$，有：
+      $
+        norm(A - M)_F^2 
+        &= sum_(i = 1)^r norm2((A - M) v_i)+ sum_(i = r + 1)^n norm2(M v_i) \ 
+        &>=  sum_(i = 1)^r norm2(sigma_i u_i - M v_i)\
+      $
+      问题相当于
+    ]

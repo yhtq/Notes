@@ -558,7 +558,7 @@
     ]
     #theorem[][
       设 $X$ 是赋范空间，则存在内积与其上的范数相容当且仅当范数满足平行四边形法则
-    ]
+    ]<law-of-norm-which-has-inner>
     #proof[
       假设有内积，则 @law-of-parallelogram 给出了平行四边形法则。反之，假设范数满足平行四边形法则，数域为 $CC$ 时定义：
       $
@@ -2682,8 +2682,8 @@
       设 $A$ 是正规算子，则：
       - $norm(A x) = norm(duel(A) x)$
       - $r(A) = norm(A)$
-      - $sigma (A) = emptyset$
-    ]
+      - $sigma_r (A) = emptyset$
+    ]<spectrum_of_normal_operator>
     #proof[
       - 
         $
@@ -3308,4 +3308,234 @@
     #proof[
       设 $ker T^p = ker T^(p + 1), im T^(q) = im T^(q + 1)$ 且 $p, q$ 都是最小的
       - 假设 $p < q$，则 $forall y in X, T^q y = T^(q + 1) z => T^q (y - T z) = 0 => T^p (y - T z) = 0 => T^p y = T^(p + 1) z$，由任意性就有 $im T^p = im T^(p + 1)$，矛盾！
+      - 假设 $p > q$，取 $y in ker T^(q + 1) - ker T^q$，也即：
+        $
+          T^(q + 1) y = 0, T^q y != 0
+        $
+        然而 $im T^(q + 1) = im T^q$，因此可设：
+        $
+          T^(q + 1) y' = T^q y
+        $
+        可以验证 $y' in ker T^(q + 2) - ker T^(q + 1)$，反复进行下去就有 $ker$ 链一直增加，与假设矛盾！
+      因此我们就有 $p = q$，且：
+      $
+        x = (x - T^p x) + T^p x\
+      $
+      其中 $x - T^p x in ker T^p, T^p x in im T^p$，只需证明两者不交即可。设：
+      $
+        T^p (T^p x) = 0 => T^(2 p) x = 0 => x in ker T^(2 p) = ker T^p =? T^p x = 0 
+      $
+      证毕。
     ]
+    #remark[][
+      显然对于任何 $k$，都有 $ker T^k$ 是 $T-$不变的。而假设 $p(T) = q(T) < +infinity$，则很明显 $im T^p$ 也是 $T^k$ 不变的。
+    ]
+    #lemma[][
+      设 $p(T) = q(T) < +infinity$，则 $T|_(im T^p)$ 是双射
+    ]
+    #proof[
+      显然它是满射。对于单射，设：
+      $
+        T (T^p x) = 0
+      $
+      立刻有：
+      $
+        x in ker T^(p + 1) = ker T^p => T^p x = 0\ 
+      $
+      因此是单射。
+    ]
+    #let pre = [设 $A in C(X), T = I - A$]
+    #lemma[][
+      #pre，则 $p(T) = q(T) < +infinity$
+    ]
+    #proof[
+      假设 $im$ 链一直下降，注意到 $T^k = (I - A)^k$ 也是紧算子，因此 $im T^k$ 都是紧的。由 Risez 可取 $x_n in im T^n - im T^(n + 1), norm(x_n) = 1, d(x_n, im T^(n + 1)) >= 1/2$，显然 $A x_n$ 有收敛子列，然而若设 $m > n$ ：
+      $
+        norm(A x_n - A x_m) = norm(T x_m - T x_n - (x_m - x_n)) = norm(x_n - (x_m + T x_m - T x_n)) >= d(x_n, im T^(n + 1)) >= 1/2
+      $
+      矛盾！同时：
+      $
+        dim ker T^k = "codim" im T^k < +infinity
+      $
+      而 $im$ 链稳定，表明 $dim ker T^k$ 稳定，因此 $ker T^k$ 当然也稳定。
+    ]
+    前面提到过，$sigma_p (A)$ 至多可数个，设为 $lambda_i$，则 $T_(lambda_i) = A - lambda_i I$ 也形如某个 $T$，因此可设 $p_i = p(T_(lambda_i))$. 就有：
+    $
+      X = ker T_(lambda_i)^(p_i) directSum im T_(lambda_i)^(p_i)\
+    $
+    注意到，$T_(lambda_i)$ 是有限维空间 $ker T_(lambda_i)^(p_i)$ 上的幂零线性变换，因此由线性代数的结论 $tilde(T)_(lambda_i)$ 有 Jordan 标准形（分解成循环子空间），不难验证 $ker T_(lambda_i)^(p_i)$ 也是 $A$ 的不变子空间，$A$ 在其上当然就有 Jordan 标准型。总之，我们就有：
+    #proposition[][
+      #pre，则 $A$ 在 $directSum_i ker T_(lambda_i)^(p_i)$ 上有 Jordan 标准型。
+    ]
+    #proof[
+      只需证明它们是直和即可，也就是证明：
+      $
+        S := ker T_(lambda_i)^(p_i) inter directSum_(j in E) ker T_(lambda_j)^(p_j) = 0\
+      $
+      其中 $E$ 是不含 $i$ 的有限集。首先，不难验证 $S$ 是 $A-$ 不变的有限维子空间。同时：
+      $
+        (lambda_i - x)^(p_i), product_(j in E) (lambda_j - x)^(p_j)\
+      $
+      都是 $A$ 的零化多项式，然而显然这两个多项式互素，因此 $A|_S = 0$，因此：
+      $
+        0 = T_(lambda_i)^(p_i)|_S = (A - lambda_i I)^(p_i)|_S = (-lambda_i)^(p_i) I
+      $
+      显然，除非 $S = 0$，否则矛盾！
+    ]
+  == Hilbert-Schmidt 理论
+    本节中都假设 $H$ 是 $CC$ 上的 Hibert 空间
+    #definition[自伴算子][
+      设 $A in L(H)$，称 $A$ 是自伴算子，如果 $inner(A x, y) = inner(x, A y), forall x, y in H$，也即 $A = duel(A)$
+    ]
+    #lemma[][
+      - 若 $A$ 自伴，则 $sigma(A) subset RR, sigma_r (A) = emptyset$
+      - $A$ 自伴当且仅当 $forall x, inner(A x, x) in RR$
+      - $norm(Inv(lambda I - A) x) <= 1/(abs(Im lambda)) norm(x), forall lambda in.not RR$
+      - 若 $A$ 自伴， $H_1$ 是 $A$ 不变的子空间，则 $A|_(H_1)$ 是自伴算子
+      - 若 $A$ 自伴，设 $lambda, lambda'$ 是不同的特征值，则特征子空间相互正交
+      - 若 $A$ 自伴，则 $norm(A) = sup_(norm(x) = 1) abs(inner(A x, x))$
+    ]
+    #proof[
+      - 由 @spectrum_of_normal_operator 即得
+      - @law-of-norm-which-has-inner 的证明中，用到了：
+        $
+          inner(A x, y) = 1/4 sum_(k = 0)^e i^k inner(A (x + i^k y), x + i^k y)\
+        $
+        而：
+        $
+          inner(x, A y) &= overline(inner(A y, x))\ 
+          &= 1/4 overline(sum_(k = 0)^e i^k inner(A (y + i^k x), y + i^k x))\
+          &= 1/4 sum_(k = 0)^e (-i)^k inner(A (y + i^k x), y + i^k x)\
+          &= 1/4 sum_(k = 0)^e (-i)^k inner((-i)^k A (y + i^k x), (-i)^k (y + i^k x))\
+          &= 1/4 sum_(k = 0)^e (-i)^k inner(A (x + (-i)^k y),  x + (-i)^k y)\
+          &= 1/4 sum_(k = 0)^e i^k inner(A (x + i^k y),  x + i^k y)\
+          &= inner(A x, y)\
+        $
+        证毕。
+      - 设 $lambda = a + b i$，可以计算得：
+        $
+          norm2((lambda I - A) y) = norm2((a I - A) y) + norm2(b y)
+        $
+        因此：
+        $
+          norm(b y) <= norm((lambda I - A) y)
+        $
+        由于 $A$ 是正规算子，$sigma(A) subset RR$，因此 $lambda I - A$ 可逆，立刻就得到了结论。
+      - 显然
+      - 设：
+        $
+          x in ker lambda I - A, y in ker lambda' I - A
+        $
+        则：
+        $
+          lambda inner(x, y) = inner(lambda x, y) = inner(A x, y) = inner(x, A y) = inner(x, lambda' y) = lambda' inner(x, y)
+        $
+        因此 $lambda = lambda'$ 或者 $inner(x, y) = 0$，因此特征子空间相互正交。
+      - 显然 $C := sup_(norm(x) = 1) abs(inner(A x, x)) <= norm(A)$，而熟知：
+        $
+          norm(A) = sup_(norm(x) = 1, norm(y) = 1) abs(inner(A x, y))
+        $
+        可以计算得：
+        $
+          inner(A(x + y), x + y) - inner(A (x - y), x - y) = 4 Re inner(A x, y)\
+        $
+        因此：
+        $
+          4 abs(Re inner(A x, y)) <= C (norm2(x + y) + norm2(x - y))\
+          <= 2 C (norm2(x) + norm2(y))
+        $
+        若取 $norm(x) = norm(y) = 1$ 就有：
+        $
+          abs(Re inner(A x, y)) <= C
+        $
+        用 $i x$ 替代 $x$，就有：
+        $
+          abs(Im inner(A x, y)) <= C
+        $
+        足以表明：
+        $
+          norm(inner(A x, y)) <= C
+        $
+        因此结论成立。
+    ]
+    #let pre = [设 $A in C(X)$ 是自伴算子]
+    #lemma[][
+      #pre，则 $exists norm(x_0) = 1, norm(A) = abs(inner(A x_0, x_0))$，且 $A x_0 = abs(inner(A x_0, x_0)) x_0$
+    ]
+    #proof[
+      注意到 $inner(A x, x)$ 总是实数，因此不妨设 $norm(A) = sup_(norm(x) = 1) inner(A x, x)$（否则取 $A = -A$）。设 $f(x) = inner(A x, x)$，取 $norm(x_n) = 1, f(x_n) -> norm(A)$，不妨设 $x_n weakConverge x_0$（Hilbert 空间中单位球弱紧），紧算子的性质表明 $A x_n -> A x_0$。断言 $inner(A x_n, x_n) -> inner(A x_0, x_0)$，这是因为：
+      $
+        inner(A x_n, x_n) - inner(A x_0, x_0) = inner(A (x_n - x_0), x_n) + inner(A x_0, x_n - x_0)\
+      $ 
+      其中 $x_n$ 有界，$A (x_n - x_0) -> 0, x_n - x_0 weakConverge 0, A x_0$ 是常数，因此上式 $-> 0$.
+
+      由弱收敛性，有：
+      $
+        norm(x_0) <= lim inf norm(x_n) = 1
+      $
+      同时：
+      $
+        norm(A) = abs(inner(A x_0, x_0)) <= norm(A) norm(x_0)^2
+      $
+      因此 $norm(x_0) = 1$. 设：
+      $
+        phi(t) = inner(A (x_0 + t y), x_0 + t y)/(inner(x_0 + t y, x_0 + t y))\
+      $
+      显然 $phi(t) <= norm(A), phi(0) = norm(A)$，因此它在零点处取最大值。求导得：
+      $
+        phi' (t) = ((inner(A x_0, y) + inner(A y, x_0)) norm2(x_0 + t y) - inner(A (x_0 + t y), x_0 + t y) (inner(y, x_0) + inner(x_0, y)))/norm(x_0 + t y)^4\
+        0 = phi' (0) = Re (inner(A x_0, y) - norm(A) inner(x_0, y))  
+      $
+      用 $i y$ 代替 $y$ 就有：
+      $
+        0 = Im (inner(A x_0, y) - norm(A) inner(x_0, y))  
+      $
+      因此：
+      $
+        inner(A x_0, y) - norm(A) inner(x_0, y) = inner((A - norm(A) I) x_0, y) = 0
+      $
+      这对任何 $y$ 都成立，因此：
+      $
+        (A - norm(A) I) x_0 = 0\
+      $
+      表明 $x_0$ 是特征向量，且对应的特征值为 $norm(A) = abs(inner(A x_0, x_0))$
+    ]
+    #theorem[自伴紧算子的对角化][
+      #pre，则存在向量组 $E$ 构成单位正交基，$i : E -> sigma_p (A)$，使得：
+      $
+        forall x = sum_(e in E) inner(x, e) e, A x = sum_(e in E) i(e) inner(x, e) e\
+      $
+      换言之，$A$ 在这组基上是对角的
+    ]
+    #proof[
+      设：
+      $
+        tau : sigma_p (A) -> P(X)
+      $
+      使得 $tau(lambda)$ 是 $ker (lambda I - A)$ 的标准正交基，以及：
+      $
+        E = union_(lambda in sigma_p (A)) tau(lambda)
+      $
+      注意到 $A$ 的不同特征子空间正交，因此，$E$ 也标准正交。往证：
+      $
+        H' = closure(span(E)) = directSum_(lambda in sigma_p (A)) ker (lambda I - A) = H
+      $
+      取 $M = orthogonalCom(H')$，断言 $M$ 是 $A-$不变的，这是因为：
+      $
+        A x in M <=> forall e in E, inner(A x, e) = 0\
+        <=> forall e in E, inner(x, A e) = 0\
+        <=> forall lambda in sigma_p (A), e in tau(lambda), inner(x, lambda e) = 0\
+        <=> forall lambda in sigma_p (A) - {0}, e in tau(lambda), inner(x, e) = 0\
+        arrow.double.l forall lambda in sigma_p (A), e in tau(lambda), inner(x, e) = 0\
+        <=> x in M\
+      $<AM-and-M>
+      以及：
+      - $forall lambda in sigma_p (A), lambda I - A|_M$ 是单射，否则设 $x in M, A x = lambda x => x in ker lambda I - A => x in ker(lambda I - A) subset H'$，这是荒谬的
+      - $A|_M$ 是紧算子：显然
+      由 Fredholm 理论，$lambda I - A|_M$ 是满射，因此 $sigma_p (A) inter sigma (A|_M) = emptyset$，导致一定有：
+      $
+        sigma(A|_M) = {0} = sigma_c (A|_M), 0 in.not sigma_p (A)
+      $
+      然而，检查@AM-and-M 的证明过程可以看出，若 $0 in.not sigma_p (A)$，则 $forall x in H, A x in M <=> x in M$
+    ]
+    
