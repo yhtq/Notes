@@ -3394,7 +3394,7 @@
       - 若 $A$ 自伴， $H_1$ 是 $A$ 不变的子空间，则 $A|_(H_1)$ 是自伴算子
       - 若 $A$ 自伴，设 $lambda, lambda'$ 是不同的特征值，则特征子空间相互正交
       - 若 $A$ 自伴，则 $norm(A) = sup_(norm(x) = 1) abs(inner(A x, x))$
-    ]
+    ]<property-of-self-adjoint-operator>
     #proof[
       - 由 @spectrum_of_normal_operator 即得
       - @law-of-norm-which-has-inner 的证明中，用到了：
@@ -3500,12 +3500,15 @@
       $
       表明 $x_0$ 是特征向量，且对应的特征值为 $norm(A) = abs(inner(A x_0, x_0))$
     ]
-    #theorem[自伴紧算子的对角化][
+    #corollary[][
+      #pre, 则 $norm(A) in sigma_p (A)$
+    ]
+    #theorem[谱定理/自伴紧算子的对角化][
       #pre，则存在向量组 $E$ 构成单位正交基，$i : E -> sigma_p (A)$，使得：
       $
         forall x = sum_(e in E) inner(x, e) e, A x = sum_(e in E) i(e) inner(x, e) e\
       $
-      换言之，$A$ 在这组基上是对角的
+      换言之，$A$ 在这组基上是对角的。同时对 $lambda != 0 in sigma_p (A)$，$Inv(i) (lambda)$ 是有限的。
     ]
     #proof[
       设：
@@ -3516,7 +3519,8 @@
       $
         E = union_(lambda in sigma_p (A)) tau(lambda)
       $
-      注意到 $A$ 的不同特征子空间正交，因此，$E$ 也标准正交。往证：
+      注意到 $A$ 
+      $E$ 也标准正交。往证：
       $
         H' = closure(span(E)) = directSum_(lambda in sigma_p (A)) ker (lambda I - A) = H
       $
@@ -3532,10 +3536,271 @@
       以及：
       - $forall lambda in sigma_p (A), lambda I - A|_M$ 是单射，否则设 $x in M, A x = lambda x => x in ker lambda I - A => x in ker(lambda I - A) subset H'$，这是荒谬的
       - $A|_M$ 是紧算子：显然
-      由 Fredholm 理论，$lambda I - A|_M$ 是满射，因此 $sigma_p (A) inter sigma (A|_M) = emptyset$，导致一定有：
+      由 Fredholm 理论，若还有 $lambda != 0$，则 $lambda I - A|_M$ 是满射，因此 $(sigma_p (A) - {0}) inter sigma (A|_M) = emptyset$，导致一定有：
       $
-        sigma(A|_M) = {0} = sigma_c (A|_M), 0 in.not sigma_p (A)
+        sigma(A|_M) = {0} = sigma_c (A|_M)
       $
-      然而，检查@AM-and-M 的证明过程可以看出，若 $0 in.not sigma_p (A)$，则 $forall x in H, A x in M <=> x in M$
+      然而，前面的定理给出一定有 $norm(A) in sigma_p (A)$，矛盾！
     ]
-    
+    #theorem[min-max 分类][
+      #pre，则：
+      $
+        min sigma_p^+ (A) = inf_(E_(n - 1)) sup_(x in orthogonalCom(E_(n - 1))) inner(A x, x)/inner(x, x)\
+        max sigma_p^- (A) = sup_(E_(m - 1)) inf_(x in orthogonalCom(E_(m - 1))) inner(A x, x)/inner(x, x)\
+      $
+      其中 $E_(n - 1)$ 是任何 $n - 1$ 维子空间,$n = abs(sigma_p^+ (A)), m = abs(sigma_p^- (A))$
+    ]
+    #proof[
+      只证明第一个，第二个是类似的。由谱定理，设：
+      $
+        A x = sum_e i(e) inner(x, e) e\
+        inner(A x, x) = sum_e i(e) abs(inner(x, e))^2\
+        inner(x, x) = sum_e abs(inner(x, e))^2\
+      $
+      记：
+      $
+        mu_n = inf_(E_(n - 1)) sup_(x in orthogonalCom(E_(n - 1))) inner(A x, x)/inner(x, x)
+      $
+      - 取 $E^0_(n - 1)$ 是 $A$ 的除 $lambda_max$ 外的正特征值对应特征向量组成的空间，显然有：
+        $
+          inner(A x, x)/inner(x, x) <= min sigma_p^+ (A)
+        $
+        这就表明 $mu_n <= min sigma_p^+ (A)$
+      - 对于任何 $E_(n - 1)$，断言存在 $x_0 in E^0_(n - 1)$ 使得 $x_0 orthogonal E_(n - 1)$（这是有限维线性代数问题，正交化即可），则：
+        $
+          sup_(x in orthogonalCom(E_(n - 1))) inner(A x, x)/inner(x, x) >= inner(A x_0, x_0)/inner(x_0, x_0)\
+          = (sum_(lambda in sigma_p^+ (A)) lambda abs(inner(x_0, e(lambda)))^2)/(sum_e abs(inner(x_0, e(lambda)))^2)\
+          >= min sigma_p^+ (A)
+        $
+    ]
+    #corollary[][
+      设 $A, B in C(X)$ 都自伴，且 $inner(A x, x) >= inner(B x, x)$，则 $min sigma_p^+ (A) >= min sigma_p^+ (B)$
+    ]
+  == Polar decomposition\*
+    #definition[][
+      设 $H$ 是 $CC$ 上的 Hibert 空间，$A in L(H)$，称 $A$ 是正定的，如果：
+      $
+        inner(A x, x) >= 0, forall x in H
+      $
+    ]
+    #corollary[][
+      正定算子都是自伴的
+    ]
+    #proof[
+      由 @property-of-self-adjoint-operator 立得
+    ]
+    #lemma[][
+      设 $A in L(H)$ 正定，则存在唯一的正定算子 $B in L(H)$ 使得 $A = B^2$\
+      进一步，对于任何 $C in L(H)$ 满足 $[C, A] = C A - A C = 0$，则 $C B - B C = 0$
+    ]
+    #proof[
+      由分析知识可以知道：
+      $
+        (1 - x)^(1/2) = sum C_n x^n
+      $
+      在 $x in [-1, 1]$ 上都绝对收敛。对于题中 $A$，不妨设 $norm(A) < 1$，则：
+      $
+        norm(I - A) = sup_(norm(x) = 1) abs(inner((I - A) x, x)) = sup_(norm(x) = 1) abs(1 - inner(A x, x)) < 1
+      $
+      设：
+      $
+        B = sum C_n (I - A)^n
+      $
+      由于级数绝对收敛，上式是良定义的，且 $B^2 = A$，并有：
+      $
+        inner(B x, x) = inner(x, x) + sum_(n > 1) C_n inner((I - A)^n x, x) 
+      $
+      同时，当 $n > 1$ 时有 $C_n < 0$，因此上式：
+      $
+        >= inner(x, x) + sum_(n > 1) C_n norm(x)\
+        = (sum_n C_n) norm(x)\
+        = 0
+      $
+      级数表达式容易给出交换性。对于唯一性，设 $B'$ 也满足要求，则由交换性以及 $B', A$ 交换，有 $B' B = B B'$，则：
+      $
+        (B - B') B (B - B') + (B - B') B' (B - B') = 0
+      $
+      而容易验证上式两项都是正定算子，因此两个正定算子的和为零，只能两项均为零，相减就有：
+      $
+        (B - B')^3 = 0
+      $
+      注意到 $B - B'$ 是自伴算子，上式给出它的特征值只有零，继而 $B - B' = 0$
+    ]
+    #definition[][
+      对于任何 $A in L(H)$，定义：
+      $
+        abs(A) = sqrt(duel(A) A)
+      $
+    ]
+    #lemma[Polar decomposition][
+      设 $A in L(H)$，则存在唯一的 $U$ 使得 $A = U abs(A)$，其中 $U$ 是部分正交算子（对于 $x in orthogonalCom(ker U)$ 有 $norm(U x) = norm(x)$），且 $ker U = ker A$
+    ]
+    #proof[
+      注意到：
+      $
+        norm2(abs(A) y) = inner(abs(A) y, abs(A) y) = inner(y, abs(A)^2 y) = inner(y, duel(A) A y) = norm2(A y)\
+      $
+      这也表明 $abs(A) z_1 = abs(A) z_2 => A z_1 = A z_2$，
+      进而定义：
+      $
+        funcDef(u, im abs(A), im A, abs(A) z, A z)
+      $
+      显然就有 $u$ 在 $im abs(A)$ 上保范。$u$ 可以简单的延拓到闭包上，再取 $P$ 是到 $closure(im abs(A))$ 的投影算子，设：
+      $
+        U = u P
+      $
+      可以验证：
+      - $ker U = orthogonalCom(im abs(A)) = ker abs(A) = ker A$
+      - $forall x, U abs(A) x = u (abs(A) x) = A x$
+      因此 $U$ 就是满足条件的算子。至于唯一性，设 $U'$ 也满足条件。显然：
+      $
+        U' (I - P) = U (I - P) = 0
+      $
+      而对于任何 $x$，可设 $P x = abs(A) y$，就有：
+      $
+        U' P x = U' abs(A) y = A y = U P x
+      $
+      因此 $U' P = U P$，就有 $U' = U$
+    ]
+    #definition[trace][
+      - 对于 $A$ 正定，定义：
+        $
+          tr(A) = sumi1inf(inner(A e_i, e_i))
+        $
+        可以证明，它是不依赖基的
+      - 对于一般的 $A$，定义：
+        $
+          tr(A) = tr(abs(A))
+        $
+      - 称：
+        $
+          {A in L(H) | tr(A) < +infinity}
+        $
+        构成 trace class. 可以证明，它是 $L(H)$ 中的一个理想。
+    ]
+  == Fredholm 算子\*
+    #let ind = "ind"
+    #let Fredholm = $cal(F)_r$
+    #definition[][
+      设 $X, Y$ 是 Banach 空间，称 $A in L(X, Y)$ 是 Fredholm 算子，如果：
+      - $dim ker A < +infinity$
+      - $im A$ 是闭的
+      - $dim (X quo im A) < +infinity$
+      记 Fredholm 算子的全体为 $Fredholm(X, Y)$，并且对其中元素定义：
+      $
+        ind(A) = dim ker A - dim coker A
+      $
+      称为 $A$ 的指标。
+    ]
+    #example[][
+      - 若 $A$ 是可逆的，则 $A$ 是 Fredholm 算子，且 $ind(A) = 0$
+      - 若 $X, Y$ 是有限维空间，则 $A$ 是 Fredholm 算子，$ind(A) = dim X - dim Y$
+      - 设 $A$ 是紧算子，则 $I - A$ 是 Fredholm 算子，且 $ind(I - A) = dim ker A - dim (X quo im A) = 0$
+      - 在 $X = l^2$ 中，$A$ 是右平移算子，则可以验证 $A$ 也是 Fredholm 算子，$ker A = 0, dim coker A = 1, ind(A) = -1$
+    ]
+    #theorem[][
+      设 $A in L(X, Y), dim coker A < infinity$，则 $im A$ 是闭的
+    ]<closed-image-lemma>
+    #proof[
+      自然的，不妨假设 $A$ 是单的（否则诱导到 $X quo ker A$ 即可），只需证明 $norm(A x) >= c norm(x)$. 取：
+      $
+        y_1, y_2, ..., y_n in Y
+      $
+      使得 $pi y_i$ 构成 $coker A = Y quo im A$ 的一组基，设：
+      $
+        tilde(X) = X directSum RR^n\
+        tilde(A) = A directSum (alpha arrowb alpha^T autoRVecN(y, n))
+      $
+      可以验证，$tilde(A)$ 是双射，立刻就有逆算子定理：
+      $
+        norm(tilde(A) (x + alpha)) >= c (norm(x) + norm(alpha))
+      $
+      特别的，取 $alpha = 0$，就得到了结论。9
+
+    ]
+    #theorem[][
+      设 $X, Y$ 完备，$A$ 是有界算子，则以下说法等价：
+      - $A in Fredholm(X, Y)$
+      - 存在 $B$ 使得 $I - B A, I - A B$ 是紧算子
+      - 存在 $B_1, B_2$ 使得 $I - B_1 A, I - A B_2$ 是紧算子
+    ]<Fredholm-characterization>
+    #proof[
+      - $1 => 2$:
+        由于 $ker A, coker A$ 是有限维，可设：
+        $
+          X = ker A directSum X_1\
+          Y = Y_0 directSum im A\
+        $
+        其中 $X_1, Y_0$ 都是闭的。取 $tilde(A) : X_1 -> im A$ 是 $A$ 诱导出的映射。注意到 $X_1, im A$ 都是完备空间，定义：
+        $
+          funcDef(B, Y, X, y_0 + y_1, Inv(tilde(A)) (y_1))
+        $
+        则 $P$ 是投影与有界算子的复合，是有界的。容易验证，$im I - B A subset ker A, im I - A B subset Y_0$，可见两者都是有限秩算子，自然是紧的。
+      - $2 => 3$ 显然
+      - $3 => 1$ 注意到 $ker (A) subset ker(B_1 A)$，而 $I - B_1 A$ 是紧算子，当然 $ker(B_1 A)$ 有限维，$ker(A)$ 也是有限维。类似的，$im A B_2 subset im A, Y quo (im A) subset Y quo im A B_2$，因此 $Y quo (im A)$ 有限维。由 @closed-image-lemma 可知结论成立。
+    ]
+    #remark[][
+      在上面的条件 2 中，显然 $B$ 也是 Fredholm 算子。（事实上 3 中的 $B_1, B_2$ 也是但并不容易）
+    ]
+    #lemma[][
+      设 $V^i ->^(T^i) V^(i + 1)$ 是有限维算子构成的正合列，且第一项和最后一项是零，就有：
+      $
+        sum_(j = 1)^n (-1)^j dim V^j = 0
+      $
+    ]<exact-sequence-lemma>
+    #proof[
+      注意到：
+      $
+        dim V^j = dim ker T^j + dim im T^j\
+        = dim ker T^j + dim ker T^(j + 1)
+      $
+      不难验证结论成立。
+    ]
+    #theorem[][
+      设 $A, B$ 是 Fredholm 算子，则 $B A$ 也是，且：
+      $
+        ind(B A) = ind(A) + ind(B)
+      $ 
+    ]
+    #proof[
+      根据 @Fredholm-characterization 可设：
+      $
+        I - C A, I - A C\
+        I - D B, I - B D
+      $
+      都是紧算子。因此（考虑在商掉紧算子的空间中）：
+      $
+        I - C D B A = I - C A = 0\
+        I - B A C D = I - B D = 0
+      $
+      由 @Fredholm-characterization 可知 $B A$ 是 Fredholm 算子。对于 $ind$，考虑：
+      $
+        0 -> ker A -> ker B A ->^A ker B ->^pi Y quo (im A) ->^B Z quo (im B A) -> Z quo (im B) -> 0
+      $
+      可以验证它是正合列，由 @exact-sequence-lemma 立刻得到结论。
+    ]
+    #theorem[][
+      设 $A$ 是 Fredholm 算子，$K$ 是紧算子，则 $A + K$ 也是，且 $ind(A + K) = ind A$
+    ]
+    #theorem[][
+      对于 $A in Fredholm$，存在 $epsilon > 0$ 使得 $B(A, epsilon) subset Fredholm$
+    ]
+    #proof[
+      设 $I - A B, I - B A$ 是紧的。注意到：
+      $
+        (A + T) B = A B + T B = I + T B - (I - A B)
+      $
+      熟知只要 $T$ 充分小，就有 $I + T B$ 可逆，计算可得：
+      $
+        (A + T) B Inv(I + T B) = I - (I - A B) Inv(I + T B)
+      $
+      这就找到了 $A + T$ 的“右逆”，类似的也可以找到左侧的。
+    ]
+    以上的事实可以总结为，Fredholm 算子是可逆算子的推广，例如当 $X = Y$ 时，Fredholm 算子就是 $L(X) quo C(X)$ 中的可逆元，$ind$ 函数也可以提升到 $Fredholm(X) quo C(X) -> ZZ$
+    #theorem[][
+      $
+        A in Fredholm <=> duel(A) in Fredholm\
+        ind(A) = ind(duel(A))\
+      $
+    ]
+

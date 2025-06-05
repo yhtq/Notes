@@ -740,7 +740,49 @@
     ]
 = 聚类算法  
   聚类是一种典型的无监督学习问题，目标是将数据集划分为若干个簇，使得同一簇内的样本相似度高，而不同簇之间的样本相似度低。
+  == K-Means 算法
+    K-Means 算法是最常用的聚类算法之一。它的基本思想是：
+    - 选择 $k$ 个初始簇心
+    - 将每个样本分配到离其最近的簇心所在的簇
+    - 更新每个簇的簇心为该簇内所有样本的均值
+    - 重复上述过程，直到簇心不再变化或达到最大迭代次数
+
+    K-Means 算法的优点是简单易实现，计算效率高，但缺点是需要预先指定聚类个数 $k$，且对初始簇心敏感（一般对多个初始簇心运行多次）。此外，K-Means 算法采用平方误差作为度量，这对非凸的数据分布可能不适用。同时，均值运算对异常点相对比较敏感。
+
+    对于一般的度量 $d$，我们也可以对其设计 K-Means 算法，计算时类 $C$ 中心点就是：
+    $
+      argmin sum_(x in C) d(x, mu_C)
+    $
+
+    此外还有一种变体称为 PAM （围绕中心点的划分算法）。它的思想是：
+    - 初始随机初始化簇心
+    - 每次迭代，对每个簇心 $o_I$，考虑所有其他样本点 $x_i$，评估用 $x_i$ 代替作为簇新能否得到更好的划分。如果可以，就将其作为新的簇心，将数据重新划分。
+    - 重复尝试直到划分不再变化
+    这种算法将数据点作为簇心，而不是计算平均值，相对而言对异常点不敏感。
   == 高斯混合模型
+    高斯混合模型是假定数据满足高斯分布和的聚类方法，也即：
+    $
+      p(x) = sum(i = 1)^k alpha_i N(x, mu_i, Sigma_i)
+    $
+    其中 $N(x, mu_i, Sigma_i)$ 是联合分布函数，我们称之为第 $i$ 个分模型。它可以理解为，对于数据 $x_j$，先构造一个随机变量 $z_j$ 使得：
+    $
+      P(z_j = i) = alpha_i
+    $
+    之后，间接确定 $x_j$ 的分布：
+    $
+      p(x_j | z_j = i) = N(mu_i, Sigma_i)
+    $
+    假设模型给定，要判断数据来自哪个簇就是要求出后验概率最大化：
+    $
+      argmax_i P(z_j = i | x_j) = argmax_i (alpha_i N(x_j, mu_i, Sigma_i))/(sum_(s = 1)^k P(x_j | z_s = s) alpha_s)
+    $
+    它们的分母是一致的，只需求：
+    $
+      argmax_i alpha_i N(x_j, mu_i, Sigma_i)
+    $
+
+    对于一组数据，如何求出它的模型呢？直观的想法是采用对数似然函数，但这实际求解起来很困难。对于此类问题，通常采用 EM 算法（期望最大化算法）来求解。
+
   == EM 算法
     对于一类含有隐变量的模型，EM 算法是常见的求解策略。通常来说，目标是最大化：
     $
@@ -754,9 +796,19 @@
     $
       sum_z p(z | y, theta^i) ln(p(y, z | theta)) = E_z (ln p(y, z | theta) | y, theta^i)
     $
-    最大。求解该优化问题就得到的 $theta^(i + 1)$
+    最大。求解该优化问题就得到的 $theta^(i + 1)$。一般，称求期望的步骤为 $E$ 步，称最大化的步骤为 $M$ 步。
 
     EM 算法对于初始值是相当敏感的，因此往往会多次求解选择最优的结果。此外，EM 算法也不能保证收敛到最优点，但可以保证似然函数的值单调递增。
+
+    对于高斯混合模型，我们采用以下扩充的隐变量：
+    $
+      z_(j i) = ite(z_j = i, 1, 0)
+    $
+    如此，可以计算：
+    $
+      E_z (ln p(y, z | theta) | y, theta^i) = sum_(i = 1)^k ((sum_(j = 1)^N E z_(j i)) ln alpha_i + sum_(j = 1)^N (E z_(j i)) ln N(x_j, mu_i, Sigma_i))
+    $
+    经过一些计算，就可以得到最终更新参数的方式。
   == 层次聚类方法
     之前提到的模型都是一致的聚类方法，聚类个数不变。如果在聚类过程中动态的调整聚类个数，就称为层次聚类方法。层次聚类方法分为自底向上和自顶向下两种：
     - 将所有样本视作一个簇，逐步拆分成更小的簇的方法称为自顶向下的方法
@@ -800,6 +852,90 @@
           则称所有 $x_i$ 都是 $x$ 的密度可达点
         - 称 $x, y$ 是密度相连的，如果存在 $z in D$，使得 $x, y$ 与 $z$ 分别是密度可达的
         - 容易验证，密度
+= 隐马尔可夫模型
+  == 马尔可夫链
+    #definition[][
+      设 $X_t$ 是随机变量的序列，如果 $X_(t + 1)$ 与 $X_1, ..., X_(t - 1)$ 都独立，且 $X_(t + 1) | X_t$ 与 $X_2 | X_1$ 同分布，则称之为（时齐）的马尔可夫链。
+    ]
+    假设 $X_t$ 都在离散空间 $S$ 中取值，则 $X_t$ 的分布可以被 $RR^S$ 中向量代表。进一步，按照定义，应该有：
+    $
+      P(X_(t + 1) = s) = sum_(k in S) P(X_t = k) P(X_(t + 1) = s | X_t = k) \
+      = sum_(k in S) P(X_t = k) P(X_2 = s | X_1 = k)
+    $
+    因此 $X_(t + 1)$ 的概率向量是 $X_t$ 的一个与 $t$ 无关的线性变换 $P$，我们也将 $P$ 称为转移矩阵，事实上：
+    $
+      P_(s t) = P(X_(t + 1) = t | X_t = s)
+    $
+    显然 $P$ 的行求和为 $1$
+  == 隐马尔可夫模型
+    在实际应用中，通常不一定能观测到马尔可夫链的状态序列。
+    #definition[隐马尔可夫模型][
+      假设 $O_t$ 是一个随机变量序列，称其的一个隐马尔可夫模型是指：
+      - 不可观测的马尔可夫序列 $X_t$，其状态空间为 $S$
+      - 已知的分布 $O_t | X_t$，并且 $O_t | X_t$ 独立于之前的 $O$ 与 $X$
+    ]
+    假设 $O_t$ 的取值空间为 $R$，则我们可以构造观测概率矩阵：
+    $
+      B = (P (O_t = r | X_t = s))_(r in R, s in S)
+    $
+    如果假设 $B$ 与 $t$ 无关，则 $A, B$ 和 $X_0$ 的初始分布 $pi$ 就确定了一个隐马尔可夫模型。隐马尔可夫模型中，变量之间的依赖关系可以用一个图来表示，因此也称为概率图模型。隐马尔可夫模型中，研究的问题包括：
+    - 概率计算：给定模型，计算任意观测序列出现的概率
+    - 解码问题：给定模型和观测序列，计算最有可能的隐变量序列 $X$
+    - 学习问题：给定观测序列，估计最有可能的隐马尔可夫模型
+  == 概率计算
+    当然，观测序列出现的概率可以直接计算，但隐变量序列的数量过大，直接计算不可接受。我们可以通过动态规划的思想，合并重复计算。
+
+    一种想法是前向算法：定义
+    $
+      alpha_t (s) = P(O_1, O_2, ..., O_t, X_t = s)
+    $
+    自然的有递推式：
+    $
+      alpha_(t + 1) (s) = sum_(s' in S) alpha_t (s') P(O_(t + 1), X_(t + 1) = s | O_1, O_2, ..., O_t, X_t = s')\
+      = sum_(s' in S) alpha_t (s') P(O_(t + 1) | O_1, O_2, ..., O_t, X_t = s', X_(t + 1) = s) P(X_(t + 1) = s | O_1, O_2, ..., O_t, X_t = s')\
+      = sum_(s' in S) alpha_t (s') P(O_(t + 1) | X_(t + 1) = s) P(X_(t + 1) = s | X_t = s')\
+    $
+    上式中都是已知量，因此可以计算。
+
+    另一种想法是后向算法：定义
+    $
+      beta_t (s) = P(O_(t + 1), O_(t + 2), ..., O_T | X_t = s)
+    $
+    就有：
+    $
+      beta_t (s) = sum_(s' in S) P(O_(t + 1), O_(t + 2), ..., O_T | X_t = s, X_(t + 1) = s') P(X_(t + 1) = s' | X_t = s)\
+      = sum_(s' in S) P(X_(t + 1) = s' | X_t = s) \
+      P(O_(t + 2), O_(t + 3), ..., O_T | X_(t + 1) = s', X_t = s) P(O_(t + 1) | O_(t + 2), O_(t + 3), ..., O_T X_(t + 1) = s', X_t = s)\
+      = sum_(s' in S) P(O_(t + 2), O_(t + 3), ..., O_T | X_(t + 1) = s') P(O_(t + 1) | X_(t + 1) = s') P(X_(t + 1) = s' | X_t = s)\
+      = sum_(s' in S) beta_(t + 1) (s') P(O_(t + 1) | X_(t + 1) = s') P(X_(t + 1) = s' | X_t = s)\
+    $
+  == 维特比算法
+    解码问题相当于求：
+    $
+      argmax_X P(X | O)
+    $
+    事实上，如果把所有 $X_1, X_2, ..., X_T$ 的取值排列起来，相邻层之间连线，则一个 $X$ 相当于在图中选取一条极大路径，解码问题就是求关于这个路径的某种最大值。采用动态规划思想，定义：
+    $
+      delta_t (s) = max_(X_1, X_2, ..., X_(t - 1)) P(X_1, X_2, ..., X_t = s, O_1, O_2, ..., O_t)
+    $
+    我们就有递推公式：
+    $
+      delta_t (s) = max_(s' in S) max_(X_1, X_2, ..., X_(t - 2)) P(X_1, X_2, ..., X_(t - 1) = s', X_t = s, O_1, O_2, ..., O_t)\
+      max_(s' in S) max_(X_1, X_2, ..., X_(t - 2)) P(X_t = s, O_t | X_1, X_2, ..., X_(t - 1) = s', O_1, O_2, ..., O_(t - 1)) P(X_1, X_2, ..., X_(t - 1) = s', O_1, O_2, ..., O_(t - 1))\
+      max_(s' in S) max_(X_1, X_2, ..., X_(t - 2)) P(X_t = s, O_t | X_(t - 1) = s') delta_(t - 1) (s')\
+      max_(s' in S) max_(X_1, X_2, ..., X_(t - 2)) P(X_t = s| X_(t - 1) = s') P(O_t | X_t = s) delta_(t - 1) (s')\
+    $
+    其中，取最大的 $s'$ 可以记录下来，后续可以回溯。
+  == Baum-Welch 算法
+    对于隐马尔可夫链，我们可以使用 EM 算法迭代求解，这就是 Baum-Welch 算法。其中，$Q$ 函数被定义为：
+    $
+      Q(lambda, lambda') = sum_X P(X | O, lambda') log P(O, X | lambda)\
+      = sum_X P(X  O | lambda')/P(O | lambda') log P(O, X | lambda)
+    $
+    由于目标是 $argmin_lambda$，因此索性直接使用 $Q$ 函数为：
+    $
+      sum_X P(X  O | lambda') log P(O, X | lambda)
+    $
 = PAC 理论
   == 可实现性假设
     #let ERM = "ERM"
@@ -1047,6 +1183,175 @@
   称为*估计误差*，它度量了训练集导致的最优损失函数的偏差。对于有限的 $H$，$epsilon_("est")$ 关于 $abs(H)$ 对数增加，关于 $m$ 减少。
 
   上面的分解表明，当 $H$ 选择的足够大时，近似误差很小，但可能导致估计误差很大，此时称为*过拟合*；当 $H$ 选择的足够小，估计误差很小，但可能导致近似误差很大，此时称为*欠拟合*。因此，选择一个合适的假设类 $H$ 是非常重要的。
+  == VC-维数
+    #definition[Shattering][
+      设 $H$ 是一个假设类，$C subset X$ 是有限集，称 $H$ shatters $C$，如果 $H$ 在 $C$ 上的限制包含了所有 $C -> {0, 1}$ 的函数。
+    ]
+    #corollary[][
+      设 $H$ 是一个假设类，$m$ 是训练集大小。假设存在 $2 m$ 元集合 $C$ 使得 $X$ shatter $C$，则对于任何学习算法 $A$，存在 $X times {0, 1}$ 上的分布 $D$ 和 $h in H$ 使得 $L_D (h) = 0$，但：
+      $
+        P_(S tilde D^m) (L_D (A(S)) >= 1/8) >= 1/7
+      $ 
+    ]<No-Free-Lunch-2>
+    #let VCdim = "VCdim"
+    #definition[VC 维数][
+      对假设类 $H$，记 $VCdim(H)$ 是元素最多的被 $H$ shattered 的有限集的大小（可能为无穷）
+    ]
+    #lemma[][
+      $VCdim(H) = d$ 当且仅当存在一个大小为 $d$ 的集合 $C$ 使得 $H$ shatters $C$，并且不存在大小为 $d + 1$ 的集合 $C'$ 使得 $H$ shatters $C'$。
+    ]
+    #corollary[][
+      设 $H$ 有限，则：
+      $
+        VCdim(H) <= log_2 (abs(H))\
+      $
+    ]
+    #definition[增长函数][
+      设 $H$ 是一个假设类，则定义 $H$ 的增长函数：
+      $
+        tau_H (m) = max_(C subset X, |C| = m) abs(H_C)\
+      $
+      其中 $H_C$ 是 $H$ 在 $C$ 上的限制
+    ]
+    #corollary[][
+      若 $VCdim(H) = d$，则 $forall n < d, tau_H (n) = 2^n$
+    ]
+    #lemma[Sauer-Shelah-Perles][
+      设 $VCdim(H) = d < +infinity$，则：
+      $
+        tau_H (m) <= sum_(i = 0)^d C_m^i
+      $
+      特别的，若 $m > d + 1$，则：
+      $
+        tau_H (m) <= ((e m) /d)^d
+      $
+    ]<Sauer-Shelah-Perles>
+    #theorem[][
+      对于任何分布 $D, delta > 0, h$ 有：
+      $
+        P_(S tilde D^m) (
+          abs(
+            L_D (h) - L_S (h) <= (4 + sqrt(ln (tau_H (2 m))))/(delta sqrt(2 m))
+          )
+        ) >= 1 - delta
+      $
+    ]<VC-dim-inequality>
+    #theorem[][
+      $H$ 是 PAC-可学习的当且仅当 $VCdim(H) < +infinity$
+    ]
+    #theorem[The Fundamental Theorem os Statistical Learning][
+      设 $H$ 是一个假设类，损失函数选取 $0-1$ 损失，则以下说法等价：
+      - $H$ 具有一致收敛性质
+      - ERM 是一个不可知 PAC 可学习的算法
+      - $H$ 是不可知 PAC 可学习的
+      - $H$ 是 PAC 可学习的
+      - ERM 是一个 PAC 可学习的算法
+      - $VCdim(H) < +infinity$
+      这个定理还有量化版本，各个性质对应的样本复杂度都可以被 $d$ 刻画。
+    ]<Fundamental-Theorem-of-Statistical-Learning>
+    #proof[
+      我们只证明若 $d < +infinity$，则 $H$ 有一直收敛性之。由 @Sauer-Shelah-Perles 我们有对 $m > d$:
+      $
+        tau_H (2 m) <= ((2 e m) / d)^d\
+      $
+      结合 @VC-dim-inequality，就有以至少 $1 - delta$ 的概率：
+      $
+        abs(L_D (h) - L_S (h)) <= (4 + sqrt(d ln ((2 e m) / d)))/(delta sqrt(2 m))\
+      $
+      不妨设 $sqrt(d ln ((2 e m))) >= 4$，则：
+      $
+        abs(L_D (h) - L_S (h)) <= 1/delta (sqrt((2 d ln ((2 e m) / d)) / m))\
+      $
+      代入一致收敛性的定义，可以验证只需：
+      $
+        m >= (2 d ln m)/(delta^2 epsilon^2) + (2 d ln (2 e quo d))/(delta^2 epsilon^2)\
+      $
+      尽管式子右侧还有 $ln m$，但 $m$ 的增长远快于 $ln m$，因此可以解出一个与 $m$ 无关的下界使得上式成立，就有原结论成立。
+      
+    ]
+  == 非一致可学习性
+    之前我们定义不可知 PAC 可学习性时，我们要求对于任何 $h in H$ 都有：
+    $
+      L_D (A(S)) <= L_D (h) + epsilon
+    $
+    我们可以稍微放松要求，对于固定的 $h' in H$，要求当 $m$ 充分大时，有：
+    $
+      P_S (L_D (A(S)) <= L_D (h') + epsilon) >= 1 - delta
+    $
+    换言之，$m$ 可以额外依赖 $h'$，这就放松了不可知 PAC 可学习性的要求。
+    #definition[非一致可学习性][
+      称一个假设类 $H$ 是非一致可学习的，如果存在一个函数 $m_H : (0, 1) -> (0, 1) -> NN$ 以及一个学习算法满足：
+      #align(center)[
+        对于任何 $delta, epsilon in (0, 1), h' in H$，任何 $X times Y$ 上的分布 $D$，选择任何样本数量 $m >= m_H^("NUL") (epsilon, delta, h')$ 独立同分布训练集，算法会给出一个假设 $h$ 使得：
+        $
+        P_S (L_D (h) <= L_D (h') + epsilon) >= 1- delta
+        $
+      ]
+    ]
+    #theorem[][
+      假设 $H_n$ 是至多可数个假设类，其中每个 $H_n$ 都满足一致收敛性，则 $H = union_(n = 1)^infinity H_n$ 是非一致可学习的
+    ]
+    #theorem[][
+      $H$ 是非一致可学习的当且仅当可以写成不可知 PAC 可学习的假设类的至多可数并集。
+    ]
+    #proof[
+      只证明必要性。考虑：
+      $
+        H_n = {h in H | m_H^("NUL") (1/8, 1/7, h) <= n}\
+      $
+      显然 $H = union_n H_n$，根据 @Fundamental-Theorem-of-Statistical-Learning，只需证明每个 $H_n$ 都是 PAC 可学习的。事实上，假设可实现性假设成立，就有：
+      $
+        P_(S tilde D^n) (L_D (h_S) <= 1/8) >= 1 - 1/7\
+      $
+      考虑 @No-Free-Lunch-2，上式蕴含着 $VCdim(H) < +infinity$，因此结论成立。
+    ]
+    #example[][
+      设 $H_n$ 是不超过 $n$ 次多项式分类器组成的空间。可以证明 $VCdim(H_n) = n + 1$，但 $VCdim(union_n H_n) = +infinity$，因此 $union_n H_n$ 是非一致可学习的，但不是不可知 PAC 可学习的。
+    ]
+    #theorem[][
+      假设 $w : NN -> [0, 1]$ 是权重函数满足 $sum_n w(n) <= 1, H = union_n H_n$ 其中 $H_n$ 是一致收敛的，定义：
+      $
+        epsilon_n (m, delta) = min {epsilon in (0, 1) | m_(H_n)^"UC" (epsilon, delta) <= m}
+      $
+      则对任意的 $delta, D$，有：
+      $
+        P_(S tilde D^m) (
+          forall n, h in H_n,
+          abs(L_D (h) - L_S (h)) <= epsilon_n (m, w(n)  delta)
+        ) >= 1 - delta
+      $
+      也就是：
+      $
+        P_(S tilde D^m) (
+          forall h in H,
+          abs(L_D (h) - L_S (h)) <= min_(n, h_n in H_n) epsilon_n (m, w(n) delta)
+        ) >= 1 - delta
+      $
+    ]
+    #proof[
+      记 $delta_n = w(n) delta$，则 $sum_n (delta_n) <= delta$，由一致收敛性，可设：
+      $
+        P(A_n) = P(forall h in H_n, abs(L_D (h) - L_S (h)) <= epsilon_n (m, delta_n)) >= 1 - delta_n\
+      $
+      因此：
+      $
+        P(product_n A_n) >= 1 - sum_n P(A_n^c) >= 1 - sum_n delta_n = 1 - delta\
+      $
+    ]
+    以上的定理表明，非一致可学习性类可以与结构风险最小化策略对应，其中 $w(n)$ 就反映了先验知识对不同的 $H_n$ 的偏好。
+    #definition[SRM 策略][
+      在上面定理的假设下，对于给定的训练集 $S$ 和置信度 $delta$，找到一个 $h$ 使得：
+      $
+        h in argmin_(h in H) (L_S (h) + epsilon_n (m, w(n) delta)) where n = min_n h in H_n
+      $
+      的策略称为*结构风险最小化(SRM)策略*
+    ]
+    #theorem[][
+      若 $w(n) = 6/(n^2 pi^2)$，则 $H$ 在 SRM 策略下是非一致可学习的，且样本复杂度：
+      $
+        m_H^"NUL" (epsilon, delta, h) <= m_(H_n)^"UC" (epsilon/2, (6 delta)/((pi n)^2)) where n = min_n h in H_n
+      $
+    ]
 
 = 奇异值分解和主成分分析
   == 奇异值分解
@@ -1235,3 +1540,61 @@
       $
       问题相当于
     ]
+  == 总体主成分分析
+    #definition[主成分变换][
+      设 $X$ 是均值为 $mu$，协方差矩阵为 $Sigma$ 的随机向量，设：
+      $
+        A^T Sigma A = Lambda
+      $
+      是对角线递降的对角矩阵，$A = (alpha_1, alpha_2, ..., alpha_m)$ 为正交矩阵。则线性变换：
+      $
+        Y = A^T (X - mu)
+      $
+      称为主成分变换。其第 $i$ 个分量称为 $X$ 的第 $i$ 主成分。不难计算：
+      $
+        E Y = 0\
+        var Y = A^T Sigma A = Lambda\
+      $
+    ]
+    注意到，对于任何向量 $alpha$ 有：
+    $
+      var alpha^T (X - mu) = alpha^T Sigma alpha
+    $
+    换言之，$alpha_1$ 就是全空间中使得 $var alpha^T (X- mu)$ 最大的 $alpha, alpha_2$ 就是 $alpha_1$ 的正交补中使得 $var alpha^T (X - mu)$ 最大的 $alpha$，依次类推。换言之，主成分变换就是将 $X$ 投影到协方差矩阵的特征向量上。
+    #definition[][
+      称 $X$ 第 $k$ 主成分的方差贡献率为：
+      $
+        n_k = lambda_k / (sum_(i = 1)^m lambda_i)
+      $
+      累计方差贡献率为：
+      $
+        n_(1 -> k) = sum_(i = 1)^k n_i = sum_(i = 1)^k lambda_i / (sum_(j = 1)^m lambda_j)
+      $
+      称 $y_k$ 与 $x_i$ 的相关系数为因子负荷量，定义前 $k$ 个主成分 $y_1, y_2, ..., y_k$ 对原有变量 $x_i$ 的贡献率为：
+      $
+        v_(1 -> k) (i) = sum_(j = 1)^k rho^2(y_j, x_i) 
+      $
+    ]
+  == 样本主成分分析
+    设 $X = (X_1, X_2, ..., X_n)$ 是对某个随机向量独立观测得到的样本。先对数据做规范化，规范化数据仍记为 $X$，此时样本协方差矩阵：
+    $
+      S = 1/(n - 1) X X^T
+    $
+    要进行主成分分析，只需要对 $S$ 进行对角化即可。事实上，如果定义：
+    $
+      X' = 1/sqrt(n - 1) X^T
+    $
+    则 $X'$ 的奇异值就是 $S$ 的奇异值，并且设其奇异值分解为：
+    $
+      X' = U Sigma V^T
+    $
+    则主成分变换就是：
+    $
+      Y = V^T X
+    $
+= 神经网络的小批量梯度下降法
+  在神经网络的训练中，目标往往是 $sum_(i = 1)^N L_i (theta) = sum_(i = 1)^N L(f(x_i, theta), y_i)$，直接使用梯度下降法需要计算全部样本的梯度，往往计算量过大。小批量梯度下降是指，选定样本容量 $n$ 将数据分成 $m$ 组，每轮更新，依次对每组数据计算梯度进行更新。通常称将数据集遍历一次为一个 Epoch。
+
+  实际操作中，我们可以采用多种方式调整超参数，包括：
+  - 批量大小 $n$ 的选择。理论上，$n$ 越大方差越小，噪声更小，训练更稳定，可以采用较大的学习率。通常来说，批量大小较小时，可以尝试批量大小和学习率等比增加。实践上，适当小的 $n$ 会导致更快的收敛。
+  - 学习率的调整：训练过程中不一定只采用固定的学习率。学习率较大时，可能导致梯度下降不收敛。学习率小时则会收敛太慢。  

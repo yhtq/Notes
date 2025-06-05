@@ -2079,6 +2079,11 @@
       AIC = RSS/sigma^2 + 2 p\
       BIC = RSS/sigma^2 + a_n p\
     $
+    有时也用以下的值：
+    $
+      BIC = - 2 ln L + a_n p
+    $
+    替代之前的表达式，这里 $L$ 是似然函数。
   == Shrinkage 方法
     前面提到过，可以通过增加正则项来降低预测误差。
     == Stein shrinkage
