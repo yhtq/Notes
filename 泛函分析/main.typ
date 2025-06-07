@@ -1940,7 +1940,7 @@
     #theorem[][
       设 $X$ 是 $RR$ 上的赋范空间，$A, B$ 是两个非空凸集：
       - 若 $A^o != emptyset, A inter B = emptyset$，则 $A, B$ 可被超平面分离
-      - 若还有 $A$ 是闭的，$B$ 是紧的，则存在 $r, delta$ 使得：
+      - 若 $A$ 是闭的，$B$ 是紧的，则存在 $r, delta$ 使得：
         $
           f(A) <= r - delta < r + delta <= f(B)
         $
@@ -2132,14 +2132,16 @@
         $
           z compose (tau : X -> duelSpace(duelSpace(X))) : X -> K
         $
-        不难验证它是有界线性泛函，且：
+        不难验证它是有界线性泛函，只需证明：
         $
-          (tau : duelSpace(X) -> duelSpace(duelSpace(duelSpace(X)))) (z compose (tau : X -> duelSpace(duelSpace(X)))) = (x : duelSpace(duelSpace(X))) arrowb (x (z compose (tau : X -> duelSpace(duelSpace(X))))) 
+          tau (z compose tau) = z\
+          inner(tau (z compose tau), x) = inner(z, x)\
+          inner(x, z compose tau) = inner(z, x)\
+          inner(tau (Inv(tau) x), z compose tau) = inner(z, x)\
+          inner(z compose tau, Inv(tau) x) = inner(z, x)\
+          inner(z, tau (Inv(tau) x)) = inner(z, x)\
         $
-        只需证明：
-        $
-          (x : duelSpace(duelSpace(X))) arrowb (x (z compose (tau : X -> duelSpace(duelSpace(X))))) = z
-        $
+        上式显然成立。
 
         再考虑 $duelSpace(X)$ 是自反空间，如果 $tau(X) != duelSpace(duelSpace(X))$，则利用 Hahn-Banach 定理，可以找到 $z in duelSpace(duelSpace(duelSpace(X)))$ 使得 $z != 0, z|_tau(X) = 0$，利用 $duelSpace(X)$ 的自反性可设：
           $
@@ -2158,15 +2160,22 @@
 
         再证明 $X quo Y$ 是自反的，注意到有典范映射 $pi : X -> X quo Y$，定义：
         $
-          orthogonalCom(Y) = {f : duelSpace(X) | f |_Y = 0}
+          orthogonalCom(Y) = {f : duelSpace(X) | f |_Y = 0}\
+          i : Y -> X
         $
-        则可以证明 $orthogonalCom(Y)$ 是 $duelSpace(X)$ 的闭子空间。事实上，可以验证 $duelSpace(pi) : duelSpace((X quo Y)) -> duelSpace(X)$ 是 $duelSpace((X quo Y)) -> orthogonalCom(Y)$ 之间的双射，因此对 $orthogonalCom(Y) -> duelSpace((X quo Y))$ 取共轭就得到 $duelSpace(duelSpace((X quo Y))) -> duelSpace(orthogonalCom(Y))$，利用 Hahn-Banach 定理得到 $duelSpace(orthogonalCom(Y)) -> duelSpace(duelSpace(X))$，最后得到：
+        则显然 $orthogonalCom(Y) = ker duel(i)$，我们有：
         $
-          duelSpace(duelSpace((X quo Y))) -> duelSpace(orthogonalCom(Y)) -> duelSpace(duelSpace(X)) -> X -> X quo Y\
+          ker duel(i) eqv^duel(pi) duelSpace(X quo im i) 
+        $
+        就得到 $duel(Inv(duel(pi))) : duelSpace(duelSpace((X quo Y))) -> duelSpace(orthogonalCom(Y))$，利用 Hahn-Banach 定理得到 $duelSpace(orthogonalCom(Y)) -> duelSpace(duelSpace(X))$，最后得到：
+        $
+          duelSpace(duelSpace((X quo Y))) ->^duel(Inv(duel(pi))) duelSpace(orthogonalCom(Y)) ->^l duelSpace(duelSpace(X)) ->^Inv(tau) X ->^pi X quo Y\
         $
         以及：
         $
-          inner(tau((duelSpace(duelSpace((X quo Y))) -> X quo Y) z), f : duelSpace(X quo Y))
+          inner(tau compose pi compose Inv(tau) compose l compose duel(Inv(duel(pi))) a, y : duel(X quo Y)) = inner(y, pi compose Inv(tau) compose l compose duel(Inv(duel(pi))) a)\
+          = inner(y compose pi, Inv(tau) compose l compose duel(Inv(duel(pi))) a)\
+          = inner(l compose duel(Inv(duel(pi))) a, y compose pi)\
         $
     ]
   == 可分空间

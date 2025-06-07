@@ -559,7 +559,7 @@
     #definition[][
       称：
       $
-        beta_phi (theta) = E_theta phi(X)
+        beta_phi (theta) = E_X phi(X)
       $
       为检验法的功效函数。称 $L_phi (theta) = 1 - beta_phi (theta)$ 为检验法的操作函数。显然（在假设成立时） $beta$ 就是 I 类错误的概率，（假设不成立时）$L$ 就是 II 类错误的概率。
     ]
