@@ -2083,10 +2083,10 @@
     $
       BIC = - 2 ln L + a_n p
     $
-    替代之前的表达式，这里 $L$ 是似然函数。
+    替代之前的表达式，这里 $L$ 是似然函数。这里 $a_n$ 最常见的取值是 $ln n$。BIC 也被称为 SIC(Schwarz)，可以用贝叶斯推断的角度理解，它接近于后验概率的对数。
   == Shrinkage 方法
     前面提到过，可以通过增加正则项来降低预测误差。
-    == Stein shrinkage
+    === Stein shrinkage
       假设 $Z in P(RR^p) tilde N(mu. sigma^2 I)$，如果要找 $mu$ 的估计值，在无偏估计中 $Z$ 本身当然就是最好的，然而事实上，可能找到更好的有偏估计。事实上：
       $
         E norm2(Z) = p sigma^2 + norm2(mu) > norm2(mu)
@@ -2110,9 +2110,9 @@
       $
       中：
       $
-        tilde(mu) = (1 - (p - 2)/(norm2(Z))) Z\
+        tilde(mu) = (1 - ((p - 2) sigma^2)/(norm2(Z))) Z\
       $
-      是平方误差最优的。这也可以从贝叶斯的角度理解，如果：
+      是平方误差最优的，称为 *Stein 估计*。这也可以从贝叶斯的角度理解，如果：
       $
         Z_i tilde N(mu_i, sigma^2), mu_i tilde N(0, sigma_0^2)
       $
@@ -2121,3 +2121,332 @@
         mu | Z tilde N((1 - w) Z, w sigma_0^2 I)\
         where w = sigma^2/(sigma^2 + sigma_0^2)
       $
+      自然的，$mu$ 的贝叶斯估计就是：
+      $
+        hat(mu) = (1 - w) Z
+      $
+      然而现实情况是，$sigma_0$ 并不确定。我们可以采用所谓的经验贝叶斯方法，考虑：
+      $
+        f(Z | sigma_0^2) = integral_()^() f(Z | mu, sigma_0^2) f(mu | sigma_0^2) dif mu = N(0, (sigma^2 + sigma_0^2) I)\ 
+      $
+      因此：
+      $
+        norm2(Z)/(sigma^2 + sigma_0^2) tilde chi^2(p)\
+        E((sigma^2 + sigma_0^2)/norm2(Z)) = 1/(p - 2)\
+        E (p - 2)/norm2(Z) = sigma^2 + sigma_0^2
+      $
+      用这个无偏估计代入 $(1 - w) z$，就可计算得：
+      $
+        hat(mu) approx (1 - ((p - 2) sigma^2)/(norm2(Z))) Z\
+      $
+      可见，Stein 估计就是参数先验分布为正态分布时，经验贝叶斯方法给出的估计值。
+
+      类似的，在线性回归问题中，若设：
+      $
+        Y tilde N(X beta, sigma^2 I)\
+        beta tilde N(0, 1/k sigma^2)
+      $
+      可以计算得，$beta$ 的贝叶斯估计就是：
+      $
+        hbeta = Inv(tMul(X) + k I) X^T Y = Inv(I + k Inv(tMul(X))) Inv(tMul(X)) X^T Y
+      $
+      事实上，这就是 ridge regression 的解。
+      #theorem[][
+        使用上面的 ridge regression 方法，则存在一个 $k$ 使得其 ME 小于标准线性回归的 ME
+      ]
+      #proof[
+        $
+          E("ME") = E_(X_0) norm2(X hbeta - X beta)\
+          = E norm2(X C hbeta_0 - X beta)\
+          = E norm2(X C hbeta_0 - X C beta + X C beta - X beta)\
+          = E norm2(X C hbeta_0 - X C beta) + E norm2(X C beta - X beta) + 2 (E (X C hbeta_0 - X C beta))^T (E (X C beta - X beta))\
+          = E norm2(X C hbeta_0 - X C beta) + norm2(X C beta - X beta)
+        $
+        若设 $X^T X = T Lambda T^T, alpha = T^T beta$，则可以计算得：
+        $
+          E norm2(X C hbeta_0 - X C beta) = tr(C^T X^T X C var (hbeta_0)) = sigma^2 tr(C^T X^T X C Inv(tMul(X)))
+        $
+        同时：
+        $
+          C = Inv(I + k Inv(tMul(X)))\
+          = T Inv(I + k Inv(Lambda)) T^T
+        $
+        因此：
+        $
+          C^T tMul(X) C Inv(tMul(X)) = T Inv(I + k Inv(Lambda)) Lambda Inv(I + k Inv(Lambda)) Inv(Lambda) T^T\
+        $
+        其中除了 $T$ 外，中间的矩阵都是对角的，因此容易计算出其 trace。另一部分可以做类似的计算，总之我们有原式：
+        $
+          = sum_(j = 1)^p (alpha_i^2 k^2 lambda_i + sigma^2 lambda_i^2)/(k + lambda_i)^2
+        $
+        求导得：
+        $
+          sum_(j = 1)^p (2 lambda_j^2 (alpha_j^2 k - sigma^2))/(k + lambda_j)^2 
+        $
+        显然 $k = 0$ 时的 ME 就是标准回归的结果，而导数在 $0$ 附近为负，因此当 $k$ 较小时，确实有 ME 更小。
+      ]
+      至于具体的 $k$ 的选取，我们可以采用之前所说的 Jackknife 方法，也就是交叉验证方法。可以计算：
+      $
+        CV(1) = 1/n sum_(i = 1)^n (Y_i - x_i^T hbeta(k))/(1 - a_n (k))
+      $
+      其中 $a_n (k)$ 是 $X Inv(tMul(X) + k I) X^T$ 的 $i i$ 元。有时，也将分母统一替代为：
+      $
+        1/n tr(X Inv(tMul(X) + k I) X^T)
+      $
+      此时得到的值称为 _GCV(Generized cross-valiadation)_
+    === Garrot estimate
+      因为 ridge regression 无法直接用于变量选择，1995年人们提出了 Garrot estimate 方法。假设 $hbeta$ 是最小二乘估计，并设：
+      $
+        tbeta = diag{c_1, c_2, ..., c_(p)} hbeta
+      $
+      使得 $c_i >= 0, sum c_i <= s$，然后求解：
+      $
+        min_c norm2(Y - X tbeta) with c_i >= 0, sum_i c_i <= s
+      $
+      得到的结果就称为 _Garrot estimate_。事实上：
+      $
+        norm2(Y - X tbeta) = norm2(Y - X hbeta) + norm2(X (tbeta - hbeta)) + 2 inner(Y - X hbeta, X (tbeta - hbeta)) \
+        = RSS + norm2(X (tbeta - hbeta))\
+      $
+      #lemma[][
+        设 $alpha, beta in KK^n, diag(x)$ 是 $x$ 中元素组成的对角矩阵，则：
+        $
+          diag(alpha) beta = diag(beta) alpha
+        $
+      ]
+      由引理，显然就有：
+      $
+        RSS + norm2(X (tbeta - hbeta)) = RSS + norm2(X diag(hbeta) C - X hbeta) := RSS + norm2(A C - d)
+      $
+      因此，原问题等价于：
+      $
+        min_C norm2(A C - d) with C >= 0, norm(C)_1 <= s
+      $
+      这是一个凸优化问题，可以利用凸优化的方法求解。我们考虑一个特殊情境，即 $X^T X = I$ 时，就有：
+      $
+        norm2(X (tbeta - hbeta)) = norm2(tbeta - hbeta) = norm2((I - diag(C)) hbeta)
+      $
+      直观上来说，应该将 $c_i$ 分配给比较大的 $hbeta_i$，因此可设解为：
+      $
+        c_j = cases(
+          1 - lambda / hbeta_i "if" lambda <= hbeta_i,
+          0 "otherwise"
+        )
+      $
+      可见，此时确实有许多 $c_j = 0$，也就相当于在变量选择时抛离了。
+    === Lasso estimate
+      Lasso 方法是另一种 shrinkage 方法，相当于在 ridge 回归中，将 2 - 范数换为 1 - 范数，也就是：
+      $
+        min_beta norm2(Y - X beta) + lambda norm(beta)_1\
+      $
+      它的对偶问题是：
+      $
+        min_beta norm2(Y - X beta) with norm(beta)_1 <= s\
+      $
+      仍然考虑 $X$ 正交的简单情形，此时有：
+      $
+        norm2(Y - X beta) lambda norm(beta)_1 = RSS + norm2(X (beta - h beta)) + lambda norm(beta)_1\
+        = RSS + norm2(beta - hbeta) + lambda norm(beta)_1\
+        = RSS + sum_j (beta_j - hbeta_j)^2 + lambda abs(beta_j)
+      $
+      事实上，求和的每一项之间没有什么关系，只需要考虑：
+      $
+        min_beta_j (beta_j - hbeta_j)^2 + lambda abs(beta_j)
+      $
+      可以计算得：
+      $
+        beta_j = cases(
+          sgn(hbeta_j) (abs(hbeta_j) - lambda) "if" lambda/2 <= abs(hbeta_j),
+          0 "otherwise"
+        )
+      $
+      相当于将 $hbeta$ 的分量向 $0$ 压缩，较小的分量直接压缩到零，因此就将这些变量筛选掉了。或者考虑到此时 $hbeta_j = X_i^T Y$，我们有：
+      $
+        beta_j = cases(
+          X_i^T Y - sgn(X_i^T Y) lambda "if" lambda/2 <= abs(X_i^T Y),
+          0 "otherwise"
+        )
+      $
+
+      接下来，设 $tbeta$ 是 Lasso 估计，我们需要考虑： 
+      - model error:
+        $
+          norm2(X beta - X tbeta)
+        $
+      - parameter error:
+        $
+          norm2(beta - tbeta)
+        $
+      - model selection(consistency):
+        $
+          P("supp"(beta) = "supp"(hbeta))
+        $
+      一般来说，直接计算这些值是比较困难的。常见的方法是构造事件 $A$ 使得 $P(A) = 1 - epsilon$，并且在 $A$ 成立时，上面的性质比较容易分析。
+
+      事实上，若设：
+      $
+        A = {2 norm(epsilon^T X)_infinity < lambda}
+      $
+      则在 $A$ 成立时有：
+      $
+        2 abs(X_i^T Y) = 2 abs(X_i^T (X beta + epsilon)) = 2 abs(beta_j + X_i^T epsilon)
+      $
+      若还有 $beta_j = 0$，立刻有 $2 abs(X_i^T epsilon) <= lambda => tbeta_i = 0$。而若 $abs(beta_j) > lambda$，可以计算得：
+      $
+        2 abs(X_i^T Y) = 2 abs(beta_j + X_i^T epsilon) >= 2 abs(beta_j) - 2 norm(epsilon^T X)_infinity >= lambda
+      $
+      也就有 $tbeta_j != 0$
+
+      这就意味着，只要 $beta$ 满足非零分量的绝对值不小于 $lambda$，就有：
+      $
+        "supp" (beta) = "supp"(tbeta)\
+      $
+      #let hbetao = $hbeta^("oracle")$
+      接下来，设 $S = {j | beta_j != 0}, s = abs(S), X_S$ 是 $X$ 中 $S$ 对应的列形成的矩阵，$hbetao$ 是仅使用这些数据得到的最小二乘估计：
+      $
+        hbetao = Inv(tMul(X_S)) X_S^T Y
+      $
+      在 $A$ 上，我们有：
+      $
+        norm(tbeta - beta) = norm(tbeta_s - beta_s) \
+        <= norm(tbeta_s - hbetao) + norm(hbetao - beta_s)\
+        = sqrt(sum_(i in S) (sgn(X_i^T Y) lambda)^2) + norm(hbetao - beta_s)\
+        = lambda sqrt(abs(S)) + norm(hbetao - beta_s)\
+      $
+      当数据足够多时，上式后项应该较小。而当 $lambda$ 比较小时，前项也比较小，就有参数的误差比较小。由于我们假设 $X$ 正交，就有：
+      $
+        norm2(X beta - X tbeta) = norm2(beta - tbeta)
+      $
+      因此，模型误差和参数误差是相同的。
+
+      注意到：
+      $
+        norm2(Y - X tbeta) + lambda norm(tbeta)_1 <= norm2(Y - X beta) + lambda norm(beta)_1\
+        = tMul(Y) + beta^T X^T X beta - 2 Y^T X beta + lambda norm(beta)_1\
+        = tMul(Y) - beta^T X^T X beta - 2 epsilon^T X beta + lambda norm(beta)_1\
+      $
+      可以类似计算得：
+      $
+        norm2(Y - X tbeta) + lambda norm(tbeta)_1 = tMul(Y) + tbeta^T X^T X tbeta - 2 beta^T X^T X beta - 2 epsilon^T X beta + lambda norm(beta)_1
+      $
+      不等式给出：
+      $
+        tbeta^T X^T X tbeta - 2 beta^T X^T X beta - 2 epsilon^T X beta + lambda norm(beta)_1 <= - beta^T X^T X beta - 2 epsilon^T X beta + lambda norm(beta)_1\
+        norm2(X (tbeta - beta)) <= 2 epsilon^T X (tbeta - beta) + lambda (norm(beta)_1 - norm(tbeta)_1)\
+      $
+      Holder 不等式给出，$A$ 成立时：
+      $
+        2 abs(epsilon^T X (tbeta - beta)) <= 2 norm(epsilon^T X)_infinity norm(tbeta - beta)_1\
+        <= lambda norm(tbeta - beta)_1
+      $
+      因此：
+      $
+        norm2(X (tbeta - beta)) <= lambda (norm(tbeta - beta)_1 + norm(tbeta)_1 - norm(beta)_1)\
+        <= 2 lambda norm(beta)_1\
+      $
+      （上面的推导在不假设 $X$ 正交的情形下也成立）
+      #lemma[][
+        设 $Z_j tilde N(0, sigma^2), j = 1, 2, ..., p$ 独立同分布，则:
+        $
+          E(max Z_j) <= sigma sqrt(2 ln (2 p))\
+        $
+      ]
+      注意到 $epsilon^T X_j$ 独立同分布，由正态分布的性质有：
+      $
+        E norm(epsilon^T X)_infinity <= sigma sqrt(2 ln (2 p))
+      $
+      因此由熟知的不等式：
+      $
+        P (norm(epsilon^T X)_infinity >= a/2) <= (E norm(epsilon^T X)_infinity) / (a / 2) <= sigma sqrt(8 ln (2 p)) / a\
+      $
+      这就得到了 $P(A)$ 的一个控制。事实上，有时我们也会设：
+      $
+        X^T X = n I
+      $
+      问题重缩放为：
+      $
+        norm2(Y - X beta) + lambda sqrt(n) norm(beta)_1\
+      $
+      最终，我们可以得到下面的结论：
+      #theorem[][
+        对一般的 $X$ 我们有：
+        $
+          norm2(X(beta - tbeta)) <= 2 epsilon^T X (tbeta - beta) + lambda (norm(beta)_1 - norm(tbeta)_1)\
+        $
+        如果 $norm2(X_i) = 1$，设 $cal(A) = 2 norm2(epsilon^T X) <= lambda$ 成立，则：
+        $
+          norm2(X(beta - tbeta)) <= 2 lambda norm(beta)_1\
+          P(A) >= 1 - Inv(A) where lambda >= A sqrt(8 ln (2 p) sigma^2)
+        $
+      ]
+      #theorem[][
+        若 $X^T X = n I$，则对 $lambda > A sqrt(Inv(n) ln (2p) sigma^2)$，在 $cal(A)$ 成立时有：
+        $
+          norm2(X (beta - tbeta))/n <= 2 lambda/sqrt(n) norm(beta)_1
+        $
+        并且：
+        $
+          cal(A) = {2 norm(1/sqrt(n) epsilon^T X)_infinity <= lambda}\
+          p(cal(A)) >= 1 - Inv(A)
+        $
+      ]
+      接下来，我们考虑一般的 $X$. 设 $lambda_0 > 0, lambda > 2 lambda_0$，则在 $cal(A)(lambda_0) = {2 norm(epsilon^T X)_infinity <= lambda_0}$ 上有：
+      $
+        norm2(X(beta - tbeta)) + lambda norm(tbeta)_1 <= 2 epsilon^T X (tbeta - beta) + lambda norm(beta)_1\
+        <= 2 norm(epsilon^T X)_infinity norm(tbeta - beta)_1 + lambda norm(beta)_1\
+        <= lambda_0 norm(tbeta - beta)_1 + lambda norm(beta)_1\
+        <= lambda/2 norm(tbeta - beta)_1 + lambda norm(beta)_1\
+      $
+      仿照之前的方法定义 $S$ 就有：
+      $
+        norm(tbeta)_1 = norm(tbeta_S)_1 + norm(tbeta_(S^c))_1 >= norm(beta_S)_1 - norm(beta_S - tbeta_S)_1 + norm(tbeta_(S^c))_1\
+        norm(tbeta - beta)_1 = norm(tbeta_S - beta_S)_1 + norm(tbeta_(S^c) - beta_(S^c))_1 = norm(tbeta_S - beta_S)_1 + norm(tbeta_(S^c))_1\
+        norm(beta)_1 = norm(beta_S)_1
+      $
+      代入前式，化简得：
+      $
+        2 norm2(X(beta - tbeta)) + lambda norm(tbeta_(S^C))_1 <= 3 lambda norm(tbeta_S - beta_S)_1
+      $
+      这表明：
+      - $norm(tbeta_(S^C))_1 <= 3 norm(tbeta_S - beta_S)_1$，表明在支集之外，参数的估计不会太大
+      - $2 norm2(X(beta - tbeta)) <= 3 lambda norm(tbeta_S - beta_S)_1$，若设 $sigma_min$ 是 $X$ 的最小奇异值，立刻有：
+        $
+          2 sigma_min^2 norm2(beta - tbeta) <= 3 lambda norm(tbeta_S - beta_S)_1 <= 3 lambda sqrt(abs(S)) norm(tbeta_S - beta_S)_2\
+          <= 3 lambda sqrt(abs(S)) norm(tbeta - beta)_2
+        $
+        也即：
+        $
+          norm2(beta - tbeta) <= (3 lambda sqrt(abs(S)))/ sigma_min^2\
+        $
+        当然如果 $p > n$，就导致 $sigma_min = 0$，此时上面的结果是无效的。
+      当然，上面的放缩还可以更加精细。
+      #definition[][
+        设:
+        $
+          v_S = {v in RR^p | norm(v_(S^C))_1 <= 3 norm(v_S)_1}\
+        $
+        称 $X$ 在其上的 restricted eigenvalue 是：
+        $
+          Phi_s = argmin_(v in v_s) norm(X v)_2/norm(v)_2
+        $
+        以及：
+        $
+          Phi = min_(abs(S) <= abs(S_0)) Phi_s
+        $
+      ]
+      由上面的结果我们有：
+      $
+        2 norm2(X(tbeta - beta)) + lambda norm(tbeta - beta)_1 = 2 norm2(X(tbeta - beta)) + lambda norm(tbeta_S - beta_S)_1 + lambda norm(tbeta_(S^C))_1\
+        <= 4 lambda norm(tbeta_S - beta_S)_1 <= 4 lambda sqrt(abs(S)) norm(tbeta_S - beta_S)_2\
+        <= 4 lambda sqrt(abs(S)) norm(X (tbeta - beta))/Phi\
+        <= norm2(X (tbeta - beta)) + 4 (lambda^2 S)/Phi^2
+      $
+      因此：
+      $
+        norm2(X(tbeta - beta)) + lambda norm(tbeta - beta)_1 <= 4 (lambda^2 S)/Phi^2
+      $
+
+      当然，Lasso 还有一些改进，例如使用弹性网惩罚 $lambda (alpha norm(beta) + (1 - beta) norm(beta)_1)$，它在预测问题上可能更好，但参数更多，超参数通常不好选择。
+
+      前面提到过，如果假设 $beta$ 服从正态的先验分布，则得到的贝叶斯估计就是 ridge regression 的解。事实上，Lasso 也可以看作是贝叶斯方法的结果。同样的，如果假设 $beta$ 服从双指数分布，则得到的贝叶斯估计就是 Lasso 的解。
+

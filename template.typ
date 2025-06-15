@@ -89,6 +89,7 @@
 #let htheta = $hat(theta)$
 #let halpha = $hat(alpha)$
 #let hbeta = $hat(beta)$
+#let tbeta = $tilde(beta)$
 #let hgamma = $hat(gamma)$
 #let hX = $hat(X)$
 #let hY = $hat(Y)$
