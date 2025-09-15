@@ -489,6 +489,7 @@
 #let fourierTrans(f) = $hat(#f)$
 #let def_str = "def"
 #let nat_str = "nat"
+#let dashed_str = "dashed"
 #let sep(..xs) = xs.pos().join($space$)
 // Theorem and definition environments.
 #let base_env(type: "Theorem", numbered: true, fg: black, bg: white, name, body) = locate(

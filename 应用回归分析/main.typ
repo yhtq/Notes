@@ -77,7 +77,7 @@
       $
     ]
     #theorem[][
-      $var(X) >= 0$，等于 $0$ 当且仅当 $X$ 中各变量线性相关
+      $var(X) >= 0$，非满秩当且仅当 $X$ 中各变量线性相关
     ]
     #proof[
       $
@@ -422,10 +422,10 @@
     $
     进而，如果假设 $var(epsilon) = sigma^2 I$，则：
     $
-      var(hat(beta)) = Inv((X^T X)) X^T var(Y) X Inv((X^T X)) = sigma^2 Inv((X^T X))
+      var(hat(beta)) = Inv((X^T X)) X^T var(Y) X Inv((X^T X)) = sigma^2 Inv(X^T X)
     $
     #theorem[][
-      设 $hat(theta)$ 是最小二乘估计，假设 $theta = X beta, $, $X$ 未必满秩。对于任意 $c in RR^n$，任意线性函数 $A$， $A c$ 是 $c^T theta$ 的无偏估计，则 $var (A c) >= var(c^T theta)$。换言之，$c^T theta$ 是最好的线性无偏估计（best linear unbiased estimator, BLUE）。
+      设 $hat(theta)$ 是 $X beta$ 的最小二乘估计，$theta = X beta, $, $X$ 未必满秩。若对于任意 $beta$，$A Y$ 是 $c^T theta$ 的无偏估计，则 $var (A Y) >= var(c^T htheta)$。换言之，$c^T htheta$ 是最好的线性无偏估计（best linear unbiased estimator, BLUE）。
     ]
     #proof[
       取 $P$ 是某个线性投影算子，则：
@@ -563,7 +563,7 @@
     $
     立刻可以计算得：
     $
-      hat(delta) = Inv(tMul(X)) Y, Inv(tMul(Z)) Y)
+      hat(delta) = (Inv(tMul(X)) Y, Inv(tMul(Z)) Y)
     $
     一般的，设 $P$ 是 $X$ 列空间的投影算子，可以做分解：
     $
@@ -586,7 +586,7 @@
       hat(beta) = hat(alpha) - Inv(tMul(X)) X^T Z hat(gamma)\
       = Inv(tMul(X)) X^T (Y - Z hat(gamma))
     $
-    类似于先在 $(I - P) Z$ 做回归，再对残差关于 $X$ 做回归。
+    类似于先对 $Y$ 关于 $(I - P) Z$ 做回归，再对残差关于 $X$ 做回归。
 
     如果用 $hat(beta)$ 记小模型的估计值，则大模型的残差为：
     $
@@ -597,6 +597,7 @@
       &= norm(Y - X hat(beta))^2 - inner(Y, (I - P) Z hat(gamma))\
       &= quadFormSym(Y - Z hat(gamma), I - P)
     $
+    也就是第二次回归的方差
     以及可以计算方差：
     $
       var(hat(delta)) = var(Inv(mat(I, L;0, I)) vec(hat(alpha), hat(gamma)))
@@ -655,7 +656,7 @@
     $
     可见，$hb$ 确实是原问题的最优解。同时，也得到：
     $
-      norm(Y - X hb)^2 = norm(Y - X hb)^2 + norm(X (hb0 - hb))^2
+      norm(Y - X hb)^2 = norm(Y - X hb_0)^2 + norm(X (hb0 - hb))^2
     $
   == 不满秩情形的最小二乘
     #definition[广义逆矩阵][
@@ -763,7 +764,7 @@
     ]
     同时，注意到如果 $A beta = c$ 成立，则：
     $
-      Z := A hat(beta) tilde N(A beta - c, sigma^2 A Inv(tMul(X)) A^T) = N(0, sigma^2 A Inv(tMul(X)) A^T)
+      Z := A hat(beta) - c tilde N(A beta - c, sigma^2 A Inv(tMul(X)) A^T) = N(0, sigma^2 A Inv(tMul(X)) A^T)
     $
     进而：
     $
@@ -919,7 +920,7 @@
         $
       - 
         $
-          R^2 = = sumBrN1((hat(Y)_i - Ybar)^2)/sumBrN1((Y_i - Ybar)^2) = 1 - RSS/sumi2n2(Y_i - Ybar)
+          R^2 = sumBrN1((hat(Y)_i - Ybar)^2)/sumBrN1((Y_i - Ybar)^2) = 1 - RSS/sumi2n2(Y_i - Ybar)
         $
     ]
     #proof[
@@ -1400,7 +1401,7 @@
         $
       - 在 $H_(1 2)$ 下检验 $H_(1 2 3)$，此时：
         $
-          F_(1 2 3) = ((RSS_(1 2 3) - RSS_1)/(I - 1))/(RSS_1 / (n - I))\
+          F_(1 2 3) = ((RSS_(1 2 3) - RSS_(1 2))/(I - 1))/(RSS_1 / (n - I))\
         $
       #lemma[][
         $
@@ -1511,7 +1512,7 @@
     距离其他数据较远的点称为*异常点*。有些点的 $x$ 值正常，但 $y$ 值偏离回归曲线，这种点称为 $y-$ 异常点。也有些点的 $x$ 值脱离其他数据，这种点称为 $x-$ 异常点或者*高杠杆点*。还有一些点的 $x$ 和 $y$ 都偏离其他数据，这种点称为*双异常点*。异常点的存在会影响线性回归的结果，导致 $hb$ 和 $S^2$ 的估计不准确。本节中，我们往往假设 $X$ 是列中心化的，也即：
     #let tildeX = $tilde(X)$
     $
-      X = (1, tilde(X))
+      X = (1, tilde(X)), 1^T tilde(X) = 0
     $
     此时:
     $
@@ -1520,7 +1521,7 @@
       = 1/n 1 1^T + tildeX Inv(tMul(tildeX)) tildeX^T\
     $
     可以计算得：
-    $P_(i i) = 1/n + quadFormSym(X^i - Xbar_i 1, Inv(tMul(tildeX)))$，（$X^i$ 指 $X$ 的第 $i$ 行的转置）上式第二项实际上是用正定矩阵 $Inv(tMul(tildeX))$ 度量的，$X_i$ 与 $Xbar_i 1$ 的距离。此外，$P$ 是对称的投影矩阵，就有：
+    $P_(i i) = 1/n + quadFormSym(X^i - Xbar, Inv(tMul(tildeX)))$，（$X^i$ 指 $X$ 的第 $i$ 行的转置, $Xbar = (Xbar_1, ..., Xbar_p)$）上式第二项实际上是用正定矩阵 $Inv(tMul(tildeX))$ 度量的，$X_i$ 与 $Xbar$ 的距离。此外，$P$ 是对称的投影矩阵，就有：
     $
       P^2 = P\
       P_(i i)  = P_(i i)^2 + sum_(j != i) P_(i j)^2\
@@ -1590,7 +1591,7 @@
     $
     两式结合，一个变量如果能被其他变量很好的线性逼近，对应参数的拟合方差就会极为严重。此时：
     $
-      R_j^2 = 1 - RSS_j/(sum_i (X_j (i) - Xbar_j)^2) = 1 - RSS_j
+      R_j^2 = 1 - RSS_j/norm2(X_j - Xbar_j 1) = 1 - RSS_j
     $
     #let VIF = $"VIF"$
     我们定义 #VIF (varience inflation factor) 为：
@@ -1666,7 +1667,7 @@
     #theorem[][
       记 $hbeta$ 是全模型拟合的参数，$hbeta_i$ 是去掉第 $i$ 个分量拟合得到的参数，则：
       $
-        hbeta - hbeta_i = (Inv(tMul(X)) X_i e_i)/(1 - h_i)
+        hbeta - hbeta_i = (Inv(tMul(X)) x_i e_i)/(1 - h_i)
       $
     ]
     #proof[
@@ -1711,7 +1712,7 @@
     #definition[Jack knife studentized residuals][
       定义：
       $
-        t_i = (Y_i - hY(i))/(S(i) sqrt(1 + quadFormSym(x_i, Inv(tMul(X(i))))))
+        t_i = (e_i)/(S(i) sqrt(1 + quadFormSym(x_i, Inv(tMul(X(i))))))
       $
     ]
     #lemma[][
@@ -2256,14 +2257,14 @@
       可以计算得：
       $
         beta_j = cases(
-          sgn(hbeta_j) (abs(hbeta_j) - lambda) "if" lambda/2 <= abs(hbeta_j),
+          sgn(hbeta_j) (abs(hbeta_j) - lambda/2) "if" lambda/2 <= abs(hbeta_j),
           0 "otherwise"
         )
       $
       相当于将 $hbeta$ 的分量向 $0$ 压缩，较小的分量直接压缩到零，因此就将这些变量筛选掉了。或者考虑到此时 $hbeta_j = X_i^T Y$，我们有：
       $
         beta_j = cases(
-          X_i^T Y - sgn(X_i^T Y) lambda "if" lambda/2 <= abs(X_i^T Y),
+          X_i^T Y - sgn(X_i^T Y) lambda/2 "if" lambda/2 <= abs(X_i^T Y),
           0 "otherwise"
         )
       $
