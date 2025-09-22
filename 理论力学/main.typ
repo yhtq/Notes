@@ -220,7 +220,112 @@
       中，将 $dif X_i$ 代入得：
       $
         sum_i (F_i^a - m derN(X_i, t, 2)) dot der(X_i, t) dif t = 0\
-        sum_i (F_i^a dot dif X_i - dif(1/2 m der(X_i, t))) = 0\
-        sum_i (-dif V_i - dif(1/2 m der(X_i, t))) = 0\
+        sum_i (F_i^a dot dif X_i - dif(1/2 m (der(X_i, t))^2)) = 0\
       $
+      这就是常见的机械能守恒定律。
     ]
+  == 第一类拉格朗日方程
+    #let Xv = $bold(X)$
+    之前提到的虚功原理和达朗伯原理，理论上已经足够强，但实践上不好操作。拉格朗日提出了更为简洁的方式，利用 $lambda$ 乘子进行计算。假设体系中有 $k$ 个约束：
+    $
+      f_i (Xv_1, Xv_2, Xv_n, t) = 0, i = 1, 2, ..., k 
+    $
+    取变分可得：
+    $
+      sum_j partialDer(f_i, Xv_j) dot diff Xv_j = 0
+    $
+    进而：
+    $
+      lambda_i sum_j partialDer(f_i, Xv_j) dot diff Xv_j = 0
+    $
+    结合达朗伯原理，有：
+    $
+      sum_i (F_i^a - m_i derN(Xv_i, t, 2) + sum_j lambda_j partialDer(f_j, Xv_i)) diff Xv_i = 0\
+    $
+    由于 $lambda$ 的任意性，我们直接令：
+    $
+      F_i^a - m_i derN(Xv_i, t, 2) + sum_j lambda_j partialDer(f_j, Xv_i) = 0, forall i\
+      f_j (Xv_1, Xv_2, ..., Xv_n, t) = 0, forall j
+    $<lagrange1>
+    假设@lagrange1 有解，则解一定是原方程组的解。该方程组称为*第一类拉格朗日方程*。
+    #example[][
+      假设光滑斜面底部长 $a$，高度为 $b$，上有一物体，尝试使用第一类拉格朗日方程：
+      - 约束方程为：
+        $
+          y = (a - x) tan alpha (tan alpha = b / a)
+        $
+      - 拉格朗日方程为：
+        $
+          (tan alpha, 1) Xv = a tan alpha\
+          (tan alpha, 1) derN(Xv, t, 2) = 0\
+          vec(0, - m g) - m derN(Xv, t, 2) + lambda der(y - (a - x) tan alpha, Xv) = 0\
+          vec(0, - m g) - m derN(Xv, t, 2) + lambda vec(tan alpha, 1) = 0\
+          - m g + lambda (1 + tan^2 alpha) = 0\
+          lambda = m g cos^2 alpha\
+          derN(Xv, t, 2) = vec(0, - g) + g cos^2 alpha vec(tan alpha, 1) = vec(g sin alpha cos alpha, - g sin^2 alpha)
+        $
+    ]
+    #example[][
+      垂直的上半圆周轨道，周长为 $R$，求何时离开球面：
+      - 约束方程为 $Xv^T Xv >= R^2$，只需求何时约束不再是紧约束，先设：
+        $
+          Xv^T Xv = R^2\
+          2 Xv^T der(Xv, t) = 0\
+          derN(Xv^T, t, 2) Xv + 2 der(Xv^T, t) der(Xv, t)  + Xv^T derN(Xv, t, 2) = 0\
+          Xv^T derN(Xv, t, 2) + norm(der(Xv, t))^2 = 0
+        $
+      - 拉格朗日方程为：
+        $
+          vec(0, - m g) - m derN(Xv, t, 2) + 2 lambda Xv = 0\
+          X^T vec(0, - m g) + m norm2(der(Xv, t)) + 2 lambda R^2 = 0\
+        $
+        约束变为松弛约束时，$lambda = 0$，解出：
+        $
+          norm2(der(Xv, t)) = g y
+        $
+        接下来，利用机械能守恒：
+        $
+          vec(0, - m g) der(Xv, t) - m derN(Xv, t, 2) der(Xv, t) + 2 lambda Xv der(Xv, t) = 0\
+          (0, g) der(Xv, t) + derN(Xv^2, t, 2) der(Xv, t) = 0\
+          (0, g) (Xv - Xv_0) + 1/2 (norm2(der(Xv, t)) - norm2(der(Xv_0, t))) = 0\
+        $
+        就可以解出 $Xv$
+    ]
+    #example[][
+      小环受主动力为 $F(Xv) = vec(k^2 x, - m g)$，约束为：
+      $
+          Xv^T Xv = R^2\
+          2 Xv^T der(Xv, t) = 0\
+          derN(Xv^T, t, 2) Xv + 2 der(Xv^T, t) der(Xv, t)  + Xv^T derN(Xv, t, 2) = 0\
+          Xv^T derN(Xv, t, 2) + norm(der(Xv, t))^2 = 0
+      $
+      求平衡位置：
+      - 拉格朗日方程为：
+        $
+          vec(k^2 x, - m g) - m derN(Xv, t, 2) + 2 lambda Xv = 0\
+          Xv^T vec(k^2 x, - m g) + m norm2(der(Xv, t)) + 2 lambda r^2 = 0\
+        $
+        平衡时：
+        $
+          vec(k^2 x, - m g) + 2 lambda Xv = 0\
+          4 lambda^2 R^2 = k^4 x^2 + m^2 g^2\
+          2 lambda = plus.minus(sqrt(k^4 x^2 + m^2 g^2) / (2 R))\
+          Xv = 1/(2 lambda) vec(- k^2 x, m g) = plus.minus(R / sqrt(k^4 x^2 + m^2 g^2)) vec(- k^2 x, m g)\
+        $
+    ]
+  == 拉格朗日方程（第二类）
+    #let Qv = $bold(Q)$
+    仍然从达朗伯原理出发：
+    $
+      sum_i (F_i^a - m derN(Xv_i, t, 2)) dot diff Xv_i = 0
+    $ 
+    如果可以取广义坐标：
+    $
+      Xv_i = Xv_i (Qv_1, Qv_2, ..., Qv_s, t)
+    $
+    使得约束全部满足，带回就有：
+    $
+      sum_i (F_i^a - m derN(Xv_i, t, 2)) (sum_j partialDer(Xv_i, Qv_j) diff Qv_j) = 0\
+    $
+
+
