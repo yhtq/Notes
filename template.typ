@@ -465,6 +465,9 @@
   "等变"
 }
 #let Mod = math.op("Mod")
+#let ModCat(R) = $#R - bold(Mod)$
+#let SetCat = $bold("Set")$
+#let AdjoinPair(F, G) = $(#F, #G)$
 #let tensorProduct = math.times.circle
 #let generatedBy(body) = $angle.l #body angle.r$
 #let norm2(x) = $norm(#x)^2$

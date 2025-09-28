@@ -163,20 +163,6 @@
     #definition()[$R$-线性范畴][
       设 $R$ 是交换环，称范畴 $C$ 是 $R$-线性范畴，如果对任意对象 $A, B in C$，$Hom(A, B)$ 是 $R$-模，
     ]
-  == 范畴同构
-    #definition()[范畴的同构][
-      设 $A, B$ 是两范畴，$F : A -> B, G : B -> A$，如果：
-      - $F compose G eqv id_B$
-      - $G compose F eqv id_A$
-      则称 $A, B$ 是同构的范畴
-    ]
-    同构范畴的实际结构可能是相差比较大的，但同构对象的的等价类是一一对应的。例如 $NN$ 和 $NN_(k - "vec")$ 是同构范畴，但对象相差很大。
-    #theorem()[][
-      设 $F : C -> D$ 是函子，则存在 $G$ 使得 $F, G$ 是一对等价当且仅当 $F$ 是全忠实的，并对每一个 $D$ 中对象 $A'$，存在 $C$ 中对象 $A$ 使得 $F A eqv A'$
-    ]
-    #example[][
-      设 $R, R'$ 是两个环/代数，如果 $R, R'$ 的模范畴同构，则 $R, R'$ Morita 等价。它比代数意义上的环同构要粗。
-    ]
   == universal
     #definition()[][
       设 $G : B -> B$ 是函子，称 $Y_0 : B$ 到 $G$ 的一个 universal 是 $(X_0, Y_0 -> G X_0)$，使得以下交换图表：
@@ -216,7 +202,146 @@
       - 对固定函子 $F$，它的左/右伴随函子在同构意义下是唯一的
       - 同一个函子的左伴随与右伴随未必是同构的
     ]
-    #example
+    这些结论我们后面再证明。
+    #lemma[][
+      设伴随对的同构为 $phi$，则：
+      $
+        phi(g : F A -> B) = (G g) compose eta_A where eta_A = phi(id : F A -> F A)
+      $
+    ]
+    #proof[
+      #TODO
+    ]
+    #lemma[][
+       假设 $F, G$ 是一对同构，则它们是一对伴随函子
+    ]
+    #proof[
+      仿照上面，定义：
+      $
+        phi(g : F Y -> X) = (G g) compose eta_Y
+      $
+      其中 $eta$ 是 $1 -> G F$ 的自然变换，验证：
+
+      #TODO
+    ]
+    上面两个例子表明，伴随对与自然变换 $1 -> G F$ 有着密切的关系。对偶的，也可以与自然变换 $F G -> 1$ 建立联系：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $Hom(F G X, X)$, 1),
+    node((0, 1), $Hom(G X, G X)$, 2),
+    node((1, 0), $Hom(F G X, X')$, 3),
+    node((1, 1), $Hom(G X, G X')$, 4),
+    arr(1, 2, $phi$),
+    arr(1, 3, $Hom(F G X, g)$),
+    arr(2, 4, $Hom(G X, G g)$),
+    arr(3, 4, $phi$),)]
+    上面的交换图表来自于伴随，给出 $epsilon_X := Inv(phi)(1) : F G X -> X$，为了证明自然性，任取 $g : X -> X'$，只需证明下面的图表：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $F G X$, 1),
+    node((0, 1), $X$, 2),
+    node((1, 0), $F G X'$, 3),
+    node((1, 1), $X'$, 4),
+    arr(1, 2, $epsilon$),
+    arr(1, 3, $F G g$),
+    arr(2, 4, $g$),
+    arr(3, 4, $epsilon$),)]
+    计算：
+    $
+      g compose epsilon_X = g compose Inv(phi)(1)\
+      epsilon compose F G g = Inv(phi)(1) compose (F G g) = Hom(F G g, X') (Inv(phi)(1))
+    $
+    前面的图表给出：
+    $
+      Hom(F G X, g) compose Inv(phi) = Inv(phi) compose Hom(G X, G g)\
+      g compose Inv(phi)(1) = Inv(phi)(G g compose 1) = Inv(phi) (G g)
+    $
+    我们还有图表：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $Hom(F G X, X')$, 1),
+    node((0, 1), $Hom(G X, G X')$, 2),
+    node((1, 0), $Hom(F G X', X')$, 3),
+    node((1, 1), $Hom(G X', G X')$, 4),
+    arr(1, 2, $$),
+    arr(3, 1, $Hom(F G g, X')$),
+    arr(4, 2, $Hom(G g, G X')$),
+    arr(3, 4, $$),)]
+    就有：
+    $
+      Hom(F G g, X') (Inv(phi)(1)) = Inv(phi)(G g)
+    $
+    这就证明了原来的结论。
+    #definition[单位/余单位][
+      设 $F ~ G$ 是一对伴随函子，同构为 $phi$，定义自然变换 $eta : 1 -> G F$，使得 $eta_A = phi(id : F A -> F A)$，称其为伴随对的单位。同理，定义 $epsilon : F G -> 1$，使得 $epsilon_B = Inv(phi)(id : G B -> G B)$，称其为伴随对的余单位
+    ]
+
+    这可以表明，伴随关系是等价关系的一种推广。
+    #example[Cartan 同构][
+      考虑 $A, B$ 是代数/环，$M$ 是左 $A$ 右 $B$ 双模，则有：
+      $
+        M tensorProduct_B *, Hom_A (M, *)
+      $
+      是一对伴随函子，也就是：
+      $
+        Hom_A (M tensorProduct_B Y, X) eqv Hom_B (Y, Hom_A (M, Y))
+      $
+    ]
+    #example[][
+      #let Fix = math.op("Fix")
+      #let CoFix = math.op("CoFix")
+      #let Triv = math.op("Triv")
+      设 $G$ 是有限群，$k$ 是域，设：
+      $
+        Fix : Mod(k g) -> kVect(k)\
+        CoFix : Mod(k g) -> kVect(k)
+      $
+      定义为：
+      $
+        Fix(X) = {x in X | g x = x, forall g in G}\
+        CoFix(X) = X / (span({g x - x | g in G, x in X}))
+      $
+      可以证明：
+      $
+        Fix eqv Hom(k, *)\
+        CoFix eqv k tensorProduct_(k G) *
+      $
+      考虑 $Triv : kVect(k) -> Mod(k g) = k tensorProduct_k * = Hom_k (k, *)$，它把$k$-线性空间看作平凡的$k g$-模，则 $(Triv, Fix), (CoFix, Triv)$ 都是伴随对。这是因为：
+      - $k tensorProduct_k * ~ Hom_(k G)(k, *)$
+      - $k tensorProduct_(k G) * tilde Hom_k (k, *)$
+      然而，$Fix, CoFix$ 并不一定是同构的。例如假设特征为 $p$，$G = (ZZ quo p ZZ) times (ZZ quo p ZZ) = (alpha) times (beta)$，取群作用为：
+      $
+        alpha -> mat(1, 0, 1;0, 1, 0;0, 0, 1)\
+        beta -> mat(1, 0, 0;0, 1, 1;0, 0, 1)
+      $
+      可以计算出 $Fix, CoFix$ 的维数分别为 $2, 1$
+    ]
+    #proposition()[][
+      假设 $AdjoinPair(F, G)$，则 $F Y, eta : Y -> G F Y$ 是一个 $Y$ 到 $G$ 的 universal
+    ]<adjoin-universal>
+    #example[][
+      - 设 $F$ 是某种构造函子（例如分式域，完备化等），$G$ 是遗忘函子，则往往有 $AdjoinPair(F, G)$
+    ]
+    #proposition()[][
+      设 $AdjoinPair(F, G), AdjoinPair(F', G)$，则 $F eqv F'$
+    ]
+    #proof[
+      由 @adjoin-universal 可知，$F Y, eta$ 和 $F' Y, eta'$ 都是 $Y$ 到 $G$ 的 universal，因此它们同构。#TODO
+    ]
+  == 范畴同构
+    #definition()[范畴的同构][
+      设 $A, B$ 是两范畴，$F : A -> B, G : B -> A$，如果：
+      - $F compose G eqv id_B$
+      - $G compose F eqv id_A$
+      则称 $A, B$ 是同构的范畴
+    ]
+    同构范畴的实际结构可能是相差比较大的，但同构对象的的等价类是一一对应的。例如 $NN$ 和 $NN_(k - "vec")$ 是同构范畴，但对象相差很大。
+    #theorem()[][
+      设 $F : C -> D$ 是函子，则存在 $G$ 使得 $F, G$ 是一对等价当且仅当 $F$ 是全忠实的，并对每一个 $D$ 中对象 $A'$，存在 $C$ 中对象 $A$ 使得 $F A eqv A'$
+    ]
+    #example[][
+      设 $R, R'$ 是两个环/代数，如果 $R, R'$ 的模范畴同构，则 $R, R'$ Morita 等价。它比代数意义上的环同构要粗。
+    ]
+    #example[][
+      设 $R$ 是交换环，则 $ModCat(R) eqv ModCat(M_n (R))$
+    ]
   == 拓扑空间上的 presheave, sheaves
     #let Open(X) = $bold("Open")(#X)$
     #definition[预层][

@@ -7,6 +7,8 @@
   withChapterNewPage: true
 )
 #let rv = $bold(r)$
+#let vt(x) = $der(#x, t)$
+#let at(x) = $derN(#x, t, 2)$
 = 拉格朗日方程
   == 约束
     #example[][
@@ -15,6 +17,7 @@
         f(x, y) = x^2 + y^2 - l^2 = 0
       $
       该约束与时间无关，称为稳定约束。
+      11
     ]
   == 虚位移，虚功
     在传统的牛顿力学中，一个体系往往要引入大量的方程来约束，很难求解。拉格朗日创立了虚位移和虚功的概念，从而大大简化了问题。
@@ -317,7 +320,7 @@
     #let Qv = $bold(Q)$
     仍然从达朗伯原理出发：
     $
-      sum_i (F_i^a - m derN(Xv_i, t, 2)) dot diff Xv_i = 0
+      sum_i (F_i^a - m_i derN(Xv_i, t, 2)) dot diff Xv_i = 0
     $ 
     如果可以取广义坐标：
     $
@@ -325,7 +328,229 @@
     $
     使得约束全部满足，带回就有：
     $
-      sum_i (F_i^a - m derN(Xv_i, t, 2)) (sum_j partialDer(Xv_i, Qv_j) diff Qv_j) = 0\
+      sum_i (F_i^a - m_i derN(Xv_i, t, 2)) (sum_j partialDer(Xv_i, Qv_j) diff Qv_j) = 0\
+      sum_j (sum_i (F_i^a - m_i derN(Xv_i, t, 2)) partialDer(Xv_i, Qv_j)) diff Qv_j = 0\
+      sum_j (Q_j - sum_i m_i derN(Xv_i, t, 2) partialDer(Xv_i, Qv_j)) diff Qv_j = 0\
+      sum_j (Q_j - sum_i m_i (der(vt(Xv_i) partialDer(Xv_i, Qv_j), t) - vt(Xv_i) der(partialDer(Xv_i, Qv_j), t))) diff Qv_j = 0\
+      sum_j (Q_j - dif/(dif t) sum_i m_i vt(Xv_i) partialDer(Xv_i, Qv_j) + sum_i m_i vt(Xv_i) dif/(dif t) partialDer(Xv_i, Qv_j))) diff Qv_j = 0\
     $
+    注意到：
+    $
+      vt(Xv_i) = sum_j partialDer(Xv_i, Qv_j) vt(Qv_j) + partialDer(Xv_i, t)
+    $
+    假设 $Qv_j, vt(Qv_j)$ 独立，则有：
+    $
+      partialDer(vt(Xv_i), vt(Qv_j)) = partialDer(Xv_i, Qv_j)\
+      dif/(dif t) partialDer(Xv_i, Qv_j) = sum_beta (partialDer(partialDer(Xv_i, Qv_j), Qv_beta) vt(Qv_beta)) + partialDer(partialDer(Xv_i, Qv_j), t)\
+      = diff/(diff Qv_j) (sum_beta (partialDer(Xv_i, Qv_beta) vt(Qv_beta)) + partialDer(Xv_i, t)) = diff/(diff Qv_j) vt(Xv_i)
+    $
+    代回就有原式：
+    $
+      = sum_j (Q_j - dif/(dif t) sum_i m_i vt(Xv_i) partialDer(vt(Xv_i), vt(Qv_j)) + sum_i m_i vt(Xv_i) dif/(dif t) partialDer(Xv_i, Qv_j))) diff Qv_j\
+      = sum_j (Q_j - dif/(dif t) sum_i 1/2 m_i partialDer((vt(Xv_i))^2, vt(Qv_j)) + m_i sum_i vt(Xv_i) diff/(diff Qv_j) vt(Xv_i))) diff Qv_j\
+      = sum_j (Q_j - dif/(dif t) sum_i 1/2 m_i partialDer((vt(Xv_i))^2, vt(Qv_j)) + sum_i 1/2 m_i partialDer(vt(Xv_i)^2, Qv_j))) diff Qv_j\
+      = sum_j (Q_j - dif/(dif t) (diff)/(diff vt(Qv_j)) sum_i 1/2 m_i (vt(Xv_i))^2 + diff/(diff Qv_j) sum_i 1/2 m_i (vt(Xv_i))^2) diff Qv_j\
+      = sum_j (Q_j - dif/(dif t) (diff)/(diff vt(Qv_j)) T + diff/(diff Qv_j) T) diff Qv_j\
+    $
+    再由广义坐标的独立性，立刻有：
+    $
+      Q_j = dif/(dif t) (diff)/(diff vt(Qv_j)) T - diff/(diff Qv_j) T
+    $
+    #proposition()[（第二类）拉格朗日方程][
+      设体系中有 $s$ 个独立的自由度，且可以取广义坐标 $Qv_i$ 使得约束全部满足，则有：
+      $
+        dif/(dif t) (diff)/(diff vt(Qv_j)) T - diff/(diff Qv_j) T = Q_j
+      $<lagrange2-ori>
+      其中 $T = sum_i 1/2 m_i (vt(Xv_i))^2$ 是体系的动能，$Q_j = sum_i F_i^a partialDer(Xv_i, Qv_j)$ 是体系的第 $j$ 个广义力。
+    ]
+    #corollary()[][
+      在保守力场中，有：
+      $
+        Q_j = - diff/(diff Qv_j) V
+      $
+      代入上面的方程，就是：
+      $
+        dif/(dif t) (diff)/(diff vt(Qv_j)) T - diff/(diff Qv_j) (T - V) = 0\
+        dif/(dif t) (diff)/(diff vt(Qv_j)) (T - V) - diff/(diff Qv_j) (T - V) = 0\
+      $<lagrange2-field>
+      我们称 $L := T - V$ 为拉格朗日函数，或者特殊函数，特征函数，它是 $Qv_j, vt(Qv_j), t$ 的函数。上面的推导表明，它唯一决定了系统的运动状态。
 
+      更进一步，对于一般的系统，可以有：
+      $
+        dif/(dif t) (diff)/(diff vt(Qv_j)) L - diff/(diff Qv_j) L = Q_j
+      $
+      其中 $Q_j$ 是非保守力产生的广义力。
+    ]
+    #example()[][
+      推导平面极坐标体系的的加速度，我们有：
+      $
+        Xv = r vec(cos theta, sin theta)\
+        v = (vt(r), r vt(theta))vec(e_r, e_theta)\
+        T = 1/2 m ((vt(r))^2 + r^2 (vt(theta))^2)\
+        Q_theta = F dot partialDer(Xv, theta) = F dot r vec(- sin theta, cos theta) = r F dot e_theta\
+         Q_r = F dot partialDer(Xv, r) = F dot vec(cos theta, sin theta) = F dot e_r\
+      $
+      产生 $theta$ 的方程：
+      $
+        dif/(dif t) (diff)/(diff vt(theta)) T - diff/(diff theta) T = r F dot e_theta\
+        m dif/(dif t) r^2 vt(theta) = r F dot e_theta\
+        m 2 r vt(r) vt(theta) + m r^2 at(theta) = r F dot e_theta\
+        at(theta) = 1/r a dot e_theta - 2/r vt(r) vt(theta) 
+      $
+      $r$ 的方程：
+      $
+        dif/(dif t) (diff)/(diff vt(r)) T - diff/(diff r) T = F dot e_r\
+        m dif/(dif t) vt(r) - m r (vt(theta))^2 = F dot e_r\
+        at(r) - r (vt(theta))^2 = F/m dot e_r\
+        at(r) - r (vt(theta))^2 = a dot e_r\
+        at(r) = r (vt(theta))^2 + a dot e_r\
+      $
+    ]
+    #example[][
+      两个定滑轮中间挂一动滑轮，三个滑轮依次挂重物质量为 $m_1, m_2, m_3$，绳长固定，广义坐标为两侧绳长 $l_1, l_2$，中间绳长 $l_3 = 1/2(l - l_1 - l_2)$，动能：
+      $
+        T = 1/2 (m_1, m_2, m_3) vec(vt(l_1)^2, vt(l_2)^2, vt(l_3)^2)
+      $
+      势能：
+      $
+        V = - g (m_1, m_2, m_3) vec(l_1, l_2, l_3)
+      $
+      代入方程进行计算即可。
+    ]
+    #theorem[][
+      若使用：
+      $
+        L_1 = L + der(f, t)
+      $
+      替代 $L$，得到的方程仍然成立，其中 $f$ 是任何关于 $Qv_i, t$ 且对 $t$ 连续可微的函数
+    ]
+    #proof[
+      只需证明：
+      $
+        dif/(dif t) (diff)/(diff vt(Qv_j)) der(f, t) - diff/(diff Qv_j) der(f, t) = 0
+      $
+      注意到：
+      $
+        vt(f) = sum_i partialDer(f, Qv_i) vt(Qv_i) + partialDer(f, t)
+      $
+      由独立性：
+      $
+        diff/(diff Qv_j) der(f, t) = sum_i (diff^2 f)/(diff Qv_j diff Qv_i) vt(Qv_i) + (diff^2 f)/(diff Qv_j diff t)\
+        = dif/(dif t) partialDer(f, Qv_j)
+      $
+      以及：
+      $
+        (diff)/(diff vt(Qv_j)) vt(f) = partialDer(f, Qv_j)
+      $
+      这就证明了原结论。
+    ]
+    #example[耦合摆][
+      两个细杆光滑地连接在一起，第一根与天花板连接，第二根末端有质量 $m_2$，两根的连接点有质量 $m_1$，设第一根杆与墙的法线为 $theta_1$，第二根与第一根夹角为 $theta_2$，则有：
+      - 势能：
+        $
+          V = -m_1 g l_1 cos theta_1 - m_2 g (l_1 cos theta_1 + l_2 cos(theta_1 + theta_2))\
+        $
+        $
+          T_1 = 1/2 m_1 (l_1 vt(theta_1))^2\
+          Xv_2 = vec(l_1 cos theta_1 + l_2 cos theta_2, l_1 sin theta_1 + l_2 sin theta_2)\
+          v_2 = vec(- l_1 sin theta_1 vt(theta_1) - l_2 sin theta_2 vt(theta_2), l_1 cos theta_1 vt(theta_1) + l_2 cos theta_2 vt(theta_2))\
+          T = 1/2((m_1 + m_2) l_1^2 (vt(theta_1))^2 + 2 m_2 l_1 l_2 vt(theta_1) vt(theta_2) cos (theta_1 + ]./theta_2) + m_2 l_2^2 (vt(theta_2))^2)\
+        $
+    ]
+    #example[][
+      质量为 $M$ 的大环上固定质量为 $m$ 的小环，两者向前滚动。
+      - 大环动能为：
+        $
+          1/2 M a^2 (vt(theta))^2 + 1/2 M (vt(x))^2
+        $
+      - 小环动能为：
+
+    ]
+  == 非稳定约束\*
+    #example()[][
+      三维空间中，有一圆盘，其法向量为 $v = vec(1, 0, 0)$，圆盘中心为 $vec(x, y, 0)$，沿方向 $v$ 做速度为 $v$ 的匀速运动
+    ]
+  == 对称性和守恒量 
+    #let Pv = $bold(P)$
+    #definition()[][
+      设拉氏方程中，$L$ 不显含某个广义速度 $q_beta$，则称 $q_beta$ 是*循环坐标*。方程给出：
+      $
+        p_alpha := partialDer(L, vt(q_beta)) = C
+      $
+      它的积分被称为*初次积分*。
+
+      一般的，我们称 $p_alpha$ 为*广义动量*，$(q_alpha, p_alpha)$ 为一对*共轭变量*。
+    ]
+    #proposition()[][
+      在保守力场中，设 $L$ 不显含 $t$，则有：
+      $
+        der(L, t) = sum_i partialDer(L, Qv_i) dot vt(Qv_i) + sum_i partialDer(L, vt(Qv_i)) dot at(Qv_i) \
+        = sum_i vt(partialDer(L, vt(Qv_i))) dot vt(Qv_i) + sum_i partialDer(L, vt(Qv_i)) dot at(Qv_i)\
+        = sum_i vt(Qv_i) dot vt(Pv_i) + sum_i Pv_i dot at(Qv_i)\
+        = sum_i vt((vt(Qv_i) dot Pv_i))\
+      $
+      这表明：
+      $
+        dif/(dif t) (sum_i vt(Qv_i) dot Pv_i - L) = 0
+      $<Hamiltonian>
+      一般的，我们称：
+      $
+        H := sum_i vt(Qv_i) dot Pv_i - L
+      $
+      上面的事实表明，$H$ 是与时间无关的守恒量，称为*哈密顿量*。@Hamiltonian 相较@lagrange2-field 而言，更加对称且微分次数少一次。
+    ]
+    #proposition()[][
+      由定义得：
+      $
+        L = T - V\
+      $
+      其中：
+      $
+        T = sum_i 1/2 m_i norm2(vt(Xv_i))\
+        = sum_i 1/2 m_i norm2(sum_j partialDer(Xv_i, Qv_j) vt(Qv_j) + partialDer(Xv_i, t))\
+        = sum_i 1/2 m_i (sum_j norm2(partialDer(Xv_i, Qv_j) vt(Qv_j)) + sum_(j k) (partialDer(Xv_i, Qv_j) vt(Qv_j) dot partialDer(Xv_i, Qv_k) vt(Qv_k)) +2 sum_j partialDer(Xv_i, Qv_j) vt(Qv_j) dot partialDer(Xv_i, t) + norm2(partialDer(Xv_i, t)))\
+        = sum_(j k) sum_i 1/2 m_i (partialDer(Xv_i, Qv_j) dot vt(Qv_j) partialDer(Xv_i, Qv_k) dot vt(Qv_k)) + sum_j (sum_i m_i partialDer(Xv_i, Qv_j) dot partialDer(Xv_i, t)) vt(Qv_j) + sum_i 1/2 m_i norm2(partialDer(Xv_i, t))\
+        := 1/2 sum_(j k) vt(Qv_j)^T a_(j k) (Qv, t) dot vt(Qv_k) + sum_j b_j (Qv, t) dot vt(Qv_j) + c(Qv, t)
+        := T_2 + T_1 + T_0\
+        = vt(Qv)^T A(Qv, t) vt(Qv) + b(Qv, t) dot vt(Qv) + c(Qv, t)
+      $
+      由@Hamiltonian 有：
+      $
+        H = sum_i partialDer(L, vt(Qv_i)) dot vt(Qv_i) - L\
+        = sum_i (partialDer(T, vt(Qv_i)) dot vt(Qv_i) - L)\
+        = sum_i (partialDer(T_2 + T_1 + T_0, vt(Qv_i)) dot vt(Qv_i) - L)\
+        = 2 T_2 + T_1 - (T_2 + T_1 + T_0 - V) \
+        = T_2 - T_0 + V\
+      $
+      其中：
+      $
+        T_2 = quadFormSym(vt(Qv), (sum_i 1/2 m_i partialDer(Xv_i, Qv) partialDer(Xv_i, Qv)^T)) = quadFormSym(vt(Qv), A(Qv, t))\
+      $
+      我们将 $T_2 - T_0 + V$ 称为*广义能量* 或者*能量初积分*。如果约束是稳定的，则 $T_0 = 0$，进而广义能量就是系统的总能量。
+    ]
+  == 瞬时拉格朗日方程
+    #proposition()[][
+      在@lagrange2-ori 中，积分得到：
+      $
+        integral_(0)^(Delta t) dif / (dif t) ((partialDer(L, vt(Qv_i))) - partialDer(L, Qv_i)) dif t = integral_(0)^(Delta t) Q_i dif t\ 
+      $
+      考虑一个短时的冲击过程，$Q_i$ 可能很大，称：
+      $
+        I_alpha := integral_(0)^(Delta t) Q_i dif t
+      $
+      为广义冲量。而式子左侧，$partialDer(L, Qv_i)$ 中，考虑前面的动能分解式可以知道，$partialDer(L, Qv_i)$ 关于空间位置应该是连续变化的，因此在短时内积分近似为零。总之，可以得到：
+      $
+        partialDer(L, vt(Qv_i))|_(t = Delta t) - partialDer(L, vt(Qv_i))|_(t = 0) = I_i
+      $
+      或者：
+      $
+        partialDer(T, vt(Qv_i))|_(t = Delta t) - partialDer(T, vt(Qv_i))|_(t = 0) = I_i
+      $
+      如果不是短时过程，也可以使用下面的方程，但要将势能产生的保守力放到 $I_i$ 里面。
+    ]
+    #remark[][
+      注意球之间的作用一定是虚功和为零的作用，因此不需要考虑约束力产生的冲量。
+    ]
+
+    
 
