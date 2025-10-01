@@ -551,6 +551,81 @@
     #remark[][
       注意球之间的作用一定是虚功和为零的作用，因此不需要考虑约束力产生的冲量。
     ]
+    #example[][
+      设一菱形边长为 $l$，中心为 $(0, 0)$，顶点光滑地在 $x, y$  轴上，其中一边与 $y$  轴夹角为 $theta$，每边有均匀的质量 $l$，下端 $(0, -l cos theta)$  处施加冲量 $I = (0, -)$，则体系自由度两个，质心 $y$  坐标 $y_c$  以及角度 $theta$，有：
+      - 动能：
+        $
+          T = 1/2 4 m (vt(y_c))^2 + 4 (1/2 m (1/2 l vt(theta))^2 + 1/2 I (vt(theta))^2)
+        $
+        其中 $I$  是棍绕中心转动的转动惯量，$I = 1/12 m l^2$
+      - 计算：
+        $
+          partialDer(T, vt(y_c)) = 4 m vt(y_c)\
+          partialDer(T, vt(theta)) = (1/2 m l^2 + 1/6 m l^2) vt(theta) = 4/3 m l^2 vt(theta)
+        $
+      - 计算广义冲量为：
+        $
+          I_(y_c) = integral_0^(Delta t) partialDer(Xv_A, y_c) dot F_A dif t integral_0^(Delta t)  F_A dif t = I\
+          I_(theta) = integral_0^(Delta t) partialDer(Xv_A, theta) dot F_A dif t = integral_0^(Delta t) l sin theta F_A dif t
+        $
+        注意到 $Delta T$  时间较小，因此可以认为 $theta approx pi/4$(初始值)，就有 $I_theta = l / sqrt(2) I$
+      - 列出公式：
+        $
+          4 m vt(y_c) (t) = I => vt(y_c) (t) = I / (4 m)\
+          4/3 m l^2 vt(theta) (t) = sqrt(2)/2 l I => vt(theta) (t) = 3 sqrt(2) I / (8 m l)
+        $
+      仍以上面情景为例，设菱形本来以 $vec(0, -v)$  速度匀速运动，突然在下端 $A$  点被固定。上面大多数公式都成立，但 $F$  未知，而是知道最终 $A$  点速度：
+      $
+        vec(0, vt(y_c) (t) + l sin theta (t) vt(theta) (t)) = 0
+      $
+      以及：
+      $
+        4 m vt(y_c) (t) + 4 m v = I\
+        4/3 m l^2 vt(theta) (t) = sqrt(2)/2 l I\
+      $
+
+    ]
+  == 两体问题
+    假设两物体质心为 $Xv_0$，相对坐标 $Xv_1 - Xv_2 := Xv$，可以解得：
+    $
+      Xv_1 = Xv_0 + m_2 / (m_1 + m_2) Xv\
+      Xv_2 = Xv_0 - m_1 / (m_1 + m_2) Xv\
+    $
+    可以计算得：
+    $
+      L = T - V = 1/2 (m_1 + m_2) norm2(vt(Xv_0)) + 1/2 (m_1 m_2)/(m_1 + m_2) norm2(vt(Xv)) - V(Xv)
+    $
+    通常，我们假定 $V(norm(Xv))$  可以写成 $V(Xv_0) + V(Xv_1)$  的形式，例如地月体系中，太阳距离很远，角度很小，可以认为太阳的引力势能就是质心处的势能。如此，代入拉格朗日方程，有：
+    $
+      dif/(dif t) (partialDer(L, vt(Xv_0))) - partialDer(L, Xv_0) = 0\
+      dif/(dif t) (partialDer(L, vt(Xv))) - partialDer(L, Xv) = 0\
+      (m_1 + m_2) at(Xv_0) - partialDer(V(Xv_0), Xv_0) = 0\
+      (m_1 m_2)/(m_1 + m_2) at(Xv) + partialDer(V(Xv), Xv) = 0
+    $
+    有时，我们会称 $(m_1 m_2)/(m_1 + m_2)$ 为*折合质量*，在上面的假设下，相当于地月体系在质心处受到折合质量的引力作用即可。
+  == 广义势
+    假设带电粒子在磁场中运动，则洛伦兹力理应做虚功，这带来了一些麻烦。实际上，可以使用*广义势*的概念来解决这个问题。假设电场为 $E$，磁场为 $B$，做变换：
+    $
+      E = - nabla phi - partialDer(A, t)\
+      B = nabla times A
+    $
+    其中 $phi, A$ 都是位置和时间的函数。就有：
+    $
+      F= e(E + v times B)\
+      = e (- nabla phi - partialDer(A, t) + vt(Xv) times (nabla times A))\
+    $
+    可以证明：
+    $
+      vt(Xv) times (nabla times A)) = partialDer(v dot A, Xv) - (vt(Xv) dot nabla) A
+    $
+    事实上，有：
+    $
+      vt(Xv) times (nabla times A) = der(A, t) - partialDer(A, t)
+    $
+    $
+      v' := e (phi dot v A)
+    $
+  
 
     
 
