@@ -15,7 +15,7 @@
 #let kVect(k) = $bold(k - "Vect")$
 #let Ring = $bold("Ring")$
 #let calu = $cal("u")$
-
+（考试不太会有具体例子）
 = 范畴论
   == 范畴
     #definition[子范畴][
@@ -325,6 +325,37 @@
     #proof[
       由 @adjoin-universal 可知，$F Y, eta$ 和 $F' Y, eta'$ 都是 $Y$ 到 $G$ 的 universal，因此它们同构。#TODO
     ]
+    #definition()[biadjoint pair][
+      称 $F, G$ 是一对双伴随，如果 $F$ 同时是 $G$ 的左伴随和右伴随（一般情况下当然是未必成立的）
+    ]
+    #lemma[][
+      设 $A$ 是环，$M$ 是左 $A$ 模，则 $M$ 是 $A$ 的自同态环的右模，且是双模。
+    ]
+    #definition()[][
+      设 $R$ 是环，定义 tr 映射：
+      $
+        tr : "End"_R X -> X' directSum X -> R
+      $
+    ]
+    #definition()[对称代数][
+      称 $A$ 是一个 $R$ 对称代数，如果：
+      - $R$ 是 $A$ 代数，且是投射模
+      - 存在 $R$ 线性映射 $l : A -> R$ 使得：
+        $
+          l(a b) = l(b a)\
+        $
+        并且诱导同构 $A -> duel(A)(Hom(A, -))$
+      它等价于 $A, duel(A)$ 在左 $R$ 右 $"End"R$ 模范畴中是同构的
+    ]
+    #definition()[][
+      设 $A, B$ 是 $R$ 的对称代数，$M$ 是左 $A$ 右 $B$ 双模，$N$ 是左 $B$ 右 $C$ 双模，若存在双线性映射：
+      $
+        M times N -> R
+      $
+      则称 $M, N$ 是一对伴随双模
+    ]
+
+
   == 范畴同构
     #definition()[范畴的同构][
       设 $A, B$ 是两范畴，$F : A -> B, G : B -> A$，如果：
@@ -340,7 +371,29 @@
       设 $R, R'$ 是两个环/代数，如果 $R, R'$ 的模范畴同构，则 $R, R'$ Morita 等价。它比代数意义上的环同构要粗。
     ]
     #example[][
-      设 $R$ 是交换环，则 $ModCat(R) eqv ModCat(M_n (R))$
+      设 $R$ 是交换环，则 $ModCat(R) eqv ModCat(M_n (R))$（可能考证明）
+    ]
+    #theorem[Skolen-Noether][
+      $M_n (R)$ 作为 $R$ 代数的的所有自同构都是内自同构。也就是说所有这样的同构都是 $A -> P A P^(-1)$ 的形式
+    ]
+    #proof[
+      先以 $kVect(k)$ 为例，其中不可分解的（不能写成子模直和的）的模只有唯一一个（也就是一维空间 $k$），由范畴等价，$ModCat(M_n (k))$ 中应该也只有唯一的不可分解对象 $k^n$. 现任取 $alpha$ 是 $M_n (k)$ 的自同构，定义 $Alpha_M : ModCat(M_n (k))$ 为：
+      $
+        a dot m = alpha(a) m, forall a in M_n (k), m in M
+      $
+      特别的，它应该是模范畴的自同构，$Alpha_(k^n)$ 仍然是不可分解的，因此就应该有：
+      $
+        k^n eqv^g Alpha_(k^n)
+      $
+      以及：
+      $
+        g(a m) = a dot g(m) = alpha(a) g(m)\
+      $
+      当然，熟知 $g$ 应该形如某个矩阵，以及：
+      $
+        forall m, g a m = alpha(a) g m => g a Inv(g) = alpha(a)
+      $
+      证毕
     ]
   == 拓扑空间上的 presheave, sheaves
     #let Open(X) = $bold("Open")(#X)$
