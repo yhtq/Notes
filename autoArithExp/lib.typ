@@ -17,7 +17,7 @@
 #let addContent = getBodyArr($+1$).at(0)
 #let subContent = getBodyArr($-1$).at(0)
 
-
+#let checkEmpty(x) = getBodyArr(x).len() == 0
 #let checkOne(x) = getBodyArr(x).at(0) == oneContent
 #let checkZero(x) = getBodyArr(x).at(0) == zeroContent
 #let checkNeg(x) = (getBodyArr(x).len() == 2 and getBodyArr(x).at(0) == subContent)
@@ -26,6 +26,14 @@
 #let getAttachT(x) = getBodyArr(x).at(0).at("t")
 #let getNegPart(x) = getBodyArr(x).at(1)
 #let checkAddOrSub(x) = getBodyArr(x).contains(addContent) or getBodyArr(x).contains(subContent)
+
+#let showIf(cond, body) = {
+  if cond {
+    body
+  } else {
+    []
+  }
+}
 
 #let removeAttachT(x) = {
   if not checkAttachT(x) {

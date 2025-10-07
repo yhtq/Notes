@@ -95,9 +95,20 @@
 #let hY = $hat(Y)$
 #let hy = $hat(y)$
 #let by = $bold(y)$
+#let bY = $bold(Y)$
 #let bx = $bold(x)$
+#let bX = $bold(X)$
 #let bu = $bold(u)$
 #let bv = $bold(v)$
+#let be = $bold(e)$
+#let bE = $bold(E)$
+#let bF = $bold(F)$
+#let bA = $bold(A)$
+#let bB = $bold(B)$
+#let bC = $bold(C)$
+#let bD = $bold(D)$
+#let bO = $bold(O)$
+#let bsigma = $bold(sigma)$
 #let xbar = $overline(x)$
 #let Xbar = $overline(X)$
 #let Ybar = $overline(Y)$
@@ -304,7 +315,7 @@
 #let prodf(var: defaultProd.Var, lower: defaultProd.Lower, upper: defaultProd.Upper) = $product_(#var = #lower)^(#upper)$
 #let directSumf(var: defaultDirectSum.Var, lower: defaultDirectSum.Lower, upper: defaultDirectSum.Upper) = $directSum_(#var = #lower)^(#upper)$
 
-#let bigOpBr(config, body) = $#(config.Op)_(#config.Var = #config.Lower)^(#config.Upper) #autoBraceIfAddOrSub(body)$ 
+#let bigOpBr(config, body) = $#(config.Op)_(#config.Var  #showIf(not checkEmpty(config.Lower))[=] #config.Lower)^(#config.Upper) #autoBraceIfAddOrSub(body)$ 
 
 #let sumfBr(config: defaultSum, body) = bigOpBr((Op: $sum$) + config, body)
 #let prodfBr(config: defaultProd, body) = bigOpBr((Op: $product$) + config, body)

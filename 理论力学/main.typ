@@ -622,8 +622,9 @@
     $
       vt(Xv) times (nabla times A) = der(A, t) - partialDer(A, t)
     $
+    总之，最终可以得到广义的拉氏函数：
     $
-      v' := e (phi dot v A)
+      L = T - q phi + q/c bA dot bv
     $
   
 
