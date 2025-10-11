@@ -101,6 +101,7 @@
 #let bu = $bold(u)$
 #let bv = $bold(v)$
 #let be = $bold(e)$
+#let bp = $bold(p)$
 #let bE = $bold(E)$
 #let bF = $bold(F)$
 #let bA = $bold(A)$
@@ -766,7 +767,7 @@
   show emph: it => {
     text(it, weight: "bold")
   }
-  show math.equation: set text(font: ("Noto Serif CJK SC", "New Computer Modern Math"))
+  show math.equation: set text(font: ("New Computer Modern Math", "Noto Serif CJK SC",))
   show math.equation: it => {
     show block: set align(center)
     it

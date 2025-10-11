@@ -18,9 +18,9 @@
       假设存在 $f, H$ 使得：
       $
         dif H(x, y, theta, phi) = f(x, y, theta, phi) (dif x - a sin theta dif phi)\
-        (diff^2 H)/(diff theta diff phi) = 0 = partialDer(a sin theta f, theta)\
+        (partial^2 H)/(partial theta partial phi) = 0 = partialDer(a sin theta f, theta)\
         partialDer(f sin theta, theta) = sin theta partialDer(f, theta) + f cos theta = 0\
-        (diff^2 H)/(diff theta diff x) = 0 = partialDer(f, theta)
+        (partial^2 H)/(partial theta partial x) = 0 = partialDer(f, theta)
       $
       以上两式给出 $f cos theta = 0, forall theta$，由于 $cos theta$ 仅在有限个点处非零，必须有 $f$ 几乎处处为零，这表明符合要求的积分因子不存在。
   == 胡 P318
@@ -32,11 +32,11 @@
       设 $O, D$ 点在 $x$ 轴上，坐标分别为 $0, bD$，$A$ 点坐标为 $bA$。取广义坐标 $psi$，就有：
       - $Q$ 所做虚功为：
         $
-          - Q diff bA_y = - Q l_2 cos psi diff psi
+          - Q partial bA_y = - Q l_2 cos psi partial psi
         $
       - $P$ 所做虚功为：
         $
-          P diff bD_x = P diff (l_2 - l_1) cos psi = - P (l_2 - l_1) sin psi diff psi
+          P partial bD_x = P partial (l_2 - l_1) cos psi = - P (l_2 - l_1) sin psi partial psi
         $
       由虚功原理，平衡时应当有：
       $
@@ -47,7 +47,7 @@
       设绳圈所在平面与球心距离为 $h$，选其为广义坐标：
       - 重力所做虚功为：
         $
-          - m g diff h
+          - m g partial h
         $
       - 绳子长度为：
         $
@@ -59,7 +59,7 @@
         $
         所做虚功为：
         $
-          k (2 pi sqrt(R^2 - h^2) - l_0) diff (2 pi sqrt(R^2 - h^2)) = k (2 pi sqrt(R^2 - h^2) - l_0) (2 pi h/sqrt(R^2 - h^2)) diff h
+          k (2 pi sqrt(R^2 - h^2) - l_0) partial (2 pi sqrt(R^2 - h^2)) = k (2 pi sqrt(R^2 - h^2) - l_0) (2 pi h/sqrt(R^2 - h^2)) partial h
         $
       因此平衡方程为：
       $
@@ -78,15 +78,15 @@
       其中 $phi$ 是广义坐标。
       - 重力所做虚功为：
         $
-          0 = - m g diff (a sin phi) = - m g a cos phi diff phi\
+          0 = - m g partial (a sin phi) = - m g a cos phi partial phi\
         $
       - 离心力所做虚功为：
         $
-          - m omega^2 a cos phi diff (a cos phi) = m omega^2 a^2 sin phi cos phi diff phi\
+          - m omega^2 a cos phi partial (a cos phi) = m omega^2 a^2 sin phi cos phi partial phi\
         $
       若可能在除底部外的位置平衡，则：
       $
-        m omega^2 a^2 sin phi cos phi diff phi - m g a cos phi diff phi = 0\
+        m omega^2 a^2 sin phi cos phi partial phi - m g a cos phi partial phi = 0\
         sin phi = g / (omega^2 a)
       $
       可见，只要 $g / (omega^2 a) <= 1$，都有解。
@@ -325,9 +325,9 @@
         // = sum m_i partialDer(vt(Xv_i), vt(q_alpha)) dot at(Xv_i) + sum m_i vt(Xv_i) dot partialDer(at(Xv_i), vt(q_alpha))\
         // = sum m_i partialDer(Xv_i, q_alpha) dot at(Xv_i) + sum m_i vt(Xv_i) dot partialDer(at(Xv_i), vt(q_alpha))\
         // 
-        dif/(dif t) partialDer(T, vt(q_alpha)) = sumbeta((diff^2 T)/(diff q_beta diff vt(q_alpha)) vt(q_beta) + (diff^2 T)/(diff vt(q_beta) diff vt(q_alpha)) at(q_beta)) + (diff^2 T)/(diff t diff vt(q_alpha))\
+        dif/(dif t) partialDer(T, vt(q_alpha)) = sumbeta((partial^2 T)/(partial q_beta partial vt(q_alpha)) vt(q_beta) + (partial^2 T)/(partial vt(q_beta) partial vt(q_alpha)) at(q_beta)) + (partial^2 T)/(partial t partial vt(q_alpha))\
         partialDer(vt(T), vt(q_alpha)) = partialDer(sumbeta(partialDer(T, q_beta) vt(q_beta) + partialDer(T, vt(q_beta)) at(q_beta)) + partialDer(T, t), vt(q_alpha))\
-        = sumbeta((diff^2 T)/(diff q_beta diff vt(q_alpha)) vt(q_beta)) + partialDer(T, q_alpha) + sumbeta((diff^2 T)/(diff vt(q_beta) diff vt(q_alpha)) at(q_beta)) + partialDer(T, vt(q_beta)) partialDer(at(q_beta), vt(q_beta)) + (diff^2 T)/(diff t diff vt(q_alpha))\
+        = sumbeta((partial^2 T)/(partial q_beta partial vt(q_alpha)) vt(q_beta)) + partialDer(T, q_alpha) + sumbeta((partial^2 T)/(partial vt(q_beta) partial vt(q_alpha)) at(q_beta)) + partialDer(T, vt(q_beta)) partialDer(at(q_beta), vt(q_beta)) + (partial^2 T)/(partial t partial vt(q_alpha))\
       $
       考虑到 $q_beta$ 是独立变量，有 $partialDer(at(q_beta), vt(q_beta)) = 0$，进而两式相等，证毕。
     === 13
@@ -391,3 +391,41 @@
         (m at(x) - partialDer(V, x)) m (vt(x))^2+ 2 V(x) (m at(x) + partialDer(V, x)) = 0
       $
       上式表明，系统的动能 $T$ 与“势能”$V$ 按照一定系数加权总和守恒为零。
+= 5
+  == 例 1
+    假设恒力为 $bF$，有拉格朗日方程：
+    $
+      dif / (dif t) partialDer(L, vt(Xv)) - partialDer(L, Xv) = bF^T
+    $
+    其中：
+    $
+      L = - m_0 c^2 sqrt(1 - norm2(vt(Xv)) / c^2) 
+    $
+    代入计算得：
+    $
+      bF = dif/(dif t) (m_0 vt(Xv)/sqrt(1 - norm2(vt(Xv))/c^2))\
+      m_0 vt(Xv)/sqrt(1 - norm2(vt(Xv))/c^2) = bF t + bC\
+      m_0^2 (norm2(vt(Xv)))/(1 - norm2(vt(Xv))/c^2) = norm2(bF t + bC)\
+      m_0^2 (norm2(vt(Xv)))/(c^2 - norm2(vt(Xv))) = c^2 norm2(bF t + bC)\
+      norm2(vt(Xv)) = (c^4 norm2(bF t + bC))/(m_0^2 + c^2 norm2(bF t + bC))\
+      m_0 vt(Xv)/sqrt(1 - (c^2 norm2(bF t + bC))/(m_0^2 + c^2 norm2(bF t + bC))) = bF t + bC\
+      m_0 vt(Xv)/sqrt((m_0^2)/(m_0^2 + c^2 norm2(bF t + bC))) = bF t + bC\
+      sqrt(m_0^2 + c^2 norm2(bF t + bC)) vt(Xv) = bF t + bC\
+      Xv - Xv_0 = integral_(0)^(t) (bF t + bC)/sqrt(m_0^2 + c^2 norm2(bF t + bC)) dif t \
+    $
+    （对于一般的 $bC$ 没有找到简单形式）
+  == 例 2
+    根据总能量守恒：
+    $
+      m_0 c^2/sqrt(1 - v^2/c^2) + V = C\
+      (m_0 c^2)/(V - C)^2 = 1 - v^2/c^2\
+      (m_0 c^4)/(V - C)^2 = c^2 - v^2\
+      v^2 = c^2 - (m_0 c^4)/(V - C)^2
+    $
+  == 例 3
+    显然可得运动方程：
+    $
+      vt(bp) = q/(m) (bp times bB)\
+      bp dot vt(bp) = 0 => vt(norm2(bp)) = 0
+    $
+    因此动量大小不变，也即速度大小不变，继而 $m$ 是一定值。这就保证粒子的运动状态和非相对论情形完全相同。

@@ -603,7 +603,7 @@
       (m_1 m_2)/(m_1 + m_2) at(Xv) + partialDer(V(Xv), Xv) = 0
     $
     有时，我们会称 $(m_1 m_2)/(m_1 + m_2)$ 为*折合质量*，在上面的假设下，相当于地月体系在质心处受到折合质量的引力作用即可。
-  == 广义势
+  == 电磁场中的广义势
     假设带电粒子在磁场中运动，则洛伦兹力理应做虚功，这带来了一些麻烦。实际上，可以使用*广义势*的概念来解决这个问题。假设电场为 $E$，磁场为 $B$，做变换：
     $
       E = - nabla phi - partialDer(A, t)\
@@ -624,7 +624,58 @@
     $
     总之，最终可以得到广义的拉氏函数：
     $
-      L = T - q phi + q/c bA dot bv
+      L = T - q phi + q bA dot bv
+    $
+    #example[][
+      设带电粒子质量为 $m$ 电荷为 $q$，$E = vec(0, e, 0), B = vec(0, 0, b)$，求解运动：
+
+      首先，找到电磁场中的标势和矢势，我们有：
+      $
+        phi(Xv) = (0, e, 0) Xv\
+        Delta times A = vec(0, 0, b)\
+        A Xv = mat(0, 0, 0;b, 0, 0;0, 0, 0) Xv 
+      $ 
+      则：
+      $
+        L' = 1/2 m norm2(vt(Xv)) - q ((0, e, 0) Xv) + q Xv^T  mat(0, b, 0;0, 0, 0;0, 0, 0) vt(Xv)\
+        0 = dif/(dif t) partialDer(L', vt(Xv)) - partialDer(L', Xv) = dif/(dif t) (m vt(Xv) + q mat(0, 0, 0;b, 0, 0;0, 0, 0) Xv) + vec(0, e q, 0) - q mat(0, b, 0;0, 0, 0;0, 0, 0) vt(Xv)
+      $
+    ]
+  == 摩擦力和耗散系数 
+    常见的流体导致的摩擦力与速度正相关。速度不太大时，近似有：
+    $
+      F_i = - B vt(Xv_i)
+    $
+    对于此种阻力，我们同样可以定义广义势函数处理它。事实上，定义：
+    $
+      J(Xv) = 1/2 quadFormSym(vt(Xv), B)
+    $
+    立刻就有：
+    $
+      dif/(dif t) (partialDer(L, vt(Qv))) - partialDer(L, Qv) = - partialDer(Xv, Qv) partialDer(J, vt(Xv)) = - partialDer(vt(Xv), vt(Qv)) partialDer(J, vt(Xv)) = - partialDer(J, vt(Qv)) 
+    $
+    我们往往称 $J$ 为体系的耗散函数。上面的方程可以看出，它也可以放进 $L$ 之中，表明系统的“总能量”应该随着时间衰减。可以证明，假设系统中 $T + V$ 与位置无关，$Xv$ 是 $Qv$ 的函数（不含时间），则有：
+    $
+      1/2 vt(T + V) = - J
+    $
+    这就是为什么它被称为耗散函数
+  == 相对论情形
+    相对论情形下，力的概念是相似的，但动能的概念无法确定。基本上来说，有：
+    $
+      F = vt(m v) = vt(p)\
+      p = m v\
+      m = m_0/sqrt(1 - v^2 / c^2)
+    $
+    可以证明，相对论情形下只要把 $L$ 换成：
+    $
+      L = - m_0 c^2 sqrt(1 - v^2 / c^2) - V
+    $
+    则拉氏方程同样成立。事实上：
+    $
+      dif/(dif t) partialDer(L, vt(Xv)) - partialDer(L, Xv) = dif/(dif t) (m_0/sqrt(1 - v^2 / c^2) (vt(Xv))^T)\
+      = dif/(dif t) m (vt(Xv))^T\
+      = dif/(dif t) p^T\
+      = F^T 
     $
   
 
