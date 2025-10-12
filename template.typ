@@ -76,6 +76,7 @@
   math.mat(delim: delim, ..rows_pre, ..row_dots, ..rows_post)
 }
 // #let autoMat(delim: "(", f) = 
+#let sep(..xs) = xs.pos().join($space$)
 #let where = "where"
 #let with = "with"
 #let suchThat = $ space "s.t." space $
