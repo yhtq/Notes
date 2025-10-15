@@ -118,6 +118,7 @@
 #let zbar = $overline(z)$
 #let Zbar = $overline(Z)$
 #let mubar = $overline(mu)$
+#let vbar = $overline(v)$
 #let duel(X) = autoPow(X, $*$)
 #let duelSpace(X) = duel(X)
 #let cov = math.op("Cov")

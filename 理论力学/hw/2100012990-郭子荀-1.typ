@@ -133,13 +133,9 @@
         vt(Xv) times (Xv - Xv_0) = 0\
         vec(vt(x), vt(y)) times vec(x - f(t), y) = 0\
         vt(x) y - vt(y) (x - f(t)) = 0\
-        vt(integral_()^() 1/(x - f(t)) dif t) = vt(ln y)\
-        ln y = integral_()^() 1/(x - f(t)) dif t + C\
-        y = A(t) exp(integral_()^() 1/(x - f(t)) dif t)
         // y^2 vt(x/y) + f(t) vt(y) = 0\
         // vt(x/y) - f(t) vt(1/y) = 0
       $
-      假设 $f(t)$ 是已知的则上面就是一个首次积分（？可能题意是 $f(t)$ 未知？）
 
       // #let bH = $bold(H)$
       // 假设存在积分因子，使得：
@@ -234,6 +230,10 @@
         $
           m_1 rho^2 vt(theta) = C
         $
+        以及能量积分：
+        $
+          H = #TODO
+        $
     === 8.7
       选取 $O$ 为坐标原点，$theta, phi$ 为广义坐标，两小球位置为 $Xv_1, Xv_2$，套管位置为 $Xv_3$，则有：
       - 位置向量为：
@@ -269,6 +269,10 @@
       - 显然第二式给出首次积分：
         $
           2 m l^2 sin^2 theta vt(phi) = C
+        $
+        以及能量积分：
+        $
+          H = #TODO
         $
     === 8.9
       使用题设 $L$ 列出的拉氏方程为：

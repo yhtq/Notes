@@ -206,12 +206,37 @@
     #lemma[][
       设伴随对的同构为 $phi$，则：
       $
-        phi(g : F A -> B) = (G g) compose eta_A where eta_A = phi(id : F A -> F A)
+        phi(g : F A -> B) = (G g) compose eta_A where eta_A = phi(id : F A -> F A)\
+        Inv(phi) (f: A -> G B) = epsilon_B compose (F f) where epsilon_B = Inv(phi)(id : G B -> G B)
       $
-    ]
+    ]<unit-counit-lemma>
     #proof[
       #TODO
     ]
+    #lemma[][
+      @unit-counit-lemma 中定义的 $eta, epsilon$ 构成自然变换
+    ]
+    #definition[单位/余单位][
+      设 $AdjoinPair(F, G)$ 是一对伴随函子，同构为 $phi$，定义自然变换 $eta : 1 -> G F$，使得 $eta_A = phi(id : F A -> F A)$，称其为伴随对的单位。同理，定义 $epsilon : F G -> 1$，使得 $epsilon_B = Inv(phi)(id : G B -> G B)$，称其为伴随对的余单位。
+    ]
+    #proposition()[][
+      给定函子 $F, G$ 以及 $eta : id -> G F, epsilon : F G -> id$，则可以定义 $phi$ 使得 $eta, epsilon$ 恰好成为单位、余单位以及$AdjoinPair(F, G)$
+    ]
+    #corollary()[][
+      我们有：
+      $
+        G epsilon compose eta = id\
+        epsilon compose F eta = id
+      $
+    ]
+    #proof[
+      展开定义，就是：
+      $
+        G epsilon compose eta = phi (epsilon) = phi(Inv(phi) id) = id\
+      
+      $
+    ]
+    下面的引理表明，伴随关系是等价关系的一种推广。
     #lemma[][
        假设 $F, G$ 是一对同构，则它们是一对伴随函子
     ]
@@ -220,7 +245,7 @@
       $
         phi(g : F Y -> X) = (G g) compose eta_Y
       $
-      其中 $eta$ 是 $1 -> G F$ 的自然变换，验证：
+      其中 $eta$ 是 $id -> G F$ 的自然变换，验证：
 
       #TODO
     ]
@@ -269,11 +294,7 @@
       Hom(F G g, X') (Inv(phi)(1)) = Inv(phi)(G g)
     $
     这就证明了原来的结论。
-    #definition[单位/余单位][
-      设 $F ~ G$ 是一对伴随函子，同构为 $phi$，定义自然变换 $eta : 1 -> G F$，使得 $eta_A = phi(id : F A -> F A)$，称其为伴随对的单位。同理，定义 $epsilon : F G -> 1$，使得 $epsilon_B = Inv(phi)(id : G B -> G B)$，称其为伴随对的余单位
-    ]
 
-    这可以表明，伴随关系是等价关系的一种推广。
     #example[Cartan 同构][
       考虑 $A, B$ 是代数/环，$M$ 是左 $A$ 右 $B$ 双模，则有：
       $
@@ -367,6 +388,90 @@
     #theorem()[][
       设 $F : C -> D$ 是函子，则存在 $G$ 使得 $F, G$ 是一对等价当且仅当 $F$ 是全忠实的，并对每一个 $D$ 中对象 $A'$，存在 $C$ 中对象 $A$ 使得 $F A eqv A'$
     ]
+      #proof[ 假设范畴 $A, B$ 通过 $F: A -> B, G: B -> A$ 等价，则：
+      - 对于任何 $D$，注意到有交换图：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $D$, 1),
+        node((0, 1), $F G D$, 2),
+        node((1, 0), $D$, 3),
+        node((1, 1), $F G D$, 4),
+        arr(1, 2, $$, bij_str),
+        arr(1, 3, $id$),
+        arr(2, 4, $id$),
+        arr(3, 4, $$, bij_str),)]
+        这表明 $D$ 与 $F G D$ 同构，意味着 $F$ 是本质满的。同理，任何 $C$ 也与 $G F C$ 同构。
+      - 根据自然同构 $G F ~ id$，对于任何对象 $C_1, C_2: A$，都有：
+        $
+          (G : Hom(F C_1, F C_2) -> Hom(G F C_1, G F C_2)) compose (F : Hom(C_1, C_2) -> Hom(F C_1, F C_2))
+        $
+        是同构，此时必有 $F : Hom(C_1, C_2) -> Hom(F C_1, F C_2)$ 是单射。同理，由 $F G ~ id$ 知：
+        $
+          (F : Hom(G F C_1, G F C_2) -> Hom(F G F C_1, F G F C_2)) \
+          compose (G : Hom(F C_1, F C_2) -> Hom(G F C_1, G F C_2))
+        $
+        也是同构，也即 $F: Hom(G F C_1, G F C_2) -> Hom(F G F C_1, F G F C_2)$ 总是满射。对于任何 $g: F C_1 -> F C_2$，有：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $C_1$, 1),
+        node((0, 1), $G F C_1$, 2),
+        node((0, 2), $F G F C_1$, 3),
+        node((1, 0), $C_2$, 4),
+        node((1, 1), $G F C_2$, 5),
+        node((1, 2), $F G F C_2$, 6),
+        node((0, 3), $F C_1$, 7),
+        node((1, 3), $F C_2$, 8),
+        arr(1, 2, $epsilon$, bij_str),
+        arr(4, 5, $$, bij_str),
+        arr(1, 4, $epsilon compose h compose Inv(epsilon)$),
+        arr(2, 5, $exists h, F h \
+        = F Inv(epsilon) compose g compose F epsilon$),
+        arr(3, 6, $F Inv(epsilon) compose g compose F epsilon$),
+        arr(3, 7, $F Inv(epsilon)$, bij_str),
+        arr(6, 8, $$, bij_str),
+        arr(7, 8, $g$)
+        )]
+        容易验证，$F(epsilon compose h compose Inv(epsilon)) = g$，这就得到了 $F$ 的全忠实性。
+      反之，假设函子 $F: A -> B$ 满足这些性质，对于范畴 $B$ 中元素，可以构造函子 $G : B -> A$，在元素上它把任何对象映为该对象所在等价类在 $im F$ 中取得的代表元（每个等价类只取一个代表元）的一个逆，态射上把 $f$ 映为 $Inv(F)(Inv(omega) compose f compose omega)$，其中 $omega$ 代表代表元 $F x$ 到对象 $y : B$ 的同构态射（同样对于每个对象只取一个固定的同构态射）。不难验证：
+      $
+        G (id) = Inv(F)(Inv(omega) compose omega) = id\
+        G (g compose f) = Inv(F)(Inv(omega) compose (g compose f) compose omega) \
+        = Inv(F)(Inv(omega) compose g compose (omega compose Inv(omega)) compose f compose omega) \
+        = Inv(F)(Inv(omega) compose g compose omega compose Inv(omega) compose f compose omega) \
+        = G(g) compose G(f)
+      $
+      因此它是函子。可以验证，$Inv(omega)$ 给出 $id -> F G$ 的自然同构，在对象上由定义成立，而：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $D_1$, 1),
+      node((0, 1), $F G D_2$, 2),
+      node((1, 0), $D_2$, 3),
+      node((1, 1), $F G D_1$, 4),
+      arr(1, 2, $Inv(omega)$),
+      arr(1, 3, $f$),
+      arr(2, 4, $F G f = Inv(omega) compose f compose omega$),
+      arr(3, 4, $Inv(omega)$),)]
+      因此在态射上也成立。另一方向上，注意到总有 $F G F C eqv^(omega compose Inv(omega)) F C$，只需验证：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $G F C_1$, 1),
+      node((0, 1), $C_1$, 2),
+      node((1, 0), $G F C_2$, 3),
+      node((1, 1), $C_2$, 4),
+      arr(1, 2, $Inv(F) (omega compose Inv(omega))$),
+      arr(1, 3, $G F f$),
+      arr(2, 4, $f$),
+      arr(3, 4, $Inv(F) (omega compose Inv(omega))$),)]
+      事实上，注意到：
+      $
+        F G F f = Inv(omega) compose (F f) compose omega\
+        F (Inv(F) (omega compose Inv(omega)) compose G F f) = omega compose Inv(omega) compose Inv(omega) compose (F f) compose omega\
+        = omega compose Inv(omega) compose (F f) compose omega\
+        = (F f) compose omega\
+        F (f compose (omega compose Inv(omega))) = (F f) compose omega compose Inv(omega)\
+        = (F f) compose omega 
+      $
+      其中：
+      - 由于代表元到代表元的 $omega = id$，因此 $Inv(omega) compose Inv(omega) = Inv(omega)$
+      - 由于 $F G$ 的像都是代表元，因此 $Inv(omega_(F G F C_1)) = id$
+      以上等式标明交换图表在 $F$ 作用下成立。由全忠实性知，交换图表本身成立。综上，$F G ~ id, G F ~ id$，因此 $A, B$ 等价。
+    ]
     #example[][
       设 $R, R'$ 是两个环/代数，如果 $R, R'$ 的模范畴同构，则 $R, R'$ Morita 等价。它比代数意义上的环同构要粗。
     ]
@@ -394,6 +499,15 @@
         forall m, g a m = alpha(a) g m => g a Inv(g) = alpha(a)
       $
       证毕
+    ]
+    #theorem[][
+      对于函子 $F, G$，以下命题等价：
+      - $F, G$ 是一对范畴等价
+      - $AdjoinPair(F, G)$ 是双伴随对，且所有单位和余单位都是同构
+      - $AdjoinPair(F, G)$ 是双伴随对，且存在一侧的单位和余单位都是同构
+      - $AdjoinPair(F, G)$ 是双伴随对，且两侧的单位都是同构
+      - $AdjoinPair(F, G)$ 是双伴随对，且两侧的余单位都是同构
+
     ]
   == 拓扑空间上的 presheave, sheaves
     #let Open(X) = $bold("Open")(#X)$
@@ -492,4 +606,191 @@
         Hom(Hom(-, C), F) eqv^(Hom(i_S, F)) Hom(Q_S, F)
       $
     ]
+= 特殊范畴
+    == 线性范畴
+      #definition()[$R$-线性范畴][
+        设 $R$ 是交换环，称范畴 $C$ 是 $R$-线性范畴，如果对任意对象 $A, B in C$，$Hom(A, B)$ 是 $R$-模，
+      ]
+      #definition()[核][
+        称 $(X', iota)$ 是 $f$ 的 $ker$，如果 $f iota = 0$，且对于任何 $g$ 使得 $f g = 0$ 都有：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $X$, 1),
+        node((0, 1), $Y$, 2),
+        node((1, 0), $X'$, 3),
+        node((1, 1), $Z$, 4),
+        arr(1, 2, $f$),
+        arr(3, 1, $iota$),
+        arr(4, 1, $g$),
+        arr(4, 3, $exists! h$, dashed_str))]
+      ]
+      #definition()[余核][
+        称 $(Y', pi)$ 是 $f$ 的 $coker$，如果 $pi f = 0$，且对于任何 $g$ 使得 $g f = 0$ 都有：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $X$, 1),
+        node((0, 1), $Y$, 2),
+        node((1, 0), $Z$, 3),
+        node((1, 1), $Y'$, 4),
+        arr(2, 1, $f$),
+        arr(1, 3, $pi$),
+        arr(1, 4, $g$),
+        arr(3, 4, $exists! h$, dashed_str))
+        ]
+      ]
+      #lemma[][
+        核映射 $iota$ 一定是单态射（右消去），余核映射 $pi$ 一定是满态射（左消去）
+      ]
+      #proof[
+        在线性范畴中，只需证明 $iota g = 0 => g = 0$。事实上，若 $iota g = 0$，则对于 $iota g$，存在唯一 $h$ 使得 $iota g = iota h = 0$. 注意到 $h = 0, h = g$ 都满足条件，由唯一性自然 $g = 0$ 
+      ]
+      #example[][
+        一般来说，单态射未必是核映射的一部分。例如在无挠交换群范畴中 $2 * : ZZ -> ZZ$ 是单态射，但它不能作为某个核。
+      ]
+      #definition()[][
+        定义：
+        $
+          im f = ker (Y -> coker f)\
+          coim f = coker (ker f -> X)
+        $
+        （假设存在）
+      ]
+      #lemma[][
+        假设 $im, coim$ 都存在，则存在唯一的 $h$ 满足图表：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $$, 1),
+        node((0, 1), $X$, 2),
+        node((0, 2), $X'$, 3),
+        node((0, 3), $$, 4),
+        node((1, 0), $ker f$, 5),
+        node((1, 1), $coim f$, 6),
+        node((1, 2), $im f$, 7),
+        node((1, 3), $coker f$, 8),
+        arr(2, 3, $f$),
+        arr(6, 7, $exists! h$, dashed_str),
+        arr(2, 6, $$),
+        arr(7, 3, $$),
+        arr(5, 2, $$),
+        arr(3, 8, $$)
+        )]
+      ]<coim-to-im>
+      #proof[
+        注意到 $(X -> coker f) compose f = 0$，由 $ker$ 的泛性质有：
+                #align(center)[#commutative-diagram(
+        node((0, 0), $$, 1),
+        node((0, 1), $X$, 2),
+        node((0, 2), $X'$, 3),
+        node((0, 3), $$, 4),
+        node((1, 0), $ker f$, 5),
+        node((1, 1), $coim f$, 6),
+        node((1, 2), $im f$, 7),
+        node((1, 3), $coker f$, 8),
+        arr(2, 3, $f$),
+        arr(2, 7, $exists! rho$, dashed_str),
+        arr(2, 6, $$),
+        arr(7, 3, $$),
+        arr(5, 2, $$),
+        arr(3, 8, $$)
+        )] 
+        同时，注意到：
+        $
+          (im f -> X') compose rho compose (ker f -> X) = f compose (ker f -> X) = 0
+        $
+        而 $im f -> X'$ 是单态射，由右消去知：
+        $
+          rho compose (ker f -> X) = 0
+        $
+        自然的，由 $coim$ 作为 $coker$ 的泛性质，就有：
+                        #align(center)[#commutative-diagram(
+        node((0, 0), $$, 1),
+        node((0, 1), $X$, 2),
+        node((0, 2), $X'$, 3),
+        node((0, 3), $$, 4),
+        node((1, 0), $ker f$, 5),
+        node((1, 1), $coim f$, 6),
+        node((1, 2), $im f$, 7),
+        node((1, 3), $coker f$, 8),
+        arr(2, 3, $f$),
+        arr(2, 7, $exists! rho$, dashed_str),
+        arr(6, 7, $exists! h$, dashed_str),
+        arr(2, 6, $$),
+        arr(7, 3, $$),
+        arr(5, 2, $$),
+        arr(3, 8, $$)
+        )] 
+        证毕
+      ]
+    == Abel 范畴
+      #definition()[Abel 范畴][
+        称 $R$-线性范畴 $C$ 是 Abel 范畴，如果：
+        - $C$ 中每个态射都有核和余核
+        - 任意单态射都是某个态射的核，任意满态射都是某个态射的余核
+      ]
+      #theorem()[Mitchell][
+        每个 Abeliean $R-$线性范畴都同构于某个 $A$-模范畴的满子范畴，其中 $A$ 是某个 $R-$代数（未必交换）
+      ]
+      #proposition()[][
+        Abel 范畴中，@coim-to-im 给出的态射是同构
+      ]
+      #proof[
+        #TODO
+      ]
+      #definition()[][
+        称 $X'$ 是 $X$ 的子对象，如果存在单态射 $iota : X' -> X$。称 $Y'$ 是 $Y$ 的商对象，如果存在满态射 $pi : Y -> Y'$。
+      ]
+      #definition()[不可分解][
+        称对象 $X$ 是不可分解的（或者单的）如果它没有非平凡的子对象
+      ]
+      #definition()[][
+        称序列 $X_i$ 是 $X$ 的 Jordan-Hölder 序列，如果：
+        - $X_0 = 0, X_n = X$
+        - $X_(i - 1) subset X_i$ 是子对象
+        - $X_i quo X_(i - 1)$ 是不可分解的
+      ]
+      #theorem[Jordan-Hölder][
+        设 $X$ 有 Jordan-Hölder 序列，则任何两个 Jordan-Hölder 序列的长度相同，且不可分解商对象的同构类也是相同的（不考虑顺序）
+      ]
+      #definition()[Grothendieck 群][
+        设 $C$ 是 Abel 范畴，定义其 Grothendieck 群 $Grp(C)$ 为 $C$ 中所有不可分解的对象的同构类生成的自由 Abelian 群。假设 $C$ 中所有对象都是有限长度的，则 $Grp(C)$ 也等价于：
+        - 生成元是 $C$ 中对象的同构类 $[X]$
+        - 商掉关系 $[X] = [X_1 + X_2]$ 如果有短正合列：
+          $
+            0 -> X_1 -> X -> X_2 -> 0
+          $
+        生成的 Abelian 群。
+      ]
+      #definition()[][
+        若函子保持左正合列，则称其是左正合的；若保持右正合列，则称其是右正合的；若保持短正合列，则称其是正合的。
+      ]
+      #lemma[][
+        $
+          Hom(X, *), Hom(*, X) 
+        $
+        都是左正合函子，但未必是右正合的。例如在 $ModCat(A)$ 中，$0 -> 2 ZZ -> ZZ -> ZZ quo 2 ZZ -> 0$ 是正合列，但在 $Hom(ZZ quo 2 ZZ, *)$ 作用下，变成了：
+        $
+          0 -> 0 -> 0 -> ZZ quo 2 ZZ -> 0
+        $
+      ]
+      #proof[
+        #let arrij(i, j) = $X_(#i) -> X_(#j)$
+        #let arrhomij(i, j) = $Hom(X, X_(#i)) -> Hom(X, X_(#j))$
+        给定左正合列：
+        $
+          0 -> X_1 -> X_2 -> X_3
+        $
+        往证：
+        $
+          0 -> Hom(X, X_1) -> Hom
+          (X, X_2) -> Hom(X, X_3)
+        $
+        也是左正合的。
+        - 首先证明：
+          $
+            (arrhomij(2, 3)) compose (arrhomij(1, 2)) = 0
+          $
+          显然它就是：
+          $
+            Hom(X, arrij(2, 3) compose arrij(1, 2)) = Hom(X, 0) = 0
+          $
+      ]
+
+
 

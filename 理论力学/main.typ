@@ -22,10 +22,10 @@
   == 虚位移，虚功
     在传统的牛顿力学中，一个体系往往要引入大量的方程来约束，很难求解。拉格朗日创立了虚位移和虚功的概念，从而大大简化了问题。
     #definition()[虚位移][
-      假设有完全约束 $f(x, t) = 0$，$t_0$ 时刻约束允许的质点的所有可能位移方向称为虚位移，记作 $diff r$。事实上，是该时刻下约束曲线/曲面的所有切方向。有：
+      假设有完全约束 $f(x, t) = 0$，$t_0$ 时刻约束允许的质点的所有可能位移方向称为虚位移，记作 $d r$。事实上，是该时刻下约束曲线/曲面的所有切方向。有：
       $
-        0 = diff f(x, y, z, t_0) = partialDer(f, x) diff x + partialDer(f, y) diff y + partialDer(f, z) diff z\
-        = nabla f dot diff rv
+        0 = d f(x, y, z, t_0) = partialDer(f, x) d x + partialDer(f, y) d y + partialDer(f, z) d z\
+        = nabla f dot d rv
       $
       换言之，就是梯度为法向量确定的平面。
 
@@ -34,22 +34,22 @@
     #definition[虚功][
       称：
       $
-        delta(x) = F dot diff rv
+        delta(x) = F dot d rv
       $
       为虚功。往往拆分为：
       $
-        F dot diff rv = F^a dot diff rv + N dot diff rv
+        F dot d rv = F^a dot d rv + N dot d rv
       $
       其中 $F^a$ 是主动力，$N$ 是约束产生的约束力。
     ]
     假设体系中有 $n$ 个点，则有：
     $
-      sum delta(x)_i = sum (F^a_i + N_i) dot diff rv_i = sum F^a_i dot diff rv_i + sum N_i dot diff rv_i
+      sum delta(x)_i = sum (F^a_i + N_i) dot d rv_i = sum F^a_i dot d rv_i + sum N_i dot d rv_i
     $
     #definition[理想约束][
       称体系的理想约束为：
       $
-        sum N_i dot diff rv_i = 0
+        sum N_i dot d rv_i = 0
       $
       常见的情形例如刚体约束、光滑面约束、理想定滑轮约束等。
 
@@ -57,16 +57,16 @@
     ]
     在理想约束下，我们有：
     $
-      sum delta(x)_i = sum F^a_i dot diff rv_i
+      sum delta(x)_i = sum F^a_i dot d rv_i
     $
   == 虚功原理
     #proposition[虚功原理][
-      在理想约束下，体系处于平衡状态的充要条件是 $sum F_i^a diff rv_i = 0$
+      在理想约束下，体系处于平衡状态的充要条件是 $sum F_i^a d rv_i = 0$
     ]
     #proof[
       牛顿力学中，平衡条件是 $F_i^a + N_i = 0$，当然这个条件比虚功原理所要求的更强。反之，由理想约束，有：
       $
-        sum_i (F_i^a + N_i) dot diff rv_i = sum F_i^a dot diff rv_i + sum N_i dot diff rv_i = sum F_i^a dot diff rv_i = 0
+        sum_i (F_i^a + N_i) dot d rv_i = sum F_i^a dot d rv_i + sum N_i dot d rv_i = sum F_i^a dot d rv_i = 0
       $
 
     ]
@@ -80,11 +80,11 @@
     ]
     在单摆中，取 $q = theta$，则 $x = l cos theta, y = l sin theta$ 就是一组广义坐标。在广义坐标下，虚位移表示为：
     $
-      diff X = sum_i partialDer(X, q_i) diff q_i
+      d X = sum_i partialDer(X, q_i) d q_i
     $
     而虚功表示为：
     $
-      delta(x) = sum_i F_i dot diff X_i = sum_i F_i dot (sum_j partialDer(X_i, q_j) diff q_j) = sum_j (sum_i F_i dot partialDer(X_i, q_j)) diff q_j
+      delta(x) = sum_i F_i dot d X_i = sum_i F_i dot (sum_j partialDer(X_i, q_j) d q_j) = sum_j (sum_i F_i dot partialDer(X_i, q_j)) d q_j
     $
     我们就定义：
     $
@@ -92,9 +92,9 @@
     $
     为体系中的第 $j$ 个*广义力*（并非对某个质点）。于是有：
     $
-      delta(x) = sum_j Q_j diff q_j
+      delta(x) = sum_j Q_j d q_j
     $
-    由于 $diff q_j$ 是独立的，因此 $delta(x) = 0 <=> Q_i = 0, forall i$，也就是说虚功原理可以表述为：
+    由于 $d q_j$ 是独立的，因此 $delta(x) = 0 <=> Q_i = 0, forall i$，也就是说虚功原理可以表述为：
     #align(center)[
       在理想约束下，体系处于平衡状态的充要条件是所有广义力为零
     ]
@@ -112,7 +112,7 @@
     #example[][
       考虑定滑轮系统，两侧物体质量分别为 $m_1, m_2$，则虚功原理给出平衡条件为：
       $
-        0 = m_1 g diff x_1 + m_2 g diff x_2 = (m_1 g - m_2 g) diff x_1
+        0 = m_1 g d x_1 + m_2 g d x_2 = (m_1 g - m_2 g) d x_1
       $
       因此若要平衡，只能 $m_1 = m_2$   
       ]
@@ -133,12 +133,12 @@
 
       假设两个杆与墙/前一根杆的夹角分别为 $alpha, beta$，显然这就是一组广义坐标。利用虚功原理：
       $
-        diff w = m g diff c_1 + m g diff c_2 + F dot diff y_2\
+        d w = m g d c_1 + m g d c_2 + F dot d y_2\
       $
       其中 $c_1, c_2$ 分别为两个杆的重心，$y_2$ 为第二根杆末端的位置。计算得：
       $
-        diff w = m g diff (l/2 sin alpha) + m g diff (l/2 sin beta + l sin alpha) + F dot diff (l (sin alpha + sin beta), l (cos alpha + cos beta)))\
-        = l (3/2 m g cos alpha diff alpha + 1/2 m g cos beta diff beta + F dot (cos alpha diff alpha + cos beta diff beta, -sin alpha diff alpha - sin beta diff beta)\
+        d w = m g d (l/2 sin alpha) + m g d (l/2 sin beta + l sin alpha) + F dot d (l (sin alpha + sin beta), l (cos alpha + cos beta)))\
+        = l (3/2 m g cos alpha d alpha + 1/2 m g cos beta d beta + F dot (cos alpha d alpha + cos beta d beta, -sin alpha d alpha - sin beta d beta)\
       $
       平衡条件为：
       $
@@ -149,17 +149,17 @@
 
       如果还要求天花板对杆的支持力，可以用以下方法：假想将约束解开，并加以力 $N$ 使得系统仍然在之前位置保持平衡。仍然利用虚功原理：
       $
-        0 = diff w = N dot diff X_0 + m g diff c_1 + m g diff c_2 + F dot diff y_2
+        0 = d w = N dot d X_0 + m g d c_1 + m g d c_2 + F dot d y_2
       $
       其中 $X_0$ 是杆的左上角。计算得：
       $
-        0 = diff w = N dot diff X_0 + m g diff (x_0 + l/2 sin alpha) + m g diff (x_0 + l sin alpha + l/2 sin beta) \ + F dot diff X_0 + F dot diff (l (sin alpha + sin beta), l (cos alpha + cos beta)))\
-        = l (3/2 m g cos alpha diff alpha + 1/2 m g cos beta diff beta + F dot (cos alpha diff alpha + cos beta diff beta, -sin alpha diff alpha - sin beta diff beta)\
-        + N dot diff X_0 + 2 m g diff x_0 + F dot diff X_0
+        0 = d w = N dot d X_0 + m g d (x_0 + l/2 sin alpha) + m g d (x_0 + l sin alpha + l/2 sin beta) \ + F dot d X_0 + F dot d (l (sin alpha + sin beta), l (cos alpha + cos beta)))\
+        = l (3/2 m g cos alpha d alpha + 1/2 m g cos beta d beta + F dot (cos alpha d alpha + cos beta d beta, -sin alpha d alpha - sin beta d beta)\
+        + N dot d X_0 + 2 m g d x_0 + F dot d X_0
       $
       由于平衡条件与之前一样，前式前项平衡时为零，后项也为零，也即：
       $
-        N dot diff X_0 + 2 m g diff x_0 + F dot diff X_0 = 0\
+        N dot d X_0 + 2 m g d x_0 + F dot d X_0 = 0\
         N + (2 m g, 0) + F = 0
       $
       这就求得了 $N$
@@ -167,19 +167,19 @@
     #example[][
       设 $O D,O A, A B$ 是刚体杆，光滑连接，$O :(0, 0), D$ 固定， $B$ 在 $O D$ 上滑动，$angle D O x = alpha, angle A O B = beta$. 不妨设杆长为 $2 l$，计算平衡条件为：
       $
-        diff w &= 1/2 m g diff y_A + m g diff (y_A + 1/2 (y_B - y_A))\ 
-        &= m g diff (l sin (alpha + beta)) + m g (diff (2 l sin (beta + alpha)) + diff (l sin (alpha - beta)))\
+        d w &= 1/2 m g d y_A + m g d (y_A + 1/2 (y_B - y_A))\ 
+        &= m g partial (l sin (alpha + beta)) + m g (partial (2 l sin (beta + alpha)) + partial (l sin (alpha - beta)))\
       $
       解出即可。
     ]
     #example[][
       假设链条两端悬挂在 $h$ 高的位置，求链条形状：
 
-      只考虑右半边，设曲线为 $y = f(x)$，对上面任何点 $(x, y)$ 想象链条沿原曲线滑动 $diff s$，则有：
+      只考虑右半边，设曲线为 $y = f(x)$，对上面任何点 $(x, y)$ 想象链条沿原曲线滑动 $partial s$，则有：
       $
-        diff w = - F_0 diff s + F_A diff s - rho g diff s y 
+        partial w = - F_0 d s + F_A d s - rho g d s y 
       $
-      其中 $rho g diff s y$ 是滑动过程中重力做功（可以想象成底端的 $diff s$ 端被移动到上端，其他不变）
+      其中 $rho g d s y$ 是滑动过程中重力做功（可以想象成底端的 $d s$ 端被移动到上端，其他不变）
 
       同时，考虑总体受力一定有：
       $
@@ -204,21 +204,21 @@
     在系统中，我们自然就有：
     $
       F_i - m derN(X_i, t, 2) = 0\
-      sum_i (F_i - m derN(X_i, t, 2)) dot diff X_i = 0
+      sum_i (F_i - m derN(X_i, t, 2)) dot d X_i = 0
     $
     如果理想约束成立，就有：
     $
-      sum_i (F_i^a - m derN(X_i, t, 2)) dot diff X_i = 0
+      sum_i (F_i^a - m derN(X_i, t, 2)) dot d X_i = 0
     $
     这与虚功原理很相近，只需要把 $- m derN(X_i, t, 2)$ 看作一种“力”，这常常被称为*倒转有效力*或者*逆转力* 。
     #example[机械能守恒][
-      设体系中有稳定约束（进而 $dif X_i in diff X_i$），且体系中只有保守力，则有：
+      设体系中有稳定约束（进而 $dif X_i in d X_i$），且体系中只有保守力，则有：
       $
         dif X_i = der(X_i, t) dif t\
       $
       在虚功原理：
       $
-        sum_i (F_i^a - m derN(X_i, t, 2)) dot diff X_i = 0
+        sum_i (F_i^a - m derN(X_i, t, 2)) dot d X_i = 0
       $
       中，将 $dif X_i$ 代入得：
       $
@@ -235,15 +235,15 @@
     $
     取变分可得：
     $
-      sum_j partialDer(f_i, Xv_j) dot diff Xv_j = 0
+      sum_j partialDer(f_i, Xv_j) dot d Xv_j = 0
     $
     进而：
     $
-      lambda_i sum_j partialDer(f_i, Xv_j) dot diff Xv_j = 0
+      lambda_i sum_j partialDer(f_i, Xv_j) dot d Xv_j = 0
     $
     结合达朗伯原理，有：
     $
-      sum_i (F_i^a - m_i derN(Xv_i, t, 2) + sum_j lambda_j partialDer(f_j, Xv_i)) diff Xv_i = 0\
+      sum_i (F_i^a - m_i derN(Xv_i, t, 2) + sum_j lambda_j partialDer(f_j, Xv_i)) d Xv_i = 0\
     $
     由于 $lambda$ 的任意性，我们直接令：
     $
@@ -320,7 +320,7 @@
     #let Qv = $bold(Q)$
     仍然从达朗伯原理出发：
     $
-      sum_i (F_i^a - m_i derN(Xv_i, t, 2)) dot diff Xv_i = 0
+      sum_i (F_i^a - m_i derN(Xv_i, t, 2)) dot d Xv_i = 0
     $ 
     如果可以取广义坐标：
     $
@@ -328,11 +328,11 @@
     $
     使得约束全部满足，带回就有：
     $
-      sum_i (F_i^a - m_i derN(Xv_i, t, 2)) (sum_j partialDer(Xv_i, Qv_j) diff Qv_j) = 0\
-      sum_j (sum_i (F_i^a - m_i derN(Xv_i, t, 2)) partialDer(Xv_i, Qv_j)) diff Qv_j = 0\
-      sum_j (Q_j - sum_i m_i derN(Xv_i, t, 2) partialDer(Xv_i, Qv_j)) diff Qv_j = 0\
-      sum_j (Q_j - sum_i m_i (der(vt(Xv_i) partialDer(Xv_i, Qv_j), t) - vt(Xv_i) der(partialDer(Xv_i, Qv_j), t))) diff Qv_j = 0\
-      sum_j (Q_j - dif/(dif t) sum_i m_i vt(Xv_i) partialDer(Xv_i, Qv_j) + sum_i m_i vt(Xv_i) dif/(dif t) partialDer(Xv_i, Qv_j))) diff Qv_j = 0\
+      sum_i (F_i^a - m_i derN(Xv_i, t, 2)) (sum_j partialDer(Xv_i, Qv_j) d Qv_j) = 0\
+      sum_j (sum_i (F_i^a - m_i derN(Xv_i, t, 2)) partialDer(Xv_i, Qv_j)) d Qv_j = 0\
+      sum_j (Q_j - sum_i m_i derN(Xv_i, t, 2) partialDer(Xv_i, Qv_j)) d Qv_j = 0\
+      sum_j (Q_j - sum_i m_i (der(vt(Xv_i) partialDer(Xv_i, Qv_j), t) - vt(Xv_i) der(partialDer(Xv_i, Qv_j), t))) d Qv_j = 0\
+      sum_j (Q_j - dif/(dif t) sum_i m_i vt(Xv_i) partialDer(Xv_i, Qv_j) + sum_i m_i vt(Xv_i) dif/(dif t) partialDer(Xv_i, Qv_j))) d Qv_j = 0\
     $
     注意到：
     $
@@ -342,42 +342,42 @@
     $
       partialDer(vt(Xv_i), vt(Qv_j)) = partialDer(Xv_i, Qv_j)\
       dif/(dif t) partialDer(Xv_i, Qv_j) = sum_beta (partialDer(partialDer(Xv_i, Qv_j), Qv_beta) vt(Qv_beta)) + partialDer(partialDer(Xv_i, Qv_j), t)\
-      = diff/(diff Qv_j) (sum_beta (partialDer(Xv_i, Qv_beta) vt(Qv_beta)) + partialDer(Xv_i, t)) = diff/(diff Qv_j) vt(Xv_i)
+      = d/(d Qv_j) (sum_beta (partialDer(Xv_i, Qv_beta) vt(Qv_beta)) + partialDer(Xv_i, t)) = d/(d Qv_j) vt(Xv_i)
     $
     代回就有原式：
     $
-      = sum_j (Q_j - dif/(dif t) sum_i m_i vt(Xv_i) partialDer(vt(Xv_i), vt(Qv_j)) + sum_i m_i vt(Xv_i) dif/(dif t) partialDer(Xv_i, Qv_j))) diff Qv_j\
-      = sum_j (Q_j - dif/(dif t) sum_i 1/2 m_i partialDer((vt(Xv_i))^2, vt(Qv_j)) + m_i sum_i vt(Xv_i) diff/(diff Qv_j) vt(Xv_i))) diff Qv_j\
-      = sum_j (Q_j - dif/(dif t) sum_i 1/2 m_i partialDer((vt(Xv_i))^2, vt(Qv_j)) + sum_i 1/2 m_i partialDer(vt(Xv_i)^2, Qv_j))) diff Qv_j\
-      = sum_j (Q_j - dif/(dif t) (diff)/(diff vt(Qv_j)) sum_i 1/2 m_i (vt(Xv_i))^2 + diff/(diff Qv_j) sum_i 1/2 m_i (vt(Xv_i))^2) diff Qv_j\
-      = sum_j (Q_j - dif/(dif t) (diff)/(diff vt(Qv_j)) T + diff/(diff Qv_j) T) diff Qv_j\
+      = sum_j (Q_j - dif/(dif t) sum_i m_i vt(Xv_i) partialDer(vt(Xv_i), vt(Qv_j)) + sum_i m_i vt(Xv_i) dif/(dif t) partialDer(Xv_i, Qv_j))) d Qv_j\
+      = sum_j (Q_j - dif/(dif t) sum_i 1/2 m_i partialDer((vt(Xv_i))^2, vt(Qv_j)) + m_i sum_i vt(Xv_i) d/(d Qv_j) vt(Xv_i))) d Qv_j\
+      = sum_j (Q_j - dif/(dif t) sum_i 1/2 m_i partialDer((vt(Xv_i))^2, vt(Qv_j)) + sum_i 1/2 m_i partialDer(vt(Xv_i)^2, Qv_j))) d Qv_j\
+      = sum_j (Q_j - dif/(dif t) (d)/(d vt(Qv_j)) sum_i 1/2 m_i (vt(Xv_i))^2 + d/(d Qv_j) sum_i 1/2 m_i (vt(Xv_i))^2) d Qv_j\
+      = sum_j (Q_j - dif/(dif t) (d)/(d vt(Qv_j)) T + d/(d Qv_j) T) d Qv_j\
     $
     再由广义坐标的独立性，立刻有：
     $
-      Q_j = dif/(dif t) (diff)/(diff vt(Qv_j)) T - diff/(diff Qv_j) T
+      Q_j = dif/(dif t) (d)/(d vt(Qv_j)) T - d/(d Qv_j) T
     $
     #proposition()[（第二类）拉格朗日方程][
       设体系中有 $s$ 个独立的自由度，且可以取广义坐标 $Qv_i$ 使得约束全部满足，则有：
       $
-        dif/(dif t) (diff)/(diff vt(Qv_j)) T - diff/(diff Qv_j) T = Q_j
+        dif/(dif t) (d)/(d vt(Qv_j)) T - d/(d Qv_j) T = Q_j
       $<lagrange2-ori>
       其中 $T = sum_i 1/2 m_i (vt(Xv_i))^2$ 是体系的动能，$Q_j = sum_i F_i^a partialDer(Xv_i, Qv_j)$ 是体系的第 $j$ 个广义力。
     ]
     #corollary()[][
       在保守力场中，有：
       $
-        Q_j = - diff/(diff Qv_j) V
+        Q_j = - d/(d Qv_j) V
       $
       代入上面的方程，就是：
       $
-        dif/(dif t) (diff)/(diff vt(Qv_j)) T - diff/(diff Qv_j) (T - V) = 0\
-        dif/(dif t) (diff)/(diff vt(Qv_j)) (T - V) - diff/(diff Qv_j) (T - V) = 0\
+        dif/(dif t) (d)/(d vt(Qv_j)) T - d/(d Qv_j) (T - V) = 0\
+        dif/(dif t) (d)/(d vt(Qv_j)) (T - V) - d/(d Qv_j) (T - V) = 0\
       $<lagrange2-field>
       我们称 $L := T - V$ 为拉格朗日函数，或者特殊函数，特征函数，它是 $Qv_j, vt(Qv_j), t$ 的函数。上面的推导表明，它唯一决定了系统的运动状态。
 
       更进一步，对于一般的系统，可以有：
       $
-        dif/(dif t) (diff)/(diff vt(Qv_j)) L - diff/(diff Qv_j) L = Q_j
+        dif/(dif t) (d)/(d vt(Qv_j)) L - d/(d Qv_j) L = Q_j
       $
       其中 $Q_j$ 是非保守力产生的广义力。
     ]
@@ -392,14 +392,14 @@
       $
       产生 $theta$ 的方程：
       $
-        dif/(dif t) (diff)/(diff vt(theta)) T - diff/(diff theta) T = r F dot e_theta\
+        dif/(dif t) (d)/(d vt(theta)) T - d/(d theta) T = r F dot e_theta\
         m dif/(dif t) r^2 vt(theta) = r F dot e_theta\
         m 2 r vt(r) vt(theta) + m r^2 at(theta) = r F dot e_theta\
         at(theta) = 1/r a dot e_theta - 2/r vt(r) vt(theta) 
       $
       $r$ 的方程：
       $
-        dif/(dif t) (diff)/(diff vt(r)) T - diff/(diff r) T = F dot e_r\
+        dif/(dif t) (d)/(d vt(r)) T - d/(d r) T = F dot e_r\
         m dif/(dif t) vt(r) - m r (vt(theta))^2 = F dot e_r\
         at(r) - r (vt(theta))^2 = F/m dot e_r\
         at(r) - r (vt(theta))^2 = a dot e_r\
@@ -427,7 +427,7 @@
     #proof[
       只需证明：
       $
-        dif/(dif t) (diff)/(diff vt(Qv_j)) der(f, t) - diff/(diff Qv_j) der(f, t) = 0
+        dif/(dif t) (d)/(d vt(Qv_j)) der(f, t) - d/(d Qv_j) der(f, t) = 0
       $
       注意到：
       $
@@ -435,12 +435,12 @@
       $
       由独立性：
       $
-        diff/(diff Qv_j) der(f, t) = sum_i (diff^2 f)/(diff Qv_j diff Qv_i) vt(Qv_i) + (diff^2 f)/(diff Qv_j diff t)\
+        d/(d Qv_j) der(f, t) = sum_i (d^2 f)/(d Qv_j d Qv_i) vt(Qv_i) + (d^2 f)/(d Qv_j d t)\
         = dif/(dif t) partialDer(f, Qv_j)
       $
       以及：
       $
-        (diff)/(diff vt(Qv_j)) vt(f) = partialDer(f, Qv_j)
+        (d)/(d vt(Qv_j)) vt(f) = partialDer(f, Qv_j)
       $
       这就证明了原结论。
     ]
@@ -677,6 +677,85 @@
       = dif/(dif t) p^T\
       = F^T 
     $
+= 小振动理论
+  == 运动方程
+    假设有 $n$ 个质点，保守体系，$s$ 个自由度，所有约束皆为稳定约束。所谓小振动，是指系统在稳定点附近小范围振动。因此：
+    $
+      V = V(0) + (partialDer(V, Qv)) Qv + 1/2 quadFormSym(Qv, partialDerN(V, Qv, 2)) + ...\
+    $
+    由于是稳定点，因此可以认为 $partialDer(V, Qv) = 0$，并且忽略高阶项，因此：
+    $
+      V = V(0) + 1/2 quadFormSym(Qv, K)
+    $
+    其中 $K = partialDerN(V, Qv, 2)$，通常我们认为它是正定的。类似的：
+    $
+      T = 1/2 quadFormSym(vt(Xv), M) = 1/2 quadFormSym(vt(Qv), (quadFormSym(partialDer(Xv, Qv), M)))
+    $
+    注意它本身就是二次项，因此我们近似认为：
+    $
+      T = 1/2 quadFormSym(vt(Qv), A)
+    $
+    其中 $A = (quadFormSym(partialDer(Xv, Qv), M)) (0)$，之后，就可以得到拉氏方程：
+    $
+      dif/(dif t) (partialDer(L, vt(Qv))) - partialDer(L, Qv) = 0\
+      dif/(dif t) (A vt(Qv)) + K Qv = 0\
+      A at(Qv) + K Qv = 0
+    $
+    设 $bY = vt(bX)$，则方程等价为：
+    $
+      dif/(dif t) vec(bX, bY) = mat(0, I; - Inv(A) K, 0) vec(bX, bY)
+    $
+    它的基础解矩阵为：
+    $
+      e^(mat(0, I; - Inv(A) K, 0) t)
+    $
+    因此原方程的特解为：
+    $
+      S e^(mat(0, I; - Inv(A) K, 0) t) S^T
+    $
+    设 $M := mat(0, I; - Inv(A) K, 0)$，则其特征值满足：
+    $
+      Det(lambda I, -I;Inv(A) K, lambda I) = 0\
+      Det(lambda I, -I;lambda^2 I + Inv(A) K, 0) = 0\
+      det(lambda^2 I + Inv(A) K) = 0
+    $
+    或者：
+    $
+      det(lambda^2 A + K) = 0
+    $
+    事实上，注意到：
+    $
+      Inv(A) K = Inv(sqrt(K))(sqrt(K) Inv(A) sqrt(K)) sqrt(K)
+    $
+    而 $sqrt(K) Inv(A) sqrt(K)$ 对称正定，因此特征值都是正的，且可设：
+    $
+      sqrt(K) Inv(A) sqrt(K) = P D^2 Inv(P)
+    $
+    就有：
+    $
+      Inv(A) K = Inv(sqrt(K)) P D^2 Inv(P) sqrt(K) := C^2
+    $
+    因此 $Inv(A) K = C^2$
+    
+    因此，$mat(P, 0;0, P) e^(i D t)$ 也是一个特解。其中：
+    $
+      D^2 = Inv(A) K
+    $
+    $D$ 的特征值被称为 *本征频率* 或者 *本征值*。
+    #example()[][
+      设有两个参数为 $l, m$ 的单摆，水平距离为 $l$，两个球通过弹簧连接在一起，弹簧原长度恰为 $l$. 取两个单摆摆动角度 $theta_1, theta_2$，则：
+      - 动能为：
+        $
+          1/2 m (norm2(vt(l sin theta_1)) + norm2(vt(l sin theta_2))) approx 1/2 m l^2 ((vt(theta_1))^2 + (vt(theta_2))^2)
+        $
+      - 势能为：
+        $
+          V approx m g l (1 - cos theta_1) + m g l (1 - cos theta_2) + 1/2 k (l (theta_1 - theta_2))^2\
+          approx 1/2 m g l (theta_1^2 + theta_2^2) + 1/2 k (l (theta_1 - theta_2))^2
+        $
+      在小振动问题中，拉氏函数总是广义坐标的二次函数，不会有一次项
+    ]
+
   
 
     

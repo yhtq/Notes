@@ -141,7 +141,6 @@
       integral 1/2 m v^2 f(v) dif v_x dif v_y dif v_z = 3/2 k T
     $
     可以计算出，理想气体的速度满足多元高斯分布：
-    #let vbar = $arrow(v)$
     $
       f(vbar) = (2 pi (k T)/m )^(- 3/2) exp(-v^2/((2 k T) / m))
     $
@@ -154,6 +153,10 @@
       $
         sqrt((2 k T) / m) = sqrt((2 R T) / mu)
       $
+    // 使用分子质量计算平均
+    #let calcAverageSpeedm(T, m) = calc.sqrt(8 * kv * T / (calc.pi * m))
+    // 使用摩尔质量计算平均速率
+    #let calcAverageSpeedmu(T, mu) = calc.sqrt(8 * Rv * T / (calc.pi * mu))
     - 平均速率：也就是 $v$  的数学期望，可以计算出为：
       $
         sqrt((8 k T)/(pi m)) = sqrt((8 R T)/(pi mu))
