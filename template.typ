@@ -111,6 +111,7 @@
 #let bD = $bold(D)$
 #let bO = $bold(O)$
 #let bsigma = $bold(sigma)$
+#let bxi = $bold(xi)$
 #let xbar = $overline(x)$
 #let Xbar = $overline(X)$
 #let Ybar = $overline(Y)$

@@ -677,8 +677,8 @@
       = dif/(dif t) p^T\
       = F^T 
     $
-= 小振动理论
-  == 运动方程
+= 振动理论
+  == 小振动的运动方程
     假设有 $n$ 个质点，保守体系，$s$ 个自由度，所有约束皆为稳定约束。所谓小振动，是指系统在稳定点附近小范围振动。因此：
     $
       V = V(0) + (partialDer(V, Qv)) Qv + 1/2 quadFormSym(Qv, partialDerN(V, Qv, 2)) + ...\
@@ -703,7 +703,8 @@
     $
     设 $bY = vt(bX)$，则方程等价为：
     $
-      dif/(dif t) vec(bX, bY) = mat(0, I; - Inv(A) K, 0) vec(bX, bY)
+      dif/(dif t) vec(bX, bY) = mat(0, I; - Inv(A) K, 0) vec(bX, bY)\
+      dif/(dif t) vec(bX, A bY) = mat(0, Inv(A); - K, 0) vec(bX, A bY) 
     $
     它的基础解矩阵为：
     $
@@ -755,6 +756,111 @@
         $
       在小振动问题中，拉氏函数总是广义坐标的二次函数，不会有一次项
     ]
+  == 简正坐标
+    注意到 $A, K$ 都是正定矩阵，由线性代数理论它们可以同时合同对角化，因此假设我们做线性变换：
+    $
+      Qv = P bxi
+    $
+    之后就有：
+    $
+      T = 1/2 norm2(vt(bxi))\
+      V = V_0 + 1/2 quadFormSym(bxi, K')
+    $
+    方程变为：
+    $
+      at(bxi) + K' bxi = 0
+    $
+    其中 $K'$ 是对角的，则方程变成若干个独立的二阶常微分方程，解为：
+    $
+      xi_alpha = C_alpha cos(omega_alpha t + phi_alpha)
+    $
+    再带回 $Qv = P bxi$，就得到了 $Qv$ 的解。
+    #example()[][
+      水平面上有一质量为 $m'$ 的物体，下端连接一 $m, l$ 的单摆，单摆做小振动。设物体坐标为 $Xv_1 = vec(x, 0)$，单摆坐标为 $Xv_2 = Xv_1 + vec(l sin theta, - l cos theta)$:
+      - 势能为：
+        $
+          V = - m g l cos theta approx 1/2 m g l theta^2
+        $
+      - 动能为：
+        $
+          T = 1/2 m' (vt(x))^2 + 1/2 m (norm2(vt(Xv_2)))^2\
+          = 1/2 m' (vt(x))^2 + 1/2 m (norm2(vec(vt(x) + l cos theta vt(theta), - l sin theta vt(theta))))^2\
+          approx 1/2 (m' + m) (vt(x))^2 + m l vt(x) vt(theta) + 1/2 m l^2 (vt(theta))^2\
+          = 1/2 quadFormSym(vec(vt(x), vt(theta)), mat(m' + m, m l; m l, m l^2))
+        $
+      若将问题改成 $m'$ 做某个固定的运动（注意此时是不稳定约束），则我们直接使用之前关于 $theta$ 的方程即可。这是因为我们可以只研究单摆，拉力对单摆总是不做虚功的。
+    ]
+  == 有限振幅振动
+    考虑最简单的单摆问题，假设摆长为 $l$，质量为 $m$，角度为 $phi$，则：
+    - 动能为：
+      $
+        T = 1/2 m (l vt(phi))^2
+      $
+    - 势能为：
+      $
+        V = - m g l cos phi
+      $
+    则拉氏方程为：
+    $
+      dif/(dif t) (m l^2 vt(phi)) + m g l sin phi = 0\
+      at(phi) + (g / l) sin phi = 0
+    $
+    就有机械能守恒：
+    $
+      at(phi) dif phi - (g / l) dif cos phi = 0\
+      vt(phi) dif vt(phi) - (g / l) dif cos phi = 0\
+      1/2 (vt(phi))^2 + (g / l) cos phi = C\
+      vt(phi) = plus.minus sqrt(2 (C - (g / l) cos phi)) =  plus.minus sqrt((2 g)/l (cos phi - cos phi_0))
+    $
+    只考虑一支，就有：
+    $
+      1/sqrt(cos phi - cos phi_0) dif phi = - sqrt((2 g)/l) dif t\
+      1/sqrt(sin^2 phi_0/2 - sin^2 phi/2) dif phi = - 2 sqrt(g/l) dif t
+    $
+    此时，假设 $phi_0/2, phi/2$ 较小，方程变为：
+    $
+      1/sqrt(phi_0^2 - phi^2) dif phi = - sqrt((g)/(l)) dif t
+    $
+    积分结果为：
+    $
+      phi = phi_0 sin(sqrt(g/l) t + C)
+    $
+    当然，一般来说我们不能认为它较小，因此回到：
+    $
+      1/sqrt(sin^2 phi_0/2 - sin^2 phi/2) dif phi = - 2 sqrt(g/l) dif t
+    $
+    设 $sin u = (sin phi/2)/(sin phi_0/2), kappa = sin phi_0/2, phi <= phi_0$，则：
+    $
+      sqrt(sin^2 phi_0/2 - sin^2 phi/2) = kappa sqrt(1 - u^2)\
+      dif phi = sqrt((1 - sin^2 u)/(1 - kappa^2 sin^2 u)) 2 kappa dif u
+    $
+    代回得：
+    $
+      integral 1/sqrt(1 - kappa^2 sin^2 u) dif u = - sqrt(g/l) t + C
+    $
+    我们希望求出 $T / 4$，也就是 $phi$ 从 $phi_0$ 到 $0$ 的过程所需的时间，经计算它就是：
+    $
+      integral_0^(pi/2) 1/sqrt(1 - kappa^2 sin^2 u) dif u = sqrt(g/l) T/4
+    $
+    左侧的定积分形式为椭圆积分，没有解析解，但我们常常使用：
+    $
+      K(kappa) := integral_0^(pi/2) 1/sqrt(1 - kappa^2 sin^2 u) dif u
+    $
+    来表示它的解。当 $kappa < 1$ 时它有展开式：
+    $
+      pi/2 (1 + (1/2)^2 kappa^2 + ((1 dot 3)/(2 dot 4))^2 kappa^4 + ...)
+    $
+    总之：
+    $
+      T = 2 pi sqrt(l/g) K(sin phi_0/2)
+    $
+    计算可得，即使 $phi_0 = pi/3$，级数展开的第二项也仅有 $1/6$，之后的项就更小了，因此我们经常将单摆处理为小振动是合理的。
+
+    一般而言，对于对于振子，如果势能保留到三阶，则表达式大致为：
+    $
+      V = 1/2 m omega^2_0 x^2 - 1/3 m a x^3
+    $
+    其中三次项被称为非谐振项。代入拉氏方程，它不是线性的，通常很难解出。
 
   
 

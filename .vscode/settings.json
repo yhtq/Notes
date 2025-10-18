@@ -3,4 +3,5 @@
         "typst"
     ],
     "tinymist.formatterMode": "typstfmt",
+    "tinymist.preview.refresh": "onSave",
 }
