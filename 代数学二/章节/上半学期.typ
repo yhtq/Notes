@@ -1,4 +1,7 @@
 #import "../../template.typ": *
+#import "@preview/commute:0.3.0": node, arr, commutative-diagram
+
+#let emptyArrow(s, e) = arr(str(s), str(e), $$)
 // Take a look at the file `template.typ` in the file panel
 // to customize this template and discover how it works.
 
@@ -112,14 +115,14 @@
     #definition[][
         + 设 $M$是$AModule(A)$，$M_i in I$ 是若干子模，定义：
           - $M_j subset sum_(i in I) M_i = {sum_(i in I) m_i | m_i in M_i, m_i "中至多有限个非零"} subset M$
-          - $sect.big_(i in I) M_i subset M_j$
+          - $inter.big_(i in I) M_i subset M_j$
           都是子$AModule(A)$
         + 设 $I$ 是 $A$ 的理想，定义：
           $
           I M = phi: (A -> (M -> M)) |_I
           $
           它是 $M$ 的子模\
-          当 $I, J$ 都是理想时，以上定义给出 $I J$ 也是理想，它含于 $I sect J$。以此乘法给出 $I^m$ 的定义
+          当 $I, J$ 都是理想时，以上定义给出 $I J$ 也是理想，它含于 $I inter J$。以此乘法给出 $I^m$ 的定义
         + 任取 $m in M$，定义：
           $
           (m) = A m = {a m | a in A}
@@ -147,7 +150,7 @@
     
     ]
     #theorem[][
-      $(M_1 + M_2)/(M_1) tilde.eq (M_1)/(M_1 sect M_2)$
+      $(M_1 + M_2)/(M_1) tilde.eq (M_1)/(M_1 inter M_2)$
     ]
     #theorem[][
       $M$ 是有限生成的当且仅当存在 $A^n -> M$ 的满同态
@@ -244,13 +247,13 @@
     #definition[幂零根|nilradical][
       设 $A$ 是环，称 $A$ 的 幂零根|nilradical 为：
       $
-      N = sect.big Spec(A)
+      N = inter.big Spec(A)
       $
     ]
     #definition[Jacob radical][
       设 $A$ 是环，称 $A$ 的 Jacob radical 为：
       $
-      R = sect.big "max"(A)
+      R = inter.big "max"(A)
       $
     ]
     #theorem[][
@@ -300,12 +303,12 @@
       - $x, y in S => x y in S$
     ]
     #theorem[][
-      设 $S$ 是乘性子集且不含零(那么 $S$ 中的元素都不是幂零元)，则存在素理想 $p$ 使得 $p sect S = emptyset$
+      设 $S$ 是乘性子集且不含零(那么 $S$ 中的元素都不是幂零元)，则存在素理想 $p$ 使得 $p inter S = emptyset$
     ]
     #proof[
       构造：
       $
-      Sigma = {I "is ideal"| I sect S = emptyset }
+      Sigma = {I "is ideal"| I inter S = emptyset }
       $
       类似上面的证明，可以利用 Zoun 引理证明 $Sigma$ 有极大元 $p$，且它是素理想
     ]
@@ -316,19 +319,19 @@
       $
       容易验证它也是：
       $
-      sect.big V(I) = sect.big {p in Spec(A) | I subset p}
+      inter.big V(I) = inter.big {p in Spec(A) | I subset p}
       $
       特别的，$sqrt(0) = N$
     ]
     #proposition[][
       - $I subset sqrt(I)$
       - $sqrt(I) = sqrt(sqrt(I))$
-      - $sqrt(I J) = sqrt(I) sect sqrt(J)$
+      - $sqrt(I J) = sqrt(I) inter sqrt(J)$
       - $sqrt(I) = (1) <=> I = 1$
       - $p in Spec(A) => sqrt(p) = p$
     ]
     #remark[][
-      对应的也应该考虑 $sect.big_(I subset m in max(A)) m$，这同样对应商环中的 Jacob radical，也即：
+      对应的也应该考虑 $inter.big_(I subset m in max(A)) m$，这同样对应商环中的 Jacob radical，也即：
       $
       forall y in A: (1 - x y) + I = (1)\
       a - a x + b = 1\
@@ -366,8 +369,8 @@
       - $V(E) = V(I)$， 其中 $I$ 是 $E$ 的生成理想。这表明我们只需要考虑理想的零点集
       - $V(0) = Spec(A)$
       - $V(A) = V(1) = emptyset$
-      - $sect.big_i V(I_i) = V(sum_i I_i)$
-      - $V(I) union V(J) = V(I sect J) = V(I J)$
+      - $inter.big_i V(I_i) = V(sum_i I_i)$
+      - $V(I) union V(J) = V(I inter J) = V(I J)$
     ]
     #proof[
       - 注意到对任何素理想 $P, I subset P <=> E subset P$，结论显然
@@ -377,11 +380,11 @@
         $
         I_j subset sum_i I_i => V(sum_i I_i) subset V(I_j)
         $
-        另一方面，假设素理想 $P$ 满足 $P in sect.big_i V(I_i)$，这就导出 $P supset I_i, forall i$，表明 $P supset sum_i I_i$
-      - 首先 $I, J supset I sect J, I J$，因此 $V(I), V(J) subset I sect J, I J$。\
+        另一方面，假设素理想 $P$ 满足 $P in inter.big_i V(I_i)$，这就导出 $P supset I_i, forall i$，表明 $P supset sum_i I_i$
+      - 首先 $I, J supset I inter J, I J$，因此 $V(I), V(J) subset I inter J, I J$。\
         - 往证 $V(I J) subset V(I) union V(J)$\
           注意到 $P$ 是素理想，因此 $P supset I J => P supset I or P supset J => P in V(I) union V(J)$
-        - 类似的，把 $I sect J$ 替换 $I J$ 结论都是正确的
+        - 类似的，把 $I inter J$ 替换 $I J$ 结论都是正确的
     ]
     注意到上面的命题实际上说明了：
     - $Spec(A), emptyset$ 是某个集合的零点集
@@ -420,24 +423,24 @@
       的集合为基本开集/主开集
     ]
     #proposition[][
-      - $D(f) sect D(g) = D(f g)$
+      - $D(f) inter D(g) = D(f g)$
       - $D(f) = emptyset <=> f in sqrt(0)$
       - $D(f) = Spec(A) <=> f in U(A)$
       - $D(f) = D(g) <=> sqrt(f) = sqrt(g)$
     ]
     #proof[
-      - $p in D(f) sect D(g) <=> f in.not p and g in.not p <=> f g in.not p$
+      - $p in D(f) inter D(g) <=> f in.not p and g in.not p <=> f g in.not p$
       - 由幂零根的概念和性质可知
       - \
         - 一方面 $f in U(A) => V(f) = emptyset$
         - 另一方面，一个不可逆的元素应该包含于某个极大理想，而极大理想一定是素理想，因此成立
         - 首先我们证明：
           $
-          sect.big_(P in V(I)) = sqrt(I)
+          inter.big_(P in V(I)) = sqrt(I)
           $
           这是因为由对应定义，$V(I)$ 中的元素与 $Spec(A quo I)$ 中元素可以产生一一对应 $phi$。同时，注意到：
           $
-          Spec(A quo I) = sect.big_(p in V(I)) p quo I
+          Spec(A quo I) = inter.big_(p in V(I)) p quo I
           $
           用 $phi$ 作用于两侧立得结论
     ]
@@ -447,7 +450,7 @@
     #proof[
       这是非常自然的，因为开集均形如：
       $
-      Spec(A) - V(E) = Spec(A) -  (sect.big_(f in E) V(f)) = union.big_(f in E) D(f) 
+      Spec(A) - V(E) = Spec(A) -  (inter.big_(f in E) V(f)) = union.big_(f in E) D(f) 
       $
     ]
     #definition[拟紧(quasi-compact)][
@@ -461,7 +464,7 @@
       由于所有 $D(f)$ 构成拓扑基，因此不妨设开覆盖是拓扑基构成的，也即：
       $
       &D(f) subset union.big_(i in I) D(g_i)\
-      <=>& V(f) supset sect.big_(i in I) V(g_i)\
+      <=>& V(f) supset inter.big_(i in I) V(g_i)\
       <=>& V(f) supset V(sum_(i in I) (g_i))\
       <=>& f in sqrt(sum_(i in I) (g_i))\
       <=>& f^k in sum_(i in I) (g_i)
@@ -509,13 +512,13 @@
       $
     ]
     #proposition[][
-      设 $I + J = (1)$，则 $I sect J = I J$
+      设 $I + J = (1)$，则 $I inter J = I J$
     ]
     #proof[
-      - 由定义，$I J subset I sect J$
+      - 由定义，$I J subset I inter J$
       - 其次：
         $
-        I sect J = (I + J)(I sect J) = I (I sect J) + (I sect J) J subset I J + I J = I J 
+        I inter J = (I + J)(I inter J) = I (I inter J) + (I inter J) J subset I J + I J = I J 
         $
     ]
     #theorem[中国剩余定理][
@@ -524,11 +527,11 @@
       funcDef(phi, A, product_i A quo I_i, a, (a + I_i))
       $
       则：
-      - 若 $I_i$ 两两互素，则此时有 $I_1 I_2 ... I_n = I_1 sect I_2 ... sect I_n$
-      - $ker phi = I_1 sect I_2 ... sect I_n$
+      - 若 $I_i$ 两两互素，则此时有 $I_1 I_2 ... I_n = I_1 inter I_2 ... inter I_n$
+      - $ker phi = I_1 inter I_2 ... inter I_n$
       - $phi$ 是满射当且仅当 $I_i$ 两两互素，此时有：
         $
-        A quo (I_1 sect I_2 ... sect I_n) tilde.eq product_i A quo I_i
+        A quo (I_1 inter I_2 ... inter I_n) tilde.eq product_i A quo I_i
         $
     ]
     #proof[
@@ -537,8 +540,8 @@
     #lemma[Prime avoidance][
       + 设 $P_i$ 是若干素理想，$I$ 是理想且 $I subset union_i P_i$，则 $exists i,I subset P_i$\
         反之，若 $I$ 不在任何一个 $P_i$ 中，则它不在 $union_i P_i$ 中
-      + 设 $I_i$ 是理想，$P$ 是素理想，若 $sect_i I_i subset P$，则 $exists i, I_i subset P$\
-        进一步，若 $sect_i I_i = P$，则 $exists i, I_i = P$
+      + 设 $I_i$ 是理想，$P$ 是素理想，若 $inter_i I_i subset P$，则 $exists i, I_i subset P$\
+        进一步，若 $inter_i I_i = P$，则 $exists i, I_i = P$
       + 设 $P_i$ 是若干理想，其中至多两个不是素理想，$I$ 是理想且 $I subset union_i P_i$，则 $exists i,I subset P_i$\
     ]<prime-avoidance>
     #proof[
@@ -559,8 +562,8 @@
         $
         x = product_i x_i
         $
-        显然 $x in sect_i I_i subset P$，但每个 $x_i in.not P$，与素理想的定义矛盾！
-      + 由上面的结论，$I sect (union_(P_i "is prime") P_i) subset union_(P_i "is prime") P_i => exists k, P_k "is prime", I sect (union_(P_i "is prime") P_i) subset P_k$\
+        显然 $x in inter_i I_i subset P$，但每个 $x_i in.not P$，与素理想的定义矛盾！
+      + 由上面的结论，$I inter (union_(P_i "is prime") P_i) subset union_(P_i "is prime") P_i => exists k, P_k "is prime", I inter (union_(P_i "is prime") P_i) subset P_k$\
         可以不妨假设只有一个素理想并且：
         - 没有其他理想：显然
         - 恰有一个其他理想 $Q$，也即：
@@ -585,7 +588,7 @@
     #definition[自由模|free AModuleule][
       称一个自由 $A-$模是同构于：
       $
-      plus.circle_(i in I) A
+      plus.o_(i in I) A
       $
       的模，指标集有限时也记为 $A^n$
     ]
@@ -925,7 +928,7 @@
       设 $0 -> &X ->^f &&Y ->^g && Z -> 0$ 正合，
       + 若 $X$ 入射或 $Z$ 投射，则该正合列分裂，也即：
         $
-        Y tilde.eq X plus.circle Z
+        Y tilde.eq X plus.o Z
         $
       + 若 $X$ 入射，则 $Y$ 入射 $<=> Z$ 入射; 若 $Z$ 投射，则 $Y$ 投射 $<=> X$ 投射 
     ]
@@ -981,7 +984,7 @@
         g r = id
         $
         表明直积分解成立
-      + 由于 $Y tilde.eq X plus.circle Z$ 故 $Hom(*, X) plus.circle Hom(*, Z) tilde.eq Hom(*, Y)$，再加上 $Hom(*, X)$ 是正合函子，因此当且仅当 $Hom(*, Z)$ 正合
+      + 由于 $Y tilde.eq X plus.o Z$ 故 $Hom(*, X) plus.o Hom(*, Z) tilde.eq Hom(*, Y)$，再加上 $Hom(*, X)$ 是正合函子，因此当且仅当 $Hom(*, Z)$ 正合
     ]
 
     #proposition[][
@@ -996,13 +999,13 @@
         $
       - 注意到可以找到满射：
         $
-        f: plus.circle_(m in M) A &-> M\
+        f: plus.o_(m in M) A &-> M\
         (a_m) &-> sum a_m m
         $
         这是满射，因此有交换图表：
         #align(center)[#commutative-diagram(
         node((0, 0), $M$, "1"),
-        node((0, 1), $plus.circle_(m in M) A$, "2"),
+        node((0, 1), $plus.o_(m in M) A$, "2"),
         node((1, 0), $M$, "3"),
         arr("2", "1", $f$, surj_str),
         arr("3", "2", $exists! f' $),
@@ -1010,11 +1013,11 @@
         )]
         不难看出 $f'$ 一定是单射，进而：
         $
-        0 -> ker f -> plus.circle_(m in M) A ->^(f) M -> 0
+        0 -> ker f -> plus.o_(m in M) A ->^(f) M -> 0
         $
         是正合列，结合 $M$ 投射，$f f' = id$，利用上面的命题知正合列分裂，继而：
         $
-        plus.circle_(m in M) A tilde.eq ker f directSum M
+        plus.o_(m in M) A tilde.eq ker f directSum M
         $
 
     ]
@@ -1073,7 +1076,7 @@
       考虑左正合函子的导出，如此定义 $R^i F$:
       - 首先，找到入射同态 $M -> I^0$  使得 $I^0$ 入射。只需取：
         $
-        I' = Hom_ZZ (A, times.circle/ZZ)
+        I' = Hom_ZZ (A, times.o/ZZ)
         I^0 = product_(Hom_A (M, I')) I'\
         phi(m) =product_(f in Hom_A (M, I')) f(m)
         $
@@ -1487,7 +1490,7 @@
   ]
   #corollary[][
     - $Inv(S)(N quo M) tilde.eq (Inv(S) N) quo (Inv(S) M)$
-    - $Inv(S) (N sect P) = Inv(S) N sect Inv(S) P$
+    - $Inv(S) (N inter P) = Inv(S) N inter Inv(S) P$
     - $Inv(S) (N + P) = Inv(S) N + Inv(S) P$
   ]
   #proof[
@@ -1503,23 +1506,23 @@
 
     - 利用正合列:
       $
-      0 -> N sect P -> M -> M quo N times M quo P 
+      0 -> N inter P -> M -> M quo N times M quo P 
       $
       得到：
       $
-      0 -> Inv(S) (N sect P) -> Inv(S) M -> Inv(S) (M quo N times M quo P) -> 0
+      0 -> Inv(S) (N inter P) -> Inv(S) M -> Inv(S) (M quo N times M quo P) -> 0
       $
       正合，在最后一项将 $Inv(S)$ 换入即可
     
     - 利用正合列:
       $
-      0 -> N plus.circle  P -> M -> M quo (N + P) -> 0
+      0 -> N plus.o  P -> M -> M quo (N + P) -> 0
       $
       得到：
       $
-      0 -> Inv(S) (N plus.circle P) -> Inv(S) M -> Inv(S) (M quo (N + P)) -> 0
+      0 -> Inv(S) (N plus.o P) -> Inv(S) M -> Inv(S) (M quo (N + P)) -> 0
       $
-      利用事实 $N+P = im(N plus.circle P -> M )$ 再次换入即可
+      利用事实 $N+P = im(N plus.o P -> M )$ 再次换入即可
   ]
   #theorem[][
     设 $M$ 是一个有限表示，也即存在正合列：
@@ -1539,7 +1542,7 @@
     $
     但是可以验证：
     $
-    Inv(S) Hom_A (A^p, N) tilde.eq plus.circle Inv(S) N tilde.eq  Hom_(InvSA) (Inv(S) A^p, Inv(S) N)
+    Inv(S) Hom_A (A^p, N) tilde.eq plus.o Inv(S) N tilde.eq  Hom_(InvSA) (Inv(S) A^p, Inv(S) N)
     $
     得到：
     #align(center)[#commutative-diagram(
@@ -1590,8 +1593,8 @@
   ]
   == 分式环的素理想
     #proposition[][
-      - $I(InvSA) = (1) <=> S sect I != emptyset$
-      - $Spec (InvSA) = {p InvSA | p in Spec(A) and p sect S = emptyset}$
+      - $I(InvSA) = (1) <=> S inter I != emptyset$
+      - $Spec (InvSA) = {p InvSA | p in Spec(A) and p inter S = emptyset}$
       - $Inv(S) sqrt(I) := sqrt(Inv(S) I)$
     ]
     #proof[
@@ -1600,14 +1603,14 @@
           $
           exists s' in S, s'(a - s) = 0 => s' a = s' s
           $
-          则 $s' a = s' s in I sect S$
-        - 取元素 $in S sect I$ 显然
+          则 $s' a = s' s in I inter S$
+        - 取元素 $in S inter I$ 显然
       + 注意到存在自然同态 $f: A -> Inv(S) A$，从而诱导同态：
         $
         f': Spec(Inv(S) A) -> Spec(A)
         $
-        同时，断言 $f'(q) = Inv(f)(q) sect S = emptyset$，否则 $q$ 中将存在单位，这当然是不可能的\
-        另一方面，设 $p in Spec(A)$ 并且 $p sect S = emptyset$，我们断言 $Inv(S) p$ 是素理想，也即：
+        同时，断言 $f'(q) = Inv(f)(q) inter S = emptyset$，否则 $q$ 中将存在单位，这当然是不可能的\
+        另一方面，设 $p in Spec(A)$ 并且 $p inter S = emptyset$，我们断言 $Inv(S) p$ 是素理想，也即：
           $
           Inv(S) A quo Inv(S) p = Inv(S) (A quo p) 
           $
@@ -1616,7 +1619,7 @@
     ]
     #corollary[][
       $
-      Spec(A_p) = {q A_p | q in Spec(A) and q sect A - p = emptyset}\
+      Spec(A_p) = {q A_p | q in Spec(A) and q inter A - p = emptyset}\
       = {q A_p | q in Spec(A) and q subset p}
       $
     ]
@@ -1628,9 +1631,9 @@
     #proof[
       设 $M = sum A x_i$，注意到：
       $
-      Inv(S) "Ann"(M) = Inv(S) sect.big "Ann"(x_i)\
-      = sect.big Inv(S) "Ann"(x_i)\
-      = sect.big "Ann"_(Inv(S) A) (x_i / 1)\
+      Inv(S) "Ann"(M) = Inv(S) inter.big "Ann"(x_i)\
+      = inter.big Inv(S) "Ann"(x_i)\
+      = inter.big "Ann"_(Inv(S) A) (x_i / 1)\
       = "Ann"_(Inv(S) A) (Inv(S) M) 
       $
       因此结论一成立
@@ -1664,7 +1667,7 @@
       arr(1, 2, $f$),
       arr(3, 2, $exists !f'$),
       arr(1, 3, $g$),)]
-      此时记 $T = M times.circle_A N$，
+      此时记 $T = M times.o_A N$，
     ]
     #proposition[][
       上面定义的张量积存在且在同构的意义下唯一
@@ -1710,7 +1713,7 @@
         
     ]
     #definition[张量积的函子性][
-      张量积 $- times.circle N : Mod_A -> Mod_A$ 是函子，由以下交换图表给出：
+      张量积 $- times.o N : Mod_A -> Mod_A$ 是函子，由以下交换图表给出：
       #align(center)[#commutative-diagram(
       node((0, 0), $A$, 1),
       node((0, 1), $B$, 2),
@@ -1732,7 +1735,7 @@
       其中 $f'$ 利用了直积的泛性质，$f''$ 利用了张量积的泛性质，其结合性是容易验证的
     ]
     #proposition[][
-      张量积函子 $- times.circle N, M times.circle -$ 是右正合的，但未必左正合
+      张量积函子 $- times.o N, M times.o -$ 是右正合的，但未必左正合
     ]
     #proof[
       右正合性之后会给出证明，至于左正合，只需验证它未必保持单射即可。\
@@ -1780,7 +1783,7 @@
     #proposition[][
       + $M tensorProduct N tilde.eq N tensorProduct M$
       + $(M tensorProduct N) tensorProduct P tilde.eq M tensorProduct(N tensorProduct P) tilde.eq M tensorProduct N tensorProduct P$
-      + $(M plus.circle N) tensorProduct P tilde.eq (M tensorProduct P) plus.circle (N tensorProduct P) $
+      + $(M plus.o N) tensorProduct P tilde.eq (M tensorProduct P) plus.o (N tensorProduct P) $
       + $A tensorProduct M tilde.eq M$，映射如下给出：
         $
         funcDef(phi, A tensorProduct M, M, a tensorProduct m, a m)
@@ -1813,14 +1816,14 @@
         )]
         这就是 $M tensorProduct(N tensorProduct P)$ 的泛性质，结论当然正确
       + #align(center)[#commutative-diagram(
-        node((0, 0), $(M plus.circle N) times P$, 1),
-        node((1, 0), $(M times P) plus.circle (N times P)$, 2),
+        node((0, 0), $(M plus.o N) times P$, 1),
+        node((1, 0), $(M times P) plus.o (N times P)$, 2),
         node((0, 1), $D$, 3),
         node((2, 2), $M times P$, 4),
         node((2, 0), $N times P$, 5),
         node((3, 2), $M tensorProduct P$, 6),
         node((3, 0), $N tensorProduct P$, 7),
-        node((4, 1), $(M tensorProduct P) plus.circle (N tensorProduct P)$, 8),
+        node((4, 1), $(M tensorProduct P) plus.o (N tensorProduct P)$, 8),
         arr(1, 2, $$, bij_str),
         arr(1, 3, $f$),
         arr(2, 3, $f_1$),
@@ -2363,7 +2366,7 @@
     #proposition[][
       设 $psi:A -> B$ 是环同态使得 $B$ 忠实平坦，则：
       + $forall N in Mod_A, N -> N tensorProduct B$ 是单射。特别的，$psi$ 是单射
-      + 任取 $A$ 的理想 $I$，均有 $I B sect A = I$
+      + 任取 $A$ 的理想 $I$，均有 $I B inter A = I$
       + $psi^*: Spec B -> Spec A$ 是满射
     ]
     #proof[
@@ -2380,7 +2383,7 @@
         $
         是单射，继而：
         $
-        ker(A quo I -> B quo I B) = (A sect I B) quo I = 0 => A sect I B = I
+        ker(A quo I -> B quo I B) = (A inter I B) quo I = 0 => A inter I B = I
         $
       - 任取 $p in Spec(A)$，做局部化，断言 $B_p = B tensorProduct A_p$ 在 $A_p$ 上忠实平坦\
         由之前的定理，这表明在唯一的极大理想 $p A_p$ 上，有：
@@ -2475,7 +2478,7 @@
       $
       故泛性质给出 $phi'$\
       - 首先，证明这个映射仍然是平坦同态。事实上，$B -> B_(q')$ 作为局部化是平坦同态，由传递性 $A -> B_q'$ 平坦，它在局部化函子下的提升 $phi'$ 当然也平坦（注意到 $Inv((A-p')) B_(q') = B_(q')$，故 $phi'$ 就是 $Inv((A-p')) (A -> B_q')$
-      - 此时，双方都是局部环，进而 $phi'$ 忠实平坦，由之前的结构性定理知 $phi^*$ 是满射，进而存在 $q^* in Spec (B_q')$ lying over $p A_p'$，也即 $Inv(phi')(q^*) = p A_p$，取 $q = q^* sect B subset q'$
+      - 此时，双方都是局部环，进而 $phi'$ 忠实平坦，由之前的结构性定理知 $phi^*$ 是满射，进而存在 $q^* in Spec (B_q')$ lying over $p A_p'$，也即 $Inv(phi')(q^*) = p A_p$，取 $q = q^* inter B subset q'$
       - 只需证明 $Inv(phi)(q) = p$，事实上交换图表给出：
         $
         Inv(phi)(q) = Inv(phi) compose Inv((B -> B_q')) (q^*) = Inv((A -> A_p')) compose Inv(phi') (q^*) = p
@@ -2545,8 +2548,8 @@
       - $arrow.double.l$ 
         任取 $M$ 的子模升链 $M^i$
         - 首先利用 $beta$ 给出的一一对应，$M^i + ker beta$ 对应到 $M''$ 的子模升链是最终稳定的
-        - 再利用 $alpha$ 给出的一一对应，$M^i sect im alpha$ 对应到 $M'$ 的子模升链是最终稳定的
-        - 由于 $M^i sect im alpha = M^i sect ker beta subset M^i subset M^i + ker beta$，两边夹逼得到 $M_i$ 最终也是稳定的
+        - 再利用 $alpha$ 给出的一一对应，$M^i inter im alpha$ 对应到 $M'$ 的子模升链是最终稳定的
+        - 由于 $M^i inter im alpha = M^i inter ker beta subset M^i subset M^i + ker beta$，两边夹逼得到 $M_i$ 最终也是稳定的
 
     ]
     #corollary[][
@@ -2616,11 +2619,11 @@
       #proof[
         设 $M_i$ 是 $M$ 的合成列，断言：
         $
-        M_i sect N
+        M_i inter N
         $
         是 $N$ 的合成列。事实上，有：
         $
-        (M_(i-1) sect N) quo (M_(i) sect N) subset M_(i-1) quo M_(i)
+        (M_(i-1) inter N) quo (M_(i) inter N) subset M_(i-1) quo M_(i)
         $
         因此这些商模要么是 $0$，要么是单模。去掉所有的 $0$ 之后便成为长度为 $l' <= l(M)$ 的合成列\
         同时，假设 $l=  l(M)$，表明上面的 $N_(i-1) quo N_i tilde.eq M_(i-1) quo M_i$，可以递归证明 $M_i = N_i$，这是荒谬的
@@ -2752,13 +2755,13 @@
         最终稳定，进而 $(x^n) = (x^(n+1)) => x^n = x^(n+1) y => x y = 1$，表明 $x$ 是可逆元。这就表明 $A quo p$ 是域
       - 任取一列 $p_i in Spec(A)$，考虑：
         $
-        m_n = sect_i^n p_i
+        m_n = inter_i^n p_i
         $
-        它是理想的降链，最终稳定，设它稳定到 $m = sect_i^n p_i$，将有：
+        它是理想的降链，最终稳定，设它稳定到 $m = inter_i^n p_i$，将有：
         $
         m subset p_i, forall i >= n
         $
-        再由 @prime-avoidance 知 $sect_i^n p_i subset p_j => exists i <= n, p_i subset p_j => p_i subset p_j, forall j > i$\
+        再由 @prime-avoidance 知 $inter_i^n p_i subset p_j => exists i <= n, p_i subset p_j => p_i subset p_j, forall j > i$\
         表明 $Spec(A)$ 中不存在无穷序列，继而是有限集
       - 由降链条件，存在 $k$ 使得：
         $
@@ -2782,7 +2785,7 @@
         设环是 Artin 环，上面命题给出 $max(A) = Spec(A)$ 有限，不妨设 $max(A) = {m_1, m_2, ..., m_n}$\
         注意到取充分大的 $k$ 将有：
         $
-        product_(i) m_i^k subset (sect m_i)^k = Re^k = 0 
+        product_(i) m_i^k subset (inter m_i)^k = Re^k = 0 
         $
         由 @artin-noether 该环是 Noether 环，而 $dim A = 0$ 由每个素理想都极大立刻给出
 
@@ -2884,12 +2887,12 @@
     ]
     #proof[
       取 $p in Ass(M), M supset N tilde.eq A quo p$
-      - 若 $N sect M' = 0$，则有：
+      - 若 $N inter M' = 0$，则有：
         $
         N tilde.eq (N directSum ker g)quo ker g tilde.eq g(N)
         $
         因此 $g(M)$ 含有一个同构于 $N$ 的子模，故 $p in Ass(M'')$
-      - 若 $N sect M' != 0$ ，此时取 $x in N sect M'$，注意到：
+      - 若 $N inter M' != 0$ ，此时取 $x in N inter M'$，注意到：
         $
         N tilde.eq A quo p => Ann(x) = p => p in Ass(M')
         $
@@ -2921,7 +2924,7 @@
 
     ]
     #lemma[][
-      $Ass(Inv(S)A) = Ass(A) sect {p | p sect S = 0}$
+      $Ass(Inv(S)A) = Ass(A) inter {p | p inter S = 0}$
     ]<localization-ass>
     #theorem[][
       $
@@ -2980,7 +2983,7 @@
         $
         (s x - k) in k[x]
         $
-        无妨设 $k, s$ 互素，容易看出有首一多项式 $in (s x - k) sect A[x]$ 除非 $s$ 在 $A$ 中可逆，进而这个元素只能在 $A$ 中
+        无妨设 $k, s$ 互素，容易看出有首一多项式 $in (s x - k) inter A[x]$ 除非 $s$ 在 $A$ 中可逆，进而这个元素只能在 $A$ 中
     ]
     #definition[][
       设 $phi: A -> B$ 是环同态，称 $B$ 在 $A$ 上整，如果 $B$ 在 $f(A)$ 上整，也称 $phi$ 是整的或者 $B$ 是整 $A-$代数
@@ -3010,7 +3013,7 @@
     ]
     #proposition[][
       设 $A subset B$ 且 $B$ 在 $A$ 上整，则
-      - 任取 $B$ 的理想 $J, B quo J$ 在 $A quo (J sect A)$ 上整
+      - 任取 $B$ 的理想 $J, B quo J$ 在 $A quo (J inter A)$ 上整
       - 任取 $A$ 的乘性子集 $S, Inv(S) B$ 在 $Inv(S) A$ 上整 
     ]
     #proposition[][
@@ -3033,8 +3036,8 @@
       #proposition[][
         设 $A subset B$ 且 $B$ 在 $A$ 上整
         - 若 $A, B$ 是整环，则 $B$ 是域当且仅当 $A$ 是域
-        - 若 $q in Spec(B)$ 在 $p = q sect A in Spec(A)$ 之上，则有整环间的整扩张 $A quo p -> B quo q$，从而 $p$ 是极大理想当且仅当 $q$ 是极大理想
-        - 设 $q subset q' in Spec(B)$，若 $q sect A = q' sect A := p$，则 $q = q'$
+        - 若 $q in Spec(B)$ 在 $p = q inter A in Spec(A)$ 之上，则有整环间的整扩张 $A quo p -> B quo q$，从而 $p$ 是极大理想当且仅当 $q$ 是极大理想
+        - 设 $q subset q' in Spec(B)$，若 $q inter A = q' inter A := p$，则 $q = q'$
       ]<integral-prime-containing>
       #proof[
         - 先证明假设 $A$ 是域，则 $B$ 也是域\
@@ -3056,13 +3059,13 @@
           上式中除 $Inv(x)$ 外的项都在 $A$ 中，进而它也在 $A$ 中，证毕
         - 就是前一个命题的直接推论
         - 做局部化 $A_p$，设 $B_p = Inv((A - p))B$，则 $p A_p$ 是极大理想，且 $q B_p subset q' B_p$ 是 $B_p$ 的素理想，由上面结论得它们都是极大理想，进而 $q B_p = q' B_p$\
-          假设 $q' != q$，取 $y' in q' - q$，则 $y'/1 in q' B_p => y'/1 = y/1 => exists x in A - p, x(y' - y) = 0 => x y' = x y in q => x in q or y' in q => x in q => x in A sect q = p$，这是荒谬的
+          假设 $q' != q$，取 $y' in q' - q$，则 $y'/1 in q' B_p => y'/1 = y/1 => exists x in A - p, x(y' - y) = 0 => x y' = x y in q => x in q or y' in q => x in q => x in A inter q = p$，这是荒谬的
       ]
       #theorem[][
         设 $A subset B$ 且 $B$ 在 $A$ 上整，则 $Spec(B) -> Spec(A)$ 是满射
       ]
       #proof[
-        任取 $p in Spec(A)$，类似的做 $A_p$ 并令 $B_p = Inv(A - p) B$，任取 $B_p$ 的极大理想 $m$，由之前的结论知 $m sect A_p$ 也是极大理想，从而只能是 $p A_p$，证毕
+        任取 $p in Spec(A)$，类似的做 $A_p$ 并令 $B_p = Inv(A - p) B$，任取 $B_p$ 的极大理想 $m$，由之前的结论知 $m inter A_p$ 也是极大理想，从而只能是 $p A_p$，证毕
       ]
       #theorem[going-up][
         设 $A subset B$ 且 $B$ 在 $A$ 上整。任取 $Spec(B)$ 中升链
@@ -3073,8 +3076,8 @@
         $
         p_1 < p_2 < ... < p_m < p_(m+1) < ... < p_n
         $
-        使得 $p_i = q_i sect A, forall i = 1, 2, ..., m$\
-        则 $q_i$ 可以被拓展到 $n$ 项，并且满足 $q_i = p_i sect A, forall i = 1, 2, ..., n$
+        使得 $p_i = q_i inter A, forall i = 1, 2, ..., m$\
+        则 $q_i$ 可以被拓展到 $n$ 项，并且满足 $q_i = p_i inter A, forall i = 1, 2, ..., n$
       ]
       #proof[
         由 $Spec(B) -> Spec(A)$ 的满射性，取原像即可
@@ -3147,14 +3150,14 @@
         $
         则存在 $q_(m+1) > ... > q_n$ 使得：
         $
-        q_i sect A = p_i, forall i = 1, 2, ..., n
+        q_i inter A = p_i, forall i = 1, 2, ..., n
         $
       ]
       #proof[
         同样只需要证明 $n = 2, m = 1$ 情形\
         经典的技巧是使用商环扩充素理想，使用分式环降低素理想。这里使用分式环。\
         利用 @integral-prime-containing
-        任取一个元素 $x in p_2 B_(q_1) sect A, x$ 将形如：
+        任取一个元素 $x in p_2 B_(q_1) inter A, x$ 将形如：
         $
         x = y / s, y in p_2 B, s in B - q_1
         $
@@ -3176,7 +3179,7 @@
         $
         故 $s in p_2$，然而之前假设 $s in B - q_1$，矛盾！
 
-        这表明 $x in p_2$，也即 $p_2 B_(q_1) sect A subset p_2$，反之 $p_2 subset p_2 B_(q_1) sect A$ 是显然的，最终有 $p_2 B_(q_1) sect A = p_2$
+        这表明 $x in p_2$，也即 $p_2 B_(q_1) inter A subset p_2$，反之 $p_2 subset p_2 B_(q_1) inter A$ 是显然的，最终有 $p_2 B_(q_1) inter A = p_2$
         
         
       ]
@@ -3188,9 +3191,9 @@
       #proof[
         - 先不证明
         - 设 $p_1 > p_2$，先通过 going up 产生 $q_1' > q_2'$ 使得 $q_1
-         sect A = q_1 sect A = p_1$，由前面的命题得它们共轭，也即：
+         inter A = q_1 inter A = p_1$，由前面的命题得它们共轭，也即：
          $
          sigma(q'_1) = q_1 
          $
-         如此可以证明 $sigma(q'_2) sect A = p_2$ #TODO
+         如此可以证明 $sigma(q'_2) inter A = p_2$ #TODO
       ]

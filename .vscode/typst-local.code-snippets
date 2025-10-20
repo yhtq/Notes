@@ -152,6 +152,24 @@
 					"arr(5, 10, $$23$),)]"
 				]
 		},
+		"veritical": {
+			"prefix": "vertical",
+			"scope": "typst",
+			"body": [
+				"arr($1, $2, $natTransb $3$, curve: 30deg, label-pos: right),",
+				"arr($1, $2, $$4$, curve: -30deg),",
+			]
+		},
+		"veritical3": {
+			"prefix": "vertical",
+			"scope": "typst",
+			"body": [
+				"arr($1, $2, $$3$, curve: 30deg),",
+				"arr($1, $2, $natTransb $4$, label-pos: left),",
+				"arr($1, $2, $natTransb $5$, label-pos: right),",
+				"arr($1, $2, $$6$, curve: -30deg),",
+			]
+		},
 		"int":{
 			"prefix": "int",
 			"scope": "typst",

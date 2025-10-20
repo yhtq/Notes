@@ -1,4 +1,7 @@
 #import "../../template.typ": *
+#import "@preview/commute:0.3.0": node, arr, commutative-diagram
+
+#let emptyArrow(s, e) = arr(str(s), str(e), $$)
 // Take a look at the file `template.typ` in the file panel
 // to customize this template and discover how it works.
 = 赋值环|Valuation ring
@@ -128,7 +131,7 @@
     ]
   == 赋值环
     #definition[dominate][
-      设 $A subset B$ 是局部环，极大理想分别为 $m, n$，若 $n sect A = m$ 则称 $B$ 支配 $A$
+      设 $A subset B$ 是局部环，极大理想分别为 $m, n$，若 $n inter A = m$ 则称 $B$ 支配 $A$
     ]
     #definition[valuation ring][
       设 $A$ 是整环，$k$ 是分式域，称 $A$ 是 $k$ 的赋值环，如果以下等价条件成立：
@@ -169,13 +172,13 @@
         exists x, y in m, u a + v b = x a + y b=> (u - x) a = (y - v) b
         $
         无妨设 $u in.not m$ ，然而局部环表明 $u$ 是单位。同时 $x in m$，因此 $u - x$ 不在 $m$ 中，也是单位，进而 $a = k b, k in A$ ，证毕
-      - 1 $=>$ 6 假设 $A'$ 是局部环，且 $A subset.neq A'$，往证 $A'$ 不支配 $A$，也就是存在 $A$ 中极大理想中的元素，在 $A'$ 中是单位（进而 $m_A subset.not m_(A') sect A$） \
+      - 1 $=>$ 6 假设 $A'$ 是局部环，且 $A subset.neq A'$，往证 $A'$ 不支配 $A$，也就是存在 $A$ 中极大理想中的元素，在 $A'$ 中是单位（进而 $m_A subset.not m_(A') inter A$） \
         取 $x in A' - A$，由条件 $Inv(x) in A subset A'$ ，因此 $x$ 在 $A'$ 中一定是单位\
         此时，$Inv(x)$ 当然不是 $A$ 中的单位，但在 $A'$ 中是单位，证毕。
       - 6 $=>$ 7 设 $K = A quo m$ 是留域，取 $L$ 是 $K$ 的代数闭包，$theta: A -> A quo m -> L$\
         假设存在延拓 $A subset A' subset k, theta': A' -> L, theta'|_A = theta$\
         显然，$ker theta = m$，设 $m' = ker(theta')$，则 $A'$ 可以嵌入 $A'_m'$ （注意到 $A'$ 是域的子环，当然是整环），此时只需证明 $A = A'_(m')$ 因此不妨设 $A'$ 是局部环，$m'$ 是极大理想\
-        显然，此时 $m = ker theta = ker theta' sect A = m' sect A$，利用条件 6 知结论成立
+        显然，此时 $m = ker theta = ker theta' inter A = m' inter A$，利用条件 6 知结论成立
       - 7 $=>$ 1 这步较为困难，需要建立若干个引理，之后会证明
     ]
     #example[][
@@ -188,7 +191,7 @@
         $
         可以验证：
         $
-        O_n subset O_(n+1), p_(n+1) sect O_n = p_n
+        O_n subset O_(n+1), p_(n+1) inter O_n = p_n
         $
         设 $O = union_n O_n$ ，此时 $O$ 是非 Noether 的赋值环，赋值群是
         $
@@ -276,7 +279,7 @@
       ]
       回到定理的证明，往证 $x in B or Inv(x) in B$，由上面的引理不妨设 $m[x] != B[x] := B'$，则存在 $B'$ 的极大理想 $m'$ 使得 $m[x] subset m'$\
       另一方面，我们证明 $f: B -> Omega$ 可以延拓到 $B' = B[x]$ 上即可\
-      首先，显然有 $m' sect B = m$（既然 $m subset m' sect B$ 而 $m$ 是极大理想），这表明 $B quo m$ 可以嵌入 $B' quo m'$，且 $B' quo m'$ 在 $B quo m$ 上代数
+      首先，显然有 $m' inter B = m$（既然 $m subset m' inter B$ 而 $m$ 是极大理想），这表明 $B quo m$ 可以嵌入 $B' quo m'$，且 $B' quo m'$ 在 $B quo m$ 上代数
     ]
     #theorem[][
       设 $A subset k$  其中 $A$ 是整环，$k$ 是域，则 $A$ 的整闭包恰为 $k$ 中包含 $A$ 的所有赋值环的交 
@@ -414,9 +417,9 @@
         #proof[
           - $A$ 当然整闭
           - $A$ 是诺特的，证明略
-          - 下证 $dim A = 1$，也即所有非零素理想都极大。这是因为任取 $p in Spec(A)$，一定有 $p sect ZZ$ 是素理想
-            - 若 $p sect ZZ = 0$，然而 $0 subset p$ 同样有 $0 sect ZZ = 0$，由整扩张性质 @integral-prime-containing 立得 $p = 0$  矛盾！
-            - 否则，$p sect ZZ$ 是极大理想，由 @integral-prime-containing 知 $p$ 也是极大理想
+          - 下证 $dim A = 1$，也即所有非零素理想都极大。这是因为任取 $p in Spec(A)$，一定有 $p inter ZZ$ 是素理想
+            - 若 $p inter ZZ = 0$，然而 $0 subset p$ 同样有 $0 inter ZZ = 0$，由整扩张性质 @integral-prime-containing 立得 $p = 0$  矛盾！
+            - 否则，$p inter ZZ$ 是极大理想，由 @integral-prime-containing 知 $p$ 也是极大理想
         ]
     ]
     
@@ -664,7 +667,7 @@
     #definition[分次环|graded ring][
       设 $A$ 是环，$A = directSum A_n$，称 $A$ 是分次环，若 $A_i A_j subset A_(i+j)$
 
-      此时，称 $A_i$ 为 $i$ 次齐次部分。设 $I$ 是 $A$ 的理想，则称 $I$ 是齐次的，若 $I = directSum (I sect A_i)$，也即它被齐次元素生成
+      此时，称 $A_i$ 为 $i$ 次齐次部分。设 $I$ 是 $A$ 的理想，则称 $I$ 是齐次的，若 $I = directSum (I inter A_i)$，也即它被齐次元素生成
     ]
     #lemma[][
       设 $I$ 是齐次理想，则 $I$  是素理想当且仅当任取齐次元素 $x, y, x y in I$ 均有 $x in I or y in I$
@@ -776,7 +779,7 @@
       $
       0 -> G' -> G -> G'' -> 0
       $
-      其中 $G', G''$ 分别用 ${G_n sect G'}$ 和 ${(G -> G'') (G_n)}$ 定义拓扑，将有：
+      其中 $G', G''$ 分别用 ${G_n inter G'}$ 和 ${(G -> G'') (G_n)}$ 定义拓扑，将有：
       $
       0 -> hat(G') -> hat(G) -> hat(G'') -> 0
       $
@@ -785,7 +788,7 @@
     #proof[
       注意到有正合列：
       $
-      0 -> {G quo G' sect G_n} -> {G quo G_n} -> {G quo ((G -> G'') (G_n))} -> 0
+      0 -> {G quo G' inter G_n} -> {G quo G_n} -> {G quo ((G -> G'') (G_n))} -> 0
       $
       取逆向极限利用之前的结论立得结论成立
     ]
@@ -818,7 +821,7 @@
     #example[环/模的完备化][
       - 设 $A$ 是环，$I$ 是理想，取 $G = A, G_n = I^n$，由 $G_n$ 定义的拓扑称为 $I$-adic 拓扑，如此可以产生完备化：
         $
-        hat(A) = inverseLimit A quo I^n, phi: A -> hat(A), ker phi = sect I_n
+        hat(A) = inverseLimit A quo I^n, phi: A -> hat(A), ker phi = inter I_n
         $ 
       - 设 $M$ 是 $AModule(A)$，取 $G = M, G_n = I^n M$ 类似可以定义 $M$ 上的 $I$-adic 拓扑，以及 $hat(M)$ 称为连续 $AModule(A)$（$A$ 在其上的作用是连续的）
       - 特别的：
@@ -878,17 +881,17 @@
         而后者就等价于 $M_n$ 最终稳定，证毕
     ]
     #proposition[Artin-Rees Lemma][
-      设 $A$ 诺特，$I$ 是理想，$M$ 是有限生成模以及稳定 $I-$filtration $(M_n)$，$M'$ 是 $M$ 的子模，则 $M' sect M_n$ 是稳定 $I-$filtration\
+      设 $A$ 诺特，$I$ 是理想，$M$ 是有限生成模以及稳定 $I-$filtration $(M_n)$，$M'$ 是 $M$ 的子模，则 $M' inter M_n$ 是稳定 $I-$filtration\
       特别的，若 $M_n = I^n M$，则存在充分大的 $k$ 使得：
       $
-      (I^n M) sect N = I^(n-k) (I^k M sect N)
+      (I^n M) inter N = I^(n-k) (I^k M inter N)
       $
 
       换言之，$I-$adic 拓扑的限制还是 $I-$adic 拓扑
     ]<Artin-Rees>
     #proof[
-      - 首先，$I(M' sect M_n) subset I M' sect I M_n subset M' sect M_(n+1)$，表明这是 $I-$filtration
-      - 其次，上面的引理给出 $M^*$ 有限生成，而 $directSum (M' sect M_n)$ 当然是它的子模。诺特环上有限生成模是诺特的，其子模仍然有限生成，因此 $directSum (M' sect M_n)$ 是子模，进而再次利用引理即可得到结论
+      - 首先，$I(M' inter M_n) subset I M' inter I M_n subset M' inter M_(n+1)$，表明这是 $I-$filtration
+      - 其次，上面的引理给出 $M^*$ 有限生成，而 $directSum (M' inter M_n)$ 当然是它的子模。诺特环上有限生成模是诺特的，其子模仍然有限生成，因此 $directSum (M' inter M_n)$ 是子模，进而再次利用引理即可得到结论
     ]
     #corollary[][
       设 $A$ 诺特，$I$ 是理想，则：
@@ -969,19 +972,19 @@
     #theorem[Krull][
       设 $A$ 诺特， $M$ 有限生成，则：
       $
-      ker (M -> hat(M)) = sect I^n M = {x in M | exists y in I, (1 + y) x = 0}
+      ker (M -> hat(M)) = inter I^n M = {x in M | exists y in I, (1 + y) x = 0}
       $
-      特别的，若 $A$ 是整环且 $I != (1)$，则 $sect I^n M = {0}$
+      特别的，若 $A$ 是整环且 $I != (1)$，则 $inter I^n M = {0}$
     ]<Krull>
     #proof[
       设 $E = ker(M -> hat(M))$，它也是 $0$ 的所有开邻域的交。
       注意到 $E$ 的限制拓扑是平凡的，也即 $E$ 是唯一一个 $E$ 中 $0$ 的邻域，而 @Artin-Rees 引理给出 $E$ 作为 $M$ 的子模产生兼容的拓扑。因此，$I E$ 当然也是 $0$ 的开邻域，
       以上事实给出 $I E = E$，由 Nakayama 引理的一个版本可得存在 $alpha in I$ 使得 $(1 - alpha) E = 0$
 
-      另一方面，设 $(1 - alpha) x = 0$，则 $x = alpha x = ... alpha^n x = ...$，当然 $x in sect I^n M$
+      另一方面，设 $(1 - alpha) x = 0$，则 $x = alpha x = ... alpha^n x = ...$，当然 $x in inter I^n M$
     ]
     #corollary[][
-      在前面的条件中，若 $I$ 落在 Jacobson 根中，必有 $sect I^n M = 0$，继而 $M$ 上的 $I-$adic 拓扑是 Hausdorff 的。
+      在前面的条件中，若 $I$ 落在 Jacobson 根中，必有 $inter I^n M = 0$，继而 $M$ 上的 $I-$adic 拓扑是 Hausdorff 的。
 
       特别的，若 $A$ 是诺特的局部环，则其上所有有限生成模的 $I-$adic 拓扑都是 Hausdorff 的，包括 $A$ 本身
     ]
@@ -1028,7 +1031,7 @@
         - $n$ 充分大时，有 $M_(n+1) quo M_(n+2) tilde.eq (I M_n) quo (I M_(n+1)) tilde.eq I (Gn(n))$，因此 $G(M)$ 本质上仅有前面有限项生成（后面的只是 $I$ 在其上的作用），而前面有限项当然每项都是有限生成的，它们的直和也是有限生成的
       ]
       #proposition[][
-        设 $M$ 是有限生成，且其上的 $I-$filtration 是稳定的，假设 $A$ 完备且 $M$ 是 Hausdoff 的，也即 $sect M_n = 0$，则：
+        设 $M$ 是有限生成，且其上的 $I-$filtration 是稳定的，假设 $A$ 完备且 $M$ 是 Hausdoff 的，也即 $inter M_n = 0$，则：
         - 若 $G(M)$ 有限生成，则 $M$ 有限生成
         - 若 $G(M)$ 诺特，则 $M$ 诺特
       ]
@@ -1094,7 +1097,7 @@
 
         对于第二个结论，证明 $M$ 的任意子模 $M'$ 是有限生成即可。令：
         $
-        M'_n = M' sect M_n
+        M'_n = M' inter M_n
         $
         可以验证 $M'_n quo M'_(n+1)$ 可以嵌入 $M_n quo M_(n+1)$，而后者是诺特模，前者也是，利用第一个结论即可
       ]
@@ -1459,7 +1462,7 @@
       - 3 $=>$ 1 前面定义了典范的满射 $k[x_1, ..., x_n] -> G_m (A)$，由上一个命题的代数独立性这里 $ker$ 为零，继而是同构
     ]
     #lemma[][
-      设 $A$ 是环，$I$ 是理想且 $sect I^n = 0$，假设 $G_I (A)$ 是整环，则 $A$ 是整环
+      设 $A$ 是环，$I$ 是理想且 $inter I^n = 0$，假设 $G_I (A)$ 是整环，则 $A$ 是整环
     ]
     #proof[
       任取 $x, y != 0$，取最大的 $r, s$  使得：
@@ -1474,7 +1477,7 @@
       - Regular Local Ring 是整闭的
     ]
     #proof[
-      - $k[t_1, .., t_d]$ 当然是整环，由 @Krull 知必有 $sect m^n = 0$，因此由上面的引理知结论成立。
+      - $k[t_1, .., t_d]$ 当然是整环，由 @Krull 知必有 $inter m^n = 0$，因此由上面的引理知结论成立。
       - $dim = 1$ 时，由于离散赋值环等价于切空间 $m quo m^2$ 恰为一维，故结论成立。一般的证明略。
     ]
     #proposition[][

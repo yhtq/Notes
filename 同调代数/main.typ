@@ -12,7 +12,7 @@
 #let Top = $bold("Top")$
 #let Grp = $bold("Grp")$
 #let Ab = $bold("Ab")$
-#let kVect(k) = $bold(k - "Vect")$
+#let kVect(k) = $k - bold("Vect")$
 #let Ring = $bold("Ring")$
 #let calu = $cal("u")$
 （考试不太会有具体例子）
@@ -791,6 +791,183 @@
             Hom(X, arrij(2, 3) compose arrij(1, 2)) = Hom(X, 0) = 0
           $
       ]
+      #lemma[][
+        $V tensorProduct *$ 是右正合函子
+      ]
+      #definition()[][
+        - 如果 $Hom(V, *)$ 是正合函子，则称 $V$ 是 projective 对象
+        - 如果 $Hom(*, V)$ 是正合函子，则称 $V$ 是 injective 对象
+        - 如果 $V tensorProduct *$ 是正合函子，则称 $V$ 是 flat 对象
+      ]
+    == 函子范畴
+      #definition()[函子范畴][
+        设 $C, D$ 是两个小范畴，称 $FunctorCat(C, D)$ 是从 $C$ 到 $D$ 的函子范畴，其对象是从 $C$ 到 $D$ 的函子，态射是自然变换。
+      ]
+      #example[][
+        给定群 $G$，则构造单点范畴 $G$，其中态射 $Hom(-, -) = G$，函子范畴 $FunctorCat(G, kVect(k))$ 恰好就是 $k$-线性表示范畴
+      ]
+      #remark()[][
+        设 $F ->^alpha G ->^beta H$ 是一列函子和自然变换，我们称 $(beta dot alpha) : F -> H$ 是自然变换的水平合成。如果：$F ->^alpha H, G ->^beta I$ ，则称 $(beta compose alpha) : G F -> I H$ 就是自然变换的垂直合成。事实上，有：
+        $
+          (beta compose alpha)_X = beta_(G alpha_X)
+        $
+        这种合成也是满足结合性的。
+      ]
+      #lemma[][
+        假设：
+        #align(center)[#commutative-diagram(
+          node((0, 0), $A$, 1),
+          node((0, 1), $B$, 2),
+          node((0, 2), $C$, 3),
+          arr(1, 2, $F$, curve: 40deg),
+          arr(1, 2, $natTransb alpha$, label-pos: left),
+          arr(1, 2, $G$, label-pos: center),
+          arr(1, 2, $natTransb beta$, label-pos: right),
+          arr(1, 2, $H$, curve: -40deg, label-pos: right), 
+        )]
+        则注意到：
+        $
+          (delta dot gamma) compose (beta dot alpha)\
+          (delta compose beta) dot (gamma compose alpha)
+        $
+        都是 $I F -> K H$ 的自然变换。事实上，有：
+        $
+          (delta dot gamma) compose (beta dot alpha) =  (delta compose beta) dot (gamma compose alpha)
+        $
+      ]
+    == 2-范畴
+      #definition()[2-范畴][
+        设 $C$ 是一个范畴，$C$ 中态射称为 $1-$ 态射，若任给 $X, Y : C$，$Hom(X, Y)$ 是一个范畴，$Hom(X, Y)$ 中态射称为 $2-$ 态射，其合成称为垂直合成，$C$ 中态射的合成称为水平合成。假若还有以下性质成立：
+        - Interchange law:
+          $
+            (delta compose beta) dot (gamma compose alpha) = (delta dot gamma) compose (beta dot alpha)\
+          $
+      ]
+      #example[][
+        大致来讲，所有范畴构成的范畴就是一个 2-范畴，其 1-态射是函子，2-态射是自然变换。
+      ]
+    == 么半范畴
+      #definition()[么半范畴（Monoidal category）][
+        称 $C$ 是么半范畴（也叫张量范畴），如果它是范畴，且存在函子：
+        $
+          tensorProduct : C times C -> C
+        $
+        满足：
+        - 对于任何 $X, Y, Z$ 存在同构：
+          $
+            (X tensorProduct Y) tensorProduct Z eqv^a X tensorProduct (Y tensorProduct Z)
+          $
+        - 交换图：
+          #align(center)[#commutative-diagram(
+          node((0, 0), $((X tensorProduct Y) tensorProduct Z) tensorProduct T$, 1),
+          node((0, 2), $(X tensorProduct (Y tensorProduct Z)) tensorProduct T$, 2),
+          node((1, 0), $(X tensorProduct Y) tensorProduct (Z tensorProduct T)$, 3),
+          node((1, 2), $X tensorProduct ((Y tensorProduct Z)) tensorProduct T)$, 4),
+          node((2, 1), $X tensorProduct (Y tensorProduct (Z tensorProduct T))$, 5),
+          arr(1, 2, $$),
+          arr(1, 3, $$),
+          arr(2, 4, $$),
+          arr(3, 5, $$),
+          arr(4, 5, $$),
+          )]
+        - 存在 $1$ 使得 $1 tensorProduct X eqv X eqv X tensorProduct 1$
+        - 交换图：
+          #align(center)[#commutative-diagram(
+          node((0, 0), $(X tensorProduct 1) tensorProduct Y$, 1),
+          node((0, 1), $X tensorProduct (1 tensorProduct Y)$, 2),
+          node((1, 0), $X tensorProduct Y$, 3),
+          arr(1, 2, $$),
+          arr(2, 3, $$),
+          arr(1, 3, $$),)]
+          成立
+        若前面的同构都是相等，则称其为严格么半范畴
+      ]
+      #example()[][
+        - 一个幺半群可以看成一个只有一个对象的么半范畴，其中态射是幺半群的元素。
+        - 一个么半范畴可以看作一个对象的 2-范畴，其中 1-态射是么半范畴的对象，合成是 $tensorProduct$，2-态射是原本的态射，合成是原本的合成。
+        - $Set, Grp, ...$ 都是么半范畴，$tensorProduct$ 分别是笛卡尔积，直积。
+        - $R-$ 线性范畴是么半范畴，$tensorProduct$ 是直和。
+        - 对于任何范畴 $C$，$FunctorCat(C, C)$ 就是严格么半范畴，其 $tensorProduct$ 是函子合成。
+      ]
+      #definition()[][
+        称 $X'$ 是 $X$ 的左对偶，如果存在 evaluation 态射：
+        $
+          ev : X' tensorProduct X -> 1
+        $
+        以及 coevaluation 态射：
+        $
+          coev : 1 -> X tensorProduct X'
+        $
+        使得以下合成：
+        $
+          X -> (X tensorProduct X') tensorProduct X -> X tensorProduct (X' tensorProduct X) -> X\
+          X' -> X' tensorProduct (X tensorProduct X') -> (X' tensorProduct X) tensorProduct X' -> X'
+        $
+        均为 $id$
+
+        类似的，称 $X'$ 是 $X$ 的右对偶，如果存在 evaluation 态射：
+        $
+          ev : X tensorProduct X' -> 1
+        $
+        以及 coevaluation 态射：
+        $
+          coev : 1 -> X' tensorProduct X
+        $
+        使得以下合成：
+        $
+          X -> X tensorProduct (X' tensorProduct X) -> (X tensorProduct X') tensorProduct X -> X\
+          X' -> (X' tensorProduct X) tensorProduct X' -> X' tensorProduct (X tensorProduct X') -> X'
+        $
+        均为 $id$
+      ]
+      #lemma[][
+        左右对偶在同构意义下是唯一的。
+      ]
+      #example[][
+        设 $AdjoinPair(F, G) : C -> C$ 是一对伴随函子，则：
+        - $F$ 是 $G$ 的右对偶，其中：
+          $
+            ev = epsilon : G F -> 1\
+            coev = eta : 1 -> G F
+          $
+        - $G$ 是 $F$ 的左对偶，其中：
+          $
+            ev = epsilon : G F -> 1\
+            coev = eta : 1 -> G F
+          $
+      ]
+      #definition()[刚性（rigid）][
+        称 $X$ 是刚性的，如果它同时有左对偶和右对偶。称么半范畴是刚性的，如果其所有对象都是刚性的。
+      ]
+      #remark()[][
+        $kVect(k)$ 范畴不是刚性的，因为无限维空间可能没有对偶空间（找不到 coev 映射）
+      ]
+      #definition()[么半函子][
+        称么半范畴间的函子为么半函子，如果它（在同构意义下啊）保持 $tensorProduct$ 以及单位对象。
+      ]
+      #example()[][
+        - 刚性范畴中，左/右对偶可以产生一个反变的么半函子。其中 $duel(Y) -> duel(X)$ 又：
+          $
+            duel(Y) -> duel(Y) tensorProduct (X tensorProduct duel(X)) -> (duel(Y) tensorProduct X) tensorProduct duel(X) ->  (duel(Y) tensorProduct Y) tensorProduct duel(X) -> duel(X)
+          $
+          产生
+      ]
+      #definition()[辫范畴][
+        称么半范畴 $C$ 是辫范畴，如果存在自然同构：
+        $
+          - tensorProduct * eqv * tensorProduct -
+        $
+        作为交换约束，并且满足一些六边形公理。
+      ]
+      在辫范畴中，给定一列对象 $X_i, i : I$ 和 $sigma : S_I$，总有：
+      $
+        tensorProduct_(i in I) X_i eqv^(c_sigma) tensorProduct_(i in I) X_(sigma(i))
+      $
+      辫关系就是：
+      $
+        c_(1, 2) c_(2, 3) = c_(3, 2, 1)\
+        c_(2, 3) c_(1, 2) = c_(1, 2, 3)
+      $
 
 
 

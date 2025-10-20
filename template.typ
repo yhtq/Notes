@@ -178,6 +178,10 @@
 #let End = math.op("End")
 #let ReT = math.op("Re")
 #let ImT = math.op("Im")
+#let ev = math.op("ev")
+#let coev = math.op("coev")
+#let natTransb = math.arrow.double.b
+#let natTranst = math.arrow.double.t
 #let eqv = sym.tilde.equiv
 #let Inter = math.inter.big
 #let Union = math.union.big
@@ -308,7 +312,7 @@
   Upper: $+infinity$,
   Op: $product$
 )
-#let directSum = math.plus.circle
+#let directSum = math.plus.o
 #let defaultDirectSum = (
   Var: $n$,
   Lower: $0$,
@@ -464,7 +468,6 @@
 #let liminfn(body) = $liminf_(n -> +infinity) autoBraceIfAddOrSub(#body)$
 #let limsupn(body) = $limsup_(n -> +infinity) autoBraceIfAddOrSub(#body)$
 
-#let emptyArrow(s, e) = arr(str(s), str(e), $$)
 #let coker = math.op("coker")
 #let coim = math.op("coim")
 #let Ad1(x, G) = $"Ad"_#G (#x)$
@@ -482,9 +485,10 @@
 #let Mod = math.op("Mod")
 #let ModCat(R) = $#R - bold(Mod)$
 #let SetCat = $bold("Set")$
+#let FunctorCat(A, B) = $bold("Func")(#A, #B)$
 #let AdjoinPair(F, G) = $(#F, #G)$
-#let tensorProduct = math.times.circle
-#let generatedBy(body) = $angle.l #body angle.r$
+#let tensorProduct = math.times.o
+#let generatedBy(body) = $chevron.l #body chevron.r$
 #let norm2(x) = $norm(#x)^2$
 #let normalSub(H, G) = $#H lt.tri.eq #G$
 #let norS = math.class("relation", math.lt.tri.eq)
