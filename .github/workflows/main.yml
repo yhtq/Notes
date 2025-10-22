@@ -1,8 +1,36 @@
 name: Render papers
 on: push
 jobs:
-  render:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.list.outputs.files }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: List main.typ files
+        id: list
+        run: |
+          set -eux
+          apt-get update
+          apt-get install -y jq
+          mapfile -t files < <(find . -type f -name 'main.typ' -not -path './.github/*' -print)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "files=[]" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          # 去掉开头的 ./ 并生成 JSON array of objects {path, dir, name}
+          json=$(printf '%s\n' "${files[@]}" | sed 's|^\./||' | jq -R -s 'split("\n")[:-1] | map({path: ., dir: (.|split("/")[:-1]|join("/")), name: (.|split("/")|.[-2])})')
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$json" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  render:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        file: ${{ fromJson(needs.prepare.outputs.files) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -15,25 +43,24 @@ jobs:
         with:
           allow-prereleases: true
 
-      - run: |
+      - name: Compile single main.typ
+        run: |
           set -eux
-          mkdir -p artifacts
-          # 找到所有 main.typ，排除 .github 目录
-          while IFS= read -r file; do
-            dir=$(dirname "$file")
-            name=$(basename "$dir")
-            echo "Compiling $file -> $dir/main.pdf (artifact: ${name}.pdf)"
-            typst compile "$file" --root . --font-path ~/.fontist/fonts | echo "Warning: compilation of $file produced warnings/errors"
-            if [ -f "$dir/main.pdf" ]; then
-              cp "$dir/main.pdf" "artifacts/${name}.pdf"
-            else
-              echo "Warning: $dir/main.pdf not produced"
-            fi
-          done < <(find . -type f -name 'main.typ' -not -path './.github/*' -print)
+          # matrix.file is an object with fields path, dir, name
+          echo "Compiling ${{ matrix.file.path }} (dir=${{ matrix.file.dir }}, name=${{ matrix.file.name }})"
+          mkdir -p out
+          typst compile "${{ matrix.file.path }}" --root . --font-path ~/.fontist/fonts
+          if [ -f "${{ matrix.file.dir }}/main.pdf" ]; then
+            cp "${{ matrix.file.dir }}/main.pdf" "out/${{ matrix.file.name }}.pdf"
+          else
+            echo "Warning: ${{ matrix.file.dir }}/main.pdf not produced"
+            # 不上传空文件，直接退出 0
+            exit 0
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
-          name: papers
-          path: artifacts
+          name: ${{ matrix.file.name }}
+          path: out/${{ matrix.file.name }}.pdf
 
 
