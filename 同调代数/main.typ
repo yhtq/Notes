@@ -968,6 +968,200 @@
         c_(1, 2) c_(2, 3) = c_(3, 2, 1)\
         c_(2, 3) c_(1, 2) = c_(1, 2, 3)
       $
+= 范畴化  
+  == A brief review of modules over associative algebras
+    #definition()[结合代数][
+      设 $R$ 是交换环，$B$ 是环/$R-$ 模，称之为一个结合 $R-$ 代数（associative $R-$ algebra），如果环乘法是 $R-$ 双线性的：
+      $
+        (alpha : R) (a b) = (alpha a) b = a (alpha b)
+      $
+      称 $B$ 是 unital 的，如果含有单位元\
+      若 $B$ 是交换的，则称之为交换 $R-$ 代数\
+      代数之间的同态定义为 $R-$ 线性的环同态（如果是含么的，要求其保持单位元）
+    ]
+    #example()[][
+      $ZZ-$ 代数就是环
+    ]
+    #example[][
+      若 $Gamma$ 是群，$F$ 是域，可以定义*群代数* $F[Gamma]$，作为模它是 $Gamma$ 的元素作为基生成的自由模，乘法根据以下定义：
+      $
+        (alpha_1 dot gamma_1) (alpha_2 dot gamma_2) = (alpha_1 alpha_2) dot (gamma_1 gamma_2)
+      $
+    ]
+    #example()[][
+      设 $V$ 是 $F-$ 向量空间，则 $End(V)$ 就是自然的 $F-$ 代数。
+    ]
+    #example[][
+      $F[x] quo (x^2)$ 称为 $F$ 的对偶数代数
+    ]
+    接下来，假设 $B$ 是一个含么的结合 $F-$ 代数，其中 $F$ 是域。
+    #definition()[表示][
+      称代数同态 $B -> End V$ 是一个 $B$ 的表示（representation），其中 $V$ 是某个 $F-$ 向量空间。 
+    ]
+    #lemma[][
+      $B-$ 模也是自然的 $F-$ 模，其中：
+      $
+        (alpha: F) m = (alpha dot 1_B) m, forall m in M
+      $
+    ]
+    #remark[][
+      假设 $M$ 是单模，则任取非零元素 $m : M$，一定有 $B m = M$，取同态 $f : B -> M := - dot m$，则它是满射，因此：
+      $
+        M eqv B quo ker f\
+      $
+      注意到 $M$ 是单的，右侧 $B quo ker f$ 也是，表明 $ker f$ 是 $B$ 的极大理想。
+    ]
+    #example()[][
+      - $kVect(F)$ 中的单模只有一维线性空间
+      - $F[x] quo (x^2)$ 中唯一的极大理想是 $(x)$，因此唯一的单模就是 $(F[x] / (x^2)) quo (x) = F$
+    ]
+    #definition()[复形分裂][
+      称复形 $0 -> M_1 -> M_2 -> M_3 -> 0$ 分裂，如果以下条件之一成立：
+      - 存在 $phi$ 使得 $phi compose (M_1 -> M_2) = id$
+      - 存在 $phi$ 使得 $(M_2 -> M_3) compose phi = id$
+      此时一定有 $M_2 eqv M_1 directSum M_2$
+    ]
+    #lemma[][
+      $P$ 是投射 $B-$ 模当且仅当：
+      - $Hom(M, -)$ 正合
+      - 所有：
+        $
+          0 -> M -> N -> P -> 0
+        $
+        都分裂
+      - $P$ 是某个自由模的直和项（$P directSum P' = M$，其中 $M$ 是自由模）
+      - 对任何满同态 $f : M -> N$ 以及任意态射 $g : P -> N$，存在态射 $tilde(g) : P -> M$ 使得 $f compose tilde(g) = g$
+    ]
+    #definition()[多余子模（Superfluous submodule）][
+      称 $M$ 的子模 $N$ 是多余（superfluous）的，如果对任何 $M$ 的子模 $H$ 有 $N + H = M => H = M$
+
+      如果满同态 $p : M -> N$ 的 $ker$ 是多余子模，则称之为多余满同态
+    ]
+    #definition()[投射覆盖（Projective cover）][
+      称 $M$ 的一个投射覆盖是一个投射模 $P$ 以及多余满同态 $p : P -> M$
+    ]
+    #example[][
+      - $0$ 显然是多余子模，因此任何投射模都是自身的投射覆盖
+      - 设 $B$ 是 Noether 局部环，例如 $D = F[x] quo (x^2)$，则唯一极大理想 $m$ 是多余子模（所有 $B$ 子模/理想都有限生成，利用 Nakayama 引理的推论即可）
+    ]
+    #lemma()[][
+      设 $(P, p)$ 是 $M$ 的投射覆盖，则 $p$ 是 essential surjection，也就是说对于 $P$ 的真子模 $Q$ 总有 $p(Q) != M$
+    ]
+    #proof[
+      如若不然，则有：
+      $
+        p(Q + ker p) = M
+      $
+      将有：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $Q + ker p$, 1),
+      node((0, 1), $M$, 2),
+      node((1, 0), $P$, 3),
+      arr(1, 2, $p'$, surj_str),
+      arr(3, 2, $p$),
+      arr(1, 3, $i$),
+      arr(3, 1, $exists h$, dashed_str, curve: 15deg)
+      )]
+      $h$ 来自于投射模的提升性质。注意到：
+      $
+        p compose (id - i compose h) = p - p' compose h = 0
+      $
+      进而 $im(id- i compose h) subset ker p, im (i compose h) + ker p = P$，依定义有 $im(i compose h) = P$，继而 $i$ 是满射，表明 $Q + ker p = P$，进而 $Q = P$，矛盾。
+    ]
+    #lemma[][
+      若存在，则 $M$ 的投射覆盖唯一。
+    ]
+    #proof[
+      假设 $(P_i, p_i), i = 1, 2$ 都是投射覆盖，则：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $P_1$, 1),
+      node((0, 1), $M$, 2),
+      node((1, 0), $P_2$, 3),
+      arr(1, 2, $p_1$),
+      arr(3, 2, $p_2$),
+      arr(1, 3, $f$, curve: 15deg, dashed_str),
+      arr(3, 1, $g$, curve: 15deg, dashed_str),
+      )]
+      其中 $f, g$ 来自于投射模的提升性质。注意到：
+      $
+        p_1 compose (id - g compose f) = p_1 - p_2 compose f = 0
+      $
+      因此存在 $im (id - g compose f) subset ker p_1$，意味着：
+      $
+        ker p_1 + im (g compose f) = P_1
+      $
+      由定义就有 $im (g compose f) = P_1$，继而 $g compose f$ 是满态射，因此 $g$ 是满态射，根据分裂性质可设：
+      $
+        (0 -> ker g -> P_2 ->^g P_1 -> 0)\
+        exists h, g compose (h : P_1 -> P_2) = id
+      $
+      继而 $p_2 compose h = (p_1 compose g) compose h = p_1$，也即：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $P_1$, 1),
+      node((0, 1), $M$, 2),
+      node((1, 0), $P_2$, 3),
+      arr(1, 2, $p_1$),
+      arr(3, 2, $p_2$),
+      arr(1, 3, $h$, curve: 15deg, dashed_str),
+      arr(3, 1, $g$, curve: 15deg, dashed_str),
+      )]
+      用类似的过程可以证明 $h$ 是满射，而由 $g compose h = id$ 知它当然是单态射，因此它是同构，逆就是 $g$，证毕。
+    ]
+    #corollary()[][
+      设 $p: P -> M$ 是一个投射覆盖，$q : Q -> M$ 是从投射模 $Q$ 到 $M$ 的满射，则有 $Q eqv P directSum Q'$ 使得 $q|_Q' = 0$ 且 $q|_P = p$
+    ]<projective-cover-summand-corollary>
+    #remark[][
+      通常没有自然的方式定义 $B-$ 模 $M tensorProduct N$，但假设 $A, B$ 两个代数是单位结合的，我们可以定义它的外张量积 $M tensorProduct_F N$ 作为 $A tensorProduct_F B$ 模
+    ]
+  == 有限维代数
+    本 notes 中大多数时候都考虑单位结合的有限维 $F-$ 代数。
+    #lemma[][
+      设 $B$ 是域 $F$ 的有限维单位结合代数，则 $B$ 是 Artinian 环，也即子模/理想的降链总是终止。
+    ]
+    #proof[
+      $F$ 当然是 Artinian 环，因此 $B$ 作为 Artinian 环的有限生成模也是 Artinian 的。当然 $B$ 的理想都可以看作 $F$-子模，因此作为环也是 Artinian 的。
+    ]
+    本节之后讨论的 $B$ 都是有限维单位结合 $F-$ 代数，模都指有限生成模。
+    #proposition()[][
+      - 每个 $B-$ 模都有投射覆盖
+      - 平坦 $B-$ 模等价于投射 $B-$ 模
+      - $B$ 只有有限个不同构的单模
+      - 单模（的同构类）恰与不可分解投射模（的同构类）通过投射覆盖一一对应
+    ]<prop-finite-alg-mod>
+    #lemma[][
+      设 $V$ 是单 $B-$ 模，$P$ 是它的投射覆盖，则对于任何单 $B-$ 模 $W$ 都有 $F-$ 模同构：
+      $
+        Hom_B (P, W) eqv Hom_B (V, W) 
+      $
+      事实上，若 $W$ 与 $V$ 作为 $B-$ 模同构，则上面的空间都是 $End_B (V)$，否则都是 $0$
+    ]
+    #proof[
+      只需证明当 $W$ 与 $V$ 不同构时两者都是零即可。
+      - 任取 $f: P -> W$，由于 $W$ 是单的，因此若 $f != 0$，则它就是满的。取 $g: Q -> W$ 是它的投射覆盖，根据 @projective-cover-summand-corollary，有 $P eqv Q directSum P'$，然而 $P$ 不可分解，显然 $Q != 0$，因此就有 $P eqv Q$，根据 @prop-finite-alg-mod 给出的单模与不可分解投射模的一一对应，立刻就有 $W eqv V$. 因此若 $W, V$ 不同构，则 $Hom(P, W) = 0$
+      - 任取 $f : V -> W$，显然只要它不是 $0$，它就是满的，导致 $f compose (P -> V) : P -> W$ 也是满的，之后的论证同上即可。
+    ]
+    #definition()[单代数][
+      一个结合代数 $B$ 称为单代数（simple algebra），如果它没有非平凡的双边理想，并且 $B^2 = {a b | a, b in B} != 0$
+    ]
+    当 $B$ 含有单位时，第二个条件等价于 $B$ 本身非零。
+    #example()[][
+      $M_n (F)$ 是 $F$ 的单代数。（使用初等变换矩阵，对于任何交换环 $R$， $M_n (R)$ 的双边理想都形如 $M_n (I)$，其中 $I$ 是 $R$ 的理想）
+    ]
+    #definition()[半单][
+      称有限维单位结合代数 $B$ 是半单代数（semisimple algebra），如果它同构于单子代数的笛卡尔积。称结合代数上的模是半单的，如果它是单模的直和。
+    ]
+    #theorem[Maschke][
+      设 $Gamma$ 是群，$F$ 的特征不整除 $|Gamma|$，则群代数 $F[Gamma]$ 是半单代数。
+    ]
+    #proposition()[][
+      设 $B$ 是半单的有限维单位结合代数，则：
+      - 所有 $B-$ 模都是半单的
+      - 所有 $B-$ 模都是投射的
+    ]
+    #proof[
+      - 设 $B = times.big B_i$，则每个 $B_i$ 事实上也是 $B-$ 模（$b dot b_i = pi_i (b) b_i$），更进一步一定是单模，这就表明 $B = directSum.big B_i$，且 $B_i$ 是单模，继而 $B$ 作为模是半单的。由于自由模都形如 $directSum.big B$，因此自由模也半单。而每个模都是某个自由模的商，因此它们也是半单的。
+      - 设 $M$ 是单模，$P$ 是它的投射覆盖，由 @prop-finite-alg-mod 可知 $P$ 不可分解，而 $P$ 也是半单的，因此 $P$ 是单模。显然，这意味着 $ker (P -> M) = 0$，也即 $P eqv M$。对于一般的 $M$，注意到它是单模的直和，而投射模的直和仍然是投射模，结论成立。
+    ]
 
 
 

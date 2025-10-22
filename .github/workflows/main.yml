@@ -1,45 +1,37 @@
-name: Render paper.pdf
+name: Render papers
 on: push
 jobs:
-  render-paper:
+  render:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: fontist/setup-fontist@v2
       - run: fontist install "Noto Serif CJK SC"
+
       - uses: typst-community/setup-typst@v3
         with:
           cache-dependency-path: requirements.typ
-      # Now Typst is installed and packages will be cached!
-      - uses: actions/checkout@v2
+
       - run: |
-              for file in "代数学二/main.typ" "几何学/main.typ" "复变函数/main.typ" "常微分方程/main.typ" "抽象代数/main.typ" "数学模型/main.typ"
-                  do
-                         typst compile $file --root . --font-path ~/.fontist/fonts
-                  done
+          set -eux
+          mkdir -p artifacts
+          # 找到所有 main.typ，排除 .github 目录
+          while IFS= read -r file; do
+            dir=$(dirname "$file")
+            name=$(basename "$dir")
+            echo "Compiling $file -> $dir/main.pdf (artifact: ${name}.pdf)"
+            typst compile "$file" --root . --font-path ~/.fontist/fonts
+            if [ -f "$dir/main.pdf" ]; then
+              cp "$dir/main.pdf" "artifacts/${name}.pdf"
+            else
+              echo "Warning: $dir/main.pdf not produced"
+            fi
+          done < <(find . -type f -name 'main.typ' -not -path './.github/*' -print)
+
       - uses: actions/upload-artifact@v4
         with:
-          name: 数学模型
-          path: 数学模型/main.pdf
-      - uses: actions/upload-artifact@v4
-        with:
-          name: 代数学二
-          path: 代数学二/main.pdf
-      - uses: actions/upload-artifact@v4
-        with:
-          name: 几何学
-          path: 几何学/main.pdf
-      - uses: actions/upload-artifact@v4
-        with:
-          name: 复变函数
-          path: 复变函数/main.pdf
-      - uses: actions/upload-artifact@v4
-        with:
-          name: 常微分方程
-          path: 常微分方程/main.pdf
-      - uses: actions/upload-artifact@v4
-        with:
-          name: 抽象代数
-          path: 抽象代数/main.pdf
-      
-                  
+          name: papers
+          path: artifacts
+
+
