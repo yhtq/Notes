@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: fontist/setup-fontist@v2
+      - uses: fontist/setup-fontist@v 2.0.1
       - run: fontist install "Noto Serif CJK SC"
 
       - uses: typst-community/setup-typst@v3
