@@ -111,12 +111,12 @@
   ]
   #theorem[Cantor][
     度量空间是完备的当且仅当闭集套确定唯一公共点，也就是说：\
-    对于任何非空下降闭集序列 ${F_i}$ 满足 $d(F_i) ->0$，那么恰有 $| sect.big_i F_i | = 1$
+    对于任何非空下降闭集序列 ${F_i}$ 满足 $d(F_i) ->0$，那么恰有 $| inter.big_i F_i | = 1$
   ]<Cantor>
   #proof[
-    - 假设空间完备，对于某个闭集套 $F_i$ 选出 $x_i in F_i$，由于 $d(F_i) ->0$，当 $i$ 充分大时有 $d(F_i) < epsilon$，进而对 $j > i, x_j in F_i => d(F_j, F_i) < epsilon$，给出 ${x_i}$ 是 Cauthy 序列。从而收敛到 $x$，由于 $F_i$ 都是闭集，故 $x in sect.big_i F_i$\
-      此外，由直径趋于零显然 $sect.big_i F_i$ 不会有第二个点，否则直径都大于两点间距离
-    - 假设闭集套成立，任取 Cauthy 序列 ${x_i}$，取 $F_i = overline({x_j | j > i})$，显然 $d(F_i) ->0$（注意到集合在半径为 $r$ 的开球中，它的闭包也在），从而 $sect.big_i F_i$ 是唯一的点 $x$\
+    - 假设空间完备，对于某个闭集套 $F_i$ 选出 $x_i in F_i$，由于 $d(F_i) ->0$，当 $i$ 充分大时有 $d(F_i) < epsilon$，进而对 $j > i, x_j in F_i => d(F_j, F_i) < epsilon$，给出 ${x_i}$ 是 Cauthy 序列。从而收敛到 $x$，由于 $F_i$ 都是闭集，故 $x in inter.big_i F_i$\
+      此外，由直径趋于零显然 $inter.big_i F_i$ 不会有第二个点，否则直径都大于两点间距离
+    - 假设闭集套成立，任取 Cauthy 序列 ${x_i}$，取 $F_i = overline({x_j | j > i})$，显然 $d(F_i) ->0$（注意到集合在半径为 $r$ 的开球中，它的闭包也在），从而 $inter.big_i F_i$ 是唯一的点 $x$\
       $x$ 是所有如上定义的闭包的交点，它一定是序列的极限。（注意到 $F_i$ 的直径趋近于零，因此对于充分大的 $n$，$F_n$ 中每个点到 $x$ 的距离都小于 $epsilon$）
   ]
   #theorem[][
@@ -223,7 +223,7 @@
       设复函数 $f: S -> C$，若：
       $
       exists A in CC, forall epsilon > 0, exists delta >0:\
-      z in B(x_0, delta) sect S => f(z) in B(A, epsilon)
+      z in B(x_0, delta) inter S => f(z) in B(A, epsilon)
       $
       则称 $f(z)$ 在 $z_0$ 处有极限 $A$|f attach to $A$ at $x_0$，记作 $lim_(z->z_0) f(z) = A$\
       注意这里并不要求 $S$ 有任何开闭等性质
@@ -362,10 +362,10 @@
     #theorem[][
       设 $f = u + i v$ 可微，$u, v in C^2$，则有：
       $
-      (diff^2 u)/(diff x^2) = (diff^2 v)/(diff x diff y)\
-      (diff^2 u)/(diff y^2) = -(diff^2 v)/(diff x diff y)\
+      (partial^2 u)/(partial x^2) = (partial^2 v)/(partial x partial y)\
+      (partial^2 u)/(partial y^2) = -(partial^2 v)/(partial x partial y)\
       $
-      进而拉普拉斯算子 $(diff^2 u)/(diff x^2) + (diff^2 v)/(diff y^2) = 0$，满足前式的 $C^2$ 函数称为 调和|harmonic 函数\
+      进而拉普拉斯算子 $(partial^2 u)/(partial x^2) + (partial^2 v)/(partial y^2) = 0$，满足前式的 $C^2$ 函数称为 调和|harmonic 函数\
       类似的 $v$ 也是调和函数
     ]
     #definition[][
@@ -380,7 +380,7 @@
       注意到：
       $
       integral_(gamma_1 + gamma_2) partialDer(u, x) dif y - partialDer(u, y) dif x\
-      = integral_D ((diff^2 u)/(diff x^2) + (diff^2 u)/(diff y^2)) dif x dif y = 0
+      = integral_D ((partial^2 u)/(partial x^2) + (partial^2 u)/(partial y^2)) dif x dif y = 0
       $
       （利用格林公式，这需要区域的单连通性）\
       因此定义是良好的\
@@ -798,30 +798,30 @@
   #theorem[Cauthy 1][
     设 $G$ 是有界区域，其边界是有限多条光滑曲线。$f$ 在区域内解析，在区域的闭包上连续，则有：
     $
-    integral_(diff G) f(z) dif z = 0
+    integral_(partial G) f(z) dif z = 0
     $
   ]
   #proof[
     - 首先，先放松一点条件，假设 $G$ 是三角形区域，而 $f$ 在区域的闭包上解析。\
       设三角形为 $A B C$，取三边的中点 $A', B', C'$，注意到积分恰可以分到四个三角形上，也即：
       $
-      integral_(diff G) f(z) dif z = sum_(i=1)^4 integral_(triangle.t_i) f(z) dif z
+      integral_(partial G) f(z) dif z = sum_(i=1)^4 integral_(triangle.t_i) f(z) dif z
       $
       以三角形 $A C' B'$ 为例，注意到 $f$ 解析，有：
       $
-      integral_(diff A C' B) f(z) dif z = integral_(diff A C' B) f(z_0) + (z-z_0) f'(z_0) + o(z- z_0)  dif z\
-      = integral_(diff A C' B) o(z- z_0)  dif z
+      integral_(partial A C' B) f(z) dif z = integral_(partial A C' B) f(z_0) + (z-z_0) f'(z_0) + o(z- z_0)  dif z\
+      = integral_(partial A C' B) o(z- z_0)  dif z
       $
       这里的 $z_0$ 可以任取\
       假设积分非零，不妨设为 $M > 0$，则四个三角形中总有一个积分的绝对值大于等于 $M/4$，记为 $triangle.t_1$\
       接下来，再次四分并取其中一个积分大于等于 $M/16$，记为 $triangle.t_2$，如此下去，我们得到一个序列 $triangle.t_i$，使得：
       $
-      abs(integral_(diff triangle.t_i) f(z) dif z) >= abs(M/4^i)\
-      integral_(diff triangle.t_i) abs(f(z)) >= M/4^i
+      abs(integral_(partial triangle.t_i) f(z) dif z) >= abs(M/4^i)\
+      integral_(partial triangle.t_i) abs(f(z)) >= M/4^i
       $
       另一方面，注意到:
       $
-      integral_(diff triangle.t_i) abs(f(z)) <= integral_(diff triangle.t_i) abs(o(z- z_0))  dif z <= c(triangle.t_i) d(triangle.t_i) a_i
+      integral_(partial triangle.t_i) abs(f(z)) <= integral_(partial triangle.t_i) abs(o(z- z_0))  dif z <= c(triangle.t_i) d(triangle.t_i) a_i
       $
       其中 $c$ 是周长，$d$ 是直径，$a_i -> 0$，有：
       $
@@ -831,7 +831,7 @@
     - 下一步，对于一般的多边形，它可以进行三角剖分（证明略显复杂和初等，这里不证），对每个三角形应用之前的结论便可得证
     - 对于一般的区域 $G$，我们希望对于任意 $epsilon > 0$，取得多边形区域 $D$，它的闭包含于 $G$，而：
       $
-      abs(integral_(diff G)^() f(z) dif z - integral_(diff D) f(z) dif z) < epsilon
+      abs(integral_(partial G)^() f(z) dif z - integral_(partial D) f(z) dif z) < epsilon
       $
       假若能取得，由引理立得结论成立。\
       该命题作为 bonus question\
@@ -901,14 +901,14 @@
   #theorem[Cauthy 2][
     设 $G$ 是有界区域，其边界是有限多条光滑曲线。$f$ 在区域内解析，在区域的闭包上连续，则对任意 $z in G$，$omega$ 是任意一个将 $z$ 包括在内的简单闭曲线，有：
     $
-    f(z) = 1/(2 pi i) integral_(diff omega) f(w)/(w - z) dif w
+    f(z) = 1/(2 pi i) integral_(partial omega) f(w)/(w - z) dif w
     $
   ]<Cauthy-value>
   #proof[
     由之前的 Cauthy 定理，只需要考虑 $omega$ 是某个任意小的球形开邻域，则：
     $
-    1/(2 pi i) integral_(diff omega) f(w)/(w - z) dif w = 1/(2 pi i) integral_(diff omega) f(z)/(w - z) + f'(z) + o(1) dif z\
-    = f(z) + 1/(2 pi i) integral_(diff omega) o(1) dif w\
+    1/(2 pi i) integral_(partial omega) f(w)/(w - z) dif w = 1/(2 pi i) integral_(partial omega) f(z)/(w - z) + f'(z) + o(1) dif z\
+    = f(z) + 1/(2 pi i) integral_(partial omega) o(1) dif w\
     $
     注意到 $delta$ 可以任意小，因此上式右侧可以任意小，进而得证
   ]
@@ -922,9 +922,9 @@
   #proof[
     无妨设 $a = 0$ 我们有：
     $
-    f(z) = 1/(2 pi i)integral_(diff G)^() f(w)/(w - z) dif w\
-    = 1/(2 pi i)integral_(diff G)^() - 1/w f(w)(sum_(k=0)^infinity (z/w)^k ) dif w\ 
-    = sum_(k=0)^infinity (1/(2 pi i)integral_(diff G)^() - 1/w f(w) 1/w^k dif w) z^k\
+    f(z) = 1/(2 pi i)integral_(partial G)^() f(w)/(w - z) dif w\
+    = 1/(2 pi i)integral_(partial G)^() - 1/w f(w)(sum_(k=0)^infinity (z/w)^k ) dif w\ 
+    = sum_(k=0)^infinity (1/(2 pi i)integral_(partial G)^() - 1/w f(w) 1/w^k dif w) z^k\
     $
     不难看出上式右侧恰为幂级数，得证
   ]
@@ -1247,7 +1247,7 @@
       由柯西积分：
       $
       f(z) 
-      &= 1/(2 pi i) integral_(diff B(z, r))^() f(w)/(w - z) dif w \
+      &= 1/(2 pi i) integral_(partial B(z, r))^() f(w)/(w - z) dif w \
       &= 1/(2 pi i) integral_(0)^(2pi) f(z + r e^(i theta))/(r e^(i theta)) dif (z + r e^(i theta))\
       &= 1/(2 pi) integral_(0)^(2pi) f(z + r e^(i theta)) dif theta
       $
@@ -1767,21 +1767,21 @@
     #proposition[][
       设 $f$ 在包含 $closedBall(a, R)$ 的开集上是解析的，在 $B(a; R)$ 上是一一的。设 $Omega = f(B(a; R))$ 则有：
       $
-      Inv(f) (omega) = 1/(2 pi i) integral_(diff B(a; R))^() (z f'(z))/(f(z) - omega) dif z 
+      Inv(f) (omega) = 1/(2 pi i) integral_(partial B(a; R))^() (z f'(z))/(f(z) - omega) dif z 
       $
     ]
     #proof[
       注意到解析的一一映射只能有简单零点，记 $z_0 = Inv(f)(omega)$，它是 $f - omega$ 的简单零点，利用 @arg-principle2 有：
       $
-      z_0 = 1/(2 pi i) integral_(diff B(a; R))^() (z f'(z))/(f(z) - omega) dif z
+      z_0 = 1/(2 pi i) integral_(partial B(a; R))^() (z f'(z))/(f(z) - omega) dif z
       $
       证毕
       
     ]
     #theorem[Rouche][
-      设 $f, g$ 在包含 $closedBall(a, R)$ 的开集上是解析的，在 $diff B(a; R)$ 上无零点/极点，设 $Z_f, Z_g, P_f, P_g$ 分别是 $f, g$ 在 $B(a; R)$ 中的零点/极点个数，并且设：
+      设 $f, g$ 在包含 $closedBall(a, R)$ 的开集上是解析的，在 $partial B(a; R)$ 上无零点/极点，设 $Z_f, Z_g, P_f, P_g$ 分别是 $f, g$ 在 $B(a; R)$ 中的零点/极点个数，并且设：
       $
-      abs(f(z) + g(z)) < abs(f(z)) + abs(g(z)), forall z in diff B(a; R)
+      abs(f(z) + g(z)) < abs(f(z)) + abs(g(z)), forall z in partial B(a; R)
       $
       则有：
       $
@@ -1799,7 +1799,7 @@
     今晚调课：6:40 - 8:40 理教 103
     #definition[][
       - 称一个解析元素是二元组 $(f, G)$ 其中 $G$ 是区域，$f: G -> CC$ 是解析函数。
-      - 称 $(f', G'), (f, G)$ 互相是直接延拓|direct continuation，如果 $G' sect G != emptyset andC f|_(G' sect G) = f_(G' sect G)$
+      - 称 $(f', G'), (f, G)$ 互相是直接延拓|direct continuation，如果 $G' inter G != emptyset andC f|_(G' inter G) = f_(G' inter G)$
       - 设有一列（有限个）解析元素 $C_n = (f_n, G_n), n = 0, 1, ..., N$ 其中 $G_n$ 都是开圆盘。若 $C_n$ 总与 $C_(n-1)$ 是直接延拓，则称 $C_N$ 是沿着链 ${D_i}$ 的 $D_0$ 的解析延拓。
       - 给定曲线 $gamma: [0, 1] -> CC$，称有限长圆盘链 $l = {D_i}$ 覆盖 $gamma$，如果：
         - $D_0$ 的圆心是 $gamma(0)$
@@ -1815,7 +1815,7 @@
       - 固定起点 $(f_0, G_0)$ 和圆盘链 $l$，则沿着 $l$ 的解析延拓（若存在）是唯一的
     ]
     #proof[
-      - $f, g$ 在 $G' sect G$ 上相等，这是 $G$ 中非空开集，当然就有 $f = g$
+      - $f, g$ 在 $G' inter G$ 上相等，这是 $G$ 中非空开集，当然就有 $f = g$
       - 利用归纳法和上一问立得
     ]
     #proposition[][
@@ -1832,11 +1832,11 @@
     ]
     #proof[
       -
-        若设 $D = B(0, 1), Delta = B(0, r)$，设 $f$ 在 $Delta$ 上泰勒展开式的收敛半径为 $R >= r$，往证 $R >= 1$ 继而结论成立。如若不然则 $R < 1$，先将 $f$ 延拓到 $B(0, R)$ 上，由假设 $diff B(0, R)$ 上有一点 $z_0$ 使得：
+        若设 $D = B(0, 1), Delta = B(0, r)$，设 $f$ 在 $Delta$ 上泰勒展开式的收敛半径为 $R >= r$，往证 $R >= 1$ 继而结论成立。如若不然则 $R < 1$，先将 $f$ 延拓到 $B(0, R)$ 上，由假设 $partial B(0, R)$ 上有一点 $z_0$ 使得：
         $
         lim_(z -> z_0) f(z) "不存在"
         $
-        （这里利用了之前习题证明的幂级数的性质，若极限存在则幂级数在该点收敛，但由假设不可能在 $diff B(0, R)$ 上每个点都收敛）\
+        （这里利用了之前习题证明的幂级数的性质，若极限存在则幂级数在该点收敛，但由假设不可能在 $partial B(0, R)$ 上每个点都收敛）\
         此时，取 $gamma = 0 -> z_0$ 线段，这条线段上当然不可能有 $f$ 的解析延拓。
       - 若 $D = CC$ 证明是类似的
       - 一般的，假设 $D != CC$ ，利用之后的 @Riemann-mapping 和开映射原理的推论 @univalent-is-homeomorphism，@Riemann-mapping 给出的 $g$ 是 $D -> g(D)$ 的解析同胚。注意到 $g(Delta)$ 当然是开集，取 $B(0, r) subset g(Delta)$，令：
@@ -1855,7 +1855,7 @@
       - 对任何开区域 $Omega$，记：
         - $Omega_+$ 是 $Omega$ 为与上半平面 ${z | Im z > 0}$ 的部分
         - $Omega_-$ 是 $Omega$ 为与下半平面 ${z | Im z < 0}$ 的部分
-        - $Omega_0 = Omega sect RR$ 
+        - $Omega_0 = Omega inter RR$ 
         - $Omega^* = overline(Omega)$
     ]
     #theorem[Schwarz Reflection Principle][
@@ -1887,15 +1887,15 @@
     #corollary[一般球上的推广][
       设 $D = B(a, r),D' = (b, R), Omega$ 是区域，令：
       $
-      Omega_D = Omega sect D\
-      Omega_(D^c) = Omega sect D^c\
-      Omega_(diff D) = Omega sect (diff D)
+      Omega_D = Omega inter D\
+      Omega_(D^c) = Omega inter D^c\
+      Omega_(partial D) = Omega inter (partial D)
       Omega^*_D "是关于圆周" D "的对称点"
       $
       若 $Omega = Omega^*_D$，并且：
       $
-      f: Omega_D union Omega_(diff D)\
-      g: Omega_(D^c) union Omega_(diff D)
+      f: Omega_D union Omega_(partial D)\
+      g: Omega_(D^c) union Omega_(partial D)
       $
       连续
       #TODO
@@ -2001,7 +2001,7 @@
     #definition[][
       - 称 $FF subset H(G)$ 局部有界（locally bounded）如果：
         $
-        forall a in G, exists M > 0, exists r > 0, forall z in B(a, r) sect G, forall f in FF, norm(f(z)) < M
+        forall a in G, exists M > 0, exists r > 0, forall z in B(a, r) inter G, forall f in FF, norm(f(z)) < M
         $
       - 称 $FF$ 内闭一致有界，如果在每个 $G$ 的紧子集上都一致有界
     ]
@@ -2025,10 +2025,10 @@
       $
       如此，利用柯西定理：
       $
-      norm(f(z) - f(z_0)) = 1/(2 pi) norm(integral_(diff overline(B(z_0, delta/2)))^() (f(w))/(w - z_0) dif w - integral_(diff overline(B(z_0, delta/2)))^() (f(w))/(w - z) dif w)\
-      = 1/(2 pi) norm(integral_(diff overline(B(z_0, delta/2)))^() (f(w) (z_0 - z))/((w - z_0)(w - z)) dif w)\
-      <= 1/(2 pi) integral_(diff overline(B(z_0, delta/2)))^() norm(f(w) (z_0 - z)/((w - z_0)(w - z))) dif w\
-      <= 1/(2 pi) integral_(diff overline(B(z_0, delta/2)))^() M norm( (z_0 - z)/((w - z_0)(w - z))) dif w\
+      norm(f(z) - f(z_0)) = 1/(2 pi) norm(integral_(partial overline(B(z_0, delta/2)))^() (f(w))/(w - z_0) dif w - integral_(partial overline(B(z_0, delta/2)))^() (f(w))/(w - z) dif w)\
+      = 1/(2 pi) norm(integral_(partial overline(B(z_0, delta/2)))^() (f(w) (z_0 - z))/((w - z_0)(w - z)) dif w)\
+      <= 1/(2 pi) integral_(partial overline(B(z_0, delta/2)))^() norm(f(w) (z_0 - z)/((w - z_0)(w - z))) dif w\
+      <= 1/(2 pi) integral_(partial overline(B(z_0, delta/2)))^() M norm( (z_0 - z)/((w - z_0)(w - z))) dif w\
       $
       其余部分分母有界，因此可以控制到分子的线性式，当然就蕴含着等度连续
     ]
@@ -2040,22 +2040,22 @@
 
       至于积分值，由一致收敛的结论和归纳法证明 $f'_n$ 在任意闭球 $B(a, r)$ 上收敛即可。注意到由柯西积分公式的推论：
       $
-      norm(f'_n (z) - f'(z)) <= norm(1/(2 pi) integral_(diff B(a, R))^() (f_n (w))/(w-z)^2 - (f'(w))/(w - z)^2 dif w) \
-      <= 1/(2 pi (R - r)^2) integral_(diff B(a, R))^() norm(f_n (w)- f'(w))  dif w\
+      norm(f'_n (z) - f'(z)) <= norm(1/(2 pi) integral_(partial B(a, R))^() (f_n (w))/(w-z)^2 - (f'(w))/(w - z)^2 dif w) \
+      <= 1/(2 pi (R - r)^2) integral_(partial B(a, R))^() norm(f_n (w)- f'(w))  dif w\
       $
       利用积分极限换序即可得到结论。
 
     ]
     #theorem[Harwitz][
-      设 ${f_n} subset C(G, CC)$ 在 $G$ 上内闭一致收敛于 $f in H(G)$，设 $f$ 不恒为零，$closedBall(a, r) subset G$，$f(z) !=0, forall z in diff closedBall(a, r)$，则：
+      设 ${f_n} subset C(G, CC)$ 在 $G$ 上内闭一致收敛于 $f in H(G)$，设 $f$ 不恒为零，$closedBall(a, r) subset G$，$f(z) !=0, forall z in partial closedBall(a, r)$，则：
       $
       exists N in NN, forall n > N, f, f_n "在 " B(a, r) "内有相同的零点个数"
       $
     ]<Harwitz>
     #proof[
-      设 $m = inf_(diff closedBall(a, r)) norm(f(z)) > 0$，由一致收敛性，当 $n$ 充分大时有：
+      设 $m = inf_(partial closedBall(a, r)) norm(f(z)) > 0$，由一致收敛性，当 $n$ 充分大时有：
       $
-      norm(f_n (z) - f(z)) < m/2 <= norm(f(z)), forall z in diff closedBall(a, r)
+      norm(f_n (z) - f(z)) < m/2 <= norm(f(z)), forall z in partial closedBall(a, r)
       $
       根据 Roache's Theorem，结论成立
     ]
@@ -2105,7 +2105,7 @@
       #proof[
         注意到 $FF$ 中函数的极限首先当然解析，且 $f(a) = 0, f'(a) >= 0$\
         假设 $f != 0$，我们需要证明：
-        - $f(G) subset B(0, 1)$，既然 $f(G) subset diff(B(0, 1))$ 且是开集，当然应该 $f(G) subset B(0, 1)$
+        - $f(G) subset B(0, 1)$，既然 $f(G) subset partial(B(0, 1))$ 且是开集，当然应该 $f(G) subset B(0, 1)$
         - $f$ 是单射，既然任取 $z_1, z_2$ 假设 $f(z_1) = f(z_2)$，总可找到 $r$ 使得：
           $
           z_2 in.not B(z_1, r)
@@ -2176,7 +2176,7 @@
     #definition[][
       设 $G subset CC, f: G -> CC$ 称 $f$ 为调和函数，如果 $f$ 有连续偏导且：
       $
-      Delta u = (diff^2 u) / (diff x^2) + (diff^2 u) / (diff y^2) = 0
+      Delta u = (partial^2 u) / (partial x^2) + (partial^2 u) / (partial y^2) = 0
       $<Laplace-equation>
     ]
     #definition[泊松核][
@@ -2234,7 +2234,7 @@
     ]
   == Dirichlet Problem
     #definition[][
-      设 $G$ 满足 $forall f in C(diff G, RR), exists u in C(overline(G), RR), u|_(diff G) = f$ 且 $u$ 在 $G$ 中调和，则称 $G$ 是 Dirichlet 区域
+      设 $G$ 满足 $forall f in C(partial G, RR), exists u in C(overline(G), RR), u|_(partial G) = f$ 且 $u$ 在 $G$ 中调和，则称 $G$ 是 Dirichlet 区域
     ]
     在 Dirichlet 研究太阳系的稳定性时，提出了什么区域是 Dirichlet 区域的问题，这个问题在数学上被称为 Dirichlet Problem。一般的解决方法非常困难，我们只对单位圆盘解决，也已经十分困难了。
     #lemma[Leibniz' s rule][
@@ -2361,7 +2361,7 @@
       #proof[
         也就是证明若 $f(x) >= 0, integral_(0)^(1) f(x) dif x = 0$ 则 $f(x) = 0$，这是实分析的经典结论
       ]
-      可得 $forall z in diff B(a, r), u(z) = u(a)$，进而 $f$ 在 $a$ 附近任何一个圆盘上是解析函数。\
+      可得 $forall z in partial B(a, r), u(z) = u(a)$，进而 $f$ 在 $a$ 附近任何一个圆盘上是解析函数。\
       对于区域内任意一点，找到一个路径并对路径做有限覆盖，不断利用上面的结论可得区域内任何一点处的函数值都是 $u(a)$
     ]
     #theorem[][

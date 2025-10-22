@@ -1024,11 +1024,11 @@
       $
         cases(
           - Delta u = f,
-          u|_(diff Omega) = 0 
+          u|_(partial Omega) = 0 
         )
       $
       其中 $f in L^2(Omega)$。为了判断该方程是否有解，可以考虑：
-      - 设 $C^M_0 (Omega) = {u in C^m (closure(Omega)) | u = 0 "in a neighborhood of" diff u}$
+      - 设 $C^M_0 (Omega) = {u in C^m (closure(Omega)) | u = 0 "in a neighborhood of" partial u}$
       - 假设 $u in C^2(Omega)$ 符合方程，则任取 $v$ 都有：
         $
           integral_(Omega)^() (Delta u - f) v dif x = 0
@@ -1044,16 +1044,16 @@
         $
         是在模为：
         $
-          norm2(u) = sum_(abs(alpha) <= m) integral_()^() norm2(diff^alpha u) dif x` 
+          norm2(u) = sum_(abs(alpha) <= m) integral_()^() norm2(partial^alpha u) dif x` 
         $
         的 $C_0^m (Omega)$ 的完备化空间。
       - 定义：
         $
-          X = H_0^1 (Omega), inner(f, g) = sum_(abs(alpha <=1)) integral_Omega diff^2 f diff^2 g dif x
+          X = H_0^1 (Omega), inner(f, g) = sum_(abs(alpha <=1)) integral_Omega partial^2 f partial^2 g dif x
         $
         以及双线性函数：
         $
-          a(f, g) = sum_(abs(alpha = 1)) integral_Omega diff^alpha f diff^alpha g dif x = integral_()^() nabla f nabla g dif x
+          a(f, g) = sum_(abs(alpha = 1)) integral_Omega partial^alpha f partial^alpha g dif x = integral_()^() nabla f nabla g dif x
         $
         我们验证 $a$ 满足之前的条件。条件 1 是显然的，条件 2 相当于：
         $
@@ -1066,7 +1066,7 @@
         $
         它是线性泛函，由 Lax-Milgram 定理，存在唯一的 $u in X$ 使得：
         $
-          integral_Omega f v dif x = F(v) = a(v, u) = sum_(abs(alpha) = 1) integral_Omega diff^alpha v diff^alpha u dif x  = integral_Omega nabla v nabla u dif x
+          integral_Omega f v dif x = F(v) = a(v, u) = sum_(abs(alpha) = 1) integral_Omega partial^alpha v partial^alpha u dif x  = integral_Omega nabla v nabla u dif x
         $
     ]
     #lemma[Poincare's 不等式][
@@ -1088,20 +1088,20 @@
       其中 $D(a)$ 是各个分量由 $[-a, a]$ 组成的立方体。同时，由 $f$ 的性质，$f$ 可以零延拓到 $D$ 上。有：
       #let x2n = $x_2, x_3, ..., x_n$
       $
-        f(autoRListN(x, n)) = f(-a, x2n) + integral_(-a)^(x_1) diff_1 f(t, x2n) dif t\
-        = integral_(-a)^(x_1) diff_1 f(t, x2n) dif t
+        f(autoRListN(x, n)) = f(-a, x2n) + integral_(-a)^(x_1) partial_1 f(t, x2n) dif t\
+        = integral_(-a)^(x_1) partial_1 f(t, x2n) dif t
       $
       （这里由延拓的性质，一定有 $f(-a, x2n) = 0$），因此：
       $
-        abs(f(x))^2 <= integral_(-a)^(x_1) (diff_1 f(t, x2n))^2 dif t integral_(-a)^(x_1) 1 dif t \
-        <= abs(x_1 + a) integral_(-a)^(a) (diff_1 f(t, x2n))^2 dif t
+        abs(f(x))^2 <= integral_(-a)^(x_1) (partial_1 f(t, x2n))^2 dif t integral_(-a)^(x_1) 1 dif t \
+        <= abs(x_1 + a) integral_(-a)^(a) (partial_1 f(t, x2n))^2 dif t
       $
       进而：
       $
         integral_(Omega)^() abs(f)^2 dif x = integral_()^() integral_(-a)^(a) abs(f)^2 dif x_1 dif x2n\
-        <= integral integral_(-a)^(a) abs(x_1 + a) integral_(-a)^(a) (diff_1 f(t, x2n))^2 dif t dif x_1 dif x2n\
-        <= integral integral_(-a)^(a) abs(x_1 + a) dif x_1 integral_(-a)^(a) (diff_1 f(t, x2n))^2 dif t dif x2n\
-        = (integral_(-a)^(a) abs(x + a) dif x) integral_(Omega)^() abs(diff_1 f)^2 dif x 
+        <= integral integral_(-a)^(a) abs(x_1 + a) integral_(-a)^(a) (partial_1 f(t, x2n))^2 dif t dif x_1 dif x2n\
+        <= integral integral_(-a)^(a) abs(x_1 + a) dif x_1 integral_(-a)^(a) (partial_1 f(t, x2n))^2 dif t dif x2n\
+        = (integral_(-a)^(a) abs(x + a) dif x) integral_(Omega)^() abs(partial_1 f)^2 dif x 
       $
       证毕。
     ]
@@ -1456,7 +1456,7 @@
         - $x : l^1 arrowb x : l^infinity$ 是线性的单射
         - $(x_i) : l^1 arrowb (x_i/i^2) : l^infinity$ 也是线性的单射
       ]
-      如此，就有基之间的双射，延拓到向量空间的同构，使用该同构将 $l^infinity$ 范数迁移过来（由于 $l^infinity$ 是完备的，该范数下的空间等距同构于 $l^infinity$，因此当然完备） ，此外，可以证明 $l^1$ 有可数稠子集（取所有位置都是有理数即可），但 $l^infinity$ 没有（任何两个 $0, 1$ 列的距离都是 $1$，但 $0, 1$ 列有 $alef^1$ 个），因此两个空间的拓扑不同，范数当然不可能等价。
+      如此，就有基之间的双射，延拓到向量空间的同构，使用该同构将 $l^infinity$ 范数迁移过来（由于 $l^infinity$ 是完备的，该范数下的空间等距同构于 $l^infinity$，因此当然完备） ，此外，可以证明 $l^1$ 有可数稠子集（取所有位置都是有理数即可），但 $l^infinity$ 没有（任何两个 $0, 1$ 列的距离都是 $1$，但 $0, 1$ 列有 $aleph^1$ 个），因此两个空间的拓扑不同，范数当然不可能等价。
       
       这个例子也提供了一个无界线性算子，但它的 $ker = {0}$ 是闭的。
     ]
@@ -1526,7 +1526,7 @@
 
       #align(center)[#diagram(
         $
-          X edge(A, <->) &im A  edge(i, ->>) &Y \
+          X edge(A, "<->") &im A  edge(i, ->>) &Y \
           Z edge("ur", exists B', "-->") edge("urr", B, ->) edge("u", Inv(A) B', "->", label-side: #left)
         $
       )]
