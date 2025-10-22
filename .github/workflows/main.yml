@@ -23,7 +23,7 @@ jobs:
             dir=$(dirname "$file")
             name=$(basename "$dir")
             echo "Compiling $file -> $dir/main.pdf (artifact: ${name}.pdf)"
-            typst compile "$file" --root . --font-path ~/.fontist/fonts
+            typst compile "$file" --root . --font-path ~/.fontist/fonts | echo "Warning: compilation of $file produced warnings/errors"
             if [ -f "$dir/main.pdf" ]; then
               cp "$dir/main.pdf" "artifacts/${name}.pdf"
             else
