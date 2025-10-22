@@ -12,6 +12,8 @@ jobs:
       - run: fontist install "Noto Serif CJK SC"
 
       - uses: typst-community/setup-typst@v4
+        with:
+          allow-prereleases: true
 
       - run: |
           set -eux
