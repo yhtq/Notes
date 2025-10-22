@@ -10,8 +10,6 @@ jobs:
       - run: fontist install "Noto Serif CJK SC"
 
       - uses: typst-community/setup-typst@v3
-        with:
-          cache-dependency-path: requirements.typ
 
       - run: |
           set -eux
