@@ -32,8 +32,8 @@
       - $V(E) = V(I)$， 其中 $I$ 是 $E$ 的生成理想。这表明我们只需要考虑理想的零点集
       - $V(0) = Spec(A)$
       - $V(A) = V(1) = emptyset$
-      - $sect.big_i V(I_i) = V(sum_i I_i)$
-      - $V(I) union V(J) = V(I sect J) = V(I J)$
+      - $inter.big_i V(I_i) = V(sum_i I_i)$
+      - $V(I) union V(J) = V(I inter J) = V(I J)$
     ]
     #proof[
       - 注意到对任何素理想 $P, I subset P <=> E subset P$，结论显然
@@ -43,11 +43,11 @@
         $
         I_j subset sum_i I_i => V(sum_i I_i) subset V(I_j)
         $
-        另一方面，假设素理想 $P$ 满足 $P in sect.big_i V(I_i)$，这就导出 $P supset I_i, forall i$，表明 $P supset sum_i I_i$
-      - 首先 $I, J supset I sect J, I J$，因此 $V(I), V(J) subset I sect J, I J$。\
+        另一方面，假设素理想 $P$ 满足 $P in inter.big_i V(I_i)$，这就导出 $P supset I_i, forall i$，表明 $P supset sum_i I_i$
+      - 首先 $I, J supset I inter J, I J$，因此 $V(I), V(J) subset I inter J, I J$。\
         - 往证 $V(I J) subset V(I) union V(J)$\
           注意到 $P$ 是素理想，因此 $P supset I J => P supset I or P supset J => P in V(I) union V(J)$
-        - 类似的，把 $I sect J$ 替换 $I J$ 结论都是正确的
+        - 类似的，把 $I inter J$ 替换 $I J$ 结论都是正确的
     ]
     注意到上面的命题实际上说明了：
     - $Spec(A), emptyset$ 是某个集合的零点集
@@ -86,24 +86,24 @@
       的集合为基本开集/主开集
     ]
     #proposition[][
-      - $D(f) sect D(g) = D(f g)$
+      - $D(f) inter D(g) = D(f g)$
       - $D(f) = emptyset <=> f in sqrt(0)$
       - $D(f) = Spec(A) <=> f in U(A)$
       - $D(f) = D(g) <=> sqrt(f) = sqrt(g)$
     ]
     #proof[
-      - $p in D(f) sect D(g) <=> f in.not p and g in.not p <=> f g in.not p$
+      - $p in D(f) inter D(g) <=> f in.not p and g in.not p <=> f g in.not p$
       - 由幂零根的概念和性质可知
       - \
         - 一方面 $f in U(A) => V(f) = emptyset$
         - 另一方面，一个不可逆的元素应该包含于某个极大理想，而极大理想一定是素理想，因此成立
         - 首先我们证明：
           $
-          sect.big_(P in V(I)) = sqrt(I)
+          inter.big_(P in V(I)) = sqrt(I)
           $
           这是因为由对应定义，$V(I)$ 中的元素与 $Spec(A quo I)$ 中元素可以产生一一对应 $phi$。同时，注意到：
           $
-          Spec(A quo I) = sect.big_(p in V(I)) p quo I
+          Spec(A quo I) = inter.big_(p in V(I)) p quo I
           $
           用 $phi$ 作用于两侧立得结论
     ]
@@ -113,7 +113,7 @@
     #proof[
       这是非常自然的，因为开集均形如：
       $
-      Spec(A) - V(E) = Spec(A) -  (sect.big_(f in E) V(f)) = union.big_(f in E) D(f) 
+      Spec(A) - V(E) = Spec(A) -  (inter.big_(f in E) V(f)) = union.big_(f in E) D(f) 
       $
     ]
     #definition[拟紧(quasi-compact)][
@@ -127,7 +127,7 @@
       由于所有 $D(f)$ 构成拓扑基，因此不妨设开覆盖是拓扑基构成的，也即：
       $
       &D(f) subset union.big_(i in I) D(g_i)\
-      <=>& V(f) supset sect.big_(i in I) V(g_i)\
+      <=>& V(f) supset inter.big_(i in I) V(g_i)\
       <=>& V(f) supset V(sum_(i in I) (g_i))\
       <=>& f in sqrt(sum_(i in I) (g_i))\
       <=>& f^k in sum_(i in I) (g_i)
@@ -184,10 +184,10 @@
         $
         D_f = emptyset <=> f in sqrt(0) <=> f in I
         $
-        因此对非空主开集 $D_f, D_g$，有 $f, g$ 不幂零，进而 $f g$ 也不幂零，因此 $D_f sect D_g = D_(f g)$ 非空
+        因此对非空主开集 $D_f, D_g$，有 $f, g$ 不幂零，进而 $f g$ 也不幂零，因此 $D_f inter D_g = D_(f g)$ 非空
       - 另一侧的证明是类似的：
         $
-        f, g in.not I => D_f, D_g != emptyset => D_f sect D_g != emptyset => D_(f g) != emptyset => f g in.not I
+        f, g in.not I => D_f, D_g != emptyset => D_f inter D_g != emptyset => D_(f g) != emptyset => f g in.not I
         $
     ]
     #theorem[][
@@ -306,7 +306,7 @@
     - $S subset S' => Z(S') subset Z(S)$
     - $Z(S) = Z(I(S)) = Z(sqrt(I))$
     - $Z(0) = k^n, Z(k[x_1, x_2, ..., x_n]) = emptyset$
-    - $Z(I) union Z(J) = Z(I sect J) = Z(I J)$
+    - $Z(I) union Z(J) = Z(I inter J) = Z(I J)$
     - $sect_(n in N)Z(I_n) = Z(sum_(n in N)Z(I_n))$
     进而 $Z$ 也给出一个拓扑，若取 $k = CC$，则这个拓扑将是欧式拓扑的子拓扑
   ]
@@ -327,7 +327,7 @@
   ]
   #proposition[][
     - $Y subset Y' => I(Y') subset I(Y)$
-    - $I(Y union Z) = I(Y) sect I(Z)$
+    - $I(Y union Z) = I(Y) inter I(Z)$
     - $Z(I(Y)) = overline(Y)$
   ]
   #proof[
@@ -353,21 +353,21 @@
     $
     Z(I(Y)) = overline(Y) = Y
     $
-    - 类似@irreducible-lemma0，假设 $Y$ 是两个闭集 $Z(A) sect Y, Z(B) sect Y$ 的并，也即：
+    - 类似@irreducible-lemma0，假设 $Y$ 是两个闭集 $Z(A) inter Y, Z(B) inter Y$ 的并，也即：
       $
-      Y subset Z(A) union Z(B) = Z(A sect B)\
-      I(Y) supset I(Z(A sect B)) = sqrt(A sect B) = sqrt(A) sect sqrt(B) 
+      Y subset Z(A) union Z(B) = Z(A inter B)\
+      I(Y) supset I(Z(A inter B)) = sqrt(A inter B) = sqrt(A) inter sqrt(B) 
       $
-      - 假设 $I(Y)$ 是素理想，则 $sqrt(A) sect sqrt(B) subset p$ 给出 $sqrt(A) subset p$ 或 $sqrt(B) subset p$，倒退即得两个闭集有一个为空，进而不可约
+      - 假设 $I(Y)$ 是素理想，则 $sqrt(A) inter sqrt(B) subset p$ 给出 $sqrt(A) subset p$ 或 $sqrt(B) subset p$，倒退即得两个闭集有一个为空，进而不可约
       - 假设不可约，任取 $x, y in.not I(Y)$，若 $(x y) subset I(Y)$ 则：
         $
-        sqrt(x) sect sqrt(y) = sqrt(x y) subset sqrt(I(Y)) => Z(x) union Z(y) = Z(sqrt(x) sect sqrt(y)) supset Z(sqrt(I(Y))) = Y
+        sqrt(x) inter sqrt(y) = sqrt(x y) subset sqrt(I(Y)) => Z(x) union Z(y) = Z(sqrt(x) inter sqrt(y)) supset Z(sqrt(I(Y))) = Y
         $
-        只需证明 $Z(x) sect Y, Z(y) sect Y$ 非空，事实上：
+        只需证明 $Z(x) inter Y, Z(y) inter Y$ 非空，事实上：
         $
         x in.not I(Y) <=> Z(I(Y)) = Y subset.not Z(x) 
         $
-        同理有 $Y subset.not Z(y)$，因此当然有 $Z(x) sect Y, Z(y) sect Y$ 非空
+        同理有 $Y subset.not Z(y)$，因此当然有 $Z(x) inter Y, Z(y) inter Y$ 非空
     - 由反序性，极大理想当然与单点集一一对应
   ]
   #corollary[][

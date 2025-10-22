@@ -366,9 +366,9 @@
     psi(g) = e <=> g = e
     $
 
-    #theorem[第二同构定理][ $A <= G, B lt.tri.eq G$, 则 $A B <= G, B lt.tri.eq A B, A sect B lt.tri.eq A$，并且：
+    #theorem[第二同构定理][ $A <= G, B lt.tri.eq G$, 则 $A B <= G, B lt.tri.eq A B, A inter B lt.tri.eq A$，并且：
     $
-    A B \/ B tilde.rev.equiv A \/ A sect B
+    A B \/ B tilde.rev.equiv A \/ A inter B
     $]
     证明：$A B <= G, B lt.tri.eq A B$ 证明容易\
     定义 
@@ -376,7 +376,7 @@
     phi: A &-> A B\/B \
         a &-> a B
     $
-    验证 $phi$ 是满射，$ker(phi) = A sect B$，由第一同构定理立得结论，同时有$ker(phi) = A sect B lt.tri.eq A$
+    验证 $phi$ 是满射，$ker(phi) = A inter B$，由第一同构定理立得结论，同时有$ker(phi) = A inter B lt.tri.eq A$
 
     #theorem[第三同构定理][$H lt.tri.eq K lt.tri.eq G$，则:
     $
@@ -443,13 +443,13 @@
     ]
 
     #lemma[][
-      $B norS C => A sect B norS A sect C$ <sect>
+      $B norS C => A inter B norS A inter C$ <inter>
     ]
 
     #proof[
       $
-      forall a in A sect C:\
-      a (A sect B) Inv(a) = (a A Inv(a)) sect (a B Inv(a)) = A sect B 
+      forall a in A inter C:\
+      a (A inter B) Inv(a) = (a A Inv(a)) inter (a B Inv(a)) = A inter B 
       $<subgroup>
     ]
 
@@ -465,18 +465,18 @@
     ]
 
     #lemma[][
-      $A(B sect C) <= G => A sect (B C) = (A sect B) (A sect C)$
+      $A(B inter C) <= G => A inter (B C) = (A inter B) (A inter C)$
     ]
 
     #proof[
       容易注意到：
       $
-      A sect B subset A sect (B C) \
-      A sect C subset A sect (B C) \
+      A inter B subset A inter (B C) \
+      A inter C subset A inter (B C) \
       $
       从而：
       $
-      (A sect B) (A sect C) subset A sect (B C)
+      (A inter B) (A inter C) subset A inter (B C)
       $ 
       对另一侧，
 
@@ -499,46 +499,46 @@
 
       #lemma[][对有限集合 $S$ 上两个滤链，将有：
       $
-      quotient(A_(i - 1) union (A_i sect B_j),(A_(i-1) union (A_i sect B_(j+1)))) = quotient(B_(j - 1) union (A_i sect B_j),(B_(j-1) union (A_(i-1) sect B_(j))))
+      quotient(A_(i - 1) union (A_i inter B_j),(A_(i-1) union (A_i inter B_(j+1)))) = quotient(B_(j - 1) union (A_i inter B_j),(B_(j-1) union (A_(i-1) inter B_(j))))
       $ ]
       #proof[
-        画图可以看出，如果找到中间的桥梁 $quotient(A_i sect B_j, (A_i) sect B_(i-1) union (A_(i-1) sect B_j))$，分别证明其与两者都同构，则结论成立。
+        画图可以看出，如果找到中间的桥梁 $quotient(A_i inter B_j, (A_i) inter B_(i-1) union (A_(i-1) inter B_j))$，分别证明其与两者都同构，则结论成立。
       ]
       #lemma[][对有限群 $G$ 上两个滤链，将有：
       $
-      quotient(A_(i - 1) union (A_i sect B_j),(A_(i-1) union (A_i sect B_(j+1)))) = quotient(B_(j - 1) union (A_i sect B_j),(B_(j-1) union (A_(i-1) sect B_(j))))
+      quotient(A_(i - 1) union (A_i inter B_j),(A_(i-1) union (A_i inter B_(j+1)))) = quotient(B_(j - 1) union (A_i inter B_j),(B_(j-1) union (A_(i-1) inter B_(j))))
       $]
       #proof[
         类似上面的发现，往证：
         $
-        quotient(A_i sect B_(j - 1), (A_i sect B_(j-1) (A_(i-1) sect B_j))) tilde.rev.equiv quotient(A_(i - 1) (A_i sect B_j),(A_(i-1) (A_i sect B_(j - 1))))
+        quotient(A_i inter B_(j - 1), (A_i inter B_(j-1) (A_(i-1) inter B_j))) tilde.rev.equiv quotient(A_(i - 1) (A_i inter B_j),(A_(i-1) (A_i inter B_(j - 1))))
         $
         ，另一侧同理。
       ]
-      - 首先证明，$A_(i-1)(A_i sect B_(j-1)) norS A_(i-1(A_i sect B_j))$\
-        断言 $A_i sect B_(j-1) norS A_i sect B_j$，从而子群关系成立。\
+      - 首先证明，$A_(i-1)(A_i inter B_(j-1)) norS A_(i-1(A_i inter B_j))$\
+        断言 $A_i inter B_(j-1) norS A_i inter B_j$，从而子群关系成立。\
         再验证它确实是正规子群：
         $
-        forall a b in A_(i-1)(A_i sect B_(j)):\
-         &a b A_(i-1)(A_i sect B_(j-1)) Inv(b) Inv(a) 
-        \ =& a b A_(i-1) Inv(b) b A_i sect B_(j-1) Inv(b) Inv(a)  
-        \ =& a (b A_(i-1) Inv(b)) (b A_i sect B_(j-1) Inv(b)) Inv(a)  
-        \ =& a A_(i-1)(A_i sect B_(j-1)) Inv(a)
-        \ =& A_(i-1)(A_i sect B_(j-1)) Inv(a)
-        \ =& A_(i-1)(A_i sect B_(j-1)) Inv(a)
-        \ =& (A_i sect B_(j-1)) A_(i-1) Inv(a)
-        \ ("这是因为" A_(i-1)(A_i sect B_(j-1)) &<= A_i =>A_(i-1)(A_i sect B_(j-1)) = (A_i sect B_(j-1))A_(i-1)  )
-        \ =& A_i sect B_(j-1)
+        forall a b in A_(i-1)(A_i inter B_(j)):\
+         &a b A_(i-1)(A_i inter B_(j-1)) Inv(b) Inv(a) 
+        \ =& a b A_(i-1) Inv(b) b A_i inter B_(j-1) Inv(b) Inv(a)  
+        \ =& a (b A_(i-1) Inv(b)) (b A_i inter B_(j-1) Inv(b)) Inv(a)  
+        \ =& a A_(i-1)(A_i inter B_(j-1)) Inv(a)
+        \ =& A_(i-1)(A_i inter B_(j-1)) Inv(a)
+        \ =& A_(i-1)(A_i inter B_(j-1)) Inv(a)
+        \ =& (A_i inter B_(j-1)) A_(i-1) Inv(a)
+        \ ("这是因为" A_(i-1)(A_i inter B_(j-1)) &<= A_i =>A_(i-1)(A_i inter B_(j-1)) = (A_i inter B_(j-1))A_(i-1)  )
+        \ =& A_i inter B_(j-1)
          
         $
       - 我们将要利用第一同构定理，定义：
         $
-        funcDef(phi, A_i sect B_j, quotient(A_(i-1)(A_i sect B_j), A_(i-1)(A_i sect B_(j-1))), x ,  x A C)\
+        funcDef(phi, A_i inter B_j, quotient(A_(i-1)(A_i inter B_j), A_(i-1)(A_i inter B_(j-1))), x ,  x A C)\
         $
         良定义及同态性显然。\
-        最后，我们要验证 $ker(phi) = (A_(i-1) sect B_j)(A_i sect B_(j-1))$。显有：
+        最后，我们要验证 $ker(phi) = (A_(i-1) inter B_j)(A_i inter B_(j-1))$。显有：
         $
-        ker(phi) = (A_i sect B_j) sect (A_(i-1) (A_i sect B_(j-1)))\
+        ker(phi) = (A_i inter B_j) inter (A_(i-1) (A_i inter B_(j-1)))\
         $
         
     ]
@@ -918,7 +918,7 @@
     以下定理给出我们如何将群分解成子群的直积
 
     #theorem[][
-      设 $H\ norS K, G$，满足：$H sect K = {e}$，则有：
+      设 $H\ norS K, G$，满足：$H inter K = {e}$，则有：
       $
       H K tilde.eq H times K
       $
@@ -946,14 +946,14 @@
         h_2 k_1 Inv(h_2) in K, Inv(k_1) in K => h_2 k_1 h_2^(-1) k_1^(-1) in K\
         h_2 k_1 Inv(h_2) in H, Inv(k_1) in H => h_2 k_1 h_2^(-1) k_1^(-1) in H
         $
-        从而由 $H sect K ={e}$ 立得原结论
+        从而由 $H inter K ={e}$ 立得原结论
       + $phi$ 是满射：显然
       + $ker(phi) = {e}$
         $
         &phi((h, k)) = e \
         <=>& h k = e\
         <=>& h = k^(-1)\
-        =>& h, k  in H sect K\
+        =>& h, k  in H inter K\
         =>& h = k = e
         $
     ]
@@ -992,7 +992,7 @@
     这里也可以看出半直积和共轭作用是一脉相承的。很自然的我们有：
 
     #proposition[][
-      设 $G$ 是群，$N norS G, H <= G$ 且 $H sect G = {e}$。从而：
+      设 $G$ 是群，$N norS G, H <= G$ 且 $H inter G = {e}$。从而：
       + $N H = H N <= G$
       + $N H tilde.eq N times.r H$
     ]
@@ -1185,13 +1185,13 @@
     #example[][
       设 $N norS G$，$P$ 是 Sylow-p 子群。取 $G -> quotient(G, N)$ 的自然同态 $pi$，则：
       - $pi(P)$
-      - $P sect N$
+      - $P inter N$
       都是 Sylow-p 子群
     ]
     #proof[
       注意到：
       $
-      |P| = |P sect N| |pi(P)|
+      |P| = |P inter N| |pi(P)|
       $
     ]
 
@@ -1376,11 +1376,11 @@
       #theorem[][
         设 $P$ 是 $p-$ 群
         - $P$ 是幂零的。事实上，它的子群还是 $p-$ 群，且中心一直非平凡，因此结论显然
-        - 若 $H norS P, H != {1}$，则 $H sect Z(P) != {1}$\
+        - 若 $H norS P, H != {1}$，则 $H inter Z(P) != {1}$\
         - 若 $H lt.nequiv P$，则 $ H lt.nequiv N_P (H)$
       ]
       #proof[
-        结论二：用 $P$ 于 $H$ 上的共轭作用的类方程，单点轨道就是 $H sect Z(P)$，非单点轨道的元素个数都是 $p$ 的倍数
+        结论二：用 $P$ 于 $H$ 上的共轭作用的类方程，单点轨道就是 $H inter Z(P)$，非单点轨道的元素个数都是 $p$ 的倍数
 
         结论三：
           用归纳法

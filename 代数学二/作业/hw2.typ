@@ -15,19 +15,19 @@
   由于 $D(f)$ 构成拓扑基，显然所有非空开集相交当且仅当任两个拓扑基相交，因此只需考虑 $D(f)$ 的相交性，注意到：
   $
   D(f), D(g) != emptyset <=> f, g in.not N \
-  D(f) sect D(g) != emptyset <=> D(f g) != emptyset \
-  (D(f), D(g) != emptyset -> D(f) sect D(g) != emptyset) <=> (f, g in.not N -> f g in.not N) \
+  D(f) inter D(g) != emptyset <=> D(f g) != emptyset \
+  (D(f), D(g) != emptyset -> D(f) inter D(g) != emptyset) <=> (f, g in.not N -> f g in.not N) \
   $
   前式前者是说 $Spec(A)$ 不可约，后者是说幂零根是素理想，得证
 = 20
   == i)
     任取 $overline(Y)$ 非空开集，记为：
     $
-    A sect overline(Y),
+    A inter overline(Y),
     $
     其中 $A$ 是 $X$ 中开集\
-    断言 $A sect Y$ 非空，否则有 $Y subset X - A => overline(Y) subset X - A => A sect overline(Y) = emptyset$\
-    这表明 $A sect Y$ 在 $Y$ 中稠密，当然在 $overline(Y)$ 中稠密，进而 $A sect overline(Y)$ 也在 $overline(Y)$ 中稠密，得证
+    断言 $A inter Y$ 非空，否则有 $Y subset X - A => overline(Y) subset X - A => A inter overline(Y) = emptyset$\
+    这表明 $A inter Y$ 在 $Y$ 中稠密，当然在 $overline(Y)$ 中稠密，进而 $A inter overline(Y)$ 也在 $overline(Y)$ 中稠密，得证
   == ii)
     取 $Y$ 是一个不可约子空间，试图利用 Zoun 引理，设：
     $
@@ -42,24 +42,24 @@
     -
       任取 $union.big Sigma'$ 中两个非空开集，记作：
       $
-      A sect union.big Sigma', B sect union.big Sigma' != emptyset
+      A inter union.big Sigma', B inter union.big Sigma' != emptyset
       $
       其中 $A, B$ 是 $X$ 中开集\
       由上两式非空，可知：
       $
-      exists Y_1, Y_2 in Sigma': A sect Y_1 != emptyset, B sect Y_2 != emptyset
+      exists Y_1, Y_2 in Sigma': A inter Y_1 != emptyset, B inter Y_2 != emptyset
       $
       但由于 $Sigma'$ 中有全序，必有 $Y_1 subset Y_2$ 或 $Y_2 subset Y_1$，不妨设前者成立，于是：
       $
-      A sect Y_1 subset A sect Y_2 != emptyset
+      A inter Y_1 subset A inter Y_2 != emptyset
       $
       从而由 $Y_2$ 的不可约性：
       $
-      A sect Y_2, B sect Y_2 != emptyset => (A sect Y_2) sect (B sect Y_2) != emptyset
+      A inter Y_2, B inter Y_2 != emptyset => (A inter Y_2) inter (B inter Y_2) != emptyset
       $
       因此：
       $
-      (A sect Y_2) sect (B sect Y_2) subset (A sect union.big Sigma') sect (B sect union.big Sigma') != emptyset
+      (A inter Y_2) inter (B inter Y_2) subset (A inter union.big Sigma') inter (B inter union.big Sigma') != emptyset
       $
       得证
   == iii)
@@ -181,7 +181,7 @@
     $
     因此：
     $
-    p in X_i sect X_j => exists p_i in Spec(A_i), p_j in Spec(A_j), p = Inv(phi)(p_i) = Inv(phi)(p_j)
+    p in X_i inter X_j => exists p_i in Spec(A_i), p_j in Spec(A_j), p = Inv(phi)(p_i) = Inv(phi)(p_j)
     $
     然而注意到 $i != j => A_i subset Inv(phi)(p_j), A_j subset Inv(phi)(p_i)$，这将给出：
     $
@@ -191,7 +191,7 @@
   - $union.big_i X_i = Spec(A)$\
     注意到 $A$ 的理想应当形如 $product_i I_i$，其中 $I_i$ 是 $A_i$ 的理想\
     （这是因为总可以先乘以 $(1, 0, 0, .., 0)$\
-    设 $p$ 是素理想，取嵌入同态 $psi_i: A_i -> A$，则 $Inv(psi_i) (p) = p sect A_i := I_i$ 也是素理想或 $A_i$\
+    设 $p$ 是素理想，取嵌入同态 $psi_i: A_i -> A$，则 $Inv(psi_i) (p) = p inter A_i := I_i$ 也是素理想或 $A_i$\
     往证其中只有至多一个分量上不是整个环，只需证明二维情形，高维情形用 $(1, 1, 0, 0..., 0)$ 覆盖即可\
     设 $p = a times b$ 是素理想，假设 $a, b$ 都是素理想（不是整个环），则可取：
     $
@@ -209,8 +209,8 @@
   == i) $=>$ ii)
     由 $Spec(A)$ 不连通知存在两个不交开集 $X, Y$ 使得它们的并是全空间\
     显然它们也是闭集，可设其为 $V(x), V(y), x, y$ 是两个理想\
-    - $emptyset = V(x) sect V(y) = V(x + y) => x + y = A$
-    - $Spec(A) = V(x) union V(y) = V(x sect y) => x sect y = sqrt(0)$
+    - $emptyset = V(x) inter V(y) = V(x + y) => x + y = A$
+    - $Spec(A) = V(x) union V(y) = V(x inter y) => x inter y = sqrt(0)$
     进而 $1 = a + b = a^2 + 2 a b + b^2, a in x, b in y$ 进而：
     $
     1 - 2 a b = a^2 + b^2\
@@ -233,7 +233,7 @@
     上题的结论
 = 26
   = i)
-    设 $V = sect.big {Inv(f)(0) | f in m}$，它当然是闭集。假设它是空集，那么它的补集：
+    设 $V = inter.big {Inv(f)(0) | f in m}$，它当然是闭集。假设它是空集，那么它的补集：
     $
     union.big {X - Inv(f)(0) | f in m} = X
     $

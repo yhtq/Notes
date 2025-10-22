@@ -62,11 +62,11 @@
   == 4
     条件表明：
     $
-    f_n|_(D_n sect D_(n-1)) = f_(n-1)|_(D_n sect D_(n-1))
+    f_n|_(D_n inter D_(n-1)) = f_(n-1)|_(D_n inter D_(n-1))
     $
-    既然 $D_n sect D_(n-1)$ 是开集，当然就有：
+    既然 $D_n inter D_(n-1)$ 是开集，当然就有：
     $
-    f'_n|_(D_n sect D_(n-1)) = f'_(n-1)|_(D_n sect D_(n-1))
+    f'_n|_(D_n inter D_(n-1)) = f'_(n-1)|_(D_n inter D_(n-1))
     $
     表明当然这也是 $f'$ 的解析延拓
 = p221  

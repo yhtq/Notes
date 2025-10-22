@@ -234,14 +234,14 @@
     $
     计算：
     $
-    a sect (b + c) = (x^u) sect (x^v + x^w) = (x^u) sect (x^(min(v, w))) = (x^(max(u, min(v, w))))\
-    (a sect b) + (a sect c) = (x^(max (u, v))) + (x^(max(u, w))) = (x^(min(max(u, v), max(u, w))))
+    a inter (b + c) = (x^u) inter (x^v + x^w) = (x^u) inter (x^(min(v, w))) = (x^(max(u, min(v, w))))\
+    (a inter b) + (a inter c) = (x^(max (u, v))) + (x^(max(u, w))) = (x^(min(max(u, v), max(u, w))))
     $
     不难验证两式相等
 
     $
-    a + (b sect c) = (x^(min(u, max(v, w))))\
-    (a + b) sect (a + c) = (x^(max(min(u, w), min(u, v))))
+    a + (b inter c) = (x^(min(u, max(v, w))))\
+    (a + b) inter (a + c) = (x^(max(min(u, w), min(u, v))))
     $
     类似的两式相等
   == 9

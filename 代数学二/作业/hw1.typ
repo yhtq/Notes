@@ -29,7 +29,7 @@
       因此 $f$ 的所有系数都在 $P$ 之中。由于 $P$ 是任取的，因此 $f$ 的所有系数都是幂零元
   == iii)
     - 假如存在 $a in A - {0}$ 使得 $a f = 0$，则 $f$ 当然是零因子
-    - 反之，设 $f$ 是零因子，则 $I = {g in A[x] | f g = 0}$ 是 $A[x]$ 中的理想。只需证明 $I sect A != emptyset$\
+    - 反之，设 $f$ 是零因子，则 $I = {g in A[x] | f g = 0}$ 是 $A[x]$ 中的理想。只需证明 $I inter A != emptyset$\
       如若不然，取 $g in I - {0}$ 是 $I$ 中最低次元素之一，设:
        $
        f(x) = sum_(i = 0)^n a_i x^i, g(x) = sum_(i = 0)^m b_i x^i
@@ -91,7 +91,7 @@
     在包含关系上，幂零根当然就是所有素理想构成集合的最小元
   = 9
     - 设 $alpha = r(alpha)$，注意到 $r(alpha)$ 是所有包含 $alpha$ 的素理想的交，因此 $alpha = r(alpha)$ 当然也是素理想的交
-    - 设 $alpha = sect.big_(i in I) P_i$，则 $r(alpha) = r(sect.big_(i in I) P_i) subset sect.big_(i in I)r(P_i) = sect.big_(i in I)P_i = alpha$，同时显有 $alpha subset r(alpha)$，因此 $alpha = r(alpha)$，证毕
+    - 设 $alpha = inter.big_(i in I) P_i$，则 $r(alpha) = r(inter.big_(i in I) P_i) subset inter.big_(i in I)r(P_i) = inter.big_(i in I)P_i = alpha$，同时显有 $alpha subset r(alpha)$，因此 $alpha = r(alpha)$，证毕
   = 14
     - 首先证明 $Sigma$ 中有极大元。对于 $Sigma$ 的某个全序子集 $S$，$union.big S$ 是同样满足要求的理想，因此成为 $S$ 在 $Sigma$ 中的上界。由 Zorn 引理，$Sigma$ 中有极大元
     - 任取 $Sigma$ 中的极大元 $P$，往证它是素理想\
@@ -122,8 +122,8 @@
     == iv)
       $
       forall P in Spec(A):\
-        P in V(a sect b) 
-        &<=> a sect b subset P\
+        P in V(a inter b) 
+        &<=> a inter b subset P\
         &<=> a subset P or b subset P\
         &<=> P in V(a) or P in V(b)\
         &<=> P in V(a) union V(b)
@@ -133,15 +133,15 @@
     注意到任何开集均形如：
     $
     S = Spec(A) - V(E) = Spec(A) - V(union.big_(x in E) {x})\
-    = Spec(A) - sect.big_(x in E) V(x)\
+    = Spec(A) - inter.big_(x in E) V(x)\
     = union.big_(x in E) (Spec(A) - V(x))\
     = union.big_(x in E) X_x
     $
     == i)
       $
-      X_f sect X_g &= (Spec(A) - V(f)) sect (Spec(A) - V(g))\
+      X_f inter X_g &= (Spec(A) - V(f)) inter (Spec(A) - V(g))\
       &= Spec(A) - (V(f) union V(g))\
-      &= Spec(A) - V((f) sect (g))\
+      &= Spec(A) - V((f) inter (g))\
       &= Spec(A) - V((f g))\
       &= X_(f g)
       $
@@ -170,12 +170,12 @@
         - 一方面，$r(b) subset r(a) => V(r(a)) = V(a) subset V(r(b)) = V(b) $
         - 另一方面：
           $
-          V(a) subset V(b) => sect.big V(a) = r(a) supset sect.big V(b) = r(b) 
+          V(a) subset V(b) => inter.big V(a) = r(a) supset inter.big V(b) = r(b) 
           $
       由于所有 $X_f$ 构成拓扑基，因此不妨设开覆盖是拓扑基构成的，也即：
       $
       &X_f subset union.big_(i in I) X_(g_i)\
-      <=>& V(f) supset sect.big_(i in I) V(g_i)\
+      <=>& V(f) supset inter.big_(i in I) V(g_i)\
       <=>& V(f) supset V(sum_(i in I) (g_i))\
       <=>& f in r(sum_(i in I) (g_i)) "（由引理）"\
       <=>& exists k in NN^+, f^k in sum_(i in I) (g_i)

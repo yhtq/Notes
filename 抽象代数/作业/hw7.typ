@@ -176,10 +176,10 @@
       $
       ord(a') = p\
       ord(b') = p\
-      generatedBy(a') sect generatedBy(b') = {e}
+      generatedBy(a') inter generatedBy(b') = {e}
       $
 
-    - 注意到若 $generatedBy(a') sect generatedBy(b') != {e}$，则它们将有公共非平凡元素 $x$，由 $p$ 是素数，$x$ 一定同时是两者的生成元，即有 $generatedBy(a') = generatedBy(b')$
+    - 注意到若 $generatedBy(a') inter generatedBy(b') != {e}$，则它们将有公共非平凡元素 $x$，由 $p$ 是素数，$x$ 一定同时是两者的生成元，即有 $generatedBy(a') = generatedBy(b')$
 
     - 这意味着，只要在 $Z_p times Z_p$ 中任找两个不在同一循环群中的非平凡元素作为两元素的像，都可以唯一确定一个同构映射。
     
@@ -257,12 +257,12 @@
     //        $
     //      - 由假设，应有：
     //        $
-    //        generatedBy((e, b_1 b^(k_1))) sect generatedBy((e, b_2 b^(k_2))) subset generatedBy(x) generatedBy(x_1) sect generatedBy(x) generatedBy(x_2) = generatedBy(x)
+    //        generatedBy((e, b_1 b^(k_1))) inter generatedBy((e, b_2 b^(k_2))) subset generatedBy(x) generatedBy(x_1) inter generatedBy(x) generatedBy(x_2) = generatedBy(x)
     //        $
     //        然而在 $generatedBy(x)$ 中，第一分量为单位元的元素只有 $(e, e)$，进而：
     //        $
-    //        generatedBy((e, b_1 b^(k_1))) sect generatedBy((e, b_2 b^(k_2))) = {(e, e)}\
-    //        => generatedBy(b_1 b^(k_1)) sect generatedBy(b_2 b^(k_2)) = {e}
+    //        generatedBy((e, b_1 b^(k_1))) inter generatedBy((e, b_2 b^(k_2))) = {(e, e)}\
+    //        => generatedBy(b_1 b^(k_1)) inter generatedBy(b_2 b^(k_2)) = {e}
     //        $
     //      - 除非 $b_1 b^(k_1) = b_2 b^(k_2) = e $，否则这是不可能的，而若前式成立，将有：
     //        $
@@ -316,7 +316,7 @@
 = P58
 == 17.
   #answer[
-    取自然同态：$pi: G -> quotient(G, G')$，由于 $N sect ker(pi) = {e}$，因此：
+    取自然同态：$pi: G -> quotient(G, G')$，由于 $N inter ker(pi) = {e}$，因此：
     $
     pi|_N : N -> pi(N)
     $
@@ -334,11 +334,11 @@
     $
     显有：
     $
-    ker(phi) = H sect K
+    ker(phi) = H inter K
     $
     因此：
     $
-    quotient(G, H sect K) tilde.eq im(phi) <= quotient(G, H) times quotient(G, K)
+    quotient(G, H inter K) tilde.eq im(phi) <= quotient(G, H) times quotient(G, K)
     $
     另一方面，显然 $quotient(G, H) times quotient(G, K)$ 可解，因此 $im(phi)$ 也可解，故 $G$ 可解。
   ]
@@ -597,7 +597,7 @@
     验证：
     - 加法结合：
       $
-      (X + Y) + Z = ((X union Y) union Z) \/ ((X sect Y) sect Y) \ = (X union (Y union Z)) \/ ((X sect Y) sect Z) = X + (Y + Z)
+      (X + Y) + Z = ((X union Y) union Z) \/ ((X inter Y) inter Y) \ = (X union (Y union Z)) \/ ((X inter Y) inter Z) = X + (Y + Z)
       $
     - 加法交换：显然
     - 加法单位元：显然 $X + emptyset = X$
@@ -607,12 +607,12 @@
     - 分配律：（由于交换，只验证左结合即可）
       $
       X (Y + Z) \
-      = X sect ((Y union Z) \/ (Y sect Z))\
-       = (X sect (Y union Z)) \/ (X sect (Y sect Z)) \
-       = ((X sect Y) union (X sect Z)) \/ ((X sect Y) union (X sect Z)) \
+      = X inter ((Y union Z) \/ (Y inter Z))\
+       = (X inter (Y union Z)) \/ (X inter (Y inter Z)) \
+       = ((X inter Y) union (X inter Z)) \/ ((X inter Y) union (X inter Z)) \
        = X Y + X Z
       $
-    - $X^2 = X sect X = X$，表明他是布尔环 
+    - $X^2 = X inter X = X$，表明他是布尔环 
   ]
 = 3.
   #answer[

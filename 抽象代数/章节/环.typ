@@ -153,7 +153,7 @@
         #proposition[][
             注意到 $I J subset I, I J subset J$，从而：
             $
-            I J subset I sect J
+            I J subset I inter J
             $
         ]
     == 商环
@@ -236,10 +236,10 @@
                 $
                 funcDef(phi, ZZ, I_1 times ... times I_n, a, (a mod m_1, ..., a mod m_n))
                 $
-                是同态，且 $ker(phi) = I_1 sect I_2 sect ... sect I_n$
+                是同态，且 $ker(phi) = I_1 inter I_2 inter ... inter I_n$
             + 若 $I_i$ 两两互素，则:
                 + $phi$ 是满射
-                + $I_1 sect I_2 sect ... sect I_n = I_1 I_2 ... I_n$
+                + $I_1 inter I_2 inter ... inter I_n = I_1 I_2 ... I_n$
         ]
         #proof[
             - 先证 $n=2$ 的情形，剩下的采用归纳法\
@@ -249,12 +249,12 @@
                      $
                         R = I_1 + I_2 => 1 = a + b, a in I_1, b in I_2
                     $
-                    从而对 $forall c in I_1 sect I_2$，将有：
+                    从而对 $forall c in I_1 inter I_2$，将有：
                     $
                         c = c a_1 + c a_2
                     $
                     而由理想的定义，$c a_1 in I_1, c a_2 in I_2$，进而由理想乘积的定义立得 $c in I J$\
-                    另一侧由前面的命题是显然的，因此 $I_1 I_2 = I_1 sect I_2$
+                    另一侧由前面的命题是显然的，因此 $I_1 I_2 = I_1 inter I_2$
                 + 继续使用上面的 $a, b$，注意到：
                     $
                     phi(a) = (a_1 + I_1, a_1 + I_2) = (0, 1 - a_2 + I_2) = (0, 1 + I_2) \
@@ -780,11 +780,11 @@
             #proof[
                 设 $pi$ 是不可约元，我们需要用到：
                 $
-                ZZ sect (pi)
+                ZZ inter (pi)
                 $
-                是 $ZZ$ 的素理想。事实上，容易建立 $ZZ$ 到 $ZZ[i]$ 之间的同态。之前我们证明了素理想的原像还是素理想，而当 $(pi)$ 拉回 $ZZ$ 时，它的原像当然就是 $ZZ sect (pi)$
+                是 $ZZ$ 的素理想。事实上，容易建立 $ZZ$ 到 $ZZ[i]$ 之间的同态。之前我们证明了素理想的原像还是素理想，而当 $(pi)$ 拉回 $ZZ$ 时，它的原像当然就是 $ZZ inter (pi)$
 
-                因此，设 $ZZ sect (pi) = (p)$，显然有：
+                因此，设 $ZZ inter (pi) = (p)$，显然有：
                 $
                 p = pi a => p^2 = N(p) = N(pi) N(a)
                 $

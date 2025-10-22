@@ -238,9 +238,9 @@
 
         #proposition[][$forall x in R, ord(a x) = p ord(a)$]
         #proof[
-            + $R sect generatedBy(a) = {e}$
+            + $R inter generatedBy(a) = {e}$
 
-                这是因为设 $g in R sect generatedBy(a)$，将有：
+                这是因为设 $g in R inter generatedBy(a)$，将有：
                 $
                 ord(g) divides #p, ord(g) divides ord(a) \
                 => ord(g) divides gcd(#p, ord(a)) = 1 => ord(g) = 1 => g = e
@@ -290,7 +290,7 @@
                 $
                 从而：
                 $
-                    c d Inv(c) Inv(d) in sect generatedBy(a) R => c d Inv(c) Inv(d) = e => c d = d c
+                    c d Inv(c) Inv(d) in inter generatedBy(a) R => c d Inv(c) Inv(d) = e => c d = d c
                 $
             + $forall x in R, ord(a x) = p ord(a)$
 
@@ -423,15 +423,15 @@
             funcDef(phi, generatedBy(b) times generatedBy(a), U(P^m), (x\, y), x y)
             $
             由于 $U(P^m)$ 交换，容易验证它是同态。
-        + $generatedBy(a) sect generatedBy(b) = {e}$
+        + $generatedBy(a) inter generatedBy(b) = {e}$
 
             由 $pi$ 是满射知 $pi|_(generatedBy(a))$ 是同构，因此：
             $
-            {e} = ker(pi|_(generatedBy(a))) = ker(pi) sect generatedBy(a) = generatedBy(a) sect generatedBy(b)
+            {e} = ker(pi|_(generatedBy(a))) = ker(pi) inter generatedBy(a) = generatedBy(a) inter generatedBy(b)
             $
         + $ker(phi) = {e}$，从而 $phi$ 是单射。
             $
-            a b = e => a = Inv(b) => a, b in generatedBy(a) sect generatedBy(b) => a = b = e => (a, b) = e
+            a b = e => a = Inv(b) => a, b in generatedBy(a) inter generatedBy(b) => a = b = e => (a, b) = e
             $
         + $|generatedBy(b) times generatedBy(a)| = |U(P^m)|$，从而结合单射知同构成立
     ]
@@ -512,7 +512,7 @@
     便有：
     $
     ord(r') = 2, ord(s') = 4\
-    generatedBy(r') sect generatedBy(s') = {e}\
+    generatedBy(r') inter generatedBy(s') = {e}\
     r' (s')^k = [r -> r^3, s -> r^(3 k) s] \
     s' r' = [r -> r^3, s -> r s] = r' s^3\  
     $
@@ -527,12 +527,12 @@
     设 $H_1, H_2$ 是 $G$ 是两个不同的指数为 $2$ 的子群。\
     有：
     $
-    |G : H_1 sect H_2| <= |G:H_1| |G:H_2| = 4
+    |G : H_1 inter H_2| <= |G:H_1| |G:H_2| = 4
     $
-    且 $2 | |G: H_1 sect H_2|$。
-    这说明 $|G: H_1 sect H_2| = 2 "或 " 4$ 
-    - $|G: H_1 sect H_2| = 2$，又 $H_1 != H_2$，从而 $H_1 sect H_2$ 是异于 $H_1, H_2$ 的二阶子群。
-    - $|G: H_1 sect H_2| = 4$
+    且 $2 | |G: H_1 inter H_2|$。
+    这说明 $|G: H_1 inter H_2| = 2 "或 " 4$ 
+    - $|G: H_1 inter H_2| = 2$，又 $H_1 != H_2$，从而 $H_1 inter H_2$ 是异于 $H_1, H_2$ 的二阶子群。
+    - $|G: H_1 inter H_2| = 4$
 
         这将意味着 $H_1 H_2 = G$。从而 $H_1, H_2$ 不可能相互包含。  
         显然 $H_1 union H_2 != G$，否则任取两个非平凡元 $h_1 in H_1, h_2 in H_2$，将有：
@@ -547,32 +547,32 @@
         取 $h_1 in H_1 - H_2, h_2 in H_2 - H_1, h_3 in G - H_1 - H_2$\
         我们有（容易验证它们不在同一个陪集）：
         $
-        G = (H_1 sect H_2) union h_1 (H_1 sect H_2) union h_2 (H_1 sect H_2) union h_3 (H_1 sect H_2)\
-        = (H_1 sect H_2) union (H_1 sect H_2) h_1 union (H_1 sect H_2) h_2 union (H_1 sect H_2) h_3
+        G = (H_1 inter H_2) union h_1 (H_1 inter H_2) union h_2 (H_1 inter H_2) union h_3 (H_1 inter H_2)\
+        = (H_1 inter H_2) union (H_1 inter H_2) h_1 union (H_1 inter H_2) h_2 union (H_1 inter H_2) h_3
         $
         
         #proposition[][
-            $(H_1 sect H_2) union h_3 (H_1 sect H_2) <= G$ 且其指数为 $2$ 
+            $(H_1 inter H_2) union h_3 (H_1 inter H_2) <= G$ 且其指数为 $2$ 
         ]
         #proof[
-            + $h_3 (H_1 sect H_2) = G - H_1 union H_2 = (H_1 sect H_2) h_3$
+            + $h_3 (H_1 inter H_2) = G - H_1 union H_2 = (H_1 inter H_2) h_3$
 
                 注意到:
                 $
-                (H_1 sect H_2) union (H_1 sect H_2) h_1 union (H_1 sect H_2) h_2 subset H_1 union H_2\
-                h_3 (H_1 sect H_2) in.not H_1, H_2 => h_3 (H_1 sect H_2) subset G - H_1 union H_2
+                (H_1 inter H_2) union (H_1 inter H_2) h_1 union (H_1 inter H_2) h_2 subset H_1 union H_2\
+                h_3 (H_1 inter H_2) in.not H_1, H_2 => h_3 (H_1 inter H_2) subset G - H_1 union H_2
                 $
                 结合上面的陪集分解，结论显然成立（另一侧同理）
 
-            + $e in (H_1 sect H_2) union h_3 (H_1 sect H_2)$ 显然成立
-            + $Inv(((H_1 sect H_2) union h_3 (H_1 sect H_2))) = (H_1 sect H_2) union h_3 (H_1 sect H_2)$
+            + $e in (H_1 inter H_2) union h_3 (H_1 inter H_2)$ 显然成立
+            + $Inv(((H_1 inter H_2) union h_3 (H_1 inter H_2))) = (H_1 inter H_2) union h_3 (H_1 inter H_2)$
 
-                若 $h in (H_1 sect H_2)$，显有 $Inv(h) in (H_1 sect H_2)$\
-                若 $h_3 x in h_3 (H_1 sect H_2)$，则： 
+                若 $h in (H_1 inter H_2)$，显有 $Inv(h) in (H_1 inter H_2)$\
+                若 $h_3 x in h_3 (H_1 inter H_2)$，则： 
                 $
-                Inv((h_3 x)) = Inv(h_3) Inv(x) in G - H_1 - H_2 => Inv((h_3 x)) in h_3 (H_1 sect H_2)
+                Inv((h_3 x)) = Inv(h_3) Inv(x) in G - H_1 - H_2 => Inv((h_3 x)) in h_3 (H_1 inter H_2)
                 $\
-            + $h_3^2 in H_1 sect H_2$
+            + $h_3^2 in H_1 inter H_2$
 
                 考虑关于 $H_1$ 的陪集分解，将有：
                 $
@@ -581,42 +581,42 @@
                 若 $h_3^2 in.not H_1 => h_3^2 in h_3 H_1 => h_3 in H_1$，矛盾！
 
                 类似可得 $h_3 in H_2$，从而结论成立。
-            + $((H_1 sect H_2) union h_3 (H_1 sect H_2))^2 = (H_1 sect H_2) union h_3 (H_1 sect H_2)$
+            + $((H_1 inter H_2) union h_3 (H_1 inter H_2))^2 = (H_1 inter H_2) union h_3 (H_1 inter H_2)$
 
-                设 $x, y, z in H_1 sect H_2$，注意到：
-                - $x y in H_1 sect H_2$
+                设 $x, y, z in H_1 inter H_2$，注意到：
+                - $x y in H_1 inter H_2$
                 - $x (h_3 y) in.not H_1$，否则 $h_3 in H_1$，同理 $x h_3 y not in H_2$。
-                - $x (h_3 y) in G - H_1 - H_2 => x h_3 y in h_3 (H_1 sect H_2)$
-                - 同理，$(h_3 x) y in h_3 (H_1 sect H_2)$
-                - $(h_3 x)(h_3 y) in H_1 sect H_2$，只需证 $h_3 x h_3 in H_1 sect H_2$，这是因为：
+                - $x (h_3 y) in G - H_1 - H_2 => x h_3 y in h_3 (H_1 inter H_2)$
+                - 同理，$(h_3 x) y in h_3 (H_1 inter H_2)$
+                - $(h_3 x)(h_3 y) in H_1 inter H_2$，只需证 $h_3 x h_3 in H_1 inter H_2$，这是因为：
                 $
-                x h_3 in (H_1 sect H_2) h_3 = h_3 (H_1 sect H_2) => exists z, x h_3 = h_3 z 
+                x h_3 in (H_1 inter H_2) h_3 = h_3 (H_1 inter H_2) => exists z, x h_3 = h_3 z 
                 $
                 从而：
                 $
-                h_3 x h_3 = h_3^2 x in H_1 sect H_2
+                h_3 x h_3 = h_3^2 x in H_1 inter H_2
                 $
             以上事实足以说明子群关系。\
-            由 $|(H_1 sect H_2) union h_3 (H_1 sect H_2)| = 2 |(H_1 sect H_2) union h_3 (H_1 sect H_2)|$ 易得其指数为 $2$
+            由 $|(H_1 inter H_2) union h_3 (H_1 inter H_2)| = 2 |(H_1 inter H_2) union h_3 (H_1 inter H_2)|$ 易得其指数为 $2$
         ]
     上述命题给出异于 $H_1, H_2$ 的二阶子群，证毕。
     
 30.
 
     #corollary[][
-        $g(H sect K) = (g H) sect (g K)$
+        $g(H inter K) = (g H) inter (g K)$
     ]
     #proof[
-        + $g(H sect K) subset (g H) sect (g K)$：显然
-        + $(g H) sect (g K) subset g(H sect K)$：
+        + $g(H inter K) subset (g H) inter (g K)$：显然
+        + $(g H) inter (g K) subset g(H inter K)$：
         $
-        x in (g H) sect (g K) => exists h in H, k in K, x = g h = g k \ => Inv(g) x = h = k in H sect K => x in g(H sect K)
+        x in (g H) inter (g K) => exists h in H, k in K, x = g h = g k \ => Inv(g) x = h = k in H inter K => x in g(H inter K)
         $
     ]
     由引理，结论是显然的。
 
 31.
-    由 30 题结论，每个 $H sect K$ 的陪集都是 $H$ 的陪集与 $K$ 的陪集的交集，从而 $|G : H sect K|$ 不可能超过 $|G : H||G : K|$，证毕。
+    由 30 题结论，每个 $H inter K$ 的陪集都是 $H$ 的陪集与 $K$ 的陪集的交集，从而 $|G : H inter K|$ 不可能超过 $|G : H||G : K|$，证毕。
 
 36.
     注意到必有 $gcd(ord(g), m) = gcd(ord(h), m) = 1$，从而 $g, h$ 分别是 $generatedBy(g), generatedBy(h)$ 的生成元。\
@@ -687,7 +687,7 @@
     足以说明这是一个群作用，从而 $G$ 可以写作轨道的无交并，而轨道恰好是双陪集。\
     只需注意到 $g K Inv(g) <= G$，从而：
     $
-    |H g K| = |H g K Inv(g)| = |H (g K Inv(g))| \ = (|H| |g K Inv(g)|) / (|H sect g K Inv(g)|) = (|H| |K|) / (|H sect g K Inv(g)|) = |K| |H : H sect g K Inv(g)|
+    |H g K| = |H g K Inv(g)| = |H (g K Inv(g))| \ = (|H| |g K Inv(g)|) / (|H inter g K Inv(g)|) = (|H| |K|) / (|H inter g K Inv(g)|) = |K| |H : H inter g K Inv(g)|
     $
     另一侧同理
 6.

@@ -253,7 +253,7 @@
   ]
   #proof[
     $
-    ker g &= union.big_i ker g sect y_i (N_i)\
+    ker g &= union.big_i ker g inter y_i (N_i)\
           &= union.big_i {y_i (n_i) | n_i in N_i and g(y_i (n_i)) = 0}\
           &= union.big_i y_i  ({n_i | n_i in N_i and z_i (g (n_i)) = 0})\
           &= union.big_i y_i  (ker z_i g_i)

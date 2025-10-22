@@ -19,7 +19,7 @@
     $
     由于它确实是复形，验证正合只需任取 $vec(c_(n-1), c_n) in ker d^CC_n$，验证它在 $im d^CC_(n+1)$ 中即可。事实上：
     $
-    vec(-d_(n-1) (c_(n-1)), d_n (c_n) - c_(n-1)) = 0 <=> c_(n-1) in ker d_(n-1) sect im d_n, c_(n-1) = d_n (c_(n))\
+    vec(-d_(n-1) (c_(n-1)), d_n (c_n) - c_(n-1)) = 0 <=> c_(n-1) in ker d_(n-1) inter im d_n, c_(n-1) = d_n (c_(n))\
     d^CC_(n+1) vec(-c_(n), 0) = vec(d_(n) (c_(n)),  c_(n)) = vec(c_(n-1), c_(n) )
     $
     上两式表明：

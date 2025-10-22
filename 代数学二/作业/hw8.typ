@@ -48,7 +48,7 @@
     arr(7, 5, $exists f'$)
     )]
     其中：
-    - $p_A = ker f$ 当然是 $A$ 的素理想，因此存在 $p_B in Spec(B)$ 使得 $p_B sect A = p_A$ 并有第二层的交换图表和自然的嵌入 $f_1$
+    - $p_A = ker f$ 当然是 $A$ 的素理想，因此存在 $p_B in Spec(B)$ 使得 $p_B inter A = p_A$ 并有第二层的交换图表和自然的嵌入 $f_1$
     - $A quo p_A, B quo p_B$ 都是整环，$k_(A quo p_A), k_(B quo p_B)$ 是其上的分式域，$f_2$ 利用环到域的同态延拓到分式环上产生
     - 利用 $Omega$ 是代数闭域和域中的同态延拓定理，$f_2$ 可被延拓到 $f'$
     由于整个交换图表成立，不难验证 $(B -> B quo p_B -> k_(B quo p_B) -> Omega)$ 在 $A$ 上的限制就是 $f$，证毕
@@ -76,8 +76,8 @@
     === ii)
       由整性 $phi^*: Spec(B) -> Spec(A)$ 将诱导 $max(B) -> max(A)$ 上的满射，因此：
       $
-      sect max(B) sect A = (sect_(m_B in max(B)) m_B) sect A = sect_(m_B in max(B)) m_B sect A \
-      = sect_(m_B in max(B)) phi^*(m_B) = sect_(m_A in max(A)) m_A = sect max(A)
+      inter max(B) inter A = (sect_(m_B in max(B)) m_B) inter A = sect_(m_B in max(B)) m_B inter A \
+      = sect_(m_B in max(B)) phi^*(m_B) = sect_(m_A in max(A)) m_A = inter max(A)
       $
   == 7
     任取 $x in B - A$，则：
@@ -95,11 +95,11 @@
     === ii)
       设任取 $B$ 中素理想 $p$，则当然有：
       $
-      A quo (p sect A) subset C quo (p sect C) subset B quo p
+      A quo (p inter A) subset C quo (p inter C) subset B quo p
       $
-      且都是整环，由上题结论得 $overline(f), overline(g)$ 的所有系数落在 $A quo (p sect A)$ 的整闭包中，进而在其上整。\
+      且都是整环，由上题结论得 $overline(f), overline(g)$ 的所有系数落在 $A quo (p inter A)$ 的整闭包中，进而在其上整。\
       #lemmaLinear[][
-        设 $x in B$ 且任取素理想 $p in Spec(B)$ 均有 $overline(x) in B quo p$ 在 $A quo (p sect A)$ 上整，则 $x$ 在 $A$ 上整
+        设 $x in B$ 且任取素理想 $p in Spec(B)$ 均有 $overline(x) in B quo p$ 在 $A quo (p inter A)$ 上整，则 $x$ 在 $A$ 上整
       ]
       #proof[
         令:
@@ -258,7 +258,7 @@
   == 13
     任取 $p_1, p_2 in P, x in p_1$，注意到：
     $
-     product_(sigma in G) sigma(x) in A^G sect p_1 = p subset p_2
+     product_(sigma in G) sigma(x) in A^G inter p_1 = p subset p_2
     $
     由素理想定义存在某个 $sigma$ 使得 $sigma(x) in p_2$，因此：
     $
@@ -267,7 +267,7 @@
     注意到 $p_2$ 是素理想，由 prime avoidance lemma 知存在 $sigma in G$ 使得 $sigma(p_1) supset p_2$\
     为了证明 $sigma(p_1) = p_2$，注意到：
     $
-    sigma(p_1) sect A^G = sigma(p_1 sect Inv(sigma)(A^G)) = sigma(p_1 sect A^G) = p = p_2 sect A^G
+    sigma(p_1) inter A^G = sigma(p_1 inter Inv(sigma)(A^G)) = sigma(p_1 inter A^G) = p = p_2 inter A^G
     $
     结合 $A$ 在 $A^G$ 上整以及 $sigma(p_1) supset p_2$ 知它们取等，证毕
   == 14
@@ -289,7 +289,7 @@
 
     对于第二个命题，首先当然有 $A subset B^G$，其次由域论知识得：
     $
-    B^G = B sect L^G = B sect K subset K
+    B^G = B inter L^G = B inter K subset K
     $
     并且 $B^G$ 当然在 $A$ 上整，由 $A$ 的整闭性知 $B^G subset A$，证毕
   == 15
@@ -298,7 +298,7 @@
       B^(Gal(L' quo K)) = A
       $
       再利用之前的结论即可得到所求有限性
-    - 设 $L quo K$ 是纯不可分扩张，设 $q in Spec(B), p in Spec(A)$ 满足 $q sect A = p$\
+    - 设 $L quo K$ 是纯不可分扩张，设 $q in Spec(B), p in Spec(A)$ 满足 $q inter A = p$\
       注意到 $B$ 中任意元素都是纯不可分元，其最小多项式形如：
       $
       x^(r^n) - a = 0, a in K, r = char(K)
@@ -306,7 +306,7 @@
       结合 $B$ 在 $A$ 上整，$A$ 在分式域中整闭，可得上式中 $a in A$\
       下设 $x in q$，则：
       $
-      x^(r^n) = a in q sect A = p
+      x^(r^n) = a in q inter A = p
       $
       令 $q_p = {x in B | exists n in NN, x^(r^n) in p}$，往证 $q_p = q$
       - 首先，容易验证 $q'$ 是素理想（乘法是简单的，加法只需注意到 $(x + y)^(r^n) = x^(r^n) + y^(r^n)$）
@@ -327,10 +327,10 @@
         (x y)^(r^n) = x^(r^n) (y^(r^m))^(r^(n - m)) = a_1 a_2^(r^(n-m)) in A  
         $
         由最小性，$a_1 a_2^(r^(n-m))$ 一定是 $a$ 的次幂，进而 $a_1 a_2^(r^(n-m)) in p$，结合素理想定义一定有 $a_1 in p or a_2 in p$，得证
-      - 最后，$q subset q_p$ 是显然的，而 $q sect A = p, q_p sect A = sqrt(p) = p$，由 $B$ 在 $A$ 上整立得 $q = q_p$
+      - 最后，$q subset q_p$ 是显然的，而 $q inter A = p, q_p inter A = sqrt(p) = p$，由 $B$ 在 $A$ 上整立得 $q = q_p$
       注意到以上构造对任何素理想都成立，因此 $Spec(B) -> Spec(A)$ 是双射\
-    - 一般的，设 $L' subset L$ 是 $K$ 的可分闭包（此时 $L quo L'$ 是纯不可分扩张），$B'$ 是 $A$ 在 $L'$ 中的整闭包，$B$ 是 $B'$ 在 $L$ 中的整闭包（由传递性也是 $A$ 的整闭包），任取 $q in Spec(A)$，若 $p in Spec(B)$ 使得 $p sect A = q$，则：
+    - 一般的，设 $L' subset L$ 是 $K$ 的可分闭包（此时 $L quo L'$ 是纯不可分扩张），$B'$ 是 $A$ 在 $L'$ 中的整闭包，$B$ 是 $B'$ 在 $L$ 中的整闭包（由传递性也是 $A$ 的整闭包），任取 $q in Spec(A)$，若 $p in Spec(B)$ 使得 $p inter A = q$，则：
       $
-      q = (p sect B') sect A
+      q = (p inter B') inter A
       $
-      由可分的情形，这样的 $p sect B'$ 至多只能有有限个，而对每个 $p sect B'$ 由纯不可分的情形将可以唯一确定一个 $p$，因此结论成立
+      由可分的情形，这样的 $p inter B'$ 至多只能有有限个，而对每个 $p inter B'$ 由纯不可分的情形将可以唯一确定一个 $p$，因此结论成立

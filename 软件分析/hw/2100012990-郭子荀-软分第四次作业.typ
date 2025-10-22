@@ -24,17 +24,17 @@
   - $"exp_with_value_change"_v$ 指所有与该语句中值被改变的变量相关的表达式
   - $"exp_calculated"_v$ 指所有在该语句中被计算（读取）的表达式
 = 合并操作
-  所有后继节点的值取交，也即 $Node(v) := f_v (sect.big_(v' in "succ"(v)) Node(v'))$（方便起见，暂时认为零个集合的交是空集）
+  所有后继节点的值取交，也即 $Node(v) := f_v (inter.big_(v' in "succ"(v)) Node(v'))$（方便起见，暂时认为零个集合的交是空集）
 = 正确性
   #lemmaLinear[][给定从某个节点 $v$ 开始的终止执行，则算法稳定后 $Node(v)$ 中的所有表达式都是该执行的繁忙表达式，即该表达式在其中变量被赋值前一定在执行中被读取。]
   #proof[
     设 $e in Node(v)$，由于算法的稳定，将有：
     $
-    Node(v) = (sect.big_(v' in "succ"(v)) Node(v') - "exp_with_value_change"_v) union "exp_calculated"_v
+    Node(v) = (inter.big_(v' in "succ"(v)) Node(v') - "exp_with_value_change"_v) union "exp_calculated"_v
     $
     讨论：
     - 若 $e in "exp_calculated"_v$，则 $e$ 在节点 $v$ 被读取，当然是繁忙表达式。
-    - 否则，若 $e in sect.big_(v' in "succ"(v)) Node(v') - "exp_with_value_change"_v$，此时 $v$ 一定不是 exit 节点，假设该具体执行中下一个节点为 $v'$，由前式显然有：
+    - 否则，若 $e in inter.big_(v' in "succ"(v)) Node(v') - "exp_with_value_change"_v$，此时 $v$ 一定不是 exit 节点，假设该具体执行中下一个节点为 $v'$，由前式显然有：
       $
       e in Node(v') - "exp_with_value_change"_v
       $

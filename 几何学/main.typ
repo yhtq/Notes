@@ -1425,13 +1425,13 @@
         $
         设 $V_1 = generatedBy(alpha\, beta), V_2 = generatedBy(alpha\, gamma)$，将有（注意到 $f$ 可逆）：
         $
-        V_1 sect V_2 = generatedBy(alpha)\
-        f(V_1 sect V_2) = f(V_1) sect f(V_2)
+        V_1 inter V_2 = generatedBy(alpha)\
+        f(V_1 inter V_2) = f(V_1) inter f(V_2)
         $
         （$f(V_1), f(V_2)$ 仍是线性空间，这是因为 $V_1$ 是所有与 $alpha\, beta$ 共面的向量，经过映射仍然共面。同时考虑逆映射，所有与 $f(alpha), f(beta)$ 共面的向量的原像也与 $alpha\, beta$ 共面）
-        - $V_1 != V_2 => f(V_1) != f(V_2)$，故 $dim(f(V_1) sect f(V_2)) < 2$
-        - $f(alpha) in f(V_1) sect f(V_2), f(alpha) != 0 => dim(f(V_1) sect f(V_2)) >= 1$
-        这表明 $dim(f(V_1) sect f(V_2)) = 1$，进而 $f(V_1 sect V_2) = f(V_1) sect f(V_2) = f(generatedBy(alpha))$\
+        - $V_1 != V_2 => f(V_1) != f(V_2)$，故 $dim(f(V_1) inter f(V_2)) < 2$
+        - $f(alpha) in f(V_1) inter f(V_2), f(alpha) != 0 => dim(f(V_1) inter f(V_2)) >= 1$
+        这表明 $dim(f(V_1) inter f(V_2)) = 1$，进而 $f(V_1 inter V_2) = f(V_1) inter f(V_2) = f(generatedBy(alpha))$\
         这就证明了 $f$ 保持向量共线。\
 
         （另证中的方法容易推广至一般空间，但本质是相同的）
@@ -2512,7 +2512,7 @@
       称一个点的 $X$ 的任意包含一个包含 $X$ 的开集的开集为邻域
     ]
     #definition[聚点/极限点][
-      称 $A$ 是集合 $E$ 的的极限点，如果对于 $A$ 的任意邻域 $X$，均有 $X sect E$ 非空
+      称 $A$ 是集合 $E$ 的的极限点，如果对于 $A$ 的任意邻域 $X$，均有 $X inter E$ 非空
     ]
     #remark[][
       类似可以定义序列的极限点，但是在一般拓扑空间中序列可能有多个极限点，同时集合的极限点也未必是其中某个序列的极限点，因此不是很常用
@@ -2534,7 +2534,7 @@
       + 一方面是显然的，另一方面，假设 $f$ 在每个点上连续，从而对每个点 $x$，存在 $S_x$ 使得 $f|_(S_x) : S_x -> B$ 连续。任取开集 $Y subset B$，将有：
         $
         A = union.big_(x in A) S_x\
-        Inv(f)(Y) = union.big_(x in A) S_x sect Inv(f)(Y) = union.big_(x in A) Inv(f|_(S_x))(Y)
+        Inv(f)(Y) = union.big_(x in A) S_x inter Inv(f)(Y) = union.big_(x in A) Inv(f|_(S_x))(Y)
         $
         由题设及开集的并仍是开集知原命题成立
     ]
@@ -2599,16 +2599,16 @@
       U_n = B_2^n - union.big overline(B_2^i)\
       V_n = B_1^n - union.big overline(B_1^i)
       $
-      取 $U = union U_i, V = union V_i$，则 $U sect V = emptyset$\
+      取 $U = union U_i, V = union V_i$，则 $U inter V = emptyset$\
       任取 $x in A_1$，由 $T_3$ 知 $X$ 与 $A_2$ 有不相交的开邻域 $W_x, W_x'$，满足存在开集 $B$, $x in B subset W_x$\
-      而 $overline(B) sect A_2 = emptyset => B = "某个" B_n$\
-      $A_1 sect union B_2^i = emptyset => x in U_n subset U => A_1 subset U, A_2 subset V$
+      而 $overline(B) inter A_2 = emptyset => B = "某个" B_n$\
+      $A_1 inter union B_2^i = emptyset => x in U_n subset U => A_1 subset U, A_2 subset V$
     ]
     #proposition[][
       可分的度量空间是第二可数的
     ]
     #lemma[][
-      对 $T_4$ 空间中，若 $A sect B = emptyset$，则存在连续函数 $f$ 使得：
+      对 $T_4$ 空间中，若 $A inter B = emptyset$，则存在连续函数 $f$ 使得：
       $
       f(A) = 0, f(B) = 1
       $
@@ -2617,7 +2617,7 @@
 
     #proof[
       这个构造是很难的，思路类似于戴德金分划\
-      令 $QQ_0 = QQ sect [0, 1] = {r_1 = 1, r_2 = 0, r_3, r_4, ...}$\
+      令 $QQ_0 = QQ inter [0, 1] = {r_1 = 1, r_2 = 0, r_3, r_4, ...}$\
       对 $r_i$ 构造开集 $U_i$，满足：
       - $r_n < r_m => overline(U_n) subset U_m$
       - $A subset U_n subset B^c$
@@ -2709,11 +2709,11 @@
       称 $X$ 是连通的，如果它不能写成不交的非空开子集之并
     ]
     #theorem[][
-      设 $X$ 可被若干连通子集 $A_i$ 覆盖，且 $sect.big A_i$ 非空，则 $X$ 连通
+      设 $X$ 可被若干连通子集 $A_i$ 覆盖，且 $inter.big A_i$ 非空，则 $X$ 连通
     ]<连通判别法>
     #proof[
       反证法，假设 $X = U_1 union U_2$，其中 $U_1, U_2$ 是开集。\
-      由于 $sect.big A_i$ 非空，不妨设 $sect.big A_i subset U_1$，则 $U_2$ 与 $sect.big A_i$ 不交，
+      由于 $inter.big A_i$ 非空，不妨设 $inter.big A_i subset U_1$，则 $U_2$ 与 $inter.big A_i$ 不交，
     ]
     #theorem[][
       $X$ 是连通的当且仅当其中既闭又开的集合只有空间和全集

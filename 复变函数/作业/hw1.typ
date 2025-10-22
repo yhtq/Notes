@@ -47,14 +47,14 @@
   $
   的 $y$ 构成的集合为 $S$，断言：
   + $S$ 是（$F$ 中的）开集。事实上，任取 $y in S$，我们有：
-    - $forall y' in B(y, epsilon) sect F$
+    - $forall y' in B(y, epsilon) inter F$
       - $y in S => exists z_0 = x, z_1, ..., z_n = y, | z_(k+1) - z_k | < epsilon, k = 0, 1, 2, ..., n-1$
         - $|y' - y| < epsilon => exists z'_0 = x, z'_1 = z_1, ..., z'_n = y, z'_(n+1) = y':$
           $
           | z'_(k+1) - z'_k | < epsilon, k = 0, 1, 2, ..., n
           $\
           $=> y' in S$
-    表明 $B(y, epsilon) sect F subset S$
+    表明 $B(y, epsilon) inter F subset S$
   + $S$ 是（$F$ 中的）闭集。为此，任取 $y_n in S, y_n -> y in F$，只需证明 $y in S$\
     - $y_n -> y => exists i, |y_i - y| < epsilon$
       - $y_i in S => exists z_0 = x, z_1, ..., z_n = y_i:$

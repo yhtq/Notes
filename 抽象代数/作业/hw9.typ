@@ -31,9 +31,9 @@
 == 7
   由同构定理
   $
-  quotient(im(phi), (Q sect im(phi)) ) tilde.eq quotient(R, Inv(phi)(Q sect im(phi)))
+  quotient(im(phi), (Q inter im(phi)) ) tilde.eq quotient(R, Inv(phi)(Q inter im(phi)))
   $
-  由于 $Q$ 是素理想，故 $Q sect im(phi)$ 也是 $im(phi)$ 中素理想，因此上式前者是整环，因而后者也是整环，表明 $Inv(phi)(Q sect im(phi)) = Inv(phi)(Q)$ 也是素理想
+  由于 $Q$ 是素理想，故 $Q inter im(phi)$ 也是 $im(phi)$ 中素理想，因此上式前者是整环，因而后者也是整环，表明 $Inv(phi)(Q inter im(phi)) = Inv(phi)(Q)$ 也是素理想
 
   对于极大理想，结论不成立。例如考虑 $ZZ_6 -> QQ$ 的嵌入映射，$QQ$ 中的极大理想 ${0}$ 的原像为 ${0}$，但 ${0}$ 不是 $ZZ_6$ 的极大理想
 == 8
@@ -48,9 +48,9 @@
   如若不然，对于每个 $i$，可以取得 $x_i != 0$ 使得：
   - $x_i in I_i$
   - $x_i in.not P$
-  从而 $product_i x_i in sect.big_i I_i subset P$，由引理，$exists i: x_i in P$，这与 $x_i in.not P$ 矛盾！
+  从而 $product_i x_i in inter.big_i I_i subset P$，由引理，$exists i: x_i in P$，这与 $x_i in.not P$ 矛盾！
 == 9
-  用归纳法，显然 $n = 1$ 时情形成立。假设 $n-1$ 时情形成立，考虑 $n$ 的情形。不妨设 $I sect P_i$ != ${0}$。\
+  用归纳法，显然 $n = 1$ 时情形成立。假设 $n-1$ 时情形成立，考虑 $n$ 的情形。不妨设 $I inter P_i$ != ${0}$。\
   假设对于每个 $i$，都存在 $x_i$ 使得：
   - $x_i in I$
   - $x_i in P_i$
@@ -63,7 +63,7 @@
   这表明 $sum_(i= 1)^n product_(j != i) x_j$ 中有且恰有一项 $in.not P_i$，因此它不在任何一个 $P_i$ 中，但它在 $I$ 中，矛盾！\
   从而假设不成立，故存在某个 $i$ 使得：
   $
-  I sect P_i subset P_j
+  I inter P_i subset P_j
   $
   从而可以去掉 $P_i$，用归纳假设即知原命题成立。
 == 10
@@ -106,14 +106,14 @@
     由 $(2)$ 的证明看出若 $Q subset P$ 是 $R$ 的素理想，则 $Q R_P$ 是 $R_P$ 的素理想。\
     同时承接 $(3)$ 的证明，若 $I$ 是 $R_P$ 的素理想，断言：
     $
-    I = (I sect P) R_P
+    I = (I inter P) R_P
     $
-    且 $I sect P$ 是 $R$ 的素理想。\
-    事实上，$(I sect P) R_P subset I$ 是显然的，而对任意 $a/b in I$，显有 $a in P, b in R - P$，从而 $a = a/b dot b in I sect P$，进而 $(I sect P) R_P = I$。\
+    且 $I inter P$ 是 $R$ 的素理想。\
+    事实上，$(I inter P) R_P subset I$ 是显然的，而对任意 $a/b in I$，显有 $a in P, b in R - P$，从而 $a = a/b dot b in I inter P$，进而 $(I inter P) R_P = I$。\
     同时设 $a_1, a_2 in R$，则：：
     $
-    a_1 a_2 in I sect P => a_1 a_2 in in I => a_1 in I or a_2 in I => a_1 in I sect R or a_2 in I sect R \
-    => a_1 in I sect P or a_2 in I sect P
+    a_1 a_2 in I inter P => a_1 a_2 in in I => a_1 in I or a_2 in I => a_1 in I inter R or a_2 in I inter R \
+    => a_1 in I inter P or a_2 in I inter P
     $
     足以给出题目所设构成一一映射。
 = 补充题
@@ -172,7 +172,7 @@
   $
   但是:
   $
-  product_i x_i in sect.big_i I_i = P
+  product_i x_i in inter.big_i I_i = P
   $
   矛盾！
   从而必有某个 $I_i$ 含于另一个，消去较大的利用归纳法即得。

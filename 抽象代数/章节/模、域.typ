@@ -612,8 +612,8 @@
         $
       + 设 $E_1, E_2$ 分别对应 $H_1, H_2$，则：
         $
-        E_1 E_2 <-> H_1 sect H_2\
-        E_1 sect E_2 <-> generatedBy(H_1\, H_2)
+        E_1 E_2 <-> H_1 inter H_2\
+        E_1 inter E_2 <-> generatedBy(H_1\, H_2)
         $
     ]
     #proof[
@@ -720,7 +720,7 @@
         - $ker eta = {sigma in Isom(K) | sigma|_(K^H) = id} = Gal(quotient(K, K^H)) = H$
         - 计数发现它也是满射，因此同构定理即得原结论
       + 注意到 $phi|_(E_1 E_2) = id <=> phi|_(E_1) = id and phi|_(E_2) = id$，因此第一条成立。\
-        对于第二条，我们从另一方向考虑。$K^(generatedBy(H_1\, H_2))$ 就是表示被所有 $H_1, H_2$ 中的元素都固定的元素构成的子域，当然就是 $E_1 sect E_2$
+        对于第二条，我们从另一方向考虑。$K^(generatedBy(H_1\, H_2))$ 就是表示被所有 $H_1, H_2$ 中的元素都固定的元素构成的子域，当然就是 $E_1 inter E_2$
     ]
     #remark[][
       @lemma-polynomial 是十分重要的，有了这个引理，我们往往也把伽罗华群中的元素称作共轭。
@@ -728,7 +728,7 @@
     #proposition[][
       设 $quotient(K, F)$ 是伽罗华扩张，$quotient(E, F)$ 是任意域扩张，则：
       - $quotient(K E, E)$ 是伽罗华扩张
-      - $Gal(quotient(K E, E)) tilde.eq Gal(quotient(K, K sect E))$
+      - $Gal(quotient(K E, E)) tilde.eq Gal(quotient(K, K inter E))$
     ] 
     #proof[
       由题设，设 $K$ 是 $F$ 上某个可分多项式 $f(x)$ 的分裂域。\
@@ -745,26 +745,26 @@
 
       给出同态映射 
       $
-      Phi: Gal(quotient(K E, E)) -> Gal(quotient(K, K sect E))\
+      Phi: Gal(quotient(K E, E)) -> Gal(quotient(K, K inter E))\
       sigma -> sigma|_K
       $
       - 单射性质容易验证
-      - 满射性质比较困难，我们需要利用伽罗华理论迂回。设 $H = im Phi <= Gal(quotient(K, K sect E))$，取 $K^H <= K$，只需验证 $K^H <= E$\
+      - 满射性质比较困难，我们需要利用伽罗华理论迂回。设 $H = im Phi <= Gal(quotient(K, K inter E))$，取 $K^H <= K$，只需验证 $K^H <= E$\
         任取 $sigma in Gal(quotient(K E, E))$，由于 $sigma|_K$ 保持 $K^H$ 不动，当然有 $sigma$ 保持 $K^H$ 不动\
-        但另一方面，被 $Gal(quotient(K E, E))$ 中所有元素保持不动的子域当然只能含于 $E$，进而 $K^H <= E => K^H <= K sect E => K^H = K sect E$
+        但另一方面，被 $Gal(quotient(K E, E))$ 中所有元素保持不动的子域当然只能含于 $E$，进而 $K^H <= E => K^H <= K inter E => K^H = K inter E$
         
         
     ]
     #example[][
       这个命题中，某一个扩张是伽罗华扩张的条件是必要的。假设在命题中，把条件改成 $quotient(K E, F)$ 是伽罗华的，且
         $
-        K sect E = F
+        K inter E = F
         $
         那么我们将有：
         $
         Gal(quotient(K E, E)) = H_1, Gal(quotient(K E, K)) = H_2\
         Gal(quotient(K E, F)) = generatedBy(H_1\, H_2)\
-        Gal(quotient(K E, K E)) = {1} =  H_1 sect H_2
+        Gal(quotient(K E, K E)) = {1} =  H_1 inter H_2
         $
       此时为了得到好的结论，我们当然希望 $H_1, H_2$ 至少一个是正规子群（换言之，其中一部分是伽罗华扩张），进而立刻有：
       $
@@ -773,13 +773,13 @@
     ]
     #theorem[][
       设 $quotient(K_1, F), quotient(K_2, F)$ 都是伽罗华扩张，则：
-      - $K_1 sect K_2$ 是伽罗华的
+      - $K_1 inter K_2$ 是伽罗华的
       - $K_1 K_2 $ 是伽罗华的
       - 
         $
-        Gal(quotient(K_1 K_2, F)) tilde.eq {(g_1, g_2) in  Gal(quotient(K_1, F)) times Gal(quotient(K_2, F))| g_1|_(K_1 sect K_2) = g_2|_(K_1 sect K_2)}
+        Gal(quotient(K_1 K_2, F)) tilde.eq {(g_1, g_2) in  Gal(quotient(K_1, F)) times Gal(quotient(K_2, F))| g_1|_(K_1 inter K_2) = g_2|_(K_1 inter K_2)}
         $
-      - 若还有 $K_1 sect K_2 = F$，则：
+      - 若还有 $K_1 inter K_2 = F$，则：
         $
         Gal(quotient(K_1 K_2, F)) tilde.eq Gal(quotient(K_1, F)) times Gal(quotient(K_2, F))
         $
@@ -1063,7 +1063,7 @@
       $
     ]
     #proof[
-      $G sect A_n = A_n <=> F(D) = F$
+      $G inter A_n = A_n <=> F(D) = F$
     ]
     #example[三次方程的求根公式][
       给定三次方程（假设多项式已经不可约）：
@@ -1422,8 +1422,8 @@
       Z(I) &<- I
       $
       - $I_1 subset I_2 <=> Z(I_1) supset Z(I_2)$
-      - $Z(I_1 + I_2) = Z(I_1) sect Z(I_2)$
-      - $Z(I_1 sect I_2) = Z(I_1) union Z(I_2)$
+      - $Z(I_1 + I_2) = Z(I_1) inter Z(I_2)$
+      - $Z(I_1 inter I_2) = Z(I_1) union Z(I_2)$
     ]
 ]
 #chapterThree

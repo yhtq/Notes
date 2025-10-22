@@ -213,7 +213,7 @@
       - 注意到 $T(*)$ 函子作用于函数只是原本函数的限制，当然保持单射性
       - 只需验证 $T(M') ->^f' T(M) ->^g' T(M'')$ 处正合性，其中 $f$ 是单射。
         - 由原本的正合性，$g compose f = 0$ 成立，当然它们的限制也成立 $g' compose f' = 0$
-        - 只需证明 $ker g' subset im f'$，任取 $x in ker g' = T(M) sect ker g = T(M) sect im f$，因此可设：
+        - 只需证明 $ker g' subset im f'$，任取 $x in ker g' = T(M) inter ker g = T(M) inter im f$，因此可设：
           $
           x = f(m'), a f(m') = f(a m') = 0, a != 0
           $
@@ -364,15 +364,15 @@
       $
       利用局部环和 Nakayama 引理，上式等价于 $alpha_p = A_p <=> (A quo alpha)_p = 0$ 或 $M_p = 0$，进而：
       $
-      Supp(M quo alpha M) = Supp(M) sect Supp(A quo alpha) \
-      = V(alpha) sect V(Ann(M)) = V(alpha + Ann(M)) 
+      Supp(M quo alpha M) = Supp(M) inter Supp(A quo alpha) \
+      = V(alpha) inter V(Ann(M)) = V(alpha + Ann(M)) 
       $
     === viii)
       先设 $M = A x$
       $
       Supp(B tensorProduct M) = Supp(B tensorProduct (A quo Ann(x))) \
-      = Supp(B quo Ann(x) B) = V(Ann(x) + Ann(B)) = V(Ann(M)) sect V(ker f)\
-      = Supp(M) sect V(ker f)
+      = Supp(B quo Ann(x) B) = V(Ann(x) + Ann(B)) = V(Ann(M)) inter V(ker f)\
+      = Supp(M) inter V(ker f)
       $
       表明这些素理想一定包含 $ker f$ 进而上式就是 $f^(* -1)(Supp(M))$
 = p78
@@ -410,7 +410,7 @@
   == 3
     由熟知的同构：
     $
-    M quo N_1 times M quo N_2  tilde.eq M quo N_1 sect N_2 
+    M quo N_1 times M quo N_2  tilde.eq M quo N_1 inter N_2 
     $
     及有限直积保持 Noether/Artin 知结论成立
   == 4
@@ -423,7 +423,7 @@
 
     若 $M$ 是 Artin 的，结果当然未必，例如设 $p$ 是素数，则 $ZZ[1/p] quo ZZ$ 作为 $ZZ$ 模 Artin，并且没有非零零化子，但 $ZZ$ 不是 Artin 的
   == 5
-    注意到子空间 $Y$ 中开集均形如 $A sect Y$，其中 $A$ 是 $Y$ 中开集，当然将满足升链条件。
+    注意到子空间 $Y$ 中开集均形如 $A inter Y$，其中 $A$ 是 $Y$ 中开集，当然将满足升链条件。
 
     为了证明拟紧，任取一族开覆盖 $union E = X$，考虑：
     $
@@ -448,11 +448,11 @@
 
     进一步，设 $X = union_i X_i$，任取其中一个不可约分支 $C$，将有：
     $
-    C = union_i (C sect X_i)
+    C = union_i (C inter X_i)
     $
     然而 $C$ 不能写成其中有限个非空闭集的并，继而：
     $
-    exists i, C = C sect X_i
+    exists i, C = C inter X_i
     $
     再由极大性，$C = X_i$，证毕
   == 8

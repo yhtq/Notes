@@ -120,14 +120,14 @@
     ]
 39. 
     #answer[
-        + $A(B sect C) subset A B sect A C = A B sect C$ 是显然的
-        + 任取 $a b = c in A B sect C$，从而 $b = Inv(a) c in C$，因此 $a b in A(B sect C)$
+        + $A(B inter C) subset A B inter A C = A B inter C$ 是显然的
+        + 任取 $a b = c in A B inter C$，从而 $b = Inv(a) c in C$，因此 $a b in A(B inter C)$
     ]
 40.
     #answer[
         
         $
-        A = A (A sect C) = A(B sect C) = B sect A C = B sect B C = B
+        A = A (A inter C) = A(B inter C) = B inter A C = B inter B C = B
         $
     ]
 42.
@@ -201,7 +201,7 @@
     + 由陪集分解：
         $
         S_n = A_n union x A_n\
-        G = (G sect A_n) union (x G sect A_n)
+        G = (G inter A_n) union (x G inter A_n)
         $
         显然后者也是陪集分解，分别表示 $G$ 中偶置换与奇置换，由陪集性质知它们数量相等。
     ]
@@ -222,14 +222,14 @@
     ]
 3.
     #answer[
-        断言：$Stab_G (m) = Stab_H (m) sect H$\
+        断言：$Stab_G (m) = Stab_H (m) inter H$\
         对于任意 $m_1, m_2 in M$，存在 $g in G$ 使得：
         $
         Stab_G (m_1) = g Stab_H (m_2) Inv(g)
         $
         从而：
         $
-        Stab_H (m_1) = Stab_G (m_1) sect H \ = g Stab_H (m_2) Inv(g) sect H = g Stab_H (m_2) Inv(g) sect g H Inv(g) \ = g (Stab_H (m_2) sect H) Inv(g) = g Stab_H (m_2) Inv(g) 
+        Stab_H (m_1) = Stab_G (m_1) inter H \ = g Stab_H (m_2) Inv(g) inter H = g Stab_H (m_2) Inv(g) inter g H Inv(g) \ = g (Stab_H (m_2) inter H) Inv(g) = g Stab_H (m_2) Inv(g) 
         $
         这就表明在 $H$ 作用下 $M$ 所有元素对应的稳定化子的阶相等，从而所有轨道的长度相等。
     ]

@@ -311,7 +311,7 @@
     ===
       熟知 $norm(x) = max abs(x_i)^p$ 作为若干凸函数的最大值仍是凸函数，因此仿照之前的理论我们希望：
       $
-      diff I_p (x) sect mu diff norm(x) != emptyset
+      diff I_p (x) inter mu diff norm(x) != emptyset
       $
       - 先计算 $diff I_p (x)$:
         $
@@ -320,7 +320,7 @@
     == 
       我们需要在 $pi = {x | norm(x) = 1}$ 上最大化 $f(x)$，也即希望：
       $
-      diff I_p (x) sect mu norm(x) != emptyset 
+      diff I_p (x) inter mu norm(x) != emptyset 
       $
       分别计算：
       - 

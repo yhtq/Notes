@@ -191,8 +191,8 @@
         // 反设 $a, b in.not p$，验证 $a b in.not p$，不妨设 $a b in.not S$\
         // 由极大性，有：
         // $
-        // p + (a) sect S != emptyset => exists h in A, x in p, h a + x in S\
-        // p + (b) sect S != emptyset => exists g in A, y in p, g b + y in S
+        // p + (a) inter S != emptyset => exists h in A, x in p, h a + x in S\
+        // p + (b) inter S != emptyset => exists g in A, y in p, g b + y in S
         // $
   ==
     取 $D = {p in Spec(A)|p subset A - S}$
@@ -208,7 +208,7 @@
 
     设 $p$ 是素理想，则：
     $
-    p sect 1 + alpha != emptyset\
+    p inter 1 + alpha != emptyset\
     <=> exists x in p, y in alpha, x = 1 + y\
     <=> exists x in p, y in alpha, 1 = x + y\
     <=> p + alpha = A\
@@ -235,7 +235,7 @@
   == v) $=>$ ii)
     设 $phi: A -> Inv(S) A$，任取 $t in T$，注意到任取 $Inv(S) A$ 的素理想 $p$，有：
     $
-    phi(t) in p => t in Inv(phi)(p) => Inv(phi)(p) sect S != emptyset 
+    phi(t) in p => t in Inv(phi)(p) => Inv(phi)(p) inter S != emptyset 
     $
     这是荒谬的，因此 $phi(t)$ 不在任何素理想之中，进而可逆
   == ii) $=>$ i)

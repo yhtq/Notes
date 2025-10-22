@@ -269,10 +269,10 @@
       // 我们可取一列 $U$ 的子区间 $I_n$ 使得：
       // - $I_n subset I_(n+1)$
       // - $a in.not I_n$
-      // - $I_n -> (a, +infinity) sect U$ 或 $(-infinity, a) sect U$\
-      //   具体来说，对于任意 $y in (a, +infinity) sect U \/ (-infinity, a) sect U$，存在 $n$ 使得 $y in I_n$\
+      // - $I_n -> (a, +infinity) inter U$ 或 $(-infinity, a) inter U$\
+      //   具体来说，对于任意 $y in (a, +infinity) inter U \/ (-infinity, a) inter U$，存在 $n$ 使得 $y in I_n$\
       //   （上半区间和下半区间的情况是类似的，这里合并讨论即可）
-      令 $I$ 是上半区间 $I^+ = (a, +infinity) sect U$ 或下半区间 $I^- = (-infinity, a) sect U$，
+      令 $I$ 是上半区间 $I^+ = (a, +infinity) inter U$ 或下半区间 $I^- = (-infinity, a) inter U$，
       在 $I$ 中任取一点 $y_0$，令：
       $
       F_I (y) = integral_(y_0)^y 1/f(t) dif t, forall y in I
@@ -297,7 +297,7 @@
       - 假设该条件成立，往证不可能 $exists x_0, y(x_0) = a$，否则又考虑到解非平凡，可设 $y(x_1) != a$\
         由于：
         $
-        Inv(y)(a sect [x_0, x_1]) != [x_0, x_1], emptyset "且是闭集"
+        Inv(y)(a inter [x_0, x_1]) != [x_0, x_1], emptyset "且是闭集"
         $
         因此不是开集，进而它的补集 $[x_0, x_1] - Inv(y)(a)$ 不是闭集。\
         换言之，将存在 $x_i -> eta in X$ 使得：

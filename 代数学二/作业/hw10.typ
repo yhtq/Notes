@@ -19,10 +19,10 @@
       $
       (p^k) B = directSum_(n >= k + 1) ZZ quo p^n ZZ\
       alpha(A) = directSum_(n >= 1) p^(n-1) ZZ quo p^n\
-      (p^k) B sect alpha(A) = directSum_(n >= k + 1) p^(n-1) ZZ quo p^n ZZ\
-      Inv(alpha)((p^k) B sect alpha(A)) = directSum_(n >= k + 1) ZZ quo p ZZ\
-      A quo Inv(alpha)((p^k) B sect alpha(A)) = directSum_(n <= k) ZZ quo p ZZ\
-      inverseLimit A quo Inv(alpha)((p^k) B sect alpha(A)) = product ZZ quo p ZZ\
+      (p^k) B inter alpha(A) = directSum_(n >= k + 1) p^(n-1) ZZ quo p^n ZZ\
+      Inv(alpha)((p^k) B inter alpha(A)) = directSum_(n >= k + 1) ZZ quo p ZZ\
+      A quo Inv(alpha)((p^k) B inter alpha(A)) = directSum_(n <= k) ZZ quo p ZZ\
+      inverseLimit A quo Inv(alpha)((p^k) B inter alpha(A)) = product ZZ quo p ZZ\
       $
     - 最后，有正合列：
       $
@@ -103,7 +103,7 @@
   == 7
     $
     hat(A) "忠实平坦" &<=> forall "有限生成模"M, M -> hat(M) "是单射" \
-    &<=> forall "有限生成模"M, sect a^n M  = 0\
+    &<=> forall "有限生成模"M, inter a^n M  = 0\
     &<= alpha subset "Jacobson 根" \
     &"（这是 Krull's 的推论）"\
     $

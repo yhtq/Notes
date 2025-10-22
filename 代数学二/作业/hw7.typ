@@ -47,7 +47,7 @@
   == 3
     由熟知的同构：
     $
-    M quo N_1 times M quo N_2  tilde.eq M quo N_1 sect N_2 
+    M quo N_1 times M quo N_2  tilde.eq M quo N_1 inter N_2 
     $
     及有限直积保持 Noether/Artin 知结论成立
   == 4
@@ -60,7 +60,7 @@
 
     若 $M$ 是 Artin 的，结果当然未必，例如设 $p$ 是素数，则 $ZZ[1/p] quo ZZ$ 作为 $ZZ$ 模 Artin，并且没有非零零化子，但 $ZZ$ 不是 Artin 的
   == 5
-    注意到子空间 $Y$ 中开集均形如 $A sect Y$，其中 $A$ 是 $Y$ 中开集，当然将满足升链条件。
+    注意到子空间 $Y$ 中开集均形如 $A inter Y$，其中 $A$ 是 $Y$ 中开集，当然将满足升链条件。
 
     为了证明拟紧，任取一族开覆盖 $union E = X$，考虑：
     $
@@ -85,11 +85,11 @@
 
     进一步，设 $X = union_i X_i$，任取其中一个不可约分支 $C$，将有：
     $
-    C = union_i (C sect X_i)
+    C = union_i (C inter X_i)
     $
     然而 $C$ 不能写成其中有限个非空闭集的并，继而：
     $
-    exists i, C = C sect X_i
+    exists i, C = C inter X_i
     $
     再由极大性，$C = X_i$，证毕
   == 8

@@ -64,7 +64,7 @@
             $
             这表明：
             $
-            Inv(k) h k Inv(h) in H sect K = {1} => h k Inv(h) = k => h k = k h
+            Inv(k) h k Inv(h) in H inter K = {1} => h k Inv(h) = k => h k = k h
             $
         ]
 = 补充题
@@ -223,7 +223,7 @@
             仿照上式证明，我们有 $|C_G (x)| >= 1/2 |G|$
             - 若 $exists x : |C_G (x)| = 1/2 |G|$
                 此时 $C_G (x)$ 是指数为 2 的子群，自然成为正规子群。\
-                只需证明 $C_G (x)$ 交换，在上面的证明中取等当且仅当恰有 $1/2 |G|$ 个元素在 $x I sect I$ 中，且这些元素都与 $x$ 可交换，进而 $C_G (x) = x I sect I$。
+                只需证明 $C_G (x)$ 交换，在上面的证明中取等当且仅当恰有 $1/2 |G|$ 个元素在 $x I inter I$ 中，且这些元素都与 $x$ 可交换，进而 $C_G (x) = x I inter I$。
 
                 另一方面，$C_G (x)$ 是子群，自然对乘法封闭。这意味着：
                 $
@@ -324,29 +324,29 @@
         ]
     4.
         #answer[
-            + 注意到 $K sect L subset K sect (H L) = {e}$，从而由熟知定理知 $K L tilde.eq K times L$
+            + 注意到 $K inter L subset K inter (H L) = {e}$，从而由熟知定理知 $K L tilde.eq K times L$
             +  $normalSub(K L, H K L)$
 
                 注意到 $K, L$ 元素之间可换，从而：
                 $
                 h k l K L Inv(l) Inv(k) Inv(h) = h k K L Inv(k) Inv(h) = h K L Inv(h) = K L
                 $
-            + 又结合 $H sect (K L) = {e}$，我们有：
+            + 又结合 $H inter (K L) = {e}$，我们有：
                 $
                 H (K L) tilde.eq H times (K L) tilde.eq H times (K times L) tilde.eq  H times K times L
                 $
         ]
     5.
         #answer[
-            显有 $H sect L = {e}$，由熟知定理知：
+            显有 $H inter L = {e}$，由熟知定理知：
             $
             G tilde.eq H times K
             $
             且 $H times K$ 的每一个子群都形如 $H_1 times K_1$\
             对任意 $G$ 的子群 $L$，将 $L$ 映射到 $H times K$ 之后设其形式为 $H_1 times K_1$，显然有：
             $
-            H_1 = H sect L, K_1 = K sect L\
-            L = H_1 K_1 = (H sect L) (K sect L)
+            H_1 = H inter L, K_1 = K inter L\
+            L = H_1 K_1 = (H inter L) (K inter L)
             $
         ]
     6.

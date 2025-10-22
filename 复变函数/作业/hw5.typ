@@ -32,7 +32,7 @@
   == 23
     首先，我们取包含 $gamma$ 的开集 $G' subset G$ 使得 $exists m, forall x in G', norm(x - a) > m > 0$\
     - 若 $a$ 不是 $G$ 的边界点，则 $G' = G$ 即可
-    - 反之，在 $a$ 附近找到开球使得 $overline(U(a, delta)) sect gamma = emptyset$，取 $G - overline(U(a, delta))$ 包含 $gamma$ 的连通分支即可
+    - 反之，在 $a$ 附近找到开球使得 $overline(U(a, delta)) inter gamma = emptyset$，取 $G - overline(U(a, delta))$ 包含 $gamma$ 的连通分支即可
     取 $F = 1/(z-a)， forall z in G'$，则由 $norm(z - a) > m$ 知它是解析函数，且 $F' = - 1/(z-a)^2$，由熟知定理知当然有：
     $
     integral_(gamma)^() F' = 0 

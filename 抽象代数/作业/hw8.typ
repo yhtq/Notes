@@ -47,7 +47,7 @@
   + $phi(a Inv(a)) = phi(a) phi(Inv(a)) = 1$，成立
   + 考虑自然同态 $ZZ -> ZZ_3$，后者是域而前者可逆元只有 $plus.minus 1$，故不成立
 == 21
-  若 $r_i in I sect R_i$，显有 $sum_i r_i in I$\
+  若 $r_i in I inter R_i$，显有 $sum_i r_i in I$\
   而对 $I$ 中任何一个元素 $x$，设：
   $
     1 = sum_i r_i space, r_i in R_i
@@ -56,7 +56,7 @@
   $
     x = sum_i x r_i
   $
-  而 $x r_i in I, R_i => x r_i in I sect R_i$，这就完成了证明。
+  而 $x r_i in I, R_i => x r_i in I inter R_i$，这就完成了证明。
 = 补充题
 == 
   对于前者，由于 $1_6 -> 1_3$，故加法群已经给出所有元素的像，容易验证它是环同态。\
@@ -100,16 +100,16 @@
   $
   将成为非平凡理想，矛盾！
 == 
-  任取 $y in phi(I sect J), x in I sect J and phi(x) = y$，显有：
+  任取 $y in phi(I inter J), x in I inter J and phi(x) = y$，显有：
   $
   x in I => y = phi(x) in phi(I)\
   x in J => y = phi(x) in phi(J)\
   $
-  进而 $phi(I sect J) subset phi(I) sect phi(J)$。
+  进而 $phi(I inter J) subset phi(I) inter phi(J)$。
   考虑 $ZZ -> ZZ_6$ 的自然同态，取 $I = 7ZZ, J = 5ZZ$，将有：
   $
-  I sect J = {0} => phi(I sect J) = {0}\
-  phi(I) = phi(J) = ZZ_6 => phi(I) sect phi(J) = ZZ_6
+  I inter J = {0} => phi(I inter J) = {0}\
+  phi(I) = phi(J) = ZZ_6 => phi(I) inter phi(J) = ZZ_6
   $
 == 
   $Z(R)$ 是子环：显然$0, 1 in Z(R)$，且：
@@ -210,8 +210,8 @@
   
 = P89
   == 1
-    显然 $I J subset I sect J$。\
-    任取 $x in I sect J$，由互素知：
+    显然 $I J subset I inter J$。\
+    任取 $x in I inter J$，由互素知：
     $
     exists i in I, j in J: i + j = 1\
     => x i + x j = x
@@ -228,7 +228,7 @@
     $
     表明结论成立
   == 4
-    由 1 中结论，$I sect J = I J$，而当然有 $I sect J subset K$，证毕
+    由 1 中结论，$I inter J = I J$，而当然有 $I inter J subset K$，证毕
 = 补充题
   == 
     - 第二同构定理，定义：
@@ -237,7 +237,7 @@
       $
       容易验证它是同态，且：
       $
-      ker(phi) = H sect I\
+      ker(phi) = H inter I\
       im(phi) = {h + I | h in H} = H + I
       $
       从而由 $ker, im$ 的结论及第一同构定理知所有结论成立

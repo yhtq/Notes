@@ -248,7 +248,7 @@
       对于两个程序（进程）$P_1, P_2$，记 $I(P), O(P)$ 分别为 $P$ 程序需要读取/写入的数据集合
     ]
     #theorem[Bernstein][
-      两个程序 $P_1, P_2$ 可以并行执行，记作 $P_1 || P_2$，如果 $O(P_1) sect I(P_2) = emptyset$ 且 $O(P_2) sect I(P_1) = emptyset$ 且 $O(P_1) sect O(P_2) = emptyset$
+      两个程序 $P_1, P_2$ 可以并行执行，记作 $P_1 || P_2$，如果 $O(P_1) inter I(P_2) = emptyset$ 且 $O(P_2) inter I(P_1) = emptyset$ 且 $O(P_1) inter O(P_2) = emptyset$
     ]
     #definition[][
       不满足 Bernstein 条件的程序会产生竞争条件（一般泛指并行程序得到的结果不确定）和数据依赖，也就是两个进程同时访问了相同数据，且至少有一个进程写入了数据。这样的并行程序如果直接执行，其结果将不能确定。具体而言，数据依赖常常分为：

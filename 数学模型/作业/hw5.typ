@@ -30,7 +30,7 @@
     + omega^(-s) sum_(s = -N/2)^(N/2 - 1) sum_(t = -N/2)^(N/2) X_(2s-1 2t) omega^(2 s u) omega^(2 t v) 
     + omega^(-v) omega^(-s) sum_(s = -N/2)^(N/2 - 1) sum_(t = -N/2)^(N/2 - 1) X_(2s-1 2t-1) omega^(2 s u) omega^(2 t v)\
     $
-    此外，当然有 $omega^(v - N) = - omega^v, omega^(u - N) = -omega^N$，因此只需对 $u, v in [0, N]^2 sect ZZ^2$ 计算上面四个子二维傅里叶变换，然后将结果合并即可。\
+    此外，当然有 $omega^(v - N) = - omega^v, omega^(u - N) = -omega^N$，因此只需对 $u, v in [0, N]^2 inter ZZ^2$ 计算上面四个子二维傅里叶变换，然后将结果合并即可。\
     方便起见，设加法和乘法的时间代价均为 $1$，$N = 2^k$ 对应二维傅里叶展开的计算次数约为：
     $
     a_(2^k) = 4 a_(2^(k-1)) + 7 dot 4 dot 2^(2 k) 

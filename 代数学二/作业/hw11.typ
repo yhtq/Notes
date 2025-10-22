@@ -44,7 +44,7 @@
     #let kA = $k[x_1, ..., x_d]$
     #let kB = $kclo[x_1, ..., x_d]$
     注意到 $kclo$ 中所有元素当然在 $k$ 上整，继而在 $kA$ 上整。而 $x_1, ..., x_n in kB$ 当然也在 $kA$ 上整，由整元的代数封闭性 $kB$ 在 $kA$ 上整。\
-    此外，$kA$ 当然在分式域中整闭。任取 $kB$ 的极大理想 $m$，则 $m sect kA$ 也是极大理想，且 $dim kA_(m sect kA) = dim kB_(m)$
+    此外，$kA$ 当然在分式域中整闭。任取 $kB$ 的极大理想 $m$，则 $m inter kA$ 也是极大理想，且 $dim kA_(m inter kA) = dim kB_(m)$
 
     回到定理的证明，类似利用诺特正规化构造 $B = kA, m$ 是任意极大理想，由上面的命题和书上引理将有：
     $
@@ -73,7 +73,7 @@
     $
     p_0 < p_1 < p_2 < ... < p_s
     $
-    注意到在 $p_i sect A$ 处的纤维同胚于 $k(p_i) tensorProduct A[x] = k[x]$，维度为 $1$，因此上式中至多连着两项拉回 $A$ 的到相同的素理想，换言之：
+    注意到在 $p_i inter A$ 处的纤维同胚于 $k(p_i) tensorProduct A[x] = k[x]$，维度为 $1$，因此上式中至多连着两项拉回 $A$ 的到相同的素理想，换言之：
     $
     dim A + 1 >= (s + 1)/2\
     s <= 2 dim A + 1
@@ -98,5 +98,5 @@
     $
     q_0 < ... < q_(s - 1) < q_s
     $
-    若 $q_i sect A != q_(i - 1) sect A, forall i$，则 $s <= dim A$ 与之前的下界矛盾。\
-    因此设 $q_i sect A = q_(i-1) sect A = p_i$，显有 $q_i, q_(i-1) subset p_i [x] + (x)$ 而后者是极大理想。之前证明了纤维维度为 $1$，进而必有 $q_i = p_i [x] + (x)$，由极大性可得 $i$ 只能为 $s$，进而 $s = dim A + 1$，证毕
+    若 $q_i inter A != q_(i - 1) inter A, forall i$，则 $s <= dim A$ 与之前的下界矛盾。\
+    因此设 $q_i inter A = q_(i-1) inter A = p_i$，显有 $q_i, q_(i-1) subset p_i [x] + (x)$ 而后者是极大理想。之前证明了纤维维度为 $1$，进而必有 $q_i = p_i [x] + (x)$，由极大性可得 $i$ 只能为 $s$，进而 $s = dim A + 1$，证毕

@@ -384,7 +384,7 @@
        容易验证 $pi$ 是闭集\
        我们需要处理绝对值，虽然理论上不能求导，但我们可以不严格的求导得到：
        $
-       diff I(x) = mu diff norm(x)_d
+       partial I(x) = mu partial norm(x)_d
        $<informallyD>
        为了拓展拉格朗日乘子法，注意到我们在这里处理的函数都是凸的，一元的情形上它单侧导数总存在，且几乎处处可微
        #definition[次梯度][
@@ -392,23 +392,23 @@
         $
         G = {g in RR^n | forall y in X, f(y) >= f(x) + g^T (y - x)}
         $
-        称 $G$ 中所有元素都是 $f$ 在 $x$ 处的某个次梯度，有时也将 $G$ 记作 $diff f$，称为 $f$ 的次梯度\
+        称 $G$ 中所有元素都是 $f$ 在 $x$ 处的某个次梯度，有时也将 $G$ 记作 $partial f$，称为 $f$ 的次梯度\
         当 $f$ 具有一些良好性质时，次梯度是存在（非空）的
        ]
        #proposition[][
         设 $f$ 是开区域 $C$ 上的凸函数：
-        - 若于 $x$ 点，可微，则 $diff x = {triangle.b f(x)}$
-        - 若 $alpha >0$，则 $diff (alpha x) = alpha diff x$\
+        - 若于 $x$ 点，可微，则 $partial x = {triangle.b f(x)}$
+        - 若 $alpha >0$，则 $partial (alpha x) = alpha partial x$\
         - 设 $g$ 是另一个区域上的凸函数，则：
           $
-          diff(f + g) = diff f + diff g
+          partial(f + g) = partial f + partial g
           $
-        - 以上两条给出 $diff$ 是（半空间意义下）的线性算子
-        - $diff f$  是闭的凸集
+        - 以上两条给出 $partial$ 是（半空间意义下）的线性算子
+        - $partial f$  是闭的凸集
         - 设 $f$ 一次齐次，则：
-          - 任取 $s in diff f(x)$，将有 $f(x) = s^T x$
-          - 任取 $s in diff f(y)$，将有 $f(x) >= s^T x$
-        - $diff abs(x) = "Sgn(x)"$，其中：
+          - 任取 $s in partial f(x)$，将有 $f(x) = s^T x$
+          - 任取 $s in partial f(y)$，将有 $f(x) >= s^T x$
+        - $partial abs(x) = "Sgn(x)"$，其中：
           $
           "Sgn"(x) = cases(
             {1} quad x> 0,
@@ -420,13 +420,13 @@
        #lemma[][
           设 $C$ 是开区域，$x$ 是其上的最小值点，则：
           $
-          0 in diff f(x)
+          0 in partial f(x)
           $
           反之，若上式成立，则 $x$ 是最小值点
        ]
        在@informallyD 中，等号不应该理解为集合间的相等，而是集合相交非空。计算：
        $
-       (diff norm(x))_j = d_j "Sgn"(x_j) := D "Sgn"(x)
+       (partial norm(x))_j = d_j "Sgn"(x_j) := D "Sgn"(x)
        $
        其中 $"Sgn"(x)$ 定义为 $product_i "Sgn"(x_i) in RR^n$（作为子集的外积）\
        对于另一侧，将 $I(x)$ 看作复合函数 $I(x) = norm(B x)_1$，其中 $B$ 是关联矩阵，$norm(x)_1 = sum_i abs(x_i)$ 
@@ -443,11 +443,11 @@
        #lemma[][
         若 $A$ 列满秩，有（某种意义上的链式法则）：
         $
-        diff f = A^T diff h(A x + b)
+        partial f = A^T partial h(A x + b)
         $
        ]
        #proof[
-        利用@convexity，这当然是凸函数。为了计算 $diff f(x_0)$，设：
+        利用@convexity，这当然是凸函数。为了计算 $partial f(x_0)$，设：
         $
         forall x in RR^n, f(x) - f(x_0) >= g^T (x - x_0)
         $
@@ -455,27 +455,27 @@
         $
         h(A x + b) - h(A x_0 + b) >= g^T  (x - x_0)
         $<eq1>
-        任取 $t in diff h(A x_0 + b)$，有：
+        任取 $t in partial h(A x_0 + b)$，有：
         $
         h(y) - h(A x_0 + b) >= t^T (y - A x_0 - b)
         $<eq2>
-        - 设 $t  in diff h(A x_0 + b)$，在@eq2 中取 $y = A x + b, g = A^T t$ 即得@eq1 恒成立，进而 $A^T t in diff f(x_0)$，故 $A^T diff h(A x_0 + b) subset diff f(x_0)$
-        - 反之，若 $x -> A x + b: RR^m -> RR^n$ 是满射，任取 $g = A^T t in diff f(x_0)$，有：
+        - 设 $t  in partial h(A x_0 + b)$，在@eq2 中取 $y = A x + b, g = A^T t$ 即得@eq1 恒成立，进而 $A^T t in partial f(x_0)$，故 $A^T partial h(A x_0 + b) subset partial f(x_0)$
+        - 反之，若 $x -> A x + b: RR^m -> RR^n$ 是满射，任取 $g = A^T t in partial f(x_0)$，有：
           $
           forall y = A x + b in RR^m, h(y) - h(A x_0 + b) >= (t^T) (y - A x_0 - b)
           $
-          换言之 $t in A^T diff h(A x_0 + b) => diff f(x_0) subset A^T diff h(A x_0 + b)$
-        综上，当上述映射是满射（也即 $A$ 列满秩）时，有 $diff f(x_0) = A^T diff h(A x_0 + b)$
+          换言之 $t in A^T partial h(A x_0 + b) => partial f(x_0) subset A^T partial h(A x_0 + b)$
+        综上，当上述映射是满射（也即 $A$ 列满秩）时，有 $partial f(x_0) = A^T partial h(A x_0 + b)$
        ]
        由引理我们得到：
        $
-       diff I(x) = B^T "Sgn"(B x)\
+       partial I(x) = B^T "Sgn"(B x)\
        = {sum_({i, j} in E) z_(i j)(x) | z_(i j) in "Sgn"(x_i - x_j) and z_(i j) = - z_(j i), forall i, j}
        $
        #definition[][
         称 $(u, x)$ 是 $Delta_1-$特征对，如果：
         $
-        diff I(x) sect mu D "Sgn"(x) != emptyset
+        partial I(x) inter mu D "Sgn"(x) != emptyset
         $
         
        ]
@@ -498,11 +498,11 @@
           $
           A = {i in V | y_i = 1}
           $
-          则取 $v in diff I(y) sect mu D "Sgn"(y)$，将有：
+          则取 $v in partial I(y) inter mu D "Sgn"(y)$，将有：
           $
           "cut"(A) = I(y) = v^T y = sum_(i in A) v_i = sum_(i in A) mu d_i = mu "vol"(A)
           $
-          （这里运用了 $I(y)$ 一次齐次，因此 $I(y) = v^T y, forall y in diff I(y)$
+          （这里运用了 $I(y)$ 一次齐次，因此 $I(y) = v^T y, forall y in partial I(y)$
           证毕
        ]
 
@@ -519,13 +519,13 @@
       #proof[
         设 $g(c, x) = sum_(i in V) d_i abs(x_i -c)$，则：
         $
-        0 in diff g(0, x) = sum_(i in V) d_i "Sgn"(x_i) <=> c = 0 "是 " g(c, x) "的最小值点" <=> 0 in "median"_d (x) 
+        0 in partial g(0, x) = sum_(i in V) d_i "Sgn"(x_i) <=> c = 0 "是 " g(c, x) "的最小值点" <=> 0 in "median"_d (x) 
         $
       ]        
 
       容易验证 $(0, arrow(1))$ 成为一个 $Delta_1$ 特征对，从而设 $mu > 0$ 是非零的特征值 $x$ 是一个对应的特征向量，我们希望依次验证：
       - $mu = I(x)$\
-        类似的，取 $v in I(x) sect mu D "Sgn"(x)$，有：
+        类似的，取 $v in I(x) inter mu D "Sgn"(x)$，有：
         $
         I(x) = v^T x = mu sum_(i in V) d_i "Sgn"(x_i) x_i = mu norm(x)_(1, d) = mu
         $
@@ -538,7 +538,7 @@
         若 $mu != 0$，则上式表明 $0 in sum_(i in V)  d_i "Sgn"(x_i) $
       - $h(G)$ 确实是特征值\
         这里注意到 $pi = {x in RR^n|0 in "median"_d (x) and norm(x)_(1, d) =1}$ 是有界闭集，也是紧集，连续函数在紧集上当然可以取得最小值，前面已经证明了最小值就是 $h(G)$，因此可以 $x in pi$  使得 $I(x) = h(G)$
-        由 $0 in "median"_d (x)$ 知可以取得 $v in diff norm(x)_(1, d)$ 使得 $v^T 1 = 0$\
+        由 $0 in "median"_d (x)$ 知可以取得 $v in partial norm(x)_(1, d)$ 使得 $v^T 1 = 0$\
         往证：$forall y in RR^n, I(y) - h(G) v^T y >= 0 = I(x) - h(G) norm(x)_(1, d)$
         - 如若不然，设 $y$ 使得上式不成立，令：
           $
@@ -552,9 +552,9 @@
           &= 1/(norm(y)_(1, d)) (I(y)-h(G)v^T y) < 0
           $
           表明 $I(y'') < h(G) v^T y <= h(G) norm(y)_(1,d) = h(G)$，注意到 $y in pi$，矛盾！\
-          （这里利用了若 $f(x)$ 是一次齐次的凸函数，则 $f(y) >= v^T y, v in diff f(x)$）
+          （这里利用了若 $f(x)$ 是一次齐次的凸函数，则 $f(y) >= v^T y, v in partial f(x)$）
 
-        因此，我们有 $0 in diff(I(x) - h(G) v^T x) = diff I(x) - h(G) v subset diff I(x) - h(G) diff norm(x)_(1, d) $\
+        因此，我们有 $0 in partial(I(x) - h(G) v^T x) = partial I(x) - h(G) v subset partial I(x) - h(G) partial norm(x)_(1, d) $\
         上式即说明 $h(G), x$ 是一个特征对，证毕
   == 从 cheeger 问题到最大割
     或许我们会想用类似的思路解决最大割问题，然而稍加尝试便可发现，最大割问题将是在求凸函数的最大值，这使得我们用过的许多性质不再成立。类似的对 $p in{1, 2}$，（这个 $p$ 并不重要，只是和之前的结果统一）定义：
@@ -580,7 +580,7 @@
       #proof[
         如若不然，设 $x_0 in X$ 是凸函数 $f$ 在有界闭凸集 $X$ 内的最大值点，而 $x_0$ 不在 $X$ 的边界上，并且：
         $
-        f(diff X) subset (-infinity, f(x_0))
+        f(partial X) subset (-infinity, f(x_0))
         $
         此时 $x_0$ 是内点，不妨任取一个方向向量 $v$ 可设：
         $
@@ -669,7 +669,7 @@
       $
       f: P_2 (V) -> RR
       $
-      其中 $P_2 (V) = {(a, b) in V times V | a sect b = emptyset}$\
+      其中 $P_2 (V) = {(a, b) in V times V | a inter b = emptyset}$\
       称其 Lovasz 延拓为：
       $
       f^L (x) = sum_(i=0)^(n-1) (abs(x_(sigma(i+1))) - abs(x_(sigma(i)))) f(V_(sigma(i))^plus, V_(sigma(i))^minus)
@@ -1391,7 +1391,7 @@
     $
     其中 $FG_N$ 是指全网格（Full grid），具体定义为：
     $
-    FG_N = ([-N, N] sect ZZ)^d
+    FG_N = ([-N, N] inter ZZ)^d
     $
     容易计算其中约有 $(2 N)^d$ 个网格点。即使有高效算法 $FFT$ 在维度较高的情况下计算量也是不可接受的，这是维度灾难的体现之一，例如 $d = 6, n = 100$ 时假设使用两字节的浮点数，将需要空间：
     $
@@ -2081,7 +2081,7 @@
         #theorem[Koksma-Hlawka 不等式][
           设 $f(x)$ 满足：
           $
-          (diff^d)/(diff x_1 diff x_2 ... diff x_n) f in C(Omega)
+          (partial^d)/(partial x_1 partial x_2 ... partial x_n) f in C(Omega)
           $
           则对任意取点方案 $P$ 均有：
           $
@@ -2266,7 +2266,7 @@
         在 QMC(Quasi Monte-Carlo) 中，有：
         $
         abs(I f - Q f) &<= sum_(u subset ZZ_d, u != emptyset) alpha_u norm(f_u)\
-        where &norm(f_u)^2 = integral_([0, 1]^(abs(u)))^() abs((diff^(abs(u)) f_u) / (diff xv_u) ) dif xv_u\
+        where &norm(f_u)^2 = integral_([0, 1]^(abs(u)))^() abs((partial^(abs(u)) f_u) / (partial xv_u) ) dif xv_u\
         &alpha_u "是只依赖于积分点投影的正常数"
         $
       ]
@@ -2314,7 +2314,7 @@
     为了完整描述白癜风的的过程，还需要考虑每点处的浓度平衡破坏如何扩散到周围。可以用扩散模型描述。设区域 $V$ 内有物质，其浓度为 $c$，有以下几个方程：
     - 守恒方程：
       $
-      (diff)/(diff t) integral_(V)^() c dif v = - integral_(partial V)^() Jv dot dif S
+      (partial)/(partial t) integral_(V)^() c dif v = - integral_(partial V)^() Jv dot dif S
       $
       其中 $Jv$ 是扩散通量，表示通过单位面积的粒子速率
     - Gauss-Green 公式：
@@ -2328,7 +2328,7 @@
       其中 $D$ 为扩散系数，可能依赖于空间位置
     最终得到：
     $
-    (diff)/(diff t) integral_(V)^() c dif v = integral_(V)^() nabla (D nabla c)  dif v
+    (partial)/(partial t) integral_(V)^() c dif v = integral_(V)^() nabla (D nabla c)  dif v
     $
     由区域的任意性可得：
     $
@@ -2384,13 +2384,13 @@
       $<E>
       #let hb = $overline(h)$
       #let vv = $bold(v)$
-      使用一次量子化，也即用 $i hb diff/(diff t)$ 代替 $E$，用 $-i hb gradient$ 替换动量 $m vv$：
+      使用一次量子化，也即用 $i hb partial/(partial t)$ 代替 $E$，用 $-i hb gradient$ 替换动量 $m vv$：
       $
-      i hb diff/(diff t) = (-i hb  gradient)^2/(2 m)
+      i hb partial/(partial t) = (-i hb  gradient)^2/(2 m)
       $
       两边乘以 $psi(vv, t)$（称为波函数），有：
       $
-      i hb diff/(diff t) psi(xv, t) = (-i hb gradient)^2/(2 m) psi(xv, t) = - hb/(2m) laplace psi(xv, t)
+      i hb partial/(partial t) psi(xv, t) = (-i hb gradient)^2/(2 m) psi(xv, t) = - hb/(2m) laplace psi(xv, t)
       $
       这就是薛定谔方程（Schrödinger equation）。假设考虑氢原子周围电子，补充势能项，也即：
       $
@@ -2398,7 +2398,7 @@
       $
       并无妨设中心为零，将有：
       $
-      i hb diff/(diff t) psi(xv, t) =  - (hb/(2m) + 1/(4 pi epsilon_0) e^2/norm(x)) laplace psi(xv, t)
+      i hb partial/(partial t) psi(xv, t) =  - (hb/(2m) + 1/(4 pi epsilon_0) e^2/norm(x)) laplace psi(xv, t)
       $
       同时还可以得到不含时间的方程：
       $
@@ -2412,7 +2412,7 @@
       $
       做与之前类似的操作，得到：
       $
-      1/c^2 (diff^2)/(diff t^2) psi - gradient^2 psi + (m^2 c^2)/hb psi = 0
+      1/c^2 (partial^2)/(partial t^2) psi - gradient^2 psi + (m^2 c^2)/hb psi = 0
       $
       然而，这个方程可能导致 $psi^2$ 可能取负值，当时人们并不接受这个观点。狄拉克认为，应该使用：
       $
@@ -2442,7 +2442,7 @@
       $
       最后得到方程：
       $
-      i hb (diff)/(diff t) psi = (- i hb c alpha dot gradient + m c^2 beta) psi
+      i hb (partial)/(partial t) psi = (- i hb c alpha dot gradient + m c^2 beta) psi
       $
       同样分裂出空间部分，可以得到类似的特征值问题 $H phi = epsilon phi$，其中 $H in M_(4 times 4)(CC), phi in CC^4$，也即是一个矩阵方程。注意到 $phi$ 有四个分量，狄拉克认为，前两个分量对应自旋，后两个分量描述的是所谓“反电子”，而带正电的电子确实被实验证明存在。
 
@@ -2460,7 +2460,7 @@
       - 随机方法
       这里主要介绍的是密度泛函理论。首先对方程中做玻恩-奥本海默近似，也即假设：
       $
-      phi(r_1, .., r_N, R_1, ..., R_M) = psi(r_1, r_2, ..., r_N) psi'(R_1, ..., R_M)
+      phi (r_1, .., r_N, R_1, ..., R_M) = psi (r_1, r_2, ..., r_N) psi'(R_1, ..., R_M)
       $
       其中 $r$ 是电子部分，$R$ 是原子核部分。这个分离来源于电子的运动远比原子核部分快，并且考虑方程：
       $

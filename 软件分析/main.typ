@@ -565,7 +565,7 @@
         并的计算也是类似的，我们因此我们可以用二元组 $(gen, kill)$ 来表示一个转换函数，运算定义为：
         $
           (gen_1, kill_1) compose (gen_2, kill_2) = (gen_1 union (gen_2 - kill_1), kill_1 union kill_2)\
-          (gen_1, kill_1) sup (gen_2, kill_2) = (gen_1 union gen_2, kill_1 sect kill_2)
+          (gen_1, kill_1) sup (gen_2, kill_2) = (gen_1 union gen_2, kill_1 inter kill_2)
         $
 
         事实上，计算进入节点到当前节点转换函数的表示本身也是标准的数据流分析，对于循环的处理方式也可以采用与数据流分析完全相同的方式，也即计算一个不动点。更进一步，它是满足单调性和分配性（因此等价于分别计算每一条路径，也就意味着与原来数据流分析相比是完全精确的）
@@ -633,7 +633,7 @@
 
       指向分析一个实用的目的是用于别名分析。一般的，别名分析导出如下结果：
       - must aliases：一定指向同一地址，如果指向分析导出 $ba = bb and abs(ba) = abs(bb) = 1$
-      - must not aliases：一定不指向同一地址，如果 $ba sect bb = emptyset$
+      - must not aliases：一定不指向同一地址，如果 $ba inter bb = emptyset$
       - may aliases：可能指向同一地址
     === 其他指针分析
       ==== CFL 指针分析
