@@ -348,12 +348,12 @@
             设 $R$ 是交换环：
             + 设 $I_i$ 是一些理想，$P$ 是素理想。若：
                 $
-                    P subset sect_(i in I) I_i
+                    P subset inter_(i in I) I_i
                 $
                 则存在 $i$ 使得 $I_i subset P$
             + 若：
                 $
-                    P = sect_(i in I) I_i
+                    P = inter_(i in I) I_i
                 $
                 则 $P = I_i$
             + 设 $P_i$ 是一些素理想，$I$ 是理想且：
@@ -368,7 +368,7 @@
         #proof[
             若对每个 $i$，存在 $x_i$ 使得 $x_i in.not P$，则：
             $
-            product_i x_i in sect_(i in I) I_i
+            product_i x_i in inter_(i in I) I_i
             $
             又由素理想定义：
             $
@@ -376,12 +376,12 @@
             $
             这表明：
             $
-            P subset.not sect_(i in I) I_i
+            P subset.not inter_(i in I) I_i
             $
 
             对于结论二，天生有：
             $
-                P = sect_(i in I) I_i subset I_i 
+                P = inter_(i in I) I_i subset I_i 
             $
             因此结论成立
 

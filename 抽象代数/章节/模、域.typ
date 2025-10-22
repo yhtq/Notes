@@ -909,26 +909,26 @@
       给定一个交换群 $G$ 并设 $L$ 是域，$H$ 的一个值在 $L$ 中的特征是指 $H$ 到 $L^times$ 的一个群同态
     ]
     #theorem[Artin][
-      假设 $kai_i$ 是群 $G$ 在 $L$ 上的不同特征，则它们作为$H -> L^times$ 的函数是线性无关的
+      假设 $ϗ_i$ 是群 $G$ 在 $L$ 上的不同特征，则它们作为$H -> L^times$ 的函数是线性无关的
     ]<Artin-linear-independent>
     #proof[
-      假设它们线性相关，那么我们不妨假设 $kai_1, ..., kai_(r-1)$ 是极大无关组，并有：
+      假设它们线性相关，那么我们不妨假设 $ϗ_1, ..., ϗ_(r-1)$ 是极大无关组，并有：
       $
-      kai_r (h) = sum_i a_i kai_i (h) ,forall h in H
+      ϗ_r (h) = sum_i a_i ϗ_i (h) ,forall h in H
       $<linear_relation>
       既然它们是不同的特征，可设：
       $
-      kai_1 (h_0) != kai_r (h_0)
+      ϗ_1 (h_0) != ϗ_r (h_0)
       $
       由于任意性，我们知道：
       $
-      kai_r (h h_0) = sum_i a_i kai_i (h h_0)
+      ϗ_r (h h_0) = sum_i a_i ϗ_i (h h_0)
       $
       但特征是群同态，因此：
       $
-      kai_r (h) kai_r (h_0) = sum_i a_i kai_i (h) kai_i (h_0)
+      ϗ_r (h) ϗ_r (h_0) = sum_i a_i ϗ_i (h) ϗ_i (h_0)
       $
-      注意到域上的乘法群不含 $0$，因此 $kai_r (h_0) !=0$，上式将给出一个不同于@linear_relation 的线性表出，矛盾！
+      注意到域上的乘法群不含 $0$，因此 $ϗ_r (h_0) !=0$，上式将给出一个不同于@linear_relation 的线性表出，矛盾！
     ]
     #definition[循环扩张][
       称一个伽罗华扩张是循环的，如果它的伽罗华群是循环群
