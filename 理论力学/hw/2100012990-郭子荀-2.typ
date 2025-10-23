@@ -215,7 +215,7 @@
     $
       sqrt((9 g)/(8 l)), sqrt((3 g)/(l))
     $
-  == 4
+  == 5
     设细杆两端为 $A, B$，取 $theta$ 使得：
     $
       A = R be(theta)
@@ -226,13 +226,273 @@
     $
     - 势能为（$y$ 方向为竖直向下方向）：
       $
-        V = - m g (1, 0) (1/2 (A + B))\
-        = - 1/2 m g R (1, 0) (be(theta) + beo(theta))\
-        = - 1/2 m g R (cos theta - sin theta) 
+        V = - m g (0, 1) (1/2 (A + B))\
+        = - 1/2 m g R (0, 1) (be(theta) + beo(theta))\
+        = - 1/2 m g R (sin theta + cos theta)\
+        der(V, theta) = - 1/2 m g R (cos theta - sin theta)\
+        derN(V, theta, 2) = 1/2 m g R (cos theta + sin theta)
+      $
+      显然平衡位置为 $theta = pi/4$，此时 $derN(V, theta, 2) = 1/2 sqrt(2) m g R$
+    - 动能为：
+      $
+        T = 1/2 integral_(0)^(1)  vtnorm2(lambda A + (1 - lambda) B) m/l norm(dif (lambda A + (1 - lambda) B))\
+        = 1/2 integral_(0)^(1)  vtnorm2(lambda A + (1 - lambda) B) m/l norm(A - B) dif lambda\
+        = 1/2 m integral_(0)^(1)  vtnorm2(lambda A + (1 - lambda) B) dif lambda\
+        = 1/2 m integral_(0)^(1)  norm2(lambda vt(A) + (1 - lambda) vt(B)) dif lambda\
+        = 1/2 m integral_(0)^(1)  norm2(lambda R beo(theta) vt(theta) - (1 - lambda) R be(theta) vt(theta)) dif lambda\
+        = 1/2 m R^2  vt2(theta) integral_(0)^(1)  norm2(lambda beo(theta) - (1 - lambda) be(theta)) dif lambda\
+        = 1/2 m R^2  vt2(theta) integral_(0)^(1)  lambda^2 + (1 - lambda)^2 dif lambda\
+        = 1/2 m R^2  vt2(theta) 2 integral_(0)^(1)  lambda^2 dif lambda\
+        = 1/2 dot 2/3 m R^2  vt2(theta) \
+      $
+    平衡位置附近有拉氏方程：
+    $
+      2/3 m R^2 at(theta) + sqrt(2) m g R theta = 0\
+    $
+    振动频率为：
+    $
+      sqrt((3 sqrt(2) g) / (2 R))
+    $
+  == 6
+    设棒重心位置坐标为 $bO = vec(0, y)$ 两端坐标分别为:
+    $
+      bA = bO + 1/2 l be(theta)\
+      bB = bO - 1/2 l be(theta)
+    $
+    - 细棒动能为：
+      $
+        T = 1/2 I (vt(theta))^2 + 1/2 m vt2(y)\
+        = 1/2 ((1/12 m l^2) vt2(theta) + m vt2(y))\
+        = 1/2 quadFormSym(vec(vt(theta), vt(y)), diag(1/12 m l^2, m))
+      $
+    - 势能为：
+      $
+        V = - m g y + 1/2 k ((y + 1/2 l sin theta - l_0)^2 + (y - 1/2 l sin theta - l_0)^2)\
+        = - m g y + 1/2 k (2 (y - l_0)^2 + 2 (1/2 l)^2 sin^2 theta)\
+        der(V, (y, theta)) = - m g vec(1, 0) + 2 k vec(y - l_0, (1/2 l)^2 sin theta cos theta)\
+        derN(V, (y, theta), 2) = 2 k diag(1, (1/2 l)^2 (cos^2 theta - sin^2 theta))\
+      $
+      平衡位置满足：
+      $
+        - m g vec(1, 0) + 2 k vec(y - l_0, sin theta cos theta) = 0\
+        y - l_0 = m g/(2 k), sin theta cos theta = 0\
+      $
+      显然应该抛弃 $theta = pi/2$ 的情况，因此平衡位置只有 $theta = 0$，此时：
+      $
+        derN(V, (y, theta), 2) = 2 k diag(1, 1/4 l^2)
+      $
+    平衡位置附近就有：
+    $
+      diag(1/12 m l^2, m) vec(at(theta), at(y)) + 2 k diag(1/4 l^2, 1) vec(theta, y) = 0
+    $
+    因此两个频率分别为：
+    $
+      sqrt((6 k)/m), sqrt((2 k)/m)
+    $
+  == 7
+    设系统势能形式为 $V(norm(Xv_3 - Xv_2), norm(Xv_2 - Xv_1))$，记：
+    $
+      Xv = vec(Xv_1, Xv_2, Xv_3)\
+      rv = vec((Xv_3 - Xv_2), (Xv_2 - Xv_1)) = mat(0, -1, 1;-1, 1, 0) Xv\
+      Xv = mat(0, 1; (0, 1), 1; (1, 1), 1) vec(rv_1, Xv_1)\
+      = mat(0, 0;0, 1;1, 1) rv + vec(Xv_1, Xv_1, Xv_1) \
+    $
+    则：
+    - 动能为：
+      $
+        T = 1/2 quadFormSym(vt(Xv), M) where M = diag(m_1, m_2, m_3)\
+        partialDer(T, vt(rv)) = (vt(Xv))^T M partialDer(vt(Xv), vt(rv))\
+        = (vt(Xv))^T M partialDer(Xv, rv)\
+
+        partialDerN(T, vt(rv), 2) = (partialDer(Xv, rv))^T M partialDer(vt(Xv), vt(rv)) + (partial/(partial vt(rv)) partialDer(Xv, rv))^T M vt(Xv)\
+        = quadFormSym(partialDer(Xv, rv), M)
+      $
+    - 势能为：
+      $
+        V((Xv_3 - Xv_2), (Xv_2 - Xv_1))\
+        partialDer(V, Xv) = partialDer(V, rv) partialDer(rv, Xv)\
+        partialDerN(V, Xv, 2) = quadFormSym(partialDer(rv, Xv), partialDerN(V, rv, 2)) + (partialDerN(Xv, rv, 2))^T (partialDer(V, rv))^T\
+        = quadFormSym(partialDer(rv, Xv), partialDerN(V, rv, 2)) 
+      $（注意到 $Xv$ 和 $rv$ 是线性关系）
+    使用绝对坐标列出方程为：
+    $
+      2 partialDerN(T, vt(Xv), 2) at(Xv) + 2 partialDerN(V, Xv, 2) Xv = 0\
+      M at(Xv) + 2  quadFormSym(partialDer(rv, Xv), partialDerN(V, rv, 2)) Xv = 0
+    $
+    广义特征值问题为：
+    $
+      det(lambda^2 M + quadFormSym(partialDer(rv, Xv), partialDerN(V, rv, 2))) = 0
+    $
+    由于第二项不满秩，故 $lambda = 0$ 是一个解。此外，因为可以验证 $partialDer(r, Xv) partialDer(Xv, rv) = I$：
+    $
+      det(lambda^2 (partialDer(Xv, rv))^T M partialDer(Xv, rv) + (partialDer(Xv, rv))^T quadFormSym(partialDer(rv, Xv), partialDerN(V, rv, 2)) partialDer(Xv, rv))  = 0\
+      det(lambda^2 (partialDer(Xv, rv))^T M partialDer(Xv, rv) + partialDerN(V, rv, 2)) = 0\
+    $
+    该方程给出剩余的非零频率。同时，使用相对坐标列出方程为：
+    $
+      2 partialDerN(T, vt(rv), 2) at(rv) + 2 partialDerN(V, rv, 2) rv = 0\
+      2 quadFormSym(partialDer(Xv, rv), M) at(rv) + 2 partialDerN(V, rv, 2) rv = 0
+    $
+    它的广义特征值方程与上面一致，因此两个问题得到的频率是相同的。
+  == 8
+    设阻力为：
+    $
+      F = - K vt(Xv)
+    $
+    （带有广义力的）拉氏方程为：
+    $
+      A at(Xv) + V Xv = - K vt(Xv) \
+      A at(Xv) + K vt(Xv) + V Xv = 0
+    $
+    若设 $bY = vec(Xv, vt(Xv))$，立刻有：
+    $
+      vt(bY) = mat(0, 1; - Inv(A) V, -Inv(A) K) bY
+    $
+    一个基础解矩阵为：
+    $
+      exp{mat(0, 1; - Inv(A) V, -Inv(A) K)}
+    $
+    计算频率只需求上矩阵的特征值，不妨设 $lambda !=0 $，则：
+    $
+      Det(lambda I, 1;-Inv(A) V, lambda I - Inv(A) K) = 0\
+      Det(lambda I, 1;0, lambda I - Inv(A) K + 1/lambda Inv(A) V) = 0\
+      det(lambda I - Inv(A) K + 1/lambda Inv(A) V) = 0\
+      det(lambda^2 A - lambda K + V) = 0\
+    $
+    这些特征值的虚部即是新的频率，而实部代表了系统的衰减。
+= 戈 p321
+  == 1
+    设质点位置为 $Xv = vec(x, a x^4)$，则：
+    - 动能为：
+      $
+        T = 1/2 m (1 + (4 a x^3)^2) vt2(x)
+      $
+    - 势能为：
+      $
+        V = m g a x^4
+      $
+    拉氏方程为：
+    $
+      dif/(dif t) (m (1 + 16 a^2 x^6) vt(x)) + 4 m g a x^3 = 0\
+      m (1 + 16 a^2 x^6) at(x) + 96 m a^2 x^5 vt2(x) + 4 m g a x^3 = 0\
+      (1 + 16 a^2 x^6) at(x) + 96 a^2 x^5 vt2(x) + 4 g a x^3 = 0\
+    $
+    能量积分为：
+    $
+      T + V = 1/2 m (1 + (4 a x^3)^2) vt2(x) + m g a x^4 = E\
+      abs(vt(x)) = sqrt(2/m (E - m g a x^4)/(1 + 16 a^2 x^6))\
+    $
+    忽略小量并只考虑一半部分，有：
+    $
+      vt(x) = sqrt(2/m (E - m g a x^4))\
+      1/sqrt(2/m (E - m g a x^4)) dif x = dif t\
+    $
+    令 $F(x') = integral_(0)^(x') 1/sqrt(2/m (E - m g a x^4)) dif x$，则运动方程为：
+    $
+      x = Inv(F) (t), y = a x^4
+    $
+  == 2
+    取 $theta, phi$ 使得：
+    $
+      A = l be(theta)\
+      B = l (be(theta) + be(phi))
+    $
+    - 势能为（$x$ 方向为竖直向下方向）：
+      $
+        V = - (1, 0) (m_A g l be(theta) + m_B g l (be(theta) + be(phi)))\
+        = - g l (m_A + m_B) cos theta - m_B g l cos phi\
+        partialDerN(V, (theta, phi), 2) = g l diag((m_A + m_B) cos theta, m_B cos phi)
       $
     - 动能为：
       $
-        T = 1/2 integral_(0)^(1)  vt2(lambda A + (1 - lambda) B) m/l norm(dif (lambda A + (1 - lambda) B))\
-        = 1/2 integral_(0)^(1)  vt2(lambda A + (1 - lambda) B) m/l norm(A - B) dif lambda\
-        = 1/2 m integral_(0)^(1)  vt2(lambda A + (1 - lambda) B) dif lambda\
+        T = 1/2 m_A l^2 vtnorm2(be(theta)) + 1/2 m_B l^2 vtnorm2(be(theta) + be(phi))\
+        = 1/2 m_A l^2 vt2(theta) + 1/2 m_B l^2 (vt2(theta) + 2 beo(theta)^T beo(phi) vt(theta) vt(phi) + vt2(phi))\
       $
+      平衡位置处，$beo(theta)^T beo(phi) = (0, 1) vec(0, 1) = 1$，有：
+      $
+        partialDerN(V, (theta, phi), 2) = g l diag((m_A + m_B), m_B)\
+        T = 1/2 quadFormSym(vec(vt(theta), vt(phi)), mat(m_A + m_B, m_B;m_B, m_B))
+      $
+      因此振动方程为：
+      $
+        mat(m_A + m_B, m_B;m_B, m_B) l^2 at(vec(theta, phi)) + 2 g l diag((m_A + m_B), m_B) vec(theta, phi) = 0
+      $
+      广义特征值问题为：
+      $
+        det(lambda^2 l mat(m_A + m_B, m_B;m_B, m_B) + 2 g diag((m_A + m_B), m_B)) = 0\
+        Det((lambda^2 l + 2 g) (m_A + m_B), lambda^2 l m_B; lambda^2 l m_B, (lambda^2 l + 2 g) m_B) = 0\
+        Det((lambda^2 l + 2 g) (m_A + m_B), lambda^2 l; lambda^2 l m_B, (lambda^2 l + 2 g)) = 0\
+        (lambda^2 l + 2 g)^2 (m_A + m_B) = lambda^4 l^2 m_B\
+        lambda^2 sqrt(m_B l^2) = (lambda^2 l + 2 g) sqrt(m_A + m_B)\
+        lambda^2 = - (2 g sqrt(m_A + m_B))/(l (sqrt(m_A + m_B) -sqrt(m_B)))\
+        lambda = plus.minus i sqrt((2 g (sqrt(m_A + m_B)))/(l (sqrt(m_A + m_B) - sqrt(m_B))))\
+        "或者"\
+        lambda^2 sqrt(m_B l^2) = - (lambda^2 l + 2 g) sqrt(m_A + m_B)\
+        lambda^2 = - (2 g sqrt(m_A + m_B))/(l (sqrt(m_A + m_B) + sqrt(m_B)))\
+        lambda = plus.minus i sqrt((2 g (sqrt(m_A + m_B)))/(l (sqrt(m_A + m_B) + sqrt(m_B))))
+      $
+      注意到：
+      $
+        sqrt(m_A + m_B)/(sqrt(m_A + m_B) - sqrt(m_B)) = (sqrt(m_A + m_B) (sqrt(m_A + m_B) + sqrt(m_B)))/(m_A)\
+        = (m_A + m_B + sqrt(m_B (m_A + m_B)))/(m_A)\
+        sqrt(m_A + m_B)/(sqrt(m_A + m_B) + sqrt(m_B)) = (m_A + m_B - sqrt(m_B (m_A + m_B)))/(m_A)\
+      $
+      当然 $m_B$ 远小于 $m_A$ 时，上面两式都近似为 $1$。
+
+      对于后面的结论，注意到设：
+      $
+        bY = vec(theta, phi, vt(theta), vt(phi))
+      $
+      则微分方程等价于：
+      $
+        vt(bY) = mat(0, I; - Inv(A) V, 0) bY
+      $
+      方程通解为：
+      $
+        bY = P diag(e^(i omega_1 t), e^(- i omega_1 t), e^(i omega_2 t), e^(- i omega_2 t)) bC
+      $
+      也即：
+      $
+        vec(theta, phi) = (I, 0) P diag(e^(i omega_1 t), e^(- i omega_1 t), e^(i omega_2 t), e^(- i omega_2 t)) bC \
+        vt(vec(theta, phi)) = (0, I) P diag(e^(i omega_1 t), e^(- i omega_1 t), e^(i omega_2 t), e^(- i omega_2 t)) bC \
+      $
+      其中 $P$ 是特征向量矩阵。计算广义特征向量：
+      $
+        mat((lambda^2 l + 2 g) (m_A + m_B), lambda^2 l m_B; lambda^2 l m_B, (lambda^2 l + 2 g) m_B) alpha = 0\
+        ((1 + (2 g)/(lambda^2 l))(m_A + m_B), m_B) alpha = 0
+      $
+      - $lambda^2 l = - (2 g sqrt(m_A + m_B))/((sqrt(m_A + m_B) -sqrt(m_B)))$ 时：
+        $
+          ((m_A + m_B - (m_A + m_B - sqrt(m_B) sqrt(m_A + m_B))), m_B) alpha = 0\
+          (sqrt(m_A + m_B), sqrt(m_B)) alpha = 0\
+          alpha = vec(sqrt(m_B), - sqrt(m_A + m_B))\
+        $
+      - $lambda^2 l = - (2 g sqrt(m_A + m_B))/((sqrt(m_A + m_B) +sqrt(m_B)))$ 时：
+        $
+          ((m_A + m_B - (m_A + m_B + sqrt(m_B) sqrt(m_A + m_B))), m_B) alpha = 0\
+          ( - sqrt(m_A + m_B), sqrt(m_B)) alpha = 0\
+          alpha = vec(sqrt(m_B), sqrt(m_A + m_B))\
+        $
+      因此：
+      $
+        (I, 0) P = mat(sqrt(m_B), sqrt(m_B), sqrt(m_B), sqrt(m_B); - sqrt(m_A + m_B),- sqrt(m_A + m_B), sqrt(m_A + m_B), sqrt(m_A + m_B))\
+        = diag(sqrt(m_B), sqrt(m_A + m_B)) mat(1, 1, 1, 1; -1, -1, 1, 1)\
+        (I, 0) P diag(e^(i omega_1 t), e^(- i omega_1 t), e^(i omega_2 t), e^(- i omega_2 t)) bC = diag(sqrt(m_B), sqrt(m_A + m_B)) mat(e^(i omega_1 t), e^(- i omega_1 t), e^(i omega_2 t), e^(- i omega_2 t); - e^(i omega_1 t), - e^(- i omega_1 t), e^(i omega_2 t), e^(- i omega_2 t)) bC\
+      $
+      代入 $t = 0$ 情形：
+      $
+        vec(theta_0, 0) = diag(sqrt(m_B), sqrt(m_A + m_B)) mat(1, 1, 1, 1;-1, -1, 1, 1) bC\
+        vec(0, 0) = diag(sqrt(m_B), sqrt(m_A + m_B)) mat(omega_1, - omega_1, omega_2, -omega_2; -omega_1 , omega_1, omega_2, - omega_2) bC\
+        vec(0, 0) = mat(omega_1, - omega_1, 0, 0; 0, 0, omega_2, - omega_2) bC\
+      $
+      以上结合有：
+      $
+        mat(1, -1, 0, 0;0, 0, 1, -1; 1, 1, -1, -1) bC = 0\
+      $
+      换言之：
+      $
+        bC = k vec(1, 1, 1, 1)\
+        theta = k_1 (omega_1 cos (omega_1 t) + omega_2 cos (omega_2 t))\
+        phi = k_2 (- omega_1 cos (omega_1 t) + omega_2 cos (omega_2 t))\
+      $
+      因此每半个周期，一个质点位于静止位置，另一个质点达到最大偏离位置。
