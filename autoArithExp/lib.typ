@@ -27,19 +27,19 @@
 #let addContent = getBodyArr($+1$).at(0)
 #let subContent = getBodyArr($-1$).at(0)
 
+#let checkContent(x) = type(x) == content
 #let checkEmpty(x) = getBodyArr(x).len() == 0
-#let checkOne(x) = getBodyArr(x).at(0) == oneContent and getBodyArr(x).len() == 1
-#let checkZero(x) = getBodyArr(x).at(0) == zeroContent and getBodyArr(x).len() == 1
-#let checkNeg(x) = (getBodyArr(x).len() == 2 and getBodyArr(x).at(0) == subContent)
+#let checkOne(x) = checkContent(x) and getBodyArr(x).at(0) == oneContent and getBodyArr(x).len() == 1
+#let checkZero(x) = checkContent(x) and getBodyArr(x).at(0) == zeroContent and getBodyArr(x).len() == 1
+#let checkNeg(x) = checkContent(x) and (getBodyArr(x).len() == 2 and getBodyArr(x).at(0) == subContent)
 #let checkNegOne(x) = checkNeg(x) and checkOne(getBodyArr(x).at(1))
-#let checkAttachT(x) = getBodyArr(x).len() == 1 and type(getBodyArr(x).at(0)) == content and getBodyArr(x).at(0).has("t")
+#let checkAttachT(x) = checkContent(x) and getBodyArr(x).len() == 1 and type(getBodyArr(x).at(0)) == content and getBodyArr(x).at(0).has("t")
 #let getAttachT(x) = getBodyArr(x).at(0).at("t")
 #let getNegPart(x) = getBodyArr(x).at(1)
-#let checkAddOrSub(x) = getBodyArr(x).contains(addContent) or getBodyArr(x).contains(subContent)
-#let checkFrac(x) = getBodyArr(x).at(0).func() == math.frac
-#let checkIsVec(e) = {
-  getBody(e).func() == math.vec
-}
+#let checkAddOrSub(x) = checkContent(x) and getBodyArr(x).contains(addContent) or getBodyArr(x).contains(subContent)
+#let checkFrac(x) = checkContent(x) and getBodyArr(x).at(0).func() == math.frac
+#let checkIsVec(e) = checkContent(e) and getBody(e).func() == math.vec
+
 
 #let showIf(cond, body) = {
   if cond {
