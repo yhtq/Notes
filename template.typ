@@ -288,14 +288,14 @@
   autoFactorial(k)
 )
 
-#let quadForm(x, A, y) = autoMul(
-  autoPow(x, $T$),
+#let quadForm(x, A, y, trans-inner: false) = autoMul(
+  autoTrans(x, trans-inner: trans-inner),
   autoMul(A,
   y)
 )
 #let quadFormSym(x, A) = quadForm(x, A, x)
-#let tMul(A) = autoMul(autoPow(A, $T$), A)
-#let mulT(A) = autoMul(A, autoPow(A, $T$))
+#let tMul(A, trans-inner: false) = autoMul(autoTrans(A, trans-inner: trans-inner), A)
+#let mulT(A, trans-inner: false) = autoMul(A, autoTrans(A, trans-inner: trans-inner))
 
 #let orthogonal = math.op($tack.t$)
 #let orthogonalCom(x) = autoPow(x, orthogonal)

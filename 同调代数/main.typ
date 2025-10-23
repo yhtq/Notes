@@ -731,7 +731,91 @@
         Abel 范畴中，@coim-to-im 给出的态射是同构
       ]
       #proof[
-        #TODO
+        在之前的构造中有：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $$, 1),
+        node((0, 1), $X$, 2),
+        node((0, 2), $X'$, 3),
+        node((0, 3), $$, 4),
+        node((1, 0), $ker f$, 5),
+        node((1, 1), $coim f$, 6),
+        node((1, 2), $im f$, 7),
+        node((1, 3), $coker f$, 8),
+        arr(2, 3, $f$),
+        arr(2, 7, $exists! rho$, dashed_str),
+        arr(2, 6, $$),
+        arr(7, 3, $$),
+        arr(5, 2, $$),
+        arr(3, 8, $$)
+        )] 
+        继而：：
+                #align(center)[#commutative-diagram(
+        node((0, 0), $$, 1),
+        node((0, 1), $X$, 2),
+        node((0, 2), $X'$, 3),
+        node((0, 3), $$, 4),
+        node((1, 0), $ker f$, 5),
+        node((1, 1), $coim f$, 6),
+        node((1, 2), $im f$, 7),
+        node((1, 3), $coker f$, 8),
+        node((2, 2), $coker rho$, 9),
+        node((2, 1), $im rho$, 10),
+        arr(2, 3, $f$),
+        arr(2, 7, $exists! rho$, dashed_str),
+        arr(2, 6, $$),
+        arr(7, 3, $$),
+        arr(5, 2, $$),
+        arr(3, 8, $$),
+        arr(7, 9, $$),
+        arr(10, 7, $$),
+        arr(2, 10, $exists$, curve: 30deg, dashed_str),
+        )] 
+        其中 $X -> im rho$ 来自于 $(im f -> coker rho) compose rho = 0$，由于 $im rho -> im f -> X'$ 是单的，设它是一个核映射，也即：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $$, 1),
+        node((0, 1), $X$, 2),
+        node((0, 2), $X'$, 3),
+        node((0, 3), $H$, 4),
+        node((1, 0), $ker f$, 5),
+        node((1, 1), $coim f$, 6),
+        node((1, 2), $im f$, 7),
+        node((1, 3), $coker f$, 8),
+        node((2, 2), $coker rho$, 9),
+        node((2, 1), $im rho = ker k$, 10),
+        arr(2, 3, $f$),
+        arr(2, 7, $exists! rho$, dashed_str),
+        arr(2, 6, $$),
+        arr(7, 3, $$),
+        arr(5, 2, $$),
+        arr(3, 8, $$),
+        arr(7, 9, $$),
+        arr(10, 7, $$),
+        arr(2, 10, $$, curve: 30deg),
+        arr(3, 4, $k$)
+        )] 
+        注意到 $k compose f$ = $k compose (X -> ker k -> X') = 0$，立刻就有：
+                #align(center)[#commutative-diagram(
+        node((0, 0), $$, 1),
+        node((0, 1), $X$, 2),
+        node((0, 2), $X'$, 3),
+        node((0, 3), $H$, 4),
+        node((1, 0), $ker f$, 5),
+        node((1, 1), $coim f$, 6),
+        node((1, 2), $im f$, 7),
+        node((1, 3), $coker f$, 8),
+        node((2, 2), $coker rho$, 9),
+        node((2, 1), $im rho = ker k$, 10),
+        arr(2, 3, $f$),
+        arr(2, 7, $exists! rho$, dashed_str),
+        arr(2, 6, $$),
+        arr(7, 3, $$),
+        arr(5, 2, $$),
+        arr(3, 8, $$),
+        arr(7, 9, $$),
+        arr(10, 7, $$),
+        arr(2, 10, $$, curve: 30deg),
+        arr(3, 4, $k$)
+        )] 
       ]
       #definition()[][
         称 $X'$ 是 $X$ 的子对象，如果存在单态射 $iota : X' -> X$。称 $Y'$ 是 $Y$ 的商对象，如果存在满态射 $pi : Y -> Y'$。
@@ -994,7 +1078,7 @@
     #example[][
       $F[x] quo (x^2)$ 称为 $F$ 的对偶数代数
     ]
-    接下来，假设 $B$ 是一个含么的结合 $F-$ 代数，其中 $F$ 是域。
+    接下来，假设 $B$ 是一个含单位的结合 $F-$ 代数，其中 $F$ 是域。
     #definition()[表示][
       称代数同态 $B -> End V$ 是一个 $B$ 的表示（representation），其中 $V$ 是某个 $F-$ 向量空间。 
     ]
@@ -1148,7 +1232,7 @@
       $M_n (F)$ 是 $F$ 的单代数。（使用初等变换矩阵，对于任何交换环 $R$， $M_n (R)$ 的双边理想都形如 $M_n (I)$，其中 $I$ 是 $R$ 的理想）
     ]
     #definition()[半单][
-      称有限维单位结合代数 $B$ 是半单代数（semisimple algebra），如果它同构于单子代数的笛卡尔积。称结合代数上的模是半单的，如果它是单模的直和。
+      称有限维单位结合代数 $B$ 是半单代数（semisimple algebra），如果它同构于单子代数的有限笛卡尔积。称结合代数上的模是半单的，如果它是单模的直和。
     ]
     #theorem[Maschke][
       设 $Gamma$ 是群，$F$ 的特征不整除 $|Gamma|$，则群代数 $F[Gamma]$ 是半单代数。

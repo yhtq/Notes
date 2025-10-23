@@ -173,24 +173,24 @@
   #let vbar = $overline(v)$
   == 1
     === 1
-      #canvas(
-    {
-      plot.plot(
-        size: (13, 10),
-        // x-tick-step: 0.5,
-        y-tick-step: 1,
-        y-min:0, 
-        y-max: 3,
-        {
-          plot.add(
-            domain:(0, 5),
-            (x => if x > 3 {0} else {1 / 3}),
-            samples: 100,
-            )
-        },
-        )
-      }
-    )
+    //   #canvas(
+    // {
+    //   plot.plot(
+    //     size: (13, 10),
+    //     // x-tick-step: 0.5,
+    //     y-tick-step: 1,
+    //     y-min:0, 
+    //     y-max: 3,
+    //     {
+    //       plot.add(
+    //         domain:(0, 5),
+    //         (x => if x > 3 {0} else {1 / 3}),
+    //         samples: 100,
+    //         )
+    //     },
+    //     )
+    //   }
+    // )
     === 2
       $v_0 C = 1 => C = 1/v_0$
     === 3

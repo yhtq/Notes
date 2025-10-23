@@ -6,9 +6,14 @@
   logo: none,
   withChapterNewPage: true
 )
+#let beo = $be^orthogonal$
 #let rv = $bold(r)$
 #let vt(x) = $der(#x, t)$
+#let vt2(x) = $autoPow(vt(#x), 2)$
+#let vtnorm2(x) = $norm2(vt(#x))$
 #let at(x) = $derN(#x, t, 2)$
+#let LagrangeEquationL(L, X) = $dif/(dif t) partialDer(#L, vt(#X)) - partialDer(#L, #X) = 0$
+#let LagrangeEquationTV(T, V, X) = $dif/(dif t) partialDer(#T, vt(#X)) + partialDer(#V, #X) = 0$
 = 拉格朗日方程
   == 约束
     #example[][
