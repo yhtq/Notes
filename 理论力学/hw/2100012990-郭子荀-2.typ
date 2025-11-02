@@ -496,3 +496,44 @@
         phi = k_2 (- omega_1 cos (omega_1 t) + omega_2 cos (omega_2 t))\
       $
       因此每半个周期，一个质点位于静止位置，另一个质点达到最大偏离位置。
+  == 8
+    设位置坐标为:
+    $
+      Xv = vec(Xv_1, Xv_1 + bD_2, Xv_1 + bD_3) = mat(1, 0, 0;1, 1, 0;1, 0, 1) vec(Xv_1, bD_2, bD_3) := A bY
+    $
+    （矩阵的每个元素事实上是 $2 times 2$ 矩阵）选择 $Xv_1, bD_1, bD_2$ 为广义坐标，则：
+    - 动能为：
+      $
+        T = 1/2 m norm2(vt(Xv)) = 1/2 m quadFormSym(bY, A^T A)
+      $
+    - 势能为：
+      $
+        V = 1/2 k (norm2(bD_2 - l_0) + norm2(bD_3 - l_0) + norm2(bD_2 - bD_3 - sqrt(2) l_0))\
+        partialDer(V, bY) = k ((0, bD_2 - l_0, 0) + (0, 0, bD_3 - l_0) + (0, bD_2 - bD_3 - sqrt(2) l_0, -(bD_2 - bD_3 - sqrt(2) l_0)))\
+        partialDerN(V, bY, 2) = k mat(0, 0, 0;0, 2, -1;0, -1, 2)
+      $
+    - 平衡位置处满足：
+      $
+        bD_2 dot bD_3 = 0\
+        norm(bD_2) = norm(bD_3) = l_0\
+      $
+    列出小振动方程：
+    $
+      m A^T A at(bY) + k mat(0, 0, 0;0, 2, -1;0, -1, 2) bY = 0
+    $
+    广义特征值问题为：
+    $
+      det(lambda^2 m A^T A + k mat(0, 0, 0;0, 2, -1;0, -1, 2)) = 0\
+      det(lambda^2 m mat(1, 1,1 ;0, 1, 0;0, 0, 1) mat(1, 0, 0;1, 1, 0;1, 0, 1) + k mat(0, 0, 0;0, 2, -1;0, -1, 2)) = 0\
+      det(lambda^2 m mat(3, 1, 1;1, 1, 0;1, 0, 1) + k mat(0, 0, 0;0, 2, -1;0, -1, 2)) = 0\
+      Det(3 m lambda^2, m lambda^2, m lambda^2; m lambda^2, m lambda^2 + 2 k, - k; m lambda^2, - k, m lambda^2 + 2 k) = 0\
+      Det(3, 1, 1; m lambda^2, m lambda^2 + 2 k, - k; m lambda^2, - k, m lambda^2 + 2 k) = 0\
+      Det(3, 1, 1; 0, 2/3 m lambda^2 + 2 k, - k - 1/3 m lambda^2; 0, - k - 1/3 m lambda^2, 2/3 m lambda^2 + 2 k) = 0\
+      (2/3 m lambda^2 + 2 k)^2 - (k + 1/3 m lambda^2)^2 = 0\
+      2/3 m lambda^2 + 2 k = k + 1/3 m lambda^2\
+      lambda = plus.minus i sqrt(3 k/m)\
+      "或者"\
+      2/3 m lambda^2 + 2 k = - (k + 1/3 m lambda^2)\
+      lambda = plus.minus i 3 sqrt(k/m)
+    $
+    注意到我们所求的数都是指在 $M_3 (RR)$ 中的嵌入，因此实际特征值为 $0, plus.minus i sqrt(3 k/m), plus.minus i 3 sqrt(k/m)$ 各三重。

@@ -727,6 +727,84 @@
       #theorem()[Mitchell][
         每个 Abeliean $R-$线性范畴都同构于某个 $A$-模范畴的满子范畴，其中 $A$ 是某个 $R-$代数（未必交换）
       ]
+      #lemma[][
+        Abel 范畴中，既单又满的态射是同构
+      ]
+      #proof[
+        设 $f$ 既是单射又是满射，则一定存在：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $A$, 1),
+        node((0, 1), $B$, 2),
+        node((0, -1), $H$, 3),
+        node((0, 2), $K$, 4),
+        node((1, 0), $ker f$, 5),
+        node((1, 1), $coker f$, 6),
+        arr(1, 2, $f$),
+        arr(3, 1, $alpha$),
+        arr(2, 4, $beta$),
+        arr(5, 1, $$),
+        arr(2, 6, $$),
+        )]
+        使得 $ker beta = A, coker alpha = B$，显然 $f alpha = 0, beta f = 0$，立刻有：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $A = ker beta$, 1),
+        node((0, 1), $B = coker alpha$, 2),
+        node((0, -1), $H$, 3),
+        node((0, 2), $K$, 4),
+        node((1, -1), $ker f$, 5),
+        node((1, 2), $coker f$, 6),
+        node((1, 0), $coim f$, 7),
+        node((1, 1), $im f$, 8),
+          arr(1, 2, $f$),
+          arr(3, 1, $alpha$),
+          arr(2, 4, $beta$),
+          arr(5, 1, $$),
+          arr(2, 6, $$),
+          arr(1, 7, $$),
+          arr(8, 2, $$),
+          arr(7, 8, $$),
+          arr(3, 5, $exists$, dashed_str),
+          arr(6, 4, $exists$, dashed_str),
+        )]
+        进而：
+        $
+          beta compose (im f -> B) = im f -> B -> coker f -> K = 0
+        $
+        同理 $(A -> coim f) compose alpha = 0$，就有：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $A = ker beta$, 1),
+        node((0, 1), $B = coker alpha$, 2),
+        node((0, -1), $H$, 3),
+        node((0, 2), $K$, 4),
+        node((1, -1), $ker f$, 5),
+        node((1, 2), $coker f$, 6),
+        node((1, 0), $coim f$, 7),
+        node((1, 1), $im f$, 8),
+          arr(1, 2, $f$),
+          arr(3, 1, $alpha$),
+          arr(2, 4, $beta$),
+          arr(5, 1, $$),
+          arr(2, 6, $$),
+          arr(1, 7, $$),
+          arr(8, 2, $$),
+          arr(7, 8, $$),
+          arr(3, 5, $exists$, dashed_str),
+          arr(6, 4, $exists$, dashed_str),
+          arr(8, 1, $$, dashed_str),
+          arr(2, 7, $$, dashed_str),
+        )]
+        其中：
+        $
+          im f -> A -> coim f -> im f  -> B\
+          = im f -> A -> B\
+          = im f -> B
+        $
+        因为 $im f -> B$ 是单的，就有：
+        $
+          im f -> A -> coim f = id
+        $
+        因此上面的图表确实全部交换，进而 $B -> coim f -> im f -> A$ 就是 $f$ 的一个逆。
+      ]
       #proposition()[][
         Abel 范畴中，@coim-to-im 给出的态射是同构
       ]
@@ -794,7 +872,7 @@
         arr(3, 4, $k$)
         )] 
         注意到 $k compose f$ = $k compose (X -> ker k -> X') = 0$，立刻就有：
-                #align(center)[#commutative-diagram(
+        #align(center)[#commutative-diagram(
         node((0, 0), $$, 1),
         node((0, 1), $X$, 2),
         node((0, 2), $X'$, 3),
@@ -807,6 +885,7 @@
         node((2, 1), $im rho = ker k$, 10),
         arr(2, 3, $f$),
         arr(2, 7, $exists! rho$, dashed_str),
+        arr(8, 4, $exists! phi$, dashed_str),
         arr(2, 6, $$),
         arr(7, 3, $$),
         arr(5, 2, $$),
@@ -816,6 +895,55 @@
         arr(2, 10, $$, curve: 30deg),
         arr(3, 4, $k$)
         )] 
+        进而：
+        $
+          k compose (im f -> X') = im f -> X' -> coker f -> H = 0
+        $
+        根据 $ker k$ 的性质，就有：
+        #align(center)[#commutative-diagram(
+        node((0, 0), $$, 1),
+        node((0, 1), $X$, 2),
+        node((0, 2), $X'$, 3),
+        node((0, 3), $H$, 4),
+        node((1, 0), $ker f$, 5),
+        node((1, 1), $coim f$, 6),
+        node((1, 2), $im f$, 7),
+        node((1, 3), $coker f$, 8),
+        node((2, 2), $coker rho$, 9),
+        node((2, 1), $im rho = ker k$, 10),
+        arr(2, 3, $f$),
+        arr(2, 7, $exists! rho$, dashed_str),
+        arr(8, 4, $exists! phi$, dashed_str),
+        arr(2, 6, $$),
+        arr(7, 3, $$),
+        arr(5, 2, $$),
+        arr(3, 8, $$),
+        arr(7, 9, $$),
+        arr(10, 7, $$),
+        arr(2, 10, $$, curve: 30deg),
+        arr(3, 4, $k$),
+        arr(7, 10, $exists !psi$, curve: 15deg, dashed_str)
+        )]
+        同时由 $psi$ 的定义得：
+        $
+          (im f -> X) compose (ker k -> im f) compose psi \
+          = im f -> X 
+        $ 
+        注意到 $im f -> X$ 是单的，上式就是说：
+        $
+          (ker k -> im f) compose psi = id
+        $
+        也就是 $ker k -> im f$ 是同构。而：
+        $
+          im rho -> im f -> coker rho = 0
+        $
+        因此：
+        $
+          im f -> coker rho = 0
+        $
+        而它是满的，因此 $coker rho = 0$，不难证明此时必有 $rho$ 是满射。
+
+        回顾构造过程，这表明 $coim f -> im f$ 是满射。类似的，可以证明它是单射。根据引理，它是一个同构，证毕。
       ]
       #definition()[][
         称 $X'$ 是 $X$ 的子对象，如果存在单态射 $iota : X' -> X$。称 $Y'$ 是 $Y$ 的商对象，如果存在满态射 $pi : Y -> Y'$。
@@ -891,11 +1019,45 @@
         给定群 $G$，则构造单点范畴 $G$，其中态射 $Hom(-, -) = G$，函子范畴 $FunctorCat(G, kVect(k))$ 恰好就是 $k$-线性表示范畴
       ]
       #remark()[][
-        设 $F ->^alpha G ->^beta H$ 是一列函子和自然变换，我们称 $(beta dot alpha) : F -> H$ 是自然变换的水平合成。如果：$F ->^alpha H, G ->^beta I$ ，则称 $(beta compose alpha) : G F -> I H$ 就是自然变换的垂直合成。事实上，有：
-        $
-          (beta compose alpha)_X = beta_(G alpha_X)
-        $
-        这种合成也是满足结合性的。
+        设 $F ->^alpha G ->^beta H$ 是一列函子和自然变换，我们称 $(beta dot alpha) : F -> H$ 是自然变换的水平合成。如果：$F ->^alpha H, G ->^beta I$ ，则称 $(beta compose alpha) : G F -> I H$ 就是自然变换的垂直合成。
+      ]
+      #lemma[][
+        自然变换的垂直合成具有结合率
+      ]
+      #proof[
+        #align(center)[#commutative-diagram(
+        node((0, 0), $A$, 1),
+        node((0, 1), $B$, 2),
+        node((0, 2), $C$, 3),
+        node((0, 3), $D$, 4),
+        arr(1, 2, $F$, curve: 20deg),
+        arr(1, 2, $natTransb alpha$, curve: 20deg, label-pos: right),
+        arr(1, 2, $H$, curve: -20deg, label-pos: right),
+        arr(2, 3, $G$, curve: 20deg),
+        arr(2, 3, $natTransb beta$, label-pos: right, curve: 20deg),
+        arr(2, 3, $I$, curve: -20deg, label-pos: right),
+        arr(3, 4, $J$, curve: 20deg),
+        arr(3, 4, $natTransb gamma$, label-pos: right, curve: 20deg),
+        arr(3, 4, $K$, curve: -20deg, label-pos: right),
+        
+      )]
+      注意到自然变换的垂直合成满足：
+      $
+        (beta compose alpha) X = (beta (H X)) compose (G (alpha X)) 
+      $
+      对于任何 $X : A$ 我们有：
+      $
+        (gamma compose (beta compose alpha)) X : J G F X -> K I H X \
+        (gamma compose (beta compose alpha)) X
+        = (gamma (I H X)) compose (J ((beta compose alpha) X)) \
+        = (gamma (I H X)) compose (J (beta (H X))) compose (J (G (alpha X))) \
+      $
+      $
+        ((gamma compose beta) compose alpha) X
+        = ( (gamma compose beta) (H X) ) compose (J G (alpha X)) \
+        = (gamma (I H X)) compose (J (beta (H X))) compose (J (G (alpha X))) \
+      $
+      因此两者相等，结合性得证。
       ]
       #lemma[][
         假设：
@@ -1052,6 +1214,174 @@
         c_(1, 2) c_(2, 3) = c_(3, 2, 1)\
         c_(2, 3) c_(1, 2) = c_(1, 2, 3)
       $
+= 复形和同调
+  == 复形
+    通常而言，我们讨论的 Abel 范畴都具有足够多的投射对象或者入射对象。（有些特殊情形下，范畴的投射对象和入射对象是相同的，这种范畴称为正合范畴，例如有限群的表示）
+    #definition()[复形][
+      设 $C$ 是 Abel 范畴，称对象列 $ ... -> V_(i + 1) ->^(d_(i + 1)) V_i ->^(d_i) ...$ 是 $C$ 中的复形，如果对任意 $i$ 有：
+      $
+        d_i compose d_(i + 1) = 0
+      $
+      称 $X_i$ 是复形的第 $i$ 个对象，$d_i$ 是第 $i$ 个微分映射。这里我们采用递减的序号。
+
+      如果还有：
+      $
+        im d_(i + 1) = ker d_i
+      $
+      则称复形是正合/ exact / acyclic 的。
+    ]
+    #definition()[][
+      定义复形间的态射为一列态射 $f_i : V_i -> W_i$ 使得对任意 $i$ 有：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $...$, 1),
+      node((0, 1), $C_(n + 1)$, 2),
+      node((0, 2), $C_n$, 3),
+      node((0, 3), $...$, 4),
+      node((1, 0), $...$, 5),
+      node((1, 1), $D_(n + 1)$, 6),
+      node((1, 2), $D_n$, 7),
+      node((1, 3), $...$, 8),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(5, 6, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(1, 5, $$),
+      arr(2, 6, $f_(n + 1)$),
+      arr(3, 7, $f_n$),
+      arr(4, 8, $$),)]
+      自然的，可以定义一个 Abel 范畴的复形范畴 $ComplexCat(C)$，可以证明它也是 Abel 范畴。
+    ]
+    #example()[自由分解/Free Resolution][
+      设 $M$ 是 $C$ 中的对象，称正合复形：
+      $
+        ... -> P_2 -> P_1 -> P_0 -> M -> 0
+      $
+      是 $M$ 的自由分解（free resolution），如果每个 $P_i$ 都是自由对象。一定意义上，就是说将 $M$ 写成自由对象的满射像，再将 $ker$ 继续写成自由对象的满射像，依此类推。我们定义一个范畴有足够多的自由对象，如果任何对象都是自由对象的满射像。在这种情况下，任何对象都有自由分解。
+    ]
+    #theorem[][
+      设 $R = k[x_1, x_2, ..., x_n], M: Mod_R$，则 $M$ 有有限的自由分解。
+    ]
+    #definition()[投射分解][
+      类似地，称正合复形：
+      $
+        ... -> P_2 -> P_1 -> P_0 -> M -> 0
+      $
+      是 $M$ 的投射分解（projective resolution），如果每个 $P_i$ 都是投射对象。
+
+      我们定义范畴有足够多的投射对象是指，任何对象都是投射对象的满射像。显然，这种情况下，任何对象都有投射分解，只要不断取 $ker$ 的投射满同态像即可。有时，我们也会将投射分解写成：
+      $
+        ... -> P_2 -> P_1 -> P_0 -> 0
+      $
+      它仍然是复形，虽然不正合，但每个对象都是投射对象。
+    ]
+    #definition()[入射分解][
+      类似地，称正合复形：
+      $
+        0 -> M -> I_0 -> I_(-1) -> I_(-2) -> ...
+      $
+      是 $M$ 的入射分解（injective resolution），如果每个 $I^i$ 都是入射对象。
+
+      我们定义范畴有足够多的入射对象是指，任何对象都是入射对象的子对象。
+    ]
+    #lemma[][
+      $ModCat(R)$ 有足够多的自由对象/投射对象/入射对象。
+    ]
+    #remark[][
+      设 $F: C -> D$ 是 Abel 范畴之间的函子，则它作用于复形上得到的还是一个复形。事实上，它诱导了 $ComplexCat(C) -> ComplexCat(D)$ 的一个函子。当然，需要注意它未必保持正合性。
+    ]
+    #definition()[][
+      - 若 $C_n = 0, forall n < 0$，则称复形是正的。正对象构成了一个子范畴
+      - 类似的，若 $C_n = 0, forall n > 0$，则称复形是负的。负对象构成了一个子范畴
+    ]
+  == 同调
+    #definition()[][
+      设 $C$ 是一个复形：
+      - 称第 $n$ 个 chain $:= C_n$
+      - 称第 $n$ 个 cycle $ker d_n := Z_n (C)$
+      - 称第 $n$ 个 boundary $im d_(n + 1) := B_n (C)$
+      - 称第 $n$ 个同调对象 $H_n (C) := Z_n (C) quo B_n (C) = (ker d_n) quo (im d_(n + 1))$
+    ]
+    #theorem[][
+      设 $f: C -> D$ 是复形间的态射，对于任何 $n$，它诱导了同态：
+      $
+        f^*_n : H_n (C) -> H_n (D)
+      $
+    ]
+    #proof[
+      #align(center)[#commutative-diagram(
+      node((0, 0), $ker d_n$, 1),
+      node((0, 1), $H_n (C)$, 2),
+      node((1, 0), $D_n$, 3),
+      node((1, 1), $H_n (D)$, 4),
+      node((2, 0), $ker e_n$, 5),
+      arr(1, 2, $$),
+      arr(1, 3, $f'_n$),
+      arr(5, 4, $$),
+      arr(5, 3, $$),
+      )]
+      注意到：
+      $
+        e_n compose f'_n = e_n compose (f_n compose (ker d_n -> C_n)) = f_(n - 1) compose d_n compose (ker d_n -> C_n) = 0
+      $
+      因此自然诱导：
+            #align(center)[#commutative-diagram(
+      node((0, 0), $ker d_n$, 1),
+      node((0, 1), $H_n (C)$, 2),
+      node((1, 0), $D_n$, 3),
+      node((1, 1), $H_n (D)$, 4),
+      node((2, 0), $ker e_n$, 5),
+      node((0, -1), $im d_(n + 1)$, 7),
+      arr(1, 2, $$),
+      arr(1, 3, $f'_n$),
+      arr(5, 4, $$),
+      arr(5, 3, $$),
+      arr(1, 5, $exists f''$, curve: -40deg, dashed_str),
+      arr(7, 1, $$),
+      )]
+      只要验证：
+      $
+        im d_(n + 1) -> ker d_n -> ker e_n -> H_n (D) = 0
+      $
+      即可。根据满射性，只需证明：
+      $
+        C_(n + 1)  -> ker d_n -> ker e_n -> H_n (D) = 0\
+        C_(n + 1)  -> D_(n + 1) -> ker e_n -> H_n (D) = 0
+      $
+      这是显然的。
+    ]
+    #corollary()[][
+      $H_n$ 是 $ComplexCat(C) -> C$ 的函子
+    ]
+    #example()[][
+      显然：
+      $
+        0 -> B_n -> Z_n -> H_n -> 0\
+        0 -> Z_n -> C_n -> B_(n - 1) -> 0
+      $
+      是正合列。我们称之为基本正合列。
+    ]
+    #proposition()[][
+      设有复形的正合序列：
+      $
+        0 -> C' ->^i C ->^p C'' -> 0
+      $
+      我们就可以定义：
+      $
+        delta_n : H_n (C'') -> H_(n - 1) (C')
+      $
+      使得：
+      $
+        delta_n ([z''_n]) = [Inv(i_(n - 1)) d_n Inv(p_n) z''_n]
+      $
+      并且：
+      $
+        .. -> H_n (C') ->^i^*_n H_n (C) ->^p^*_n H_n (C'') ->^(delta_n) H_(n - 1) (C') -> ...
+      $
+      是长正合列。
+    ]
+
 = 范畴化  
   == A brief review of modules over associative algebras
     #definition()[结合代数][

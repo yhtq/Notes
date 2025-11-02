@@ -100,6 +100,7 @@
 #let bx = $bold(x)$
 #let bX = $bold(X)$
 #let bu = $bold(u)$
+#let bU = $bold(U)$
 #let bv = $bold(v)$
 #let be = $bold(e)$
 #let bp = $bold(p)$
@@ -484,6 +485,7 @@
 }
 #let Mod = math.op("Mod")
 #let ModCat(R) = $#R - bold(Mod)$
+#let ComplexCat(R) = $bold("Comp")(#R)$
 #let SetCat = $bold("Set")$
 #let FunctorCat(A, B) = $bold("Func")(#A, #B)$
 #let AdjoinPair(F, G) = $(#F, #G)$

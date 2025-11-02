@@ -866,8 +866,137 @@
       V = 1/2 m omega^2_0 x^2 - 1/3 m a x^3
     $
     其中三次项被称为非谐振项。代入拉氏方程，它不是线性的，通常很难解出。
-
-  
+= 哈密顿正则方程，泊松括号        vt(Qv) = partialDer(H, Pv)\
+        vt(Pv) = - partialDer(L, Qv)= partialDer(H, Qv)\
+  == 勒让德变换
+    设有函数 $F(bX, bY)$，定义新函数：
+    $
+      G(bU, bY) := (bU bX) - F(bX, bY)\
+      where bU = partialDer(F, bX)
+    $
+    则有：
+    $
+      dif G = (dif bU) bX + bU (dif bX) - partialDer(F, bX) (dif bX) -partialDer(F, bY) (dif bY) = (dif bU) bX -partialDer(F, bY) (dif bY)
+    $
+    立刻有：
+    $
+      partialDer(G, bU) = bX\
+      partialDer(G, bY) = - partialDer(F, bY)
+    $
+    这表明，$bU, bX$ 的关系是完全对称的。这个变换被称为*勒让德变换*。
+  == 正则方程
+    #definition()[广义动量][
+      定义广义动量为：
+      $
+        Pv := partialDer(L, vt(Qv))
+      $
+    ]
+    利用广义动量，拉氏方程变为：
+    $
+      vt(Pv) - partialDer(L, Qv) = 0
+    $
+    我们希望使用勒让德变换消去 $vt(Qv)$，事实上，定义：
+    $
+      H(Pv, Qv, t) := Pv vt(Qv) - L(Qv, vt(Qv), t)
+    $
+    #definition()[哈密顿函数][
+      定义哈密顿函数为：
+      $
+        H(Pv, Qv, t) := Pv vt(Qv) - L(Qv, vt(Qv), t)
+      $
+    ]
+    #example[][
+      只要 $T = quadFormSym(vt(Qv), A(Qv))$，也就是关于 $vt(Qv)$ 是二次齐次的，就立刻有：
+      $
+        H = T + V\
+      $
+      这是因为：
+      $
+        L = T(Qv, vt(Qv)) - V(Qv)\
+        Pv = partialDer(L, vt(Qv)) = partialDer(T, vt(Qv)) = 2 autoTrans(vt(Qv)) A(Qv)\
+        Pv vt(Qv) = 2 quadFormSym(vt(Qv), A(Qv)) = 2 T\
+        H = Pv vt(Qv) - L = 2 T - (T - V) = T + V
+      $
+      一般的，若：
+      $
+        T = quadFormSym(vt(Qv), A) + b^T vt(Qv) + T_0\
+      $
+      则：
+      $
+        H = quadFormSym(vt(Qv), A)  - T_0 + V\
+      $
+      这就是前面推导中的广义机械能守恒。实验上，因为 $H$ 代表的是能量，因此相比 $L$ 有着更清晰的物理意义。
+    ]
+    #proposition()[][
+      哈密顿函数满足正则方程：
+      $
+        vt(Qv) = partialDer(H, Pv)\
+        vt(Pv) = partialDer(L, Qv) = - partialDer(H, Qv)\
+      $
+    ]<Hamiltonian-equation>
+    #proof[
+      由勒让德变换给出
+    ]
+    我们称 @Hamiltonian-equation 为*哈密顿正则方程*。它与拉氏方程是等价的，但它将位置和动量对称地处理了。直观来说，@Hamiltonian-equation 中第一个方程给出了参数的变换，而第二个参数给出了力学方程。
+    #remark[][
+      如果系统中还有广义力 $bF$，则正则方程变为：
+      $
+        vt(Qv) = partialDer(H, Pv)\
+        vt(Pv) = bF + partialDer(L, Qv)= bF - partialDer(H, Qv)\
+      $
+    ]
+    #lemma[][
+      正则方程 @Hamiltonian-equation 成立时，哈密顿量 $H$ 满足：
+      $
+        partialDer(H, t) = vt(H)
+      $
+    ]
+    #proof[
+      $
+        vt(H) = partialDer(H, Qv) vt(Qv) + partialDer(H, Pv) vt(Pv) + partialDer(H, t)\
+        = - vt(Pv) vt(Qv) + vt(Qv) vt(Pv) + partialDer(H, t) = partialDer(H, t)
+      $ 
+    ]
+    #corollary()[][
+      - 若 $H$ 不显含某个广义动量，则它就是一个守恒量，此时该坐标称为*循环坐标*。
+      - 若 $H$ 不显含时间，则它就是一个守恒量。
+    ]
+    #example[][
+      考虑氦原子外的电子轨道，使用球坐标系，有：
+      $
+        T = 1/2 m (vt2(r) + r^2 vt2(theta) + r^2 sin^2 theta vt2(phi))\
+        V = 1/(4 pi epsilon_0) (- z e^2 / r) := - alpha/r
+      $   
+      因此：
+      $
+        L = T - V = 1/2 m (vt2(r) + r^2 vt2(theta) + r^2 sin^2 theta vt2(phi)) + alpha/r\
+        Pv_r = partialDer(L, vt(r)) = m vt(r)\
+        Pv_theta = m r^2 vt(theta)\
+        Pv_phi = m r^2 sin^2 theta vt(phi)\
+        H = vt(r) Pv_r + vt(theta) Pv_theta + vt(phi) Pv_phi - L\
+        = 1/(2 m) (Pv_r^2 + Pv_theta^2 / r^2 + Pv_phi^2 / (r^2 sin^2 theta)) - alpha/r 
+      $
+      事实上，$H$ 就是电子的机械能，注意到它不显含时间，因此是守恒的。代入第二个正则方程有：
+      $
+        vt(P_r) = Pv^2_theta /(m r^2) + Pv^2_phi /(m r^2 sin^2 theta) - alpha/r^2\
+        vt(Pv_phi) = 0\
+        vt(Pv_theta) = (Pv_phi^2 cos theta) / (m r^2 sin^3 theta)
+      $
+      表明 $phi$ 是一个循环坐标。就有：
+      $
+        m r^2 sin^2 theta vt(phi) = C 
+      $
+    ]
+    // $
+    //   m at(Xv) + k partialDer(1/norm(Xv), Xv) = 0\
+    //   m at(Xv) - k/2 1/norm(Xv)^3 Xv = 0\
+    //   X^T A X + b^T X + C = 0\
+    //   X^T A vt(Xv) + b^T vt(Xv) = 0\
+    //   X^T A at(Xv) + vt(Xv)^T A vt(Xv) + b^T at(Xv) = 0\
+    //   (A X + b)^T X = - C\
+    //   m quadFormSym(vt(Xv), A) + k/2 1/norm(Xv)^3 C = 0\
+    //   1/2 m norm2(vt(Xv)) - k/(2 norm(Xv)) = E\
+    // $
 
     
 

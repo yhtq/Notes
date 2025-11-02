@@ -164,10 +164,9 @@
 			"prefix": "vertical",
 			"scope": "typst",
 			"body": [
-				"arr($1, $2, $$3$, curve: 30deg),",
-				"arr($1, $2, $natTransb $4$, label-pos: left),",
-				"arr($1, $2, $natTransb $5$, label-pos: right),",
-				"arr($1, $2, $$6$, curve: -30deg),",
+				"arr($1, $2, $$3$, curve: 20deg),",
+				"arr($1, $2, $$natTransb $4$, label-pos: right, curve: 20deg),",
+				"arr($1, $2, $$5$, curve: -20deg, label-pos: right),",
 			]
 		},
 		"int":{
