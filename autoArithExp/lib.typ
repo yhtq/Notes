@@ -223,4 +223,4 @@
 #let evalSub(x, y) = {
 }
 #let bx = $bold(x)$
-// #repr(checkIsVec($vec(x, y)$.body))
+#repr($a b + 1$)

@@ -2,7 +2,7 @@
 
 //#import "typst-sympy-calculator.typ": *
 
-#import "@preview/lemmify:0.1.7": *
+#import "@preview/lemmify:0.1.8": *
 // #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 #import "@preview/showybox:2.0.3": showybox
 #import "autoArithExp/lib.typ": *

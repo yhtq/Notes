@@ -987,16 +987,100 @@
         m r^2 sin^2 theta vt(phi) = C 
       $
     ]
-    // $
-    //   m at(Xv) + k partialDer(1/norm(Xv), Xv) = 0\
-    //   m at(Xv) - k/2 1/norm(Xv)^3 Xv = 0\
-    //   X^T A X + b^T X + C = 0\
-    //   X^T A vt(Xv) + b^T vt(Xv) = 0\
-    //   X^T A at(Xv) + vt(Xv)^T A vt(Xv) + b^T at(Xv) = 0\
-    //   (A X + b)^T X = - C\
-    //   m quadFormSym(vt(Xv), A) + k/2 1/norm(Xv)^3 C = 0\
-    //   1/2 m norm2(vt(Xv)) - k/(2 norm(Xv)) = E\
-    // $
+  == 泊松括号，泊松形式正则方程
+    对于任何 $f(Qv, Pv, t)$，有：
+    $
+      vt(f) = partialDer(f, t) + vt(Pv) partialDer(f, Pv) + partialDer(f, Qv) vt(Qv)\
+    $
+    根据正则方程，上式等于：
+    $
+      partialDer(f, t) - partialDer(H, Qv) partialDer(f, Pv) + partialDer(f, Qv) partialDer(H, Pv)\
+    $
+    #definition()[泊松括号][
+      定义两个函数 $f, g$ 的*泊松括号*为：
+      $
+        [f, g] := partialDer(f, Qv) partialDer(g, Pv) - partialDer(g, Qv) partialDer(f, Pv)
+      $
+    ]
+    #corollary()[][
+      一定有：
+      $
+        vt(f) = partialDer(f, t) + [f, H]\
+      $
+    ]
+    #corollary()[泊松形式的正则方程][
+      $
+        vt(Qv) = partialDer(Qv, t) + [Qv, H] = [Qv, H]\
+        vt(Pv) = partialDer(Pv, t) + [Pv, H] = [Pv, H]\
+      $
+    ]
+    #lemma[][
+      泊松括号是反对称双线性的，并有：
+      - $
+        [f, bA bB^T] = partialDer(f, Qv) partialDer(bA bB^T, Pv) - partialDer(bA bB^T, Qv) partialDer(f, Pv)\
 
-    
+      $
+      - $
+          partialDer([f, g], t) = [partialDer(f, t), g] + [f, partialDer(g, t)]\
+        $
+    ]
+    #lemma[][
+      - $[Qv, Qv^T] = 0$
+      - $[Pv, Pv^T] = 0$
+      - $[Qv, Pv] = I$
+    ]
+    #lemma[][
+      $
+        [f, quadFormSym(Pv^T, A)] = [f, Pv^T] Pv A + Pv^T [f, Pv A] \
+        = [f, Pv] Pv A + Pv^T ( [f, A] Pv + Pv [f, A])\
+      $
+    ]
+    #proposition()[泊松恒等式][
+      对任意三个函数 $f, g, h$，都有：
+      $Pv^T + e A
+Pv^T + e A
+        [f, [g, h]] + [g, [h, f]] + [h, [f, g]] = 0
+      $
+    ]
+    #theorem[泊松定理][
+      若 $vt(f) = vt(g) = 0$，则 $vt([f, g]) = 0$
+    ]
+    #proof[
+      熟知：
+      $
+        vt([f, g]) = partialDer([f, g], t) + [ [f, g], H ]\
+        = [partialDer(f, t), g] + [f, partialDer(g, t)] + [ [f, g], H ]\
+        = - [ [f, H], g ] - [f, [g, H]] + [ [f, g], H ] \
+        = [g, [f, H]] - [f, [g, H]] - [H, [f, g]]\
+        = 0
+      $
+    ]
+    #example[][
+      电磁场中，给定广义势：
+      $
+        V' = e (phi - A^T vt(Xv))
+      $
+      广义动量为：
+      $
+        Pv = partialDer(L, vt(Xv)) = m (vt(Xv))^T + e A^T\
+        vt(Xv) = 1/m (Pv^T - e A)
+      $
+      有时，我们会称上面的动量为*场动量*。
+
+      哈密顿量为：
+      $
+        H = vt(Xv) Pv - L = 1/(2 m) norm2(Pv^T - e A) + e phi\
+      $
+      显然它就是机械能加上电势能。假设 $phi, A$ 是稳定的，就有 $H$ 是守恒量。同时：
+      $
+        [f, H] = partialDer(f, Qv) partialDer(H, Pv) - partialDer(H, Qv) partialDer(f, Pv)\
+        = partialDer(f, Qv) (1/m (Pv^T - e A)) - (e partialDer(phi, Qv) - e/m (Pv^T - e A) partialDer(A, Qv)) partialDer(f, Pv)\
+      $
+      进而：
+      $
+        vt(Qv) = [Qv, H] = 1/m (Pv^T - e A)\
+        vt(Pv) = [Pv, H] = e/m (Pv^T - e A) partialDer(A, Qv) - e partialDer(phi, Qv)
+      $
+    ]
+
 
