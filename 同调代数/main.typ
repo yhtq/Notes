@@ -1380,6 +1380,209 @@
         .. -> H_n (C') ->^i^*_n H_n (C) ->^p^*_n H_n (C'') ->^(delta_n) H_(n - 1) (C') -> ...
       $
       是长正合列。
+    ]<homotoolgy-connecting-morphism>
+    #theorem[Snake lemma][
+      设有以下交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $0$, 1),
+      node((0, 1), $A'$, 2),
+      node((0, 2), $A$, 3),
+      node((0, 3), $A''$, 4),
+      node((0, 4), $0$, 5),
+      node((1, 0), $0$, 6),
+      node((1, 1), $B'$, 7),
+      node((1, 2), $B$, 8),
+      node((1, 3), $B''$, 9),
+      node((1, 4), $0$, 10),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(4, 5, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(8, 9, $$),
+      arr(9, 10, $$),
+      arr(1, 6, $$),
+      arr(2, 7, $f$),
+      arr(3, 8, $g$),
+      arr(4, 9, $h$),
+      arr(5, 10, $$),)]
+      使得上下两行都是正合列，则存在正合列：
+      $
+        0 -> ker f -> ker g -> ker h ->^delta coker f -> coker g -> coker h -> 0
+      $
+    ]
+    #proof[
+      只需要补充若干个 $0$，就可以将题设视为复形的短正合列：
+      $
+        0 -> *' -> * -> *'' -> 0
+      $
+      套用 @homotoolgy-connecting-morphism，立刻就可以得到结论。
+    ]
+    #remark()[][
+      事实上，Snake lemma 和 @homotoolgy-connecting-morphism 是等价的，也可以反过来用 Snake lemma 推导出 @homotoolgy-connecting-morphism。
+    ]
+    #proposition()[][
+      设有
+      #align(center)[#commutative-diagram(
+      node((0, 0), $0$, 1),
+      node((0, 1), $A'$, 2),
+      node((0, 2), $A$, 3),
+      node((0, 3), $A''$, 4),
+      node((0, 4), $0$, 5),
+      node((1, 0), $0$, 6),
+      node((1, 1), $B'$, 7),
+      node((1, 2), $B$, 8),
+      node((1, 3), $B''$, 9),
+      node((1, 4), $0$, 10),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(4, 5, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(8, 9, $$),
+      arr(9, 10, $$),
+      arr(1, 6, $$),
+      arr(2, 7, $$),
+      arr(3, 8, $$),
+      arr(4, 9, $$),
+      arr(5, 10, $$),)]
+      其中 $A, B$ 都是复形，并记 $f : A -> B$， @homotoolgy-connecting-morphism 中诱导的长正合列分别为：
+      $
+        H (A), H (B)
+      $
+      则 $f$ 诱导了长正合列间的同态：
+      $
+        H_n (A) -> H_n (B)
+      $
+    ]
+    #proof[
+      除了连接部分，其他部分的结论都由 $H_n$ 的函子性立刻可得。对于连接部分，证明有些复杂，这里略过。
+    ]
+  == 同伦（Homotopic）
+    #definition()[][
+      称复形 $C, D$ 间的映射 $s$ 为 degree $k$ 的，如果它 $s_n : C_(n) -> D_(n + k)$
+    ]
+    #definition()[同伦][
+      设 $C$ 是 Abel 范畴，$A, B$ 是 $C$ 中的复形，$f, g : A -> B$ 是复形间的态射，称 $f$ 和 $g$ 同伦（homotopic），如果存在 degree $+1$ 的 $s$ 使得对任意 $n$ 有：
+      $
+        f - g = s d + d s
+      $
+      也即：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $C_(n + 1)$, 1),
+      node((0, 1), $C_n$, 2),
+      node((0, 2), $C_(n - 1)$, 3),
+      node((1, 0), $C'_(n + 1)$, 4),
+      node((1, 1), $C'_n$, 5),
+      node((1, 2), $C'_(n - 1)$, 6),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(1, 4, $f$),
+      arr(2, 5, $f$),
+      arr(3, 6, $f$),
+      arr(2, 4, $s$),
+      arr(3, 5, $s$),
+      )]
+      称 $h = {h_n}$ 是从 $f$ 到 $g$ 的同伦映射。
+
+      如果 $f$ 和 $0$ 同伦，则称 $f$ 是零伦。
+    ]
+    #lemma[][
+      同伦是等价关系。
+    ]
+    #definition()[同伦范畴][
+      给定 Abel 范畴 $C$，称 $C$ 的同伦范畴 $K(C)$ 是如下范畴：
+      - 对象是 $C$ 中的复形
+      - 态射是复形间态射的同伦等价类
+    ]
+    一般情况下，同伦范畴只是加法范畴，不一定是 Abel 范畴。
+    #lemma[][
+      设 $f, g$ 是同伦的，则它们诱导的同调群间的映射：
+      $
+        f^*_n, g^*_n : H_n (A) -> H_n (B)
+      $
+      相同
+    ]<homotoolgy-homotopic-maps>
+    #proof[
+      注意到：
+      $
+        (f - g) (ker d -> C) = (s d + d s) compose (ker d -> C) = d s (ker d -> C)\
+      $
+      意味着 $im ((f - g)|(ker d)) subset im d$，自然有 $f^* - g^* = 0$
+    ]
+    #definition()[可缩(contractiong)][
+      称复形 $C$ 是可缩的，如果 $id_C$ 是零伦。
+    ]
+    #proposition()[][
+      若复形是可缩的，则它是正合的。
+    ]
+    #proof[
+      由 @homotoolgy-homotopic-maps 可知，$1$ 诱导的同调群之间的映射与 $0$ 相同，因此同调群全为零，复形正合。
+    ]
+  == 导出函子
+    #theorem[比较定理][
+      设 $A$ 有两个投射分解 $P, P'$，$f : A -> A'$ 是态射，则它诱导复形之间的态射 $tilde(f) : P -> P'$，且任意两个这样的态射同伦。
+      #align(center)[#commutative-diagram(
+      node((0, 0), $...$, 1),
+      node((0, 1), $P$, 2),
+      node((0, 2), $A$, 3),
+      node((1, 0), $...$, 4),
+      node((1, 1), $P'$, 5),
+      node((1, 2), $A'$, 6),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(1, 4, $$),
+      arr(2, 5, $$),
+      arr(3, 6, $f$),
+      )]
+      根据投射模的性质，利用 $P' -> A'$ 是满射可以得到：
+            #align(center)[#commutative-diagram(
+      node((0, 0), $P_1$, 1),
+      node((0, 1), $P_0$, 2),
+      node((0, 2), $A$, 3),
+      node((1, 0), $P'_1$, 4),
+      node((1, 1), $P'_0$, 5),
+      node((1, 2), $A'$, 6),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(2, 5, $exists$, dashed_str),
+      arr(3, 6, $f$),
+      )]
+      下一步，延展图表得到：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $P_1$, 1),
+      node((0, 1), $P_0$, 2),
+      node((0, 2), $A$, 3),
+      node((1, 0), $P'_1$, 4),
+      node((1, 1), $P'_0$, 5),
+      node((1, 2), $A'$, 6),
+      node((2, 1), $im d'$, 7),
+      node((2, 2), $ker d'$, 8),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(2, 5, $exists$, dashed_str),
+      arr(3, 6, $f$),
+      arr(7, 5, $$),
+      arr(4, 7, $$, surj_str),
+      arr(7, 8, $$, bij_str),
+      arr(1, 8, $exists$, dashed_str, curve: 15deg),
+      arr(1, 4, $exists$, dashed_str)
+      )]
+      其中 $P_1 -> ker d'$ 是因为：
+      $
+        P_1 -> P_0 -> P'_0 -> A' = P_1 -> P_0 -> A -> A' = 0
+      $
+      如此，利用 $P'_1 -> im d'$ 的满射性可以得到 $P_1 -> P'_1$，追图可以得到交换性。依此类推，可以得到整个图表的态射 $tilde(f) : P -> P'$
     ]
 
 = 范畴化  

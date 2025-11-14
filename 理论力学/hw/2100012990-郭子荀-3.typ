@@ -286,3 +286,132 @@
       = m (l^2 vt2(theta) + a l omega e^orthogonal (omega t)^T e^orthogonal (theta) vt(theta)) - (1/2 m (a^2 omega^2 + l^2 vt2(theta) + 2 a l omega e^orthogonal (omega t)^T e^orthogonal (theta) vt(theta)) - m g (a sin(omega t) + l sin theta))\
       = 1/2 m (l^2 vt2(theta) - a^2 omega^2) + m g (a sin(omega t) + l sin theta)\
     $
+= 戈 P91
+  == 2
+    设球面上一闭合曲线为：
+    $
+      bX(t) = vec(theta(t), phi(t)),\
+      Phi(t) = e(bX(t)) = vec(cos theta(t) cos phi(t), cos theta(t) sin phi(t), sin theta(t)), t in [0, 1]\
+      e^orthogonal (theta, phi) = partialDer(e(theta, phi), vec(theta, phi)) = mat(- sin theta cos phi, -cos theta sin phi; -sin theta sin phi, cos theta cos phi; cos theta, 0)\
+      e'^T e = 0
+    $
+    则其长度为：
+    $
+      integral_(0)^(1) norm(dif Phi(t)) = integral_(0)^(1) norm(e^orthogonal (theta(t), phi(t)) vec(dif theta(t), dif phi(t)))\
+      integral_(0)^(1) norm(e^orthogonal (theta(t), phi(t)) vec(theta'(t), phi'(t))) dif t\
+    $
+    记 $E = tMul(e^orthogonal) = mat(1, 0;0, sin^2 theta)$，有：
+    $
+      f = norm(e^orthogonal (theta(t), phi(t)) vec(theta'(t), phi'(t)))\
+      \
+      partialDer(f, bX) = 1/(2 f) quadFormSym(bX', partialDer(E, bX))\
+      partialDer(f, bX') = 1/(2 f) (2 bX'^T E)
+    $
+    有守恒量：
+    $
+      1/(f) theta' = c\
+      theta' = c f\
+    $
+    不失一般性，可设 $theta'(0) = 0, theta(0) = 0$，而根据曲线的要求一定有 $f(0) != 0$ 立刻就有：
+    $
+      theta' = 0
+    $
+    这就得到了结论。
+    // 继而 $E$ 是常数，$partialDer(f, bX) = 0$，有：
+    // $
+    //   bX'^T E = C^T f\
+    //   C = vec(0, (sin^2 theta_0 phi' (0))/( f(0)))\
+    //   f = 1/(C^T C) bX'^T E C\
+    //   L = integral_()^() 1/(C^T C) bX'^T E C dif t\
+    //   = ((bX(1) - bX(0))^T E C)/(C^T C)\
+    //   = (bX(1) - bX(0))^T vec(0, f(0) / (phi' (0) ))\
+    //   = (phi(1) - phi(0)) phi' (0) sqrt(cos^2 theta_0)/(phi'(0))\
+    //   // phi' sin^2 theta_0 = c_0 sqrt((cos phi sin theta_0 - sin phi sin theta_0) phi')\
+    //   // phi' = c_0^2/(sin^3 theta_0) (cos phi - sin phi)
+    // $
+    // $
+    //   e''^T (e' times e) = (e_2 bX' bX' + e^orthogonal bX'')^T (e^orthogonal bX' times e bX)\
+    // $
+    // 欧拉-拉格朗日方程为：
+    // $
+    //   dif/(dif t) (partialDer(f, bX')) - partialDer(f, bX) = 0\
+    //   ((autoTrans(bX') partialDer(E, bX) bX' + autoTrans(bX'') E)f - (bX'^T E) f')/f^2 \
+    //   = 1/(2 f) quadFormSym(bX', partialDer(E, bX))\
+    //   quadFormSym(bX', partialDer(E, bX)) + 2 autoTrans(bX'') E - 2 f'/f bX'^T E = 0\
+
+    //   quadFormSym(bX', partialDer(E, bX)) + 2 autoTrans(bX'') E- 2 (1/(2 f^2) (quadFormSym(Xv', E))') bX'^T E = 0\
+    //   quadFormSym(bX', partialDer(E, bX)) + 2 autoTrans(bX'') E-  ((quadFormSym(Xv', E))')/(quadFormSym(Xv', E)) bX'^T E = 0\
+    //   quadFormSym(bX', partialDer(E, bX)) + 2 autoTrans(bX'') E-  (quadFormSym(Xv', partialDer(E, bX)) Xv' + 2 bX'^T E bX'' )/(quadFormSym(Xv', E)) bX'^T E = 0\
+    //   quadFormSym(Xv', partialDer(E, bX)) (quadFormSym(Xv', E) I  - mulT(bX') E) + 2 autoTrans(bX'') E (quadFormSym(Xv', E) I - mulT(bX') E) = 0\
+    //   (quadFormSym(Xv', partialDer(E, bX)) + 2 autoTrans(bX'') E) (quadFormSym(Xv', E) I  - mulT(bX') E) = 0\
+    //   quadFormSym(Xv', partialDer(E, bX)) + 2 autoTrans(bX'') E = c bX'^T E
+    //   // quadFormSym(bX', partialDer(E, bX)) + 2 E bX''-  bX'^T E  (quadFormSym(Xv', partialDer(E, bX)) Xv' + 2 bX'^T E bX'' )/(quadFormSym(Xv', E)) = 0\
+    //   // (partialDer(e^orthogonal, bX) bX' f - e^orthogonal f')/f = partialDer(e^orthogonal, bX) bX'\
+    //   // e^orthogonal f' = 0\
+    //   // norm(e^orthogonal f') = 0\
+    //   // f' = 0\
+    //   // f = C\
+    //   // tMul(e^orthogonal (theta(t), phi(t)) vec(theta'(t), phi'(t))) = C^2\
+    //   // tMul(Phi') = C^2\
+    //   // autoTrans(Phi') Phi'' = 0
+
+    //   // e^orthogonal 1/(2 f) (bX''^T autoTrans(e^orthogonal) + bX'^T autoTrans(partialDer(e^orthogonal, bX) bX')) = 0\
+    //   // (e^orthogonal bX'' + partialDer(e^orthogonal, bX) bX' bX') autoTrans(e^orthogonal) = 0\
+    // $
+    // $
+    //   a b' + 2 a' b 
+    // $
+  == 3
+    直接求带初动能情形。设曲线为 $Phi(t), t in [0, 1]$ 下降时间为：
+    $
+      T = integral_(0)^(1) (dif norm(Phi(t)))/norm(v(Phi(t))) dif t\
+      = integral_(0)^(1) norm(bX')/sqrt(2/m (E_0 - m g z)) dif t 
+    $
+    因此：
+    $
+      f = norm(bX')/sqrt(2/m (E_0 - m g z))
+    $
+    欧拉-拉格朗日方程为：
+    $
+      dif/(dif t) (partialDer(f, bX')) - partialDer(f, bX) = 0
+    $
+    若设：
+    $
+      bX = vec(Pv, z)
+    $
+    则上面方程给出守恒量：
+    $
+      partialDer(f, Pv') = bC^T\
+      partial/(partial Pv') (sqrt(norm2(Pv') + z'^2)/sqrt(2/m (E_0 - m g z))) = C^T\
+      1/sqrt(2/m (E_0 - m g z))) 1/(2 sqrt(norm2(Pv') + z'^2)) 2 Pv'^T = bC^T
+    $
+    换言之，$Pv'$ 有固定方向，继而 $Pv$ 在某条直线上。可设 $Pv = bC r(t)$，并不失一般性设 $norm(bC) = 1$ 就有：
+    $
+      1/sqrt(2/m (E_0 - m g z)) 1/(sqrt(r'^2 + z'^2)) r' = r_0\
+      r'^2 = 2 r_0^2 (E_0/m - g z) (r'^2 + z'^2)\
+    $
+    做变量代换：
+    $
+      r' = rho cos alpha,\
+      z' = rho sin alpha
+    $
+    方程变为：
+    $
+      rho^2 cos^2 alpha = 2 r_0^2 (E_0/m - g z) rho^2\
+      cos^2 alpha = 2 r_0^2 (E_0/m - g z)\
+      - 2 sin alpha cos alpha = - 2 r_0^2 g z'\
+      sin alpha cos alpha = r_0^2 g rho sin alpha\
+    $
+    $alpha = 0$ 的情形可以舍去，就有：
+    $
+      cos alpha = r_0^2 g rho\
+      rho = 1/(r_0^2 g) cos alpha\
+      z = E_0/(m g) - 1/(2 r_0^2 g) cos^2 alpha\
+      = E_0/(m g) - 1/(4 r_0^2 g) (cos 2 alpha + 1)\
+      = E_0/(m g) - 1/(4 r_0^2 g) - 1/(4 r_0^2 g) cos 2 alpha\
+      r' = rho cos alpha = 1/(r_0^2 g) cos^2 alpha\
+      r = 1/(r_0^2 g) integral cos^2 alpha dif t\
+      = 1/(2 r_0^2 g) (sin alpha cos alpha + alpha) + r_0\
+      = 1/(4 r_0^2 g) (sin 2 alpha + 2 alpha) + r_0
+    $
+    这就得到了结论。

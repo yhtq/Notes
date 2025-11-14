@@ -1082,5 +1082,257 @@ Pv^T + e A
         vt(Pv) = [Pv, H] = e/m (Pv^T - e A) partialDer(A, Qv) - e partialDer(phi, Qv)
       $
     ]
+  == 带电粒子的相对论情形
+    前面提到过，相对论情形的拉氏量为：
+    $
+      L = - m_0 c^2 sqrt(1 - norm2(vt(Xv)) / c^2) - e (phi - A^T vt(Xv))
+    $
+    广义动量为：
+    $
+      Pv = partialDer(L, vt(Xv)) = m_0 vt(Xv)^T / sqrt(1 - norm2(vt(Xv)) / c^2) + e A^T\
+      ((Pv - e A^T)/m_0)^2 = norm2(vt(Xv)) / (1 - norm2(vt(Xv)) / c^2) = c^2 (c^2 / (c^2 - norm2(vt(Xv))) - 1)\
+      ((Pv - e A^T)/(m_0 c))^2 + 1 = c^2 / (c^2 - norm2(vt(Xv)))\
+      1 - norm2(vt(Xv)) / c^2 = 1/(((Pv - e A^T)/(m_0 c))^2 + 1) \
+    $
+    代回得：
+    $
+      Pv - e A^T = m_0 sqrt(((Pv - e A^T)/(m_0 c))^2 + 1) vt(Xv)^T\
+      vt(Xv)^T = (Pv - e A^T) / sqrt(m_0^2 + ((Pv - e A^T)/c)^2)
+    $
+    从而：
+    $
+      H = (Pv - e A^T) vt(Xv) + m_0 c^2 sqrt(1 - norm2(vt(Xv)) / c^2) + e phi\
+    $
+    可以证明，它恰好就是：
+    $
+      H = m c^2 + e phi = (m_0 c^2)/sqrt(1 - norm2(vt(Xv)) / c^2) + e phi = c sqrt(m_0^2 c^2 + (Pv - e A^T)^2) + e phi
+    $
+= 力学的变分原理
+  1696 年，伯努利提出了最速降线问题。假设某个曲线的方程为 $y(x)$，可以计算出下降时间为：
+  $
+    F(y) = integral_(x_1)^(x_2) sqrt((1 + y'^2) / y) dif x 
+  $ 
+  == 变分法
+    仿照微分极值的思想，我们认为如果 $integral F(y)$ 取极值，则应该有对于任何微小变化 $delta y_1$，都有：
+    $
+      F(y + delta y_1) >= F(y)
+    $
+    其中 $y_1$ 是任何从 $(x_1, 0)$ 到 $(x_2, 0)$ 的（二次可微）函数。可以定义：
+    $
+      delta y 
+    $
+    是 $y$ 点处的任何切向量，不难发现有：
+    $
+      delta (der(y, x)) = der((delta y), x)
+    $
+    对于一般的泛函 $F(bY, bY')$，我们有：
+    $
+      delta F = partialDer(F, bY) delta bY + partialDer(F, bY') delta bY'\
+      = partialDer(F, bY) delta bY + partialDer(F, bY') der((delta bY), x)\
+    $
+    还注意到：
+    $
+      dif/(dif x) (partialDer(F, bY')  delta bY) = der(partialDer(F, bY'), x) delta bY + partialDer(F, bY') der((delta bY), x)\
+    $
+    因此就有：
+    $
+      delta F = dif/(dif x) (partialDer(F, bY')  delta bY)  + (partialDer(F, bY) - dif/(dif x) partialDer(F, bY')) delta bY
+    $
+    因此：
+    $
+      delta integral_(x_1)^(x_2) F dif x = integral_(x_1)^(x_2) (partialDer(F, bY) - dif/(dif x) partialDer(F, bY')) delta bY dif x + [partialDer(F, bY')  delta bY]_(x_1)^(x_2) \
+      = integral_(x_1)^(x_2) (partialDer(F, bY) - dif/(dif x) partialDer(F, bY')) delta bY dif x
+    $
+    由 $delta bY$ 的自由性，一定有：
+    $
+      partialDer(F, bY) - dif/(dif x) partialDer(F, bY') = 0
+    $<Euler-Lagrange-equation>
+    这就是*欧拉-拉格朗日方程*。它提供了变分问题的解的必要条件。很明显，它和拉氏方程形式上是一样的，它的原因就是著名的*哈密顿原理*。同时，可以得到一个初积分：
+    $
+      ( partialDer(F, bY) - dif/(dif x) partialDer(F, bY')) bY' = dif/(dif x) (F - partialDer(F, bY') bY') - partialDer(F, x) = 0
+    $
+    回到伯努利方程，它的方程为：
+    $
+      y'^2/sqrt(y (1 + y'^2)) - sqrt((1 + y'^2) / y) = C\
+      y (1 + y'^2) = 1/c^2\
+      y' = plus.minus sqrt(1/(c^2 y) - 1)
+    $
+    可以解出：
+    $
+      x = a (theta - sin theta) + x_0\
+      y = a (1 - cos theta) + y_0
+    $
+    这就是摆轮线。
+  == 哈密顿原理
+    #proposition()[哈密顿原理][
+      设体系的拉氏函数为 $L(Qv, vt(Qv), t)$，则实际运动轨迹使得泛函：
+      $
+        S = integral_(t_1)^(t_2) L(Qv, vt(Qv), t) dif t
+      $
+      取极值。
+      而非保守体系中，若有广义力 $bF$，则实际运动轨迹使得泛函：
+      $
+        S = integral_(t_1)^(t_2) (L(Qv, vt(Qv), t) + bF^T Qv) dif t
 
-
+      $
+      取极值。
+    ]
+= 正则变换与哈密顿-雅各比方程
+  == 正则变换
+    在哈密顿原理中，我们可以想到，如果将 $H$ 变换为 $H_1$，$Qv, Pv$ 变换为 $Qv_1, Pv_1$，只要：
+    $
+      Qv_1 = partialDer(H_1, Pv_1)\
+      Pv_1 = - partialDer(H_1, Qv_1)
+    $
+    就称这个变换是*正则变换*。事实上，这样的变换会保持正则方程的形式不变。根据变分原理，只需要：
+    $
+      delta (integral_()^() Pv Qv - Pv_1 Qv_1 - (H - H_1) dif t)
+    $
+    一个常见的构造是：
+    $
+      Pv Qv - Pv_1 Qv_1 - (H - H_1) = dif/(dif t) F(Qv, Pv, t)
+    $
+    不难验证此时总有前式成立。一般来说，我们称 $F(Qv, Qv_1, t)$ 为*第一类生成函数*，$F(Qv, Pv_1, t)$ 为*第二类生成函数*...... 一般而言，第二类生成函数使用较多。
+  == 哈密顿-雅各比方程
+    如果可以找到一个第二类母函数：
+    $
+      F_2 (Qv, Pv_1, t)
+    $
+    使得 $H_1 = 0$，则根据：
+    $
+      vt(Pv_1) = [Qv_1, H_1] = 0\
+      vt(Qv_1) = [Qv_1, H_1] = 0
+    $
+    则它们都是常数，设：
+    $
+      Pv_1 = bA\
+      Qv_1 = bB
+    $
+    微分方程立刻就变成了代数方程。为了求出这样的变换，根据：
+    $
+      Pv = partialDer(F_2 (Qv, bA, t), Qv)\
+      Qv_1 = partialDer(F_2 (Qv, bA, t), bA)\
+      H_1 = H + partialDer(F_2 (Qv, bA, t), t)
+    $
+    根据要求，就是要：
+    $
+      H_1 (Qv_1, Pv_1, t) = H(Qv, Pv, t) + partialDer(F_2 (Qv, bA, t), t) = 0
+    $
+    不难看出，如果能消去 $Pv$ 上面的方程就很好实现。注意到：
+    $
+      Pv = partialDer(F_2 (Qv, bA, t), Qv)
+    $
+    因此方程变成了：
+    $
+      partialDer(F_2 (Qv, bA, t), t) + H(Qv, partialDer(F_2 (Qv, bA, t), Qv), t) = 0
+    $<Hamilton-Jacobi-equation>
+    这个方程被称为*哈密顿-雅各比方程*。解出的 $F_2$ 被称为*哈密顿母函数*。注意到：
+    $
+      partialDer(F_2, t) = - H\
+      vt(F_2) = partialDer(F_2, Qv) vt(Qv) + partialDer(F_2, t)\
+      = Pv Qv - H = L
+    $
+    从而一定有：
+    $
+      F_2 = integral L dif t
+    $
+    当然，由于 $L$ 含有 $Pv$，它不能在 $F_2$ 中出现，因此方程仍然无法求出。
+    #example()[][
+      对于谐振子，有：
+      $
+        H = norm2(Pv) /(2 m) + 1/2 m omega^2 norm2(Qv)
+      $
+      设 $F_2(Qv, Pv_1, t) = F_2 (Qv, t)$，代入 @Hamilton-Jacobi-equation 得：
+      $
+        partialDer(F_2, t) + H (Qv, partialDer(F_2, Qv)) = 0\
+      $
+      假设 $F_2 = W(Qv) + T(t)$，代回得到：
+      $
+        vt(T) + H(Qv, der(W, Qv)) = 0
+      $
+      注意到上式前一项只是时间的函数，而后一项只是位置的函数，因此它们都等于某个常数 $E$。于是有：
+      $
+        vt(T) = -E => T = - E t\
+        H(Qv, der(W, Qv)) = E\
+        1/(2 m) norm2(der(W, Qv)) + 1/2 m omega^2 norm2(Qv) = E\
+      $
+      无妨设 $W$ 只有 $W_1$ 分量非零，因此：
+      $
+        der(W_1, Qv) = 2 m E - m^2 omega^2 norm2(Qv)\
+        W_1 = integral sqrt(2 m E - m^2 omega^2 norm2(Qv)) dif Qv
+      $
+      我们就得到了 $F_2 = W - E t$ 的形式。不妨取 $Pv_1 = E$（任取一个常数也可以），就有：
+      $
+        Qv_1 = partialDer(F_2, Pv_1) = partialDer(W, E) - t\ = integral (m / sqrt(2 m E - m^2 omega^2 norm2(Qv))) dif Qv - t
+      $
+      从而上式是一常数。立刻能反解出 $Qv$
+    ]<Hamilton-Jacobi-harmonic>
+  == 作用量、周期公式
+    仿照 @Hamilton-Jacobi-harmonic 的思路，对于典型的 $H = T + V$ 是守恒量的系统，我们可以设：
+    $
+      F_2 = W(Qv, E) - E t
+    $
+    假设运动是周期的，设：
+    $
+      J = integral.cont Pv dif Qv
+    $
+    是一个在一个周期内的（曲线）积分，我们就取 $Pv_1 = J$，则有：
+    $
+      J = integral.cont partialDer(W, Qv) dif Qv    
+    $
+    显然，它只是 $E$ 的函数。上式可以反解出：
+    $
+      E = E(J)
+    $
+    进而：
+    $
+      F_2 = W(Qv, J) - E(J) t\
+      Qv_1 = partialDer(W, J) - partialDer(E, J) t = C\
+      dif (partialDer(W, J)) = partialDer(E, J) dif t\
+      integral.cont dif partialDer(W, J) = integral.cont  (partialDer(W, J)) dif Qv = partial/(partial J) (integral.cont partialDer(W, Qv) dif Qv) = 1\
+      integral.cont partialDer(E, J) dif t = partialDer(E, J) T
+    $
+    因此立刻有：
+    $
+      1 = partialDer(E, J) T\
+      T = partialDer(J, E) 
+    $
+  == 玻尔模型和旧量子论
+    之前计算过，氢原子的中电子的哈密顿量为：
+    $
+      H = 1/(2 m) (P_r^2 + Pv_theta^2 / r^2) - e^2/(4 pi epsilon_0 r)
+    $
+    代入 @Hamilton-Jacobi-equation，设 $F_2 = W(Qv) + T(t)$，就有：
+    $
+      vt(T) = -E\
+      1/(2 m) (quadFormSym(der(W, Qv), diag(1, 1/r^2))) - e^2/(4 pi epsilon_0 r) = E
+    $
+    注意到 $H$ 中不显含 $theta$，因此 $P_theta$ 是常数。设 $P_theta = alpha_theta$，则上式变为：
+    $
+      (der(W, r))^2 = 2 m (E + (e^2)/(4 pi epsilon_0 r)) - alpha_theta^2 / r^2\
+    $
+    显然就有：
+    $
+      J_r = integral.cont Pv_r dif r = 2 integral_(r_1)^(r_2) sqrt(2 m (E + (e^2)/(4 pi epsilon_0 r)) - alpha_theta^2 / r^2) dif r
+    $
+    其中 $r_1, r_2$ 是 $r$ 的最大最小值，因此当然是里面方程的两根，计算可得：
+    $
+      J_r = 2 pi (- alpha_theta + (m e^2)/(4 pi epsilon_0 sqrt(-2 m E)))                                        
+    $
+    玻尔认为，$J_r, J_theta = alpha_theta 2 pi$ 应该是量子化的，分别等于 $n_r h, n_theta h$，从而：
+    $
+      J = (n_r + n_theta) h = n h\
+    $
+    $n$ 被称为*主量子数*。可以计算出，频率（周期倒数）为：
+    $
+      nu = (m e^4)/(4 epsilon_0^2 J^3) = (m e^4)/(4 epsilon_0^2 n^3 h^3)
+    $
+    顺带，还有：
+    $
+      E = - (m e^4)/(8 epsilon_0^2 n^2 h^2)
+    $
+    电子发生跃迁时，发出的光线的能量可以换算为光线的频率，可以计算出：
+    $
+      nu_(n' n) = (m e^4)/(8 epsilon_0^2 h^3) abs(1/n^2 - 1/n'^2)
+    $
+    它很好的解释了氢原子的光谱线。
