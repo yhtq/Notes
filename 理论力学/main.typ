@@ -1186,13 +1186,40 @@ Pv^T + e A
     $
     就称这个变换是*正则变换*。事实上，这样的变换会保持正则方程的形式不变。根据变分原理，只需要：
     $
-      delta (integral_()^() Pv Qv - Pv_1 Qv_1 - (H - H_1) dif t)
+      delta (integral_()^() Pv vt(Qv) - Pv_1 vt(Qv_1) - (H - H_1) dif t) = 0
     $
     一个常见的构造是：
     $
-      Pv Qv - Pv_1 Qv_1 - (H - H_1) = dif/(dif t) F(Qv, Pv, t)
+      Pv vt(Qv) - Pv_1 vt(Qv_1) - (H - H_1) = dif/(dif t) F(Qv, Qv_1, t)
     $
-    不难验证此时总有前式成立。一般来说，我们称 $F(Qv, Qv_1, t)$ 为*第一类生成函数*，$F(Qv, Pv_1, t)$ 为*第二类生成函数*...... 一般而言，第二类生成函数使用较多。
+    或者说：
+    $
+      dif F(Qv, Qv_1, t) = Pv dif Qv - Pv_1 dif Qv_1 - (H - H_1) dif t
+    $
+    只需取：
+    $
+      Pv = partialDer(F, Qv)\
+      Pv_1 = - partialDer(F, Qv_1)\
+      H_1 = H + partialDer(F, t), H_1 = H + partialDer(F, t)
+    $
+    不难验证此时总有前式成立。类似的，若 $F_2$ 是 $Qv, Pv_1, t$ 的函数，同样的只需：
+    $
+      dif/(dif t) F_2 (Qv, Pv_1, t) = Pv vt(Qv) - Pv_1 vt(Qv_1)  - (H - H_1)\
+      = Pv vt(Qv) - (vt(Pv_1 Qv_1) - vt(Pv_1) Qv_1) - (H - H_1)
+    $
+    这里 $vt(Pv_1 Qv_1)$ 是全微分，不妨就设：
+    $
+      dif/(dif t) F_2 (Qv, Pv_1, t) = Pv vt(Qv) + vt(Pv_1) Qv_1 - (H - H_1)
+    $
+    显然，取：
+    $
+      Pv = partialDer(F, Qv)\
+      Qv_1 = partialDer(F, Pv_1)\
+      H_1 - H = partialDer(F, t), H_1 = H + partialDer(F, t)
+    $
+    即可
+     
+    一般来说，我们称上面的 $F(Qv, Qv_1, t)$ 为*第一类生成函数*，$F(Qv, Pv_1, t)$ 为*第二类生成函数*...... 一般而言，第二类生成函数使用较多。
   == 哈密顿-雅各比方程
     如果可以找到一个第二类母函数：
     $
@@ -1336,3 +1363,297 @@ Pv^T + e A
       nu_(n' n) = (m e^4)/(8 epsilon_0^2 h^3) abs(1/n^2 - 1/n'^2)
     $
     它很好的解释了氢原子的光谱线。
+= 有心运动
+  在一体的有心运动中，常常使用角动量：
+  $
+    l = Xv times (m vt(Xv))\
+    = m e(theta) times e^orthogonal (theta) vt(theta)\
+    = m r^2 vt(theta) e(z)
+  $
+  可以验证它就是广义动量守恒的一部分。延续之前的步骤，一体有心运动的方程可以写成：
+  $
+    1/2 m vt2(r) + l^2/(2 m r^2) + V(r) = E
+  $<径向方程>
+  其中 $l, E$ 是初始的角动量和能量，是常数。该方程被称为 *径向方程*。事实上，$l^2/(2 m r^2)$ 也可以看作离心势能。通过该方程，我们可以得到：
+  $
+    vt(r) = plus.minus sqrt((2/m) (E - V(r)) - (l^2)/(m^2 r^2))\
+    t = integral 1 / sqrt((2/m) (E - V(r)) - (l^2)/(m^2 r^2)) dif r\
+  $
+  通常来说，这个积分是很困难的。此外，还有：
+  $
+    vt(theta) = l/(m r^2)\
+    theta = integral l/(m r^2) dif t
+  $
+  当然，更常用的是消去 $t$ 求出轨迹。事实上：
+  $
+    der(r, theta) = 1/l m r^2 sqrt((2/m) (E - V(r)) - (l^2)/(m^2 r^2))
+  $<轨道方程>
+  这个方程通常称为*轨道方程*。通过它，我们可以求出轨道的形状。
+  #let Veff = $V_"eff"$
+  回到@径向方程，我们常常令：
+  $
+    l^2/(2 m r^2) + V(r) = Veff(r)
+  $
+  为*有效势能*，它只是 $r$ 的函数。显然，方程表明 $vt(r) = 0$ 时，势能达到最大。方程也表明：
+  - $E > 0$  时，无穷远处仍有动能，轨道是开口的（双曲线）
+  - $E = 0$  时，无穷远处恰好没有动能，轨道是抛物线
+  - $E < 0$  时，不可能到达无穷远处，轨道是闭合的（椭圆）
+  - 特别的，假如 $E$ 恰好是 $Veff$ 的最小值，则 $vt(r)$ 恒为零，轨迹是圆。
+  == 轨道方程的微分形式
+    角动量守恒给出：
+    $
+      vt(theta) = c / r^2
+    $
+    进而：
+    $
+      vt(r) = der(r, theta) c / r^2 = - c der(1/r, theta)
+    $
+    设 $u = 1/ r$，则方程变为：
+    $
+      vt(r) = - c der(u, theta)\
+      at(r) = - c derN(u, theta, 2) vt(theta) = - c^2 u^2 derN(u, theta, 2)
+    $
+    用这些式子代入拉氏方程，可以得到方程：
+    $
+      m (at(r) - r vt2(theta)) = F(r)\
+      - m (c^2 u^2 derN(u, theta, 2) + c^2 u^3) = F(1/u)\
+      - m c^2 u^2 derN(u, theta, 2) = F(1/u) + m c^2 u^2\
+      derN(u, theta, 2) + u = - F(1/u) / (m c^2 u^2)
+    $
+    这个方程被称为*比内公式*，历史上是根据开普勒的观测在 18 世纪得到的。
+  == 天文概念
+    #definition()[拱点][
+      径向速度 $vt(r) = 0$ 称为*拱点*
+    ]
+    #definition()[拱距][
+      径向速度 $vt(r) = 0$ 时距力心的距离称为*拱距*
+    ]
+    #definition()[拱线][
+      拱点到力心的连线称为*拱线*
+    ]
+    #definition()[拱角][
+      相邻拱线的夹角称为*拱角*
+    ]
+    #proposition()[][
+      假设 $r_1, r_2$ 是两个不同的拱距，则：
+      $
+        Delta theta = integral_(r_1)^(r_2) (l / r^2)/sqrt(2 m (E - V) - l^2/r^2) dif r
+      $
+      就给出了它们之间的拱角。如果：
+      $
+        Delta theta = 2 pi q
+      $
+      其中 $q$ 是有理数，则轨道是闭合的。反之，轨道是不可能闭合的。
+    ]
+    #proof[
+      直接由轨道方程@轨道方程 得到。
+    ]
+  == 轨道的稳定性
+    为了研究轨道的稳定性，设 $u = 1/r$，我们给 $u$ 施加一个微小的偏移 $epsilon$，代入比内公式就有：
+    $
+      (u + epsilon)^2( derN(u + epsilon, theta, 2) + (u + epsilon)) = - F(1/(u + epsilon)) / (m c^2 )
+    $
+    注意 $u, u + epsilon$ 都是轨道，因此同时满足比内公式。只保留一阶小量，化简得到：
+    $
+      derN(epsilon, theta, 2) + A epsilon = 0
+    $
+    其中 $A = 3 + 2/u derN(u, theta, 2) + m / (u^2 l^2) der(F(u), u)$，对于给定的 $u$ 它是一个已知常数。研究方程的解可以知道，$A < 0$ 时轨道指数发散，$A = 0$ 时轨道是不稳定的，$A > 0$ 时轨道是周期的（也是稳定的）。如果代入 $F = - der(V, r)$ 以及比内公式，可以计算得：
+    $
+      A = 1 + (2 m)/l^2 r^3 der(V, r) + m/l^2 r^4 derN(V, r, 2)\
+    $
+    - 典型的，如果 $V = plus.minus a/r$，就有 $A = 1$
+    - 如果是类似弹簧振子 $V = k r^2$，则 $A = 1 + (6 m k)/l^2 r^4 > 0$
+    - 如果 $V = - a/r^3$，则 $A = 1 - (6 m a)/(l^2 r)$，当半径较小时不稳定
+    特别的，如果轨道是圆，我们有：
+    $
+      F(r) = - l^2/(m r^3)
+    $
+    做小扰动 $x$，得到：
+    $
+      m at(x) + (- 3/r F(r) - F'(r)) = 0\
+      := m at(x) + m omega^2 x = 0\
+    $
+    如果 $F = - c / r^n$，可以证明 $n > - 3$ 时，轨道都是稳定的。反之，轨道是不稳定的。对于圆周运动，还可以研究微小冲击后拱点、拱角。假设微扰之后，角速度近似不变，则：
+    $
+      vt(theta) = l_0 / (m r_0^2) = sqrt( - (F(r_0))/(m r_0))
+    $
+    注意到前面 $omega$ 就是在原轨道附近做振动的频率，因此周期为 $T = (2 pi)/omega$，立刻就有：
+    $
+      Delta theta = 1/2 T vt(theta)
+    $
+    计算可得：
+    $
+      Delta theta = pi (3 + (a F'(a))/(F(a)))^(- 1 / 2)
+    $
+    特别的，如果 $F = c r^n$，则有：
+    $
+      Delta theta = pi / sqrt(3 + n)
+    $
+    如果 $n = -2$，则恰好是 $pi$，轨道实际上类似于比原轨道胖一点的椭圆。如果 $n > -2$，则拱角 $< pi$，物体在远离力心位置时，等效的近力心位置会后退，这种现象称为*进动*，反之，$n < -2$，则拱角 $> pi$，物体在远离力心位置时，等效的近力心位置会提前。长期观测表明，太阳系中所有行星都存在进动，大致的相当于：
+    $
+      F = - k / r^2 - epsilon / r^4, epsilon > 0
+    $
+    使用圆轨道，近似可以得到：
+    $
+      Delta theta = pi (1 + epsilon / (k r_0^2))
+    $
+    #remark[][
+      之前的计算中假设了角速度近似不变，事实上不使用这个近似，也可以得到类似的结果，不过计算会复杂一些。
+    ]
+  == 开普勒三定律
+    开普勒三定律是对行星运动的经验总结：
+    - 行星绕太阳的轨道是椭圆，太阳位于一个焦点上
+    - 行星与太阳的连线在相等时间内扫过相等的面积
+    - 所有行星轨道半长轴的立方与其轨道周期的平方成正比，该常数称为高斯常数，与行星无关
+
+    我们现在知道，$1, 3$ 给出了万有引力满足平方反比的证据，$2$ 是角动量守恒的结果。我们知道，圆锥曲线有统一的极坐标方程：
+    $
+      r = p / (1 + e cos theta)\
+      u = 1/r = (1 + e cos theta) / p
+    $
+    代入比内公式就有：
+    $
+      F = - 1/p (c^2 m)/r^2  where p = b^2/a
+    $
+    对于第二条，事实上：
+    $
+      F_theta = m (r at(theta) + 2 vt(r) vt(theta)) = m/r vt((r^2 vt(theta)))
+    $
+    换言之，面积速度守恒意味着 $F_theta = 0$，因此力是有心力，角动量守恒。对于第三条，我们利用：
+    $
+      T = S / (vt(S))
+    $
+    其中 $S$ 是椭圆面积，$vt(S)$ 是面积速度。我们设 $c = 2 vt(S)$，可以计算得：
+    $
+      c^2/p = (4 pi^2 a^2)/T^3 = gamma ("高斯常数")
+    $
+    代入之前的 $F$ 就有：
+    $
+      F = - gamma m/r^2
+    $
+    这就看出，$gamma$ 就是太阳质量与万有引力常数的乘积。
+    #example[][
+      （可能会考）\
+      假设有心运动中，力的形式为：
+      $
+        F = - mu (1 / r^2 - a / r^3), a > 0, mu > 0
+      $
+      初始位置为某个拱点，距离力心为 $a$，初始速度为 $vt(a) = sqrt(u c)/a$，试求另一拱距和拱角。
+
+      显然，势能可以写成：
+      $
+        V(r) = - mu (1/r - a/(2 r^2))
+      $
+      以及角动量为：
+      $
+        l = m sqrt(mu c)
+      $
+      能量为：
+      $
+        E = V(a) + 1/2 l^2/(m a^2) = V(a) + 1/2 m (mu c)/a^2 = mu/(2 a^2) (c - a)
+      $
+      一般的，我们有：
+      $
+        1/2 m vt2(r) + V(r) + l^2/(2 m r^2) = E\ 
+      $
+      对于拱点，我们总有 $vt2(r) = 0$，因此只需解方程：
+      $
+        V(r) + l^2/(2 m r^2) = E
+      $
+      可以解出除了 $r = a$ 的解以外，还有一个解为：
+      $
+        r = a (a + c)/(a - c)
+      $
+      根据之前的拱角方程，我们有：
+      $
+        Delta theta = integral_(r_1)^(r_2) (1 / r^2)/sqrt(2 m (E - V(r)) - l^2/(r^2)) dif r\
+      $
+      计算它的结果即可。
+    ]
+    #example[][
+      设有一竖直的圆锥，顶角为 $alpha$，一小球在在表面上某水平平面做半径为 $r_0$ 的圆周运动，证明：
+      - 其轨道是稳定的
+      - 若做微扰满足 $Delta E != 0, Delta l = 0$，求质点的运动
+
+      我们取柱坐标，体系自由度为 $r, theta$，有：
+      $
+        z = r cot alpha\
+        T = 1/2 m (vt2(r) + r^2 vt2(theta) + vt2(z))\
+        V = m g z = m g r cot alpha\
+        L = T - V = 1/2 m 1/(sin^2 alpha) vt2(r)  + 1/2 m r^2 vt2(theta) - m g r cot alpha\
+      $
+      注意到其中不含 $theta$，当然 $theta$ 就是循环变量，得到角动量守恒：
+      $
+        m r^2 vt(theta) = l\
+      $
+      这也表明运动是有心运动。以及初积分：
+      $
+        E = 1/2 m 1/(sin^2 alpha) vt2(r)  + 1/2 m r^2 vt2(theta) + m g r cot alpha\
+      $
+      初始时，由于做圆周运动，一定有：
+      $
+        (1/2 m r^2 vt2(theta) + m g r cot alpha)' (r_0) = 0
+      $
+      根据之前对轨道稳定性的研究，可以指导只有 $derN(Veff, r, 2) > 0$，轨道就是稳定的。这是显然的。
+
+      做微扰后，有方程：
+      $
+        E + Delta E = 1/2 m 1/(sin^2 alpha) vt2(r)  + l^2/(2 m r^2) + m g r cot alpha\
+        = 1/2 m 1/(sin^2 alpha) vt2(Delta r)  + l^2/(2 m (r + Delta r)^2) + m g (r + Delta r) cot alpha\
+        approx 1/2 m 1/(sin^2 alpha) vt2(Delta r)  + l^2/(2 m r^2) - l^2/(m r_0^3) Delta r + m g (r + Delta r) cot alpha\
+      $
+      因此：
+      $
+        Delta E = 1/2 m 1/(sin^2 alpha) vt2(Delta r) - l^2/(m r_0^3) Delta r + m g Delta r cot alpha\
+      $
+      对 $Delta r$ 求导，就获得小振动的标准线性微分方程。
+      
+
+      $
+        vt(norm(bX)) = der(norm(bX), tMul(bX)) der(tMul(bX), t) = vt2(norm(bX)) / (2 norm(bX)) vt(bX)\
+      $
+      $
+        T = 1/2 m vtnorm2(bX) + 1/2 m vt2(norm(bX) cot alpha)\
+        = 1/2 m vtnorm2(bX) + 1/2 m cot^2 alpha 1/(2 norm(bX)) vtnorm2(bX)\
+        V = m g norm(bX) cot alpha\
+      $
+
+    ]
+  == 开普勒轨道
+    在最常见的平方反比情形，有：
+    $
+      F = - k / r^2
+    $
+    代入比内公式就有：
+    $
+      derN(u, theta, 2) + u = 1/(r_0) := u_0
+    $
+    其中 $r_0$ 是 $Veff$ 的平衡点。它的解为：
+    $
+      u = A cos (theta - beta) + u_0\
+    $
+    代入定义就有：
+    $
+      r = r_0 / (1 + e cos (theta - beta)), e = r_0 A
+    $
+    可以计算出，其中：
+    $
+      r_0 = l^2/(m k)\
+      e = sqrt(1 + (2 E l^2)/(m k^2))\
+      a = - k / (2 E)\
+      b = l / sqrt(- 2 m E )\
+      T = 2 pi a^(3/2) /sqrt(k/m)
+    $
+    #remark[][
+      实际的结果与之略有偏差，原因包括：
+      - 太阳，行星本质是两体运动，需要使用折合质量/折合距离替代计算。也就是，使用 $(M m) / (M + m) := mu$ 代替 $m$（引力不需要修正），就有：
+        $
+          T = 2 pi a^(3/2) /sqrt(k/mu)
+        $
+        太阳系中，木星的质量最大，约为太阳质量的 $1/1047$，修正值为原先值的 $1047 / 1048$，相差很小
+      - 太阳系中各个天体之间也有引力作用
+      - 广义相对论效应
+    ]
+    
+
+

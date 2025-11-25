@@ -1584,6 +1584,181 @@
       $
       如此，利用 $P'_1 -> im d'$ 的满射性可以得到 $P_1 -> P'_1$，追图可以得到交换性。依此类推，可以得到整个图表的态射 $tilde(f) : P -> P'$
     ]
+    #proposition()[Horsesshoes 马蹄引理][
+      设 Abel 范畴中有足够的投射对象，有复形的短正合列：
+      $
+        0 -> A' ->^i A ->^p A'' -> 0
+      $
+      以及它们的投射分解：
+      $
+        ... -> P'_1 -> P'_0 -> A' -> 0\
+        ... -> P_1 -> P_0 -> A -> 0\
+        ... -> P''_1 -> P''_0 -> A'' -> 0
+      $
+      则存在短正合列：
+      $
+        0 -> P' -> P -> P'' -> 0
+      $
+      使得下列图表交换：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $...$, 1),
+      node((0, 1), $P'$, 2),
+      node((0, 2), $A'$, 3),
+      node((1, 0), $...$, 4),
+      node((1, 1), $P$, 5),
+      node((1, 2), $A$, 6),
+      node((2, 0), $...$, 7),
+      node((2, 1), $P''$, 8),
+      node((2, 2), $A''$, 9),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(4, 5, $$),
+      arr(5, 6, $$),
+      arr(7, 8, $$),
+      arr(8, 9, $$),
+      arr(1, 4, $$),
+      arr(2, 5, $$),
+      arr(3, 6, $$),
+      arr(4, 7, $$),
+      arr(5, 8, $$),
+      arr(6, 9, $$),
+      )]
+      并且，三个投射解消构成复形之间的短正合列。事实上，其中的 $P$ 就是 $P'' directSum P'$
+    ]
+    #proof[
+      取 $P = P' directSum P''$，只需要构造相应的映射即可。事实上，只需找到 $P' -> A$ 和 $P'' -> A$，其中：
+      - $P' -> A$ 是显然的，由 $P' -> A' -> A$ 得到
+      - $P'' -> A$ 是注意到 $A -> A''$ 满，$P''$ 投射，因此存在 $P'' -> A$ 使得 $P'' -> A -> A'' = P'' -> A''$
+      至于交换性：
+      - $P' -> P -> A$ 依定义就是 $P -> A' -> A$
+      - $P -> P'' -> A'' = P -> A -> A''$，根据直和定义，分别验证：
+        - $P' -> P -> P'' -> A'' = 0 = P' -> P -> A -> A'' = P' -> A' -> A -> A''$
+        - $P'' -> P -> P'' -> A'' = P'' -> A'' = P'' -> A -> A'' = P'' -> P -> A -> A''$
+      根据五引理，显然 $P -> A$ 是满射。依此类推，就可以得到上面的对象。
+    ]
+    #remark[][
+      对偶的，可以得到入射解消的马蹄引理。
+    ]
+    #corollary[][
+      设 $0 -> A' -> A -> A'' -> 0$ 是 $R-$ 模的短正合列，且 $A', A''$ 是有限表现的（存在正合列 $R^m -> R^n -> M -> 0$，其中 $R^m, R^n$ 是有限生成的自由模），则 $A$ 也是有限表现的。
+    ]
+    #proof[
+      显然，有限表现就是一个有限的投射分解。同时，自由模的直和当然也是自由模，因此由马蹄引理可知 $A$ 也是有限表现的。
+    ]
+    #theorem[][
+      若有两行短正合列和短正合列之间的态射：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $0$, 1),
+      node((0, 1), $A'$, 2),
+      node((0, 2), $A$, 3),
+      node((0, 3), $A''$, 4),
+      node((0, 4), $0$, 5),
+      node((1, 0), $0$, 6),
+      node((1, 1), $C'$, 7),
+      node((1, 2), $C$, 8),
+      node((1, 3), $C''$, 9),
+      node((1, 4), $0$, 10),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(4, 5, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(8, 9, $$),
+      arr(9, 10, $$),
+      arr(1, 6, $$),
+      arr(2, 7, $$),
+      arr(3, 8, $$),
+      arr(4, 9, $$),
+      arr(5, 10, $$),)]
+      立刻就有：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $Tor_n (A', B)$, 1),
+      node((0, 1), $Tor_n (A, B)$, 2),
+      node((0, 2), $Tor_n (A'', B)$, 3),
+      node((0, 3), $Tor_(n - 1) (A', B)$, 4),
+      node((1, 0), $Tor_n (C', B)$, 5),
+      node((1, 1), $Tor_n (C, B)$, 6),
+      node((1, 2), $Tor_n (C'', B)$, 7),
+      node((1, 3), $Tor_(n - 1) (C')$, 8),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(5, 6, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(1, 5, $$),
+      arr(2, 6, $$),
+      arr(3, 7, $$),
+      arr(4, 8, $$),)]
+    ]
+    #proof[
+      本质上，就是所有对象（在函子的作用下）的投射解消构成了短正合列之间的交换图（为了避免麻烦，可以找 $*', *''$ 的投射解消，根据马蹄引理取得 $*$ 的投射解消），再取同调群即可。
+    ]
+    #theorem[][
+      设 $T$ 是加性函子，有短正合列：
+      $
+        0 -> A' -> A -> A'' -> 0
+      $
+      就可以得到长正合列：
+      $
+        ... -> L_(n + 1)(T) A' -> L_(n + 1)(T) A -> L_(n + 1)(T) A'' \
+        -> L_n (T) A' -> L_n (T) A -> L_n (T) A'' -> ...\
+        -> (L_0 (T) A' = T A') -> (L_0 (T) A = T A) -> (L_0 (T) A'' = T A'') -> 0
+      $
+    ]
+    #proof[
+      类似上面的定理
+    ]
+    #proposition()[][
+      - 若 $T$ 右整合，则 $L_0 T$ 就是 $T$
+      - 对于任何 $n$ 都有：
+        $
+          Tor_n (A, B) eqv "tor"_n (A, B)
+        $
+        其中 $Tor$ 是 $* tensorProduct B$ 的导出函子，$"tor"$ 是 $A tensorProduct *$ 的导出函子
+    ]
+    #proof[
+      - 略
+      - 考虑 $A$ 的投射解消：
+        $
+          ... -> P_1 -> P_0 -> A -> 0
+        $
+        容易得到短正合列：
+        $
+          0 -> K_n -> P_n -> K_(n - 1) -> 0
+        $
+        其中 $K_n$ 事实上就是 $ker (P_(n - 1) -> P_(n - 2))$，类似的，设 $Q -> B$ 是 $B$ 的投射解消，就有短正合列：
+        $
+          0 -> V_n -> Q_n -> V_(n - 1) -> 0
+        $
+        通过张量积，得到以下正合列：
+        $
+          K_i tensorProduct V_j -> K_i tensorProduct Q_j -> K_i tensorProduct V_(j - 1) -> 0\
+          0 -> P_i tensorProduct V_j -> P_i tensorProduct Q_j -> P_i tensorProduct V_(j - 1) -> 0\
+          K_(i - 1) tensorProduct V_j -> K_(i - 1) tensorProduct Q_j -> K_(i - 1) tensorProduct V_(j - 1) -> 0
+        $
+        事实上，它们的竖列配上下面的 $0$ 也是正合的，而中间列是完整的正合列。通过图表引理可以得到：
+        $
+          Z = ker (K_(i - 1) tensorProduct V_j -> K_(i - 1) tensorProduct Q_j) eqv W = ker (K_i tensorProduct V_(j - 1) -> P_i tensorProduct V_(j - 1))
+        $
+        注意到 $.. -> P_i -> K_(i- 1)$ 当然是投射分解，因此由定义可以验证：
+        $
+          W = Tor_1 (K_(i - 1), V_(j - 1))\
+          Z = "tor"_1 (K_(i - 1), V_(j - 1))
+        $
+        图表中同样可以得到：
+        $
+          ker ( K_i tensorProduct V_j -> K_i tensorProduct Q_j) = "tor"_1 (K_i, V_(j - 1))\
+          ker (K_i tensorProduct V_j -> P_i tensorProduct V_j) = Tor_1 (K_(i - 1), V_j)
+        $
+        同构。同时，注意到有：
+        $
+          K_(- 1) = A\
+          V_(- 1) = B
+        $
+        从 $-1$ 开始，不难得到原结论。
+    ]
 
 = 范畴化  
   == A brief review of modules over associative algebras
@@ -1778,6 +1953,14 @@
     #proof[
       - 设 $B = times.big B_i$，则每个 $B_i$ 事实上也是 $B-$ 模（$b dot b_i = pi_i (b) b_i$），更进一步一定是单模，这就表明 $B = directSum.big B_i$，且 $B_i$ 是单模，继而 $B$ 作为模是半单的。由于自由模都形如 $directSum.big B$，因此自由模也半单。而每个模都是某个自由模的商，因此它们也是半单的。
       - 设 $M$ 是单模，$P$ 是它的投射覆盖，由 @prop-finite-alg-mod 可知 $P$ 不可分解，而 $P$ 也是半单的，因此 $P$ 是单模。显然，这意味着 $ker (P -> M) = 0$，也即 $P eqv M$。对于一般的 $M$，注意到它是单模的直和，而投射模的直和仍然是投射模，结论成立。
+    ]
+  == 朴素范畴化
+    #let cM = $cal(M)$
+    #definition()[平凡范畴化][
+      设 $M$ 是 $A$ 模，我们称 $cM, phi, F_i$ 是它的一个范畴化，如果：
+      - $cM$ 是 Abel 范畴
+      - $phi: K_0 (M) tensorProduct_Z A -> M$ 是一个 Abel 群同构
+      
     ]
 
 
