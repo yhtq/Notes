@@ -1636,7 +1636,11 @@ Pv^T + e A
     $
       r = r_0 / (1 + e cos (theta - beta)), e = r_0 A
     $
-    可以计算出，其中：
+    注意到轨道方程可以写成：
+    $
+      1/2 m c^2 (derN(u, theta, 2) + u)^2 = E + k u
+    $
+    其中 $c$ 是两倍的面积速度，进而可以计算出，其中：
     $
       r_0 = l^2/(m k)\
       e = sqrt(1 + (2 E l^2)/(m k^2))\
@@ -1654,6 +1658,171 @@ Pv^T + e A
       - 太阳系中各个天体之间也有引力作用
       - 广义相对论效应
     ]
+  == 平方反比力场中的散射
+    （考试不会考）
+    设斥力形式为 $F = k u^2$，回到比内公式：
+    $
+      derN(u, theta, 2) + u = - m/(l^2 u^2) F(u)\
+      = - (m k)/l^2
+    $
+    其通解为：
+    $
+      u = A cos (theta - beta) - (m k)/l^2\
+    $
+    无妨设 $beta = 0$（调整坐标系即可），就有：
+    $
+      r = p/(e cos theta - 1) where \
+      e = A l^2/(m k), p = l^2/(m k)\
+    $
+    可以证明，轨迹一定是双曲线。当粒子从远处射入时，会经过斥力后从另一方向离开，这就是卢瑟福观测到的散射现象。不难想到，粒子射入方向，射出方向恰为双曲线的两条渐进线。实验上，定义出射方向与入射方向的夹角的补角为*散射角*，它恰好等于：
+    $
+      phi = pi - 2 theta_0 where cos theta_0 = 1/e
+    $
+    此外，双曲线只有一个拱点，其拱距为：
+    $
+      r = p / (e - 1)\
+      V(r) = k/r = (e - 1)/p k
+    $
+    代入机械能守恒就有：
+    $
+      1/2 m l^2/(m^2 r^2) + (e - 1)/p k = E
+    $
+    可以解出：
+    $
+      e = sqrt(1 + ((2 E S)/k)^2) where l = S sqrt(2 m E)
+    $
+    事实上，$S$ 就是入射方向与正入射方向的水平距离。进而：
+    $
+      tan theta_0 = (2 E S)/k = cot (phi / 2)
+    $
+    实际实验中，$E$ 是稳定且已知的，因此 $theta_0$ 与 $S$ 是一一对应的。卢瑟福之前，人们普遍认为原子核中电子是分布在原子核上的，外来电荷穿过时，等效的斥力力心只有入射方向内部的部分，不可能产生背散射（方向与入射方向成钝角）。卢瑟福的实验表明，确实存在背散射现象，从而证明了原子核的存在。
+
+    当然，卢瑟福当时实验时并不能实际计算出 $S$，他采用了很巧妙的方法，对于不同的 $S$，取一个宽度为 $dif S$ 的环带，使用微分方法，计算通过该环带的粒子的散射情况。
+= 刚体力学
+  #definition()[刚体运动][
+    描述刚体运动时，往往使用以下术语：
+    - 平动：刚体的所有质点的速度都相同，3 个自由度
+    - 平面平行运动：刚体的所有质点的速度都在同一平面内，3 个自由度
+    - 定轴转动：刚体绕某一固定轴转动，1 个自由度
+    - 定点转动：刚体的某一点固定不动，3 个自由度
+    最一般的，刚体运动有 6 个自由度
+  ]
+  == 刚体的基本方程
+    #let intXv = $integral_Xv$
+    #theorem()[总动量][
+      $
+        intXv m vt(Xv) =  Pv = M vt(Xv_c)\
+        vt(Pv) =  intXv F 
+      $
+      其中 $Xv_c$ 为质心。
+    ]
+    #theorem()[动量矩/角动量][
+      $
+        vt(G) = intXv (Xv - Xv_0) times F - vt(Xv_0) times M vt(Xv_c)
+      $
+      其中 $G = intXv (Xv - Xv_0) times m vt(Xv)$ 为总体的角动量，$Xv_0$ 是刚体上任何一个点
+    ]
+    #proof[
+      $
+      dif/(dif t)intXv (Xv - Xv_0) times m vt(Xv) \
+      = intXv (Xv - Xv_0) times F + intXv m (vt(Xv) - vt(Xv_0)) times vt(Xv)\
+      = intXv (Xv - Xv_0) times F - intXv vt(Xv_0) times m vt(Xv)\
+      = intXv (Xv - Xv_0) times F - vt(Xv_0) times M vt(Xv_c)\
+      $
+    ]
+    #corollary()[][
+      惯性系中对质心，有：
+      $
+        vt(G) = intXv (Xv - Xv_c) times F
+      $
+    ]
+    #corollary()[][
+      质心系中对质心，有：
+      $
+        vt(G') = intXv (Xv - Xv_c) times F\
+        where G' = intXv (Xv - Xv_c) times m vt(Xv - Xv_c)
+      $
+
+    ]
+    #proof[
+      $
+        intXv (Xv - Xv_c) times m vt(Xv - Xv_c) 
+        &= intXv (Xv - Xv_c) times m vt(Xv) - intXv (Xv - Xv_c) times m vt(Xv_c)\
+        &=  intXv (Xv - Xv_c) times m vt(Xv) - (intXv m (Xv - Xv_c)) times vt(Xv_c)\
+        &= intXv (Xv - Xv_c) times m vt(Xv) \
+      $
+    ]
+    #theorem[柯尼西][
+      $
+        T = 1/2 M vtnorm2(Xv_c) + 1/2 intXv m vtnorm2(Xv - Xv_c) \
+      $
+      也即刚体的动能可以分解为质心的平动动能和刚体相对于质心的动能之和
+    ]
+  == 惯量张量
+    按定义，刚体绕定点 $Xv_0$ 的角动量就是：
+    $
+      bG = intXv m (Xv - Xv_0) times vt(Xv)
+    $
+    设刚体做定轴转动，轴过 $Xv_0$ ，角速度为 $omega$，则有：
+    $
+      vt(Xv) = omega times (Xv - Xv_0)
+    $
+    代入就有：
+    $
+      bG = intXv m (Xv - Xv_0) times (omega times (Xv - Xv_0))\
+      = intXv m (norm2(Xv - Xv_0) omega - ((Xv - Xv_0) dot omega) (Xv - Xv_0))\
+      = intXv m (norm2(Xv - Xv_0) omega - mulT(Xv - Xv_0) omega)\
+      = (intXv m norm2(Xv - Xv_0)) omega - (intXv m mulT(Xv - Xv_0)) omega\
+      = ((intXv m norm2(Xv - Xv_0)) E  - intXv m mulT(Xv - Xv_0)) omega\
+    $
+    其中 $E$ 是单位矩阵。我们定义：
+    $
+      bI = (intXv m norm2(Xv - Xv_0)) E  - intXv m mulT(Xv - Xv_0)
+    $
+    为刚体绕点 $Xv_0$ 的*惯量张量*，则有：
+    $
+      bG = bI omega
+    $
+    从形式上看，对于给定的 $Xv_0$，$bI$ 是一个对称矩阵。因此，如果 $omega$ 是它的一个特征向量，一定就有：
+    $
+      bI omega = lambda omega\
+      G = lambda omega
+    $
+    此时的转动轴是过 $Xv_0$ 的以 $omega$ 方向的轴。同时，它的三个特征向量恰好可以构成正交坐标系。这个坐标系被称为*主轴坐标系*。显然，在主轴坐标系中，$bI$ 就是一个对角矩阵。常见情形是，设 $omega_1. omega_2$ 是刚体的两个对称轴，则再找一个与其正交的向量，它们就构成了主轴坐标系。可以证明，主轴坐标下，有：
+    $
+      vt(bG) = I omega + omega times bG
+    $
+    另外，假设我们想求某个方向 $xi$ 上的转动惯量，假设建立直角坐标系：
+    $
+      xi, eta, zeta
+    $
+    则有：
+    $
+      I = intXv m ((Xv - Xv_0) dot zeta)^2 + ((Xv - Xv_0) dot eta)^2\ 
+      = intXv m (norm2(Xv - Xv_0) - ((Xv - Xv_0) dot xi)^2)\
+      = intXv m norm2(Xv - Xv_0) - intXv m quadFormSym(xi, mulT(Xv - Xv_0))\
+      = intXv m norm2(Xv - Xv_0) - quadFormSym(xi, intXv m  mulT(Xv - Xv_0))\
+      = xi^T (intXv m norm2(Xv - Xv_0) E) xi - quadFormSym(xi, intXv m  mulT(Xv - Xv_0))\
+      = xi^T bI xi\
+    $
+    假设现有坐标系是主轴坐标系，则：
+    $
+      bI = diag(I_1, I_2, I_3)
+    $
+    这就立刻求得了 $I$
+    // #definition()[][
+    //   设刚体做定轴转动，其轴为：
+    //   $
+    //     bC_0 + t bv
+    //   $
+    //   则定义其转动惯量为：
+    //   $
+    //     I = intXv m (norm2(Xv - bC_0) - ((Xv - bC_0) dot bv)^2)\
+    //   $
+    //   其中第二项就是点到转动轴的距离的平方
+    // ]
+
+
     
 
 
