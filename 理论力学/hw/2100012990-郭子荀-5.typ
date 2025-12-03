@@ -260,3 +260,91 @@
       - n - 1 > - 3\
       n < 2
     $
+= 戈  P144
+  == 1
+    设旋转抛物面方程为：
+    $
+      z = a (x^2 + y^2) = a r^2
+    $
+    取质点坐标为 $(r cos theta, r sin theta, z = a r^2)$，则：
+    - 动能为：
+      $
+        T = 1/2 m (vt2(r) + r^2 vt2(theta) + 4 a^2 r^2 vt2(r))\
+        = 1/2 m ((1 + 4 a^2 r^2) vt2(r) + r^2 vt2(theta))\
+      $
+    - 势能为：
+      $
+        V = m g z = m g a r^2
+      $
+    - 拉氏方程为：
+      $
+        dif/(dif t) (m r^2 vt(theta)) = 0\
+        dif/(dif t) (m (1 + 4 a^2 r^2) vt(r)) - 4 m a^2 r vt2(r) - m r vt2(theta) + 2 m g a r = 0\
+        4 a^2 r vt2(r) + (1 + 4 a^2 r^2) at(r)  - r vt2(theta) + 2 g a r = 0 
+      $
+      这两个拉氏方程就给出了等效的一维问题。假设轨道是圆，则 $vt(r) = 0$，代入有：
+      $
+        m r^2 vt(theta) = C\
+        2 g a r = r vt2(theta)\
+        vt(theta) = sqrt(2 g a)\
+        r = sqrt(C/(m vt(theta))) = sqrt(C/(m sqrt(2 g a)))
+      $
+      质点初速度大小为：
+      $
+        v_0 = r vt(theta) = sqrt((C sqrt(2 g a)) / m)
+      $
+      假设做微扰 $Delta r$，就有：
+      $
+        0 = 4 a^2 (r + Delta r) vt2(Delta r) + (1 + 4 a^2 (r + Delta r)^2) at(Delta r) - C'^2/(m^2 (r + Delta r)^3) + 2 g a (r + Delta r) \
+        approx (1 + 4 a^2 r^2) at(Delta r) - C'^2/m^2 (1/r^3 - 3 Delta r 1 / r^4) + 2 g a r + 2 g a Delta r\
+        = (1 + 4 a^2 r^2) at(Delta r) + ((3 C'^2)/(m^2 r^4) + 2 g) Delta r + ... 
+      $
+      其周期为：
+      $
+        omega^2 = ((3 C'^2)/(m^2 r^4) + 2 g)/(1 + 4 a^2 r^2)\
+      $
+  == 25
+    类似之前 19 题，轨道相当于原来轨道的 $r$ 取相反值。
+  == 27
+    假设入射角（也即粒子在 $r = a$ 的点上，入射速度方向与球心径向的夹角）为 $theta$，入射时动能为 $E = T = 1/2 m v_0^2$，则根据机械能守恒，穿过截面后，有：
+    $
+      T' - V_0 = E\
+      1/2 m v_1^2 = 1/2 m v_0^2 + V_0\
+      v_1 = sqrt(v_0^2 + 2 V_0 / m)
+    $
+    另外，速度的变化应该是沿径向的。因此切向速度保持 $v_0 sin theta$ 不变，进而出射角 $theta'$ 满足：
+    $
+      sin theta' = (v_0 sin theta) / v_1\
+      (sin theta) / (sin theta') = v_1 / v_0
+    $
+    上式即为等效折射率，它等于：
+    $
+      sqrt(1 + V_0 / (1/2 m v_0^2)) = sqrt((E + V_0) / E)
+    $
+    设出射时折射角为 $theta ''$，则根据几何关系有：
+    $
+      sin theta '' = sin theta
+    $
+    以及出射角为：
+    $
+      Theta = theta'' + theta - 2 theta' = 2 theta - 2 theta'\
+    $
+    此外，$theta$ 与 $s$ 的关系为：
+    $
+      sin theta = s / a
+    $
+    因此：
+    $
+      theta = arcsin(s / a)\
+      theta' = arcsin((sin theta) / n) = arcsin(s / (a n))
+    $
+    故：
+    $
+      Theta = 2 arcsin(s / a) - 2 arcsin(s / (a n))\
+      der(Theta, s) = 2 / sqrt(a^2 - s^2) - 2 / (n sqrt(a^2 - s^2 / n^2))\
+      sigma(Theta) = a / (der(Theta, s)) = 1/a 1/(2 / sqrt(a^2 - s^2) - 2 / (n sqrt(a^2 - s^2 / n^2)))
+    $
+    总截面为：
+    $
+      integral_(0)^(2 pi) 2 pi sin Theta sigma(Theta) dif Theta 
+    $
