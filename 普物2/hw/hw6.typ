@@ -123,6 +123,7 @@
     $
       lambda' = Delta / Delta' lambda = #scientificShow(0.22 / 0.25 * 5893e-10) "m"
     $
+    （*答案为 $640$ nm*）
   == 6
     根据等厚干涉公式，有：
     $

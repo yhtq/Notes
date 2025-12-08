@@ -1809,20 +1809,36 @@ Pv^T + e A
     $
       bI = diag(I_1, I_2, I_3)
     $
-    这就立刻求得了 $I$
-    // #definition()[][
-    //   设刚体做定轴转动，其轴为：
-    //   $
-    //     bC_0 + t bv
-    //   $
-    //   则定义其转动惯量为：
-    //   $
-    //     I = intXv m (norm2(Xv - bC_0) - ((Xv - bC_0) dot bv)^2)\
-    //   $
-    //   其中第二项就是点到转动轴的距离的平方
-    // ]
-
-
-    
+    这就立刻求得了 $I$。从方程也可以看出，所有 $xi$ 关于 $I$ 的等值面都是由矩阵 $I$ 确定的等值面。这被称为*惯量椭球*
+  == 刚体动能
+    考虑相对质心的动能 $T'$，有：
+    $
+      T' 
+      &= 1/2 intXv m vtnorm2(Xv - Xv_c)\
+      &= 1/2 intXv m norm2(omega times (Xv - Xv_c))\
+      &= 1/2 intXv , omega dot ((Xv - Xv_c) times vt(Xv - Xv_c))\
+      &= 1/2 omega dot bG'\
+      &= 1/2 quadFormSym(omega, I_c)
+    $
+    事实上，不考虑相对质心，同样有：
+    $
+      T = 1/2 quadFormSym(omega, I_0)
+    $
+    其中 $I_0$ 是相对任何一个固定点 $Xv_0$ 的转动惯量
+  == 定轴转动 
+    设刚体绕某个轴做定轴转动，轴上有一定点 $A$ 作为参考点，轴的方向为 $xi$，则有：
+    $
+      G_(A xi) = I_xi omega = (bI xi) omega\
+      I_xi vt(omega) = vt(G_(A xi)) = intXv (Xv - A) times F = L_(A)
+    $
+    这里，$L_A$ 就是相对 $A$ 点的外力矩。更详细的，假设轴被 $A, B$ 点约束，我们可以求轴承的受力。事实上，我们有公式：
+    $
+      M at(Xv_c) = intXv F + R_A + R_B\
+      vt(G_A) = (Xv_B - Xv_A) times R_B + intXv (Xv - Xv_A) times F
+    $
+    其中 $R_A, R_B$ 是 $A, B$ 点的约束力。
+    #example[][
+      设一圆筒
+    ]
 
 
