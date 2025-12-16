@@ -1721,7 +1721,7 @@ Pv^T + e A
         vt(G) = intXv (Xv - Xv_0) times F - vt(Xv_0) times M vt(Xv_c)
       $
       其中 $G = intXv (Xv - Xv_0) times m vt(Xv)$ 为总体的角动量，$Xv_0$ 是刚体上任何一个点
-    ]
+    ]<刚体的动量矩>
     #proof[
       $
       dif/(dif t)intXv (Xv - Xv_0) times m vt(Xv) \
@@ -1837,8 +1837,185 @@ Pv^T + e A
       vt(G_A) = (Xv_B - Xv_A) times R_B + intXv (Xv - Xv_A) times F
     $
     其中 $R_A, R_B$ 是 $A, B$ 点的约束力。
-    #example[][
-      设一圆筒
-    ]
+  == 瞬心
+    #definition()[瞬心][
+      在刚体的运动中，假设有一个点 $Xv_0$，使得：
+      $
+        vt(Xv_0) = 0
+      $
+      则称 $Xv_0$ 为*瞬心*。瞬心是一个瞬时的概念，随着刚体的转动而变化。注意瞬心只要求速度为零，不要求加速度为零。
 
+      例如说，在纯滚动中，接触点总是此刻的瞬心。
+    ]
+    设 $Xv_t$ 代表刚体 $t$ 时刻的瞬心（可能随时间变化），根据类似 @刚体的动量矩 的推导，我们有：
+    $
+      vt(G_(Xv_t)) = intXv (Xv - Xv_t) times F + vt(Xv_t) times M vt(Xv_c)\
+    $
+    此处，$vt(Xv_t)$ 表明瞬心位置的变化率（注意它未必为零），因此角动量定理未必成立。当然，在纯滚动中就有：
+    $
+      vt(G_(Xv_t)) = intXv (Xv - Xv_t) times F
+    $
+    之前说过，对于刚体的定轴转动总有：
+    $
+      T = 1/2 I_omega omega^2
+    $
+    在均匀纯滚动中，每一时刻都在关于瞬心做定轴转动。由于瞬心的对称性，关于瞬心的 $I_omega$ 是不变的，因此上面的公式直接给出了动能。
+  == 定点运动
+    定点运动是刚体力学中的重点。陀螺做的就是定点运动。通常而言，我们取固定在刚体上的主轴坐标系（不是参考系，基矢量随时间变化），也即设：
+    $
+      Xv = E(t) Xv'\
+      omega = E(t) omega'\
+      G = D omega' where D = diag(I_1, I_2, I_3)
+    $
+    可以计算出：
+    $
+      L = vt(G) = vt(G') + omega times G\
+    $
+    上面的等式在主轴坐标系下，就得到了*定点运动基本方程*，也叫*欧拉方程*
+    #definition()[欧拉角][
+      假设 $E(t) = (e_1, e_2, e_3)$ 是随刚体运动的主轴坐标系，对于 $t$ 时刻：
+      - 先将 $E(0)$ 以 $e_3 (0)$ 为轴作旋转，旋转角 $psi$ 称为进动角，$e'_1$ 称为节线。
+      - 再绕之前的节线 $e'_1$ 作旋转，旋转角 $theta$ 称为章动角，$e''_3$ 称为极轴。
+      - 最后绕极轴 $e''_3$ 作旋转，旋转角 $phi$ 称为自转角。
+      这三个角度称为*欧拉角*，它当然与转动的实际选择和顺序有关，不能叠加。
+
+      设 $2 times 2$ 转动矩阵为 $R_2 (theta)$，则旋转过程 $R$ 可写成：
+      $
+        R = mat(R_2 (phi), 0;0, 1) mat(1, 0;0, R_2 (theta)) mat(R_2 (psi), 0;0, 1)
+      $
+    ]
+    #theorem[][
+      实际的加速度成立：
+      $
+        omega = vt(psi) + vt(theta) + vt(phi)\
+      $
+      其中 $vt(psi)$ 和 $vt(phi)$ 不垂直，其余都是垂直的。这给出了欧拉运动学方程：
+      $
+        omega'_1 = vt(psi) sin theta sin phi + vt(theta) cos phi\
+        omega'_2 = vt(psi) sin theta cos phi - vt(theta) sin phi\
+        omega'_3 = vt(psi) cos theta + vt(phi)
+      $
+    ]
+    结合动力学方程和运动学方程，理论上就可以求解刚体的运动。不过，其方程非常复杂，可以证明，除了以下三种特殊情形：
+    - $L = 0$，这种运动称为绕定点的自由运动，被称为欧拉-潘索情形
+    - $I_1 = I_2$，仅受重力作用，重心在质心。这种运动称为对称陀螺运动，被称为拉格朗日-泊松情形
+    - $I_1 = I_2 = 2 I_3$，刚体仅受重力作用，重心在赤道平面。这种情形称为柯凡律夫斯卡娅情形
+    外，不存在解析解。
+    === 刚体自由运动
+      刚体自由运动是指没有外力矩作用的定点运动。此时，欧拉方程变为：
+      $
+        I_1 der(omega'_1, t) + (I_3 - I_2) omega'_2 omega'_3 = 0\
+        I_2 der(omega'_2, t) + (I_1 - I_3) omega'_3 omega'_1 = 0\
+        I_3 der(omega'_3, t) + (I_2 - I_1) omega'_1 omega'_2 = 0
+      $
+      这个方程组有两个积分：
+      以及初积分：
+      $
+        T = 1/2 quadFormSym(omega', D) = E_0\
+        norm(G) = norm(G') = norm2(D omega') = L_0^2
+      $
+      使用初积分，可以解出 $omega' = f(omega'_3)$，再代入欧拉运动学方程，就可以解出 $omega'_3$ 随时间的变化。
+      
+      还有一种半定量半定性方法，称为潘索方法。取刚体的质心为主轴坐标系的原点，由于 $G$ 是守恒量，不妨设其为 $vec(0, 0, G)$，可以证明：
+      - 
+        $
+          omega_G = omega dot G / norm(G)\
+          = 1/norm(G) (E(t) omega') dot (E(t) D omega')\
+          = 1/norm(G) quadFormSym(omega', D)\
+          = 2 E_0 / norm(G)
+        $
+        是常数
+      - 设 $N = k omega$ 满足 $quadFormSym(N, D) = 1$，也就是角动量方向与惯量椭球的交点，代入之前的结论计算得：
+        $
+          norm(N) = norm(omega) / sqrt(2 E_0)\
+          N = 1/sqrt(2 E_0) omega
+        $ 
+        因此该点切平面方程为：
+        $
+          1/sqrt(2 E_0) omega^T D Xv' = 1
+        $
+        也即：
+        $
+          G_0 Xv' = sqrt(2 E_0)\
+        $
+        显然，该平面是固定的，不随时间变化。该平面与中心的距离为：
+        $
+          sqrt(2 E_0) / norm(G_0)
+        $
+        某种意义上，就是刚体在该固定切平面上，绕 $G$ 做纯滚动。角速度沿质心与切点的连线。
+    如果刚体是对称的，即 $I_1 = I_2$，则我们可以定量求解。此时，欧拉方程变为：
+    $
+      I_1 der(omega'_1, t) + (I_3 - I_1) omega'_2 omega'_3 = 0\
+      I_1 der(omega'_2, t) + (I_1 - I_3) omega'_3 omega'_1 = 0\
+      I_3 der(omega'_3, t) = 0
+    $
+    立刻可得 $omega'_3 = "const"$，代入前两式，得到：
+    $
+      vt(omega'_1) = - ((I_3 - I_1)/I_1) omega'_2 omega'_3 := A omega'_2\
+      vt(omega'_2) = ((I_3 - I_1)/I_1) omega'_1 omega'_3 := - A omega'_1\
+      where A = ((I_3 - I_1)/I_1) omega'_3
+    $
+    这就是常系数线性微分方程：
+    $
+      dif/(dif t) vec(omega'_1, omega'_2) = mat(0, - A; A, 0) vec(omega'_1, omega'_2)
+    $
+    不妨设解是周期的，则可以表示为：
+    $
+      omega'_1 = C cos (A t + phi)\
+      omega'_2 = C sin (A t + phi)
+    $
+    这也表明：
+    $
+      norm(omega) = sqrt(omega'_1^2 + omega'_2^2 + omega'_3^2) = sqrt(C^2 + omega'_3^2) = "const"
+    $
+    典型的，地球可以认为是一个对称刚体。上面的结果表明，地球自转的角速度并不完全沿对称轴，而是以 $A$ 为频率绕对称轴转动，这就导致了纬度变迁现象。（事实上我们对北极点的定义是自转轴与北半球的交点）可以计算出，地球的 $A$ 大概为 $(2 pi) / 300$ 每天，也即大概 $300$ 天转一圈。
+
+    同时，如果假设 $G$ 沿惯性系的 $z$ 方向，则刚体主轴坐标系中 $z'$ 轴与 $z$ 轴的夹角就是欧拉角之中的章动角 $theta$。根据之前的结论，有：
+    $
+      G_z = G cos theta = I_3 omega'_3\
+    $
+    是常数，因此地球不会有章动。再结合 $omega = vt(psi) + vt(theta) + vt(phi)$，可以得到 $omega$ 总是与 $G, z'$ 是共面的。若设 $alpha$ 是 $omega, z'$ 夹角，可以证明 $cos alpha = omega_z / omega < cos theta$，进而 $alpha > theta$
+
+    最后，我们代入欧拉运动学方程，由于 $vt(theta) = 0$，我们有：
+    $
+      omega'_1 = vt(psi) sin theta sin phi\
+      omega'_2 = vt(psi) sin theta cos phi\
+      omega'_3 = vt(psi) cos theta + vt(phi)
+    $
+    代入有：
+    $
+      vt(psi) sin theta sin phi = C cos (A t + phi)\
+      vt(psi) sin theta cos phi = C sin (A t + phi)\
+    $
+    平方相加就有：
+    $
+      vt(psi) = C / (sin theta) = "const"
+    $
+    这表明，进动角速度是常数。注意事实上 $C$ 是地球自转运动的周期（一天），上面的进动速度比自转速度大得多。
+
+    接下来，代回就有：
+    $
+      sin phi = cos (A t + phi) = sin (A t + phi + pi/2)\
+      vt(phi) = A
+    $
+  == 刚体的稳定性
+    人们使用陀螺仪来测量方位。陀螺仪的原理就是一个相当稳定的刚体自由转动，希望它总是绕某个固定方向转动。
+
+    假设扰动刚体绕某个惯量主轴转动，也即 $omega$ 是稳定的，不随时间变化。我们考察做小扰动后 $omega$ 是否能保持稳定。做小扰动后，有：
+    $
+      omega = omega_0 + omega_1 (t)
+    $
+    代入欧拉动力学方程：
+    $
+      vt(omega') = quadFormSym(omega', L) where L = 1/2 vec(mat(0, (I_3 - I_1)/I_2; (I_1 - I_2)/I_3, 0), mat(0, (I_2 - I_3)/I_1; (I_1 - I_2)/I_3, 0), mat(0, (I_1 - I_2)/I_3; (I_2 - I_1)/I_3, 0))
+    $
+    就有：
+    $
+      vt(omega'_0 + omega'_1) = quadFormSym(omega'_0 + omega'_1, L)
+    $
+    忽略高阶项就是：
+    $
+      vt(omega'_1) = quadForm(omega'_0, L, omega'_1)
+    $
+    因此，它的稳定性取决于 $omega'_0^T L$ 的正定性。如果它完全负定，则扰动会导致周期运动，进而是稳定的。否则，扰动会导致指数增长，进而是不稳定的。
 

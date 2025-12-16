@@ -1584,7 +1584,54 @@
       $
       如此，利用 $P'_1 -> im d'$ 的满射性可以得到 $P_1 -> P'_1$，追图可以得到交换性。依此类推，可以得到整个图表的态射 $tilde(f) : P -> P'$
     ]
-    #TODO ($Tor$ 的构造)
+    接下来，我们给出加性函子 $T$ 的左导出函子的定义。设 $C$ 中有足够多的投射对象，则任何对象都有投射解消。对于任何 $A$，它的投射分解形如：
+    $
+      ... -> P_2 -> P_1 -> P_0 -> A
+    $
+    使用函子 $T$ 作用，得到复形：
+    $
+      ... -> T(P_2) -> T(P_1) -> T(P_0) -> T(A)
+    $
+    定义：
+    $
+      L_n T (A) := H_n ( ... -> T(P_2) -> T(P_1) -> T(P_0) -> T(A))
+    $
+    类似地，如果 $C$ 有足够多的入射对象，则可以定义右导出函子 $R^n T$。首先，我们验证它的函子性。大体来说，比较定理给出了将 $f : A -> A'$ 延拓到投射解消的方式，且任何两个这样的延拓是同伦的。经函子作用再诱导到同调群上，得到的映射是唯一的。因此，它具有函子性。
+
+    #definition()[][
+      - 取 $B = * tensorProduct N$，则称 $Tor_n^R (M, N) := L_n B (M)$
+      - 取 $B = M tensorProduct *$，则称 $"tor"_n^R (N, M) := L_n B (M)$
+      后面会证明，它们其实是相等的
+    ]
+
+    #lemma[][
+      设 $T$ 是保持乘法（乘法作为态射的作用仍然是乘法态射）的加性函子，$C$ 有足够多的投射对象，则 $L_n T$ 也保持乘法。
+    ]
+
+    之前的导出函子都是对于某一种投射分解而言的。下面我们证明这个选定方式是无关紧要的
+    #lemma[][
+      如果 $L_n, L'_n$ 是不同的投射分解得到的导出函子，则它们自然同构。
+    ]
+    #proof[
+      首先，对于给定的 $A$，我们找到 $L_n A eqv L'_n A$，事实上，我们有两列投射分解：
+      $
+        ... -> P_2 -> P_1 -> P_0 -> A -> 0\
+        ... -> P'_2 -> P'_1 -> P'_0 -> A -> 0
+      $
+      而 $A -> A$ 之间选取 $id$ 态射，立刻就可以通过比较定理得到 $f : P -> P'$，反过来，也可以得到 $g: P' -> P$，注意它们的合成未必是 $id$，但根据比较定理一定同伦于 $id$，因此，它们诱导在同调群上的映射确实是互逆的，因此是同构。
+
+      类似的，对于自然性，也是根据比较定理得到的同伦性得到结论。
+    ]
+
+    #lemma()[][
+      $
+        (L_(n + 1) T) A eqv (L_n T) K_0 eqv (L_(n - 1) T) K_1 eqv ...
+      $
+    ]
+    #proof[
+      注意到投射解消就是依次做 $K_i = ker epsilon$ 的投射解消，因此立刻可得结论。
+    ]
+
     #proposition()[Horsesshoes 马蹄引理][
       设 Abel 范畴中有足够的投射对象，有复形的短正合列：
       $
@@ -2098,3 +2145,117 @@
 
 
 
+= 群同调
+  == 概念
+    设 $G$ 是有限群，$k$ 是域，研究群同调就是研究 $k[G]-$ 模的模范畴。注意到它是一个对称代数，这表明其中的投射模和入射模是一致的。
+    #theorem[][
+      在群模范畴中，任意模都有投射覆盖
+    ]
+    #lemma[Schanuel's][
+      设 $P -> M, Q -> M$ 都是满同态，$P, Q$ 是投射模，则 $P directSum ker (Q -> M) eqv Q directSum ker (P -> M)$. 事实上，它们都是 $Q times_M P$
+    ]
+    #definition()[极小投射分解][
+      称 $P_i -> M$ 是极小的投射分解，如果对于任何投射覆盖 $Q_i -> M$，存在嵌入 $(P_i -> M) -> (Q_i -> M)$
+
+      根据投射覆盖的存在性，极小投射分解总是存在的
+    ]
+    类似的，也可以定义它的极小入射分解。
+    #definition()[][
+      设 $M$ 是模，$P_i -> M -> I_(-i)$ 中，左侧是极小投射分解，右侧是极小入射分解，则定义：
+      $
+        Omega^n (M) = ker (d_(n - 1)) = im (d_n) = coim (d_n) = coker (d_(n + 1))\
+      $
+    ]
+    #proposition[][
+      - $Omega^n (P) = 0$，$P$ 是投射模
+      - $Omega^n (M)$  中没有投射子模
+    ]
+    #definition()[][
+      设 $P_i -> M$ 是投射分解，则有复形：
+      $
+        0 -> Hom(P_0, N) -> Hom(P_1, N) -> Hom(P_2, N) -> ...
+      $
+      定义 $Ext^n (M, N)$ 为该复形在 $n$ 处的同调群。设 $k$ 是平凡模，则定义群同调为：
+      $
+        H^n (G, N) = Ext^n (k, N)
+      $
+    ]
+    #theorem[][
+      $Ext^n (M, N)$ 与 $Hom(Omega^n (M), N)$ 之间存在双向的映射
+    ]
+    #proof[
+      不妨设我们取的投射解消是极小投射解消。首先，任取 $xi in Ext^n (M, N)$，可设：
+      $
+        xi = xi' + im Hom(d_n, N)
+      $
+      且：
+      $
+        xi in ker Hom(d_(n + 1), N) => Hom(d_(n + 1), N) (xi') = 0 => xi' compose d_(n + 1) = 0
+      $
+      注意到：
+      $
+        Omega^n (M) = coker d_(n + 1)
+      $
+      因此根据 $coker$ 性质存在唯一的 $tilde(xi) : Omega^n (M) -> N$ 使得 $tilde(xi) compose pi = xi'$
+
+      反过来的过程也是类似的。（但是需要注意到投射模也是入射模）
+    ]
+  == Stable category
+    #let calM = $cal(M)$
+    #definition()[稳定范畴][
+      设 $calM$ 是 $k[G]-$ 模的范畴，称它的稳定范畴 $underline(calM)$ 是与 $calM$ 有相同对象的范畴，态射由以下商构成：
+      $
+        underline(Hom) (M, N) = Hom_(calM) (M, N) quo {f : M -> N | f "factor through 某个投射模" }
+      $
+      显然，所有投射模在稳定范畴中都是零。它仍是加法范畴，但未必是 Abel 范畴。
+    ]
+    #lemma[][
+      $Ext^n (M, N) eqv underline(Hom) (Omega^n (M), N)$
+    ]
+    #theorem[][
+      设 $P, Q$ 分别是 $M, N$ 的投射解消，则：
+      $
+        C(P, Q) eqv underline(Hom)(M, N) = underline(Hom)(Omega^n (M), Omega^n (M))
+      $
+    ]
+    #proof[
+      设 $alpha - beta : M -> N$ 可以 factor through 某个投射模，可以证明它 factor through $Q_0$，依次就可以得到同伦映射。
+    ]
+  == 三角化范畴
+    #definition()[三角化范畴][
+      称加性范畴 $calM$ 是三角化范畴，如果它配备了一个自同构 $T : calM -> calM$ （称为移位（translation））以及一类三角形（$X ->^f Y ->^g Z ->^h T X$），满足以下条件：
+      - $U ->^id -> U -> 0 -> T U$ 是三角形 
+      - 与某个三角形同构的图形也是三角形
+      - 对于任何 $U, V, U -> V$ 可以找到 $W$ 使得 $U -> V -> W -> T U$ 是三角形 
+      - 满足轮换性，也即如果 $U -> V -> W -> T U$ 是三角形，则 $V -> W -> T U -> T V$ 以及 $W -> T U -> T V -> T W$ 也是三角形
+      - （八面体公理）设有八面体型的交换图，其中有三个表面是三角，则其他的都是三角
+    ]
+    #example()[][
+      复形范畴就是典型的三角化范畴，其中移位是复形的度数提升
+    ]
+    #theorem[][
+      稳定范畴是三角化范畴，其中移位是 $Omega^(-1)$，$U, V, W$ 是三角，如果：
+      $
+        0 -> U -> V directSum P -> W -> 0\
+        0 => V -> W directSum Q -> Omega^(-1) U -> 0\
+      $
+      其中 $P, Q$ 是某个投射模  
+    ]
+    #proof[
+      略
+    ]
+  == 
+    #definition()[][
+      定义复形间的张量积为：
+      $
+        (C tensorProduct D)_n = directSum_(i + j = n) C_i tensorProduct D_j\
+        d (c_i tensorProduct d_j) = d_C (c_i) tensorProduct d_j + (-1)^i c_i tensorProduct d_D (d_j)
+      $
+      可以证明，它仍然是一个复形
+    ]
+    #lemma[][
+      设 $C, D$ 是两个复形，则：
+      $
+        H_n (C tensorProduct D) eqv b directSum_(i + j = n) H_i (C) tensorProduct H_j (D)
+      $
+    ]
