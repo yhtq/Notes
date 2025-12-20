@@ -1381,6 +1381,52 @@
       $
       是长正合列。
     ]<homotoolgy-connecting-morphism>
+    #proof[
+      连接映射应该是：
+      $
+        ker d''_n quo im d''_(n + 1) -> ker d'_(n - 1) quo im d'_(n)
+      $
+      $
+        #align(center)[#commutative-diagram(
+        node((0, 0), $C'_(n)$, 1),
+        node((0, 1), $C_n$, 2),
+        node((0, 2), $C''_n$, 3),
+        node((1, 0), $C'_(n - 1)$, 4),
+        node((1, 1), $C_(n - 1)$, 5),
+        node((1, 2), $C''_(n - 1)$, 6),
+        node((-1, 2), $ker d''_n$, 7),
+        node((-1, 1), $ker d_n$, 8),
+        // node((-1, 0), $ker d'_n$, 9),
+        node((2, 1), $ker = im$, 9),
+        node((2, 0), $ker d'_(n - 1)$, 10),
+        arr(1, 2, $$),
+        arr(2, 3, $$),
+        arr(4, 5, $$),
+        arr(5, 6, $$),
+        arr(1, 4, $$),
+        arr(2, 5, $$),
+        arr(3, 6, $$),
+        arr(7, 3, $$),
+        arr(8, 2, $$),
+        arr(8, 7, $$),
+        // arr(9, 1, $$),
+        arr(9, 5, $$),
+        arr(1, 8, $$, dashed_str),
+        arr(4, 9, $$, bij_str),
+        arr(8, 9, $$, dashed_str, curve: -40deg),
+        arr(10, 4, $$),
+        arr(8, 10, $$, dashed_str)
+        )]
+      $
+      可以证明，$ker d_n$ 是 $C_n, ker d''_n$ 关于 $C''_n$ 的拉回，进而 $ker d_n -> ker d''_n$ 是满射，且 $ker (ker d_n -> ker d''_n) = ker (C_n -> C''_n) = C'_n$
+
+      根据交换图，就有：
+      $
+        d' (ker d_n -> C'_(n - 1)) = 0
+      $
+
+      因此产生了两个 $ker$ 间映射，再通过商的性质得到同调群之间的映射。
+    ]
     #theorem[Snake lemma][
       设有以下交换图：
       #align(center)[#commutative-diagram(
@@ -1583,6 +1629,44 @@
         P_1 -> P_0 -> P'_0 -> A' = P_1 -> P_0 -> A -> A' = 0
       $
       如此，利用 $P'_1 -> im d'$ 的满射性可以得到 $P_1 -> P'_1$，追图可以得到交换性。依此类推，可以得到整个图表的态射 $tilde(f) : P -> P'$
+    ]
+    #proof[
+      我们验证同伦意义下的唯一性。根据加性，不妨设 $f_0 = 0$，只需验证其余的 $f$ 都零伦即可。令 $s_0: A -> P'_0 = 0$，注意到：
+      $
+        P_0 -> P'_0 -> A' = P_0 -> A -> A' = 0
+      $
+      因此 $P_0 -> P'_0$ 诱导 $P_0 -> ker d' = im d'$，根据满射性和投射模性质，就可以得到：
+      $
+        s_1: P_0 -> P'_1
+      $
+      并且显有 $P_0 -> P'_0 = d s_1$. 一般的，如果：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $P_(4)$, 1),
+      node((0, 1), $P_3$, 2),
+      node((0, 2), $P_2$, 3),
+      node((0, 3), $P_1$, 4),
+      node((1, 0), $P'_4$, 5),
+      node((1, 1), $P'_3$, 6),
+      node((1, 2), $P'_2$, 7),
+      node((1, 3), $P'_1$, 8),
+      arr(1, 2, $$),
+      arr(2, 3, $$),
+      arr(3, 4, $$),
+      arr(5, 6, $$),
+      arr(6, 7, $$),
+      arr(7, 8, $$),
+      arr(1, 5, $$),
+      arr(2, 6, $$),
+      arr(3, 7, $$),
+      arr(4, 8, $$),
+      arr(3, 6, $s$),
+      arr(4, 7, $s$)
+      )]
+      满足：
+      $
+        P_2 -> P'_2 = d s + s d
+      $
+      注意到：$d(P_3 -> P'_3 - s d) = (P_2 -> P'_2) d - d s d = d s d + s d d - d s d = 0$，因此 $P_3 -> P'_3 - s d$ 诱导 $s : P_3 -> ker d = im d$，根据满射性就可以提升得到 $s: P_3 -> P'_4$
     ]
     接下来，我们给出加性函子 $T$ 的左导出函子的定义。设 $C$ 中有足够多的投射对象，则任何对象都有投射解消。对于任何 $A$，它的投射分解形如：
     $
@@ -2259,3 +2343,374 @@
         H_n (C tensorProduct D) eqv b directSum_(i + j = n) H_i (C) tensorProduct H_j (D)
       $
     ]
+    #lemma[][
+      设 $P_n, Q_n$ 分别是 $M, N$ 的投射解消，则 $P_n tensorProduct Q_n$ （复形的张量积）是 $M tensorProduct N$ 的投射解消
+    ]
+    #definition()[][
+      定义：
+      $
+        E = directSum_n Ext^n (k, k)
+      $
+      还可以通过复形的乘法定义它的乘积，就构成了分次模。
+    ]
+  == Ext 函子的性质
+    #proposition()[][
+      $
+        Ext (directSum A_k, B) eqv product Ext (A_k, B) \
+      $
+    ]
+    #proof[
+      这个证明是典型的 dimension shifting. 对于任何 $A_k$，设投射分解为：
+      $
+        Q_k -> A_k
+      $
+      可以验证，$directSum Q_k$ 就是 $directSum A_k$ 的投射分解。第一步，考虑正合列：
+      $
+        0 -> L_k -> Q_k (1) -> A_k -> 0\
+      $
+      直和起来，就是：
+      $
+        0 -> directSum L_k -> directSum Q_k (1) -> directSum A_k -> 0\
+      $
+      就得到正合列：
+      $
+        Hom (directSum Q_k (0), B) -> Hom (directSum L_k, B) -> Ext^1 (directSum A_k, B) -> 0\
+      $
+      注意到前两项都自然同构于 $Hom$ 的积，根据 $5-$ 引理，自然就有 $Ext^1 (directSum A_k, B)$ 同构于 $product Ext^1 (A_k, B)$。对于之后的位置，依此类推即可。
+    ]
+    #proposition()[][
+      $
+        Ext (A, product B_k) eqv product Ext (A, B_k) \
+      $
+    ]
+    #example()[][
+      计算 $Ext^1_ZZ (ZZ quo m ZZ, B)$:
+      - 首先，有正合列：
+        $
+          0 -> ZZ ->^(* m) ZZ -> ZZ quo m ZZ -> 0\
+        $
+        使用 $Hom$ 函子作用，就有：
+        $
+          Hom(Z, B) -> (*m)^* Hom(Z, B) -> Ext^1 (ZZ quo m ZZ, B) -> Ext^1 (ZZ, B) = 0\
+        $
+        （注意到 $ZZ$ 自己当然是投射模），同时，注意到：
+        $
+          Hom(ZZ, B) eqv B\
+        $
+        根据 $5-$ 引理，以及正合列：
+        $
+          B -^(* m) B -> B quo m B -> 0\
+        $
+        就得到：
+        $
+          Ext^1_ZZ (ZZ quo m ZZ, B) eqv B quo m B\
+        $
+      
+      作为推论，注意到有限交换群都是循环群的直和，而：
+      $
+        Ext^1_ZZ (directSum ZZ quo n_i ZZ, B) eqv product Ext^1_ZZ (ZZ quo n_i ZZ, B) eqv product B quo n_i B\
+      $
+    ]
+= 谱序列
+  == 基本概念
+    #definition()[][
+      设 $M, N$ 是分次模，称 $f$ 是 $a$ 次的分次模映射，如果对于所有 $n$，$f$ 对应一个态射 $M_n -> N_(n + a)$，记作 $deg(f) = a$
+    ]
+    #example()[][
+      设 $C$ 是复形，则 $d_C$ 是 $1$ 次的分次模映射
+    ]
+    #proposition()[][
+      设 $deg(f) = a, deg(f) = b$，则 $deg(f compose g) = a + b$
+    ]
+    #definition()[][
+      分次模可以构成一个范畴，其中的态射是任意 degree 的态射。这个范畴不是加法范畴，但仍然可以定义 $ker, coker$ 和正合性。
+    ]
+    下面，回顾短正合列诱导长正合列，设有复形的正合列：
+    $
+      0 -> C' -> C -> C'' -> 0\
+    $
+    有时，我们会把它诱导的，同调群之间的映射记作*正合三角*：
+    #align(center)[#commutative-diagram(
+    node((0, 0), $H(C')$, 1),
+    node((0, 1), $H(C)$, 2),
+    node((1, 0), $H(C'')$, 3),
+    arr(1, 2, $i$),
+    arr(2, 3, $pi$),
+    arr(3, 1, $partial$),)]
+    其中，$deg(i), deg(pi) = 0, deg(partial) = -1$
+    #definition()[双分次模][
+      称分次模 $M$ 是双分次模，如果它有两个分次结构 $ M_(i, j)$。类似的，双分次模的态射是：
+      $
+        f_(i, j) : M_(i, j) -> N_(i + p, j + q)
+      $
+      我们称 $deg(f) = (p, q)$
+
+      类似的，双分次模也可以构成一个范畴。
+    ]
+    #definition()[双复形][
+      称双分次模 $C_(i, j)$ 是双复形，如果它配备了两个微分 $d_h, d_v$，满足：
+      - $deg(d_h) = (-1, 0), deg(d_v) = (0, -1)$
+      - $d_h compose d_h = 0 = d_v compose d_v$
+      - $d_h compose d_v + d_v compose d_h = 0$
+      
+      类似的，双复形也可以构成一个范畴。可以验证，对于一个双复形，每条直线画出的部分（包括每行、每列、对角线等）都是复形。以及，称每条对角线直和组成的复形为*全复形*，记作 $Tot(C)$，定义为：
+      $
+        Tot(C)_n = directSum_(i + j = n) C_(i, j)\
+        d_n = directSum_(i + j = n) (d_h + d_v)\
+      $
+    ]
+    #example()[][
+      设有双分次模，以及两个微分运算，满足：
+      - $deg(d_h) = (-1, 0), deg(d_v) = (0, -1)$
+      - $d_h compose d_h = 0 = d_v compose d_v$
+      - $d_h compose d_v = d_v compose d_h$
+      实际上，它和双复形结构几乎是一样的，只需要把 $d_h$ 隔项取负即可。
+    ]
+    #definition()[双函子][
+      称一个函子是双函子，如果有交换图：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $T (A, B)$, 1),
+      node((0, 1), $T(A, B')$, 2),
+      node((1, 0), $T(A', B)$, 3),
+      node((1, 1), $T(A', B')$, 4),
+      arr(1, 2, $T(A, g)$),
+      arr(1, 3, $T(f, B)$),
+      arr(2, 4, $T(f, B')$),
+      arr(3, 4, $T(A', g)$),)]
+      常见的 $Hom, tensorProduct$ 都是双函子
+    ]
+    设 $R$ 是环，$A, B$ 是两个正复形（下标递减，负项均为零），可以定义双复形：
+    $
+      M_(p, q) = A_p tensorProduct_R B_q\
+      d_h = d_A tensorProduct id_B,\
+      d_v = (-1)^p id_A tensorProduct d_B\
+    $
+    （它的全复形就是之前定义的复形的张量积）
+    它非负的项都在第一象限。因此，我们称双复形是第一象限的，如果对于 $p < 0 or q < 0$ 均有 $M_(p, q) = 0$
+    #definition()[转置][
+      设 $C$ 是双复形，称它的转置 $C^T$ 是双复形，其中：
+      $
+        C^T_(p, q) = C_(q, p), d_h^T = d_v, d_v^T = d_h\
+      $
+      显然，转置不改变全复形。
+    ]
+    #definition()[filteration][
+      设 $C$ 是 Abel 范畴，称 $... subset F_(p - 1) C subset F_p C subset F_(p + 1) C subset ...$ 是 $C$ 的一个滤子（filteration），其中后项与前项的商称为因子（factor）
+    ]
+    #example[][
+      对于双复形，可以取 $F_p C$ 是横坐标小于 $p$ 的对角线的直和。可以验证它是全复形的一个滤子。这种滤子称为*第一种滤子（first filtration）*。类似的，取纵坐标小于 $p$ 的对角线的直和，也可以得到一个滤子，称为*第二种滤子（second filtration）*。
+    ]
+    #definition()[正合偶(exact couple)][
+      称一个正合三角：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $D$, 1),
+      node((0, 1), $D$, 2),
+      node((1, 0), $E$, 3),
+      arr(1, 2, $i$),
+      arr(1, 3, $j$),
+      arr(3, 2, $k$),)]
+      是一个正合偶，其中 $D, E$ 是双分次模
+    ]
+    #proposition()[][
+      设 $F^p (C)$ 是 $C$ 的一个滤子，则设 $D$ 是所有同调群构成的双复形做一平移，$E$ 是后面的滤子商掉前面的滤子再取同调构成的双复形做一平移，也即：
+      $
+        D_(p, q) = H_(p + q) (F^p C) \
+        E_(p, q) = H_(p + q) (F^p C quo F^(p - 1) C) \
+      $
+      则有正合偶：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $D$, 1),
+      node((0, 1), $D$, 2),
+      node((1, 0), $E$, 3),
+      arr(1, 2, $alpha (1, -1)$),
+      arr(1, 3, $beta (0, 0)$),
+      arr(3, 2, $gamma (-1, 0)$, label-pos: right),)]
+      其中 $beta$ 是复形间的商映射，$gamma$ 来自于短正合列诱导的长正合列的连接同态，$alpha$ 是滤子的嵌入映射（的诱导）
+    ]
+    #definition()[微分双分次模][
+      称双分次模 $E$ 是微分双分次模，如果它配备了一个微分 $d$，满足：
+      - $d compose d = 0$
+      进而，可以定义它的同调群：
+      $
+        H_(p, q) = ker (d_(p, q)) quo im (d_(p - a, q - b)) where deg(d) = (a, b)
+      $
+    ]
+    #proposition()[][
+      设： 
+      #align(center)[#commutative-diagram(
+      node((0, 0), $D$, 1),
+      node((0, 1), $D$, 2),
+      node((1, 0), $E$, 3),
+      arr(2, 1, $alpha$),
+      arr(3, 2, $gamma$),
+      arr(1, 3, $beta$),)]
+      是正合偶，则 $beta gamma$ 就是 $E$ 上的一个微分，且有导出的正合偶：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $D^2$, 1),
+      node((0, 1), $D^2$, 2),
+      node((1, 0), $E^2$, 3),
+      arr(2, 1, $alpha^2$),
+      arr(3, 2, $gamma^2$),
+      arr(1, 3, $beta^2$),)]
+      其中 $D^2 = im alpha subset D, E^2 = H (E, beta gamma) = ker d quo im d$，以及：
+      $
+        alpha^2  = alpha|_(im alpha)\
+        beta^2 (y) = [beta Inv(alpha) y]\
+        gamma^2([z]) = gamma z
+      $
+    ]
+    #proof[
+      （定义的验证可能会考）、
+
+      首先，注意到：
+      $
+        beta gamma beta gamma = beta (gamma beta) gamma = 0
+      $
+      因此 $d = beta gamma$ 确实是一个微分。$alpha^2$ 的构造是容易的，对于 $beta$ 而言，注意到：
+      $
+        im alpha = D^2
+      $
+      我们要找一个 $im alpha -> ker (beta gamma) quo im (beta gamma)$ 的映射。注意到：
+      #align(center)[#commutative-diagram(
+      node((0, 0), $D$, 1),
+      node((0, 1), $im alpha eqv D quo (ker alpha)$, 2, surj_str),
+      node((1, 0), $ker (beta gamma)_(deg(beta))$, 3),  
+      node((1, 1), $E_(deg(beta))$, 4),
+      node((0, 2), $D_(deg(alpha))$, 5),
+      node((2, 0), $ker (beta gamma)_(deg(beta)) quo im (beta gamma)_(- deg(gamma))$, 6),
+      arr(1, 2, $alpha$),
+      arr(2, 5, $$),
+      arr(1, 3, $$, dashed_str),
+      arr(3, 4, $$),
+      arr(1, 4, $beta$),
+      arr(3, 6, $$),
+      )]
+      其中 $D -> ker (beta gamma)$ 是因为 $(beta gamma) beta = 0$. 同时：
+      $
+        im (gamma)_(-deg(gamma)) subset ker alpha\
+         beta (im (gamma)_(-deg(gamma))) subset beta(ker alpha)
+      $
+      这就导出 $ker alpha -> ker (beta gamma)_(deg(beta)) quo im (beta gamma)_(- deg(gamma)) = 0$，进而上图诱导 $im alpha eqv D quo (ker alpha) -> H_(deg(beta))$
+
+      至于 $gamma^2$ 我们要给出映射：
+      $
+        ker (beta gamma) quo im (beta gamma) -> im alpha\
+      $
+      显然有：
+      $
+        #align(center)[#commutative-diagram(
+        node((0, 0), $ker (beta gamma)$, 1),
+        node((0, -1), $im (beta gamma)_(- deg(beta) - deg(gamma))$, 2),
+        node((1, 0), $E$, 3),
+        node((1, 1), $D$, 4),
+        node((0, 1), $ker (beta gamma) quo im (beta gamma)_(- deg(beta) - deg(gamma))$, 5),
+        arr(2, 1, $$),
+        arr(1, 3, $$),
+        arr(3, 4, $gamma$),
+        arr(1, 5, $$)
+        )]
+      $
+      不难验证：
+      $
+        im(ker (beta gamma) -> D) subset ker beta = im alpha\
+        im (beta gamma)_(- deg(beta) - deg(gamma)) -> D  = 0 => im (beta gamma)_(- deg(beta) - deg(gamma)) -> im alpha = 0
+      $
+      自然就导出我们需要的映射。
+
+      还要验证正合性。我们有：
+      -
+        $
+          im gamma^2 = im (ker (beta gamma) quo im (beta gamma)_(- deg(beta) - deg(gamma)) -> im alpha)\
+          = im (ker (beta gamma) -> D)\
+          = gamma (ker (beta gamma))
+        $
+      - 
+        $
+          ker alpha^2 = ker alpha inter im alpha_(- deg(alpha)) = im gamma_(- deg (alpha)) inter ker beta = im gamma^2_(- deg(alpha))
+        $
+      -
+        $
+          im alpha^2 = im alpha|_(im alpha) = im alpha alpha_(- deg(alpha))
+        $
+      - 
+        $
+          ker beta^2 = alpha(im gamma_(- deg(gamma)) + ker beta) quo (ker alpha)\
+          = alpha(ker alpha + im alpha) quo (ker alpha)\
+          = im alpha^2
+        $
+      // 注意到对于任何 $A, B, C$ 有推出图表：
+      // #align(center)[#commutative-diagram(
+      // node((0, 0), $B$, 1),
+      // node((0, 1), $A$, 2),
+      // node((1, 0), $coker (C -> B)$, 3),
+      // node((1, 1), $coker (C -> A)$, 4),
+      // node((0, -1), $C$, 5),
+      // arr(1, 2, $$),
+      // arr(1, 3, $$),
+      // arr(2, 4, $$),
+      // arr(3, 4, $$),
+      // arr(5, 1, $$)
+      // )]
+      // 因此：
+      // #align(center)[#commutative-diagram(
+      // node((0, 0), $im (beta gamma)$, 1),
+      // node((0, 1), $ker (beta gamma)$, 2),
+      // node((1, 0), $$, 3),
+      // node((1, 1), $ker (beta gamma) quo im (beta gamma)$, 4),
+      // arr(1, 2, $$),
+      // arr(1, 3, $$),
+      // arr(2, 4, $$),
+      // arr(3, 4, $$),)]
+      
+      // 有拉回图表：
+      // $
+      //   #align(center)[#commutative-diagram(
+      //   node((0, 0), $ker (beta gamma)$, 1),
+      //   node((0, 1), $E$, 2),
+      //   node((1, 0), $ker beta = im alpha$, 3),
+      //   node((1, 1), $D$, 4),
+      //   arr(1, 2, $$),
+      //   arr(1, 3, $$),
+      //   arr(2, 4, $gamma$),
+      //   arr(3, 4, $$),)]
+      // $
+      // 进而：
+      // $
+      //   #align(center)[#commutative-diagram(
+      //   node((0, 0), $ker (beta gamma)$, 1),
+      //   node((0, 1), $E_(- deg(beta) - deg(gamma))$, 2),
+      //   node((1, 0), $ker beta = im alpha$, 3),
+      //   node((1, 1), $D_(- deg(beta))$, 4),
+      //   node((1, -1), $D_(- deg(beta) - deg(alpha))$, 5),
+      //   node((2, -1), $E_(- deg(alpha))$, 6),
+      //   arr(1, 2, $$),
+      //   arr(1, 3, $$),
+      //   arr(2, 4, $gamma$),
+      //   arr(3, 4, $$),
+      //   arr(5, 3, $alpha$),
+      //   arr(5, 6, $beta$)
+      //   // arr(5, 2, $beta$),
+      //   // arr(5, 1, $exists!$, dashed_str)
+      //   ),
+      //   ]
+      // $
+    ]
+  == 谱序列
+    #definition()[谱序列][
+      称 $(E^r, d^r)$ 是谱序列，如果对于每个 $r >= r_0$，都有：
+      $
+        E^(r + 1) = H(E^r, d^r)\
+      $
+    ]
+    根据上节内容可以知道，对于任何滤子，都可以找到对应的谱序列（只需要不断求导出即可）
+    // #definition()[][
+    //   设 $F^p (C)$
+    // ]
+
+考试：
+- 谱序列作业
+- $alpha^2, beta^2, gamma^2$ 定义
+- 复形张量积，全复形
+- $Ext^1_ZZ (ZZ quo m ZZ, B) = B quo m B$
+- 比较引理，马蹄引理
+- 复形的短正合列诱导长正合列，连接映射的定义

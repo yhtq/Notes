@@ -193,6 +193,7 @@
 #let eqv = sym.tilde.equiv
 #let Inter = math.inter.big
 #let Union = math.union.big
+#let Tot = math.op("Tot")
 #let arrowb = $arrow.bar$
 #let ite(cond, r1, r2) = $"if" autoBraceIfAddOrSub(#cond) "then" autoBraceIfAddOrSub(#r1) "else" autoBraceIfAddOrSub(#r2) $
 
