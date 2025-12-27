@@ -1998,6 +1998,40 @@ Pv^T + e A
       sin phi = cos (A t + phi) = sin (A t + phi + pi/2)\
       vt(phi) = A
     $
+  == 重力场中对称陀螺的拉格朗日定点运动
+    在重力场中，重力对定点的力矩为：
+    $
+      L = a times m g = a e_3' times (- m g) e_3
+    $
+    可以计算得到：
+    $
+      e_3 = E' vec(sin theta sin phi, sin theta cos phi, cos theta) where E' = (e_1', e_2', e_3')
+    $
+    假设刚体有对称条件 $I_1 = I_2$，代入欧拉动力学方程：
+    $
+      I_1 der(omega'_1, t) + (I_3 - I_1) omega'_2 omega'_3 = m g a sin theta cos phi\
+      I_1 der(omega'_2, t) + (I_1 - I_3) omega'_3 omega'_1 = - m g a sin theta sin phi\
+      I_3 der(omega'_3, t) = 0
+    $
+    方程给出：
+    $
+      omega'_3 = vt(psi) cos theta + vt(phi) = "const"
+    $
+    以及机械能守恒：
+    $
+      1/2 quadFormSym(omega', D) + m g a cos theta = E_0
+    $
+    重力在铅直方向分量为零，因此：
+    $
+      G_3 = G dot e_3 = (E D omega) dot (E' e_3')
+    $
+    逻辑上，这三个方程可以解出 $omega', theta, phi$ 随时间的变化。不过，可能需要用到椭圆积分。
+
+    同时，我们还可以做定性分析。设 $S = cos theta, omega'_3 = omega$，则微分方程导出：
+    $
+      (I_1 vt(S))^2 = 2 m g a I_1 S_0 (1 - S^2) - 2 m g a I_1 S (1 - S^2) - I^2_3 omega^2 (S_0 - S)^2
+    $
+    右侧是一 $S$ 的三次方程。
   == 刚体的稳定性
     人们使用陀螺仪来测量方位。陀螺仪的原理就是一个相当稳定的刚体自由转动，希望它总是绕某个固定方向转动。
 
@@ -2018,4 +2052,18 @@ Pv^T + e A
       vt(omega'_1) = quadForm(omega'_0, L, omega'_1)
     $
     因此，它的稳定性取决于 $omega'_0^T L$ 的正定性。如果它完全负定，则扰动会导致周期运动，进而是稳定的。否则，扰动会导致指数增长，进而是不稳定的。
+  == NAZ 坐标系
+    有时，我们会使用 NKZ 坐标系来描述刚体的定点运动。设 $e_z$ 是刚体的某个旋转对称轴，则 $e_x', e_y', e_z$ 构成部分随刚体转动的主轴坐标系。设其角速度为 $Omega$，则：
+    $
+      Omega = vt(theta) + vt(psi) = omega - vt(phi)
+    $
+    类似的：
+    $
+      vt(G) = vt(G') + Omega times G\
+    $
+    可以计算出：
+    $
+      Omega = (e_x', e_y', e_z) vec(vt(theta), vt(psi) sin theta, vt(psi) cos theta)\
+    $
+    但是其动力学方程会更复杂
 

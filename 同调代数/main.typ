@@ -321,13 +321,17 @@
       $
       可以证明：
       $
-        Fix eqv Hom(k, *)\
+        Fix eqv Hom_(k G) (k, *)\
         CoFix eqv k tensorProduct_(k G) *
       $
-      考虑 $Triv : kVect(k) -> Mod(k g) = k tensorProduct_k * = Hom_k (k, *)$，它把$k$-线性空间看作平凡的$k g$-模，则 $(Triv, Fix), (CoFix, Triv)$ 都是伴随对。这是因为：
+      这是因为：
+      - 
+        $Hom_(k G) (k, X)$ 由其在 $1$ 的像完全决定，而 $g f(1) = f(g dot 1) = f(1)$
+      - 
+      考虑 $Triv : kVect(k) -> Mod(k g) = k tensorProduct_(k G) * = Hom_(k G) (k, *)$，它把$k$-线性空间看作平凡的$k g$-模，则 $(Triv, Fix), (CoFix, Triv)$ 都是伴随对。这是因为：
       - $k tensorProduct_k * ~ Hom_(k G)(k, *)$
       - $k tensorProduct_(k G) * tilde Hom_k (k, *)$
-      然而，$Fix, CoFix$ 并不一定是同构的。例如假设特征为 $p$，$G = (ZZ quo p ZZ) times (ZZ quo p ZZ) = (alpha) times (beta)$，取群作用为：
+      然而，$Fix, CoFix$ 并不一定是同构的。例如假设域的特征为 $p$，$G = (ZZ quo p ZZ) times (ZZ quo p ZZ) = (alpha) times (beta)$，考虑 $k^3$， 取群作用为：
       $
         alpha -> mat(1, 0, 1;0, 1, 0;0, 0, 1)\
         beta -> mat(1, 0, 0;0, 1, 1;0, 0, 1)
@@ -477,6 +481,9 @@
     ]
     #example[][
       设 $R$ 是交换环，则 $ModCat(R) eqv ModCat(M_n (R))$（可能考证明）
+    ]
+    #proof[
+      参考#link("https://planetmath.org/moritaequivalence")[这里]
     ]
     #theorem[Skolen-Noether][
       $M_n (R)$ 作为 $R$ 代数的的所有自同构都是内自同构。也就是说所有这样的同构都是 $A -> P A P^(-1)$ 的形式
@@ -2714,3 +2721,8 @@
 - $Ext^1_ZZ (ZZ quo m ZZ, B) = B quo m B$
 - 比较引理，马蹄引理
 - 复形的短正合列诱导长正合列，连接映射的定义
+- 函子的自然同构（例如有限维线性空间的对偶函子）
+- 伴随对，单位，余单位。左伴随和右伴随可能不同构
+- 2-范畴，融合性
+- 满态射与满射，单态射与单射
+- 极限、余极限
