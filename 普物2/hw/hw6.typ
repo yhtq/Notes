@@ -76,8 +76,8 @@
     $
     水中为：
     $
-      n D /d lambda = #scientificShow(
-        1.33 * 100e-2 / 1e-3 * 6328e-10
+      1/n D /d lambda = #scientificShow(
+        100e-2 / 1e-3 * 6328e-10 / 1.33
       ) "m"
     $
   == 2
@@ -121,7 +121,7 @@
   == 5
     相邻暗纹间距正比于波长，因此：
     $
-      lambda' = Delta / Delta' lambda = #scientificShow(0.22 / 0.25 * 5893e-10) "m"
+      lambda' = Delta' / Delta lambda = #scientificShow(0.24 / 0.22 * 5893e-10) "m"
     $
     （*答案为 $640$ nm*）
   == 6

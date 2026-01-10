@@ -14,6 +14,7 @@
 #let at(x) = $derN(#x, t, 2)$
 #let LagrangeEquationL(L, X) = $dif/(dif t) partialDer(#L, vt(#X)) - partialDer(#L, #X) = 0$
 #let LagrangeEquationTV(T, V, X) = $dif/(dif t) partialDer(#T, vt(#X)) + partialDer(#V, #X) = 0$
+教师： 许甫荣
 = 拉格朗日方程
   == 约束
     #example[][
@@ -866,8 +867,7 @@
       V = 1/2 m omega^2_0 x^2 - 1/3 m a x^3
     $
     其中三次项被称为非谐振项。代入拉氏方程，它不是线性的，通常很难解出。
-= 哈密顿正则方程，泊松括号        vt(Qv) = partialDer(H, Pv)\
-        vt(Pv) = - partialDer(L, Qv)= partialDer(H, Qv)\
+= 哈密顿正则方程，泊松括号      
   == 勒让德变换
     设有函数 $F(bX, bY)$，定义新函数：
     $
@@ -999,7 +999,7 @@
     #definition()[泊松括号][
       定义两个函数 $f, g$ 的*泊松括号*为：
       $
-        [f, g] := partialDer(f, Qv) partialDer(g, Pv) - partialDer(g, Qv) partialDer(f, Pv)
+        [f, g] := partialDer(f, Qv) partialDer(g, Pv) - partialDer(g, Qv) partialDer(f, Pv)\
       $
     ]
     #corollary()[][
@@ -1037,8 +1037,7 @@
     ]
     #proposition()[泊松恒等式][
       对任意三个函数 $f, g, h$，都有：
-      $Pv^T + e A
-Pv^T + e A
+      $
         [f, [g, h]] + [g, [h, f]] + [h, [f, g]] = 0
       $
     ]
@@ -1228,7 +1227,7 @@ Pv^T + e A
     使得 $H_1 = 0$，则根据：
     $
       vt(Pv_1) = [Qv_1, H_1] = 0\
-      vt(Qv_1) = [Qv_1, H_1] = 0
+      vt(Qv_1) = [Pv_1, H_1] = 0
     $
     则它们都是常数，设：
     $
@@ -1316,7 +1315,7 @@ Pv^T + e A
       F_2 = W(Qv, J) - E(J) t\
       Qv_1 = partialDer(W, J) - partialDer(E, J) t = C\
       dif (partialDer(W, J)) = partialDer(E, J) dif t\
-      integral.cont dif partialDer(W, J) = integral.cont  (partialDer(W, J)) dif Qv = partial/(partial J) (integral.cont partialDer(W, Qv) dif Qv) = 1\
+      integral.cont dif partialDer(W, J) = partial/(partial J) (integral.cont partialDer(W, Qv) dif Qv) = 1\
       integral.cont partialDer(E, J) dif t = partialDer(E, J) T
     $
     因此立刻有：
@@ -1758,6 +1757,24 @@ Pv^T + e A
       $
       也即刚体的动能可以分解为质心的平动动能和刚体相对于质心的动能之和
     ]
+    #theorem[柯尼西（角动量）][
+      $
+        G_0 = (Xv_c - Xv_0) times vt(Xv_c) + G'\
+        where G' = intXv (Xv - Xv_c) times m vt(Xv - Xv_c)\
+      $
+      也即刚体的总角动量可以分解为质心相对于某点的角动量和刚体相对于质心的角动量之和
+    ]
+    #proof[
+      $
+        intXv (Xv - Xv_0) times m vt(Xv) &= intXv ((Xv - Xv_c) + (Xv_c - Xv_0)) times m vt(Xv)\
+        &= intXv (Xv - Xv_c) times m vt(Xv) + (Xv_c - Xv_0) times intXv m vt(Xv)\
+        &= intXv (Xv - Xv_c) times m vt(Xv - Xv_c) + (Xv_c - Xv_0) times M vt(Xv_c)\
+      $
+      其中利用了：
+      $
+        intXv (Xv - Xv_c) times m vt(Xv_c) = (intXv m (Xv - Xv_c)) times vt(Xv_c) = 0\
+      $
+    ]
   == 惯量张量
     按定义，刚体绕定点 $Xv_0$ 的角动量就是：
     $
@@ -1828,8 +1845,21 @@ Pv^T + e A
   == 定轴转动 
     设刚体绕某个轴做定轴转动，轴上有一定点 $A$ 作为参考点，轴的方向为 $xi$，则有：
     $
-      G_(A xi) = I_xi omega = (bI xi) omega\
-      I_xi vt(omega) = vt(G_(A xi)) = intXv (Xv - A) times F = L_(A)
+      vt(Xv) = omega times (Xv - A)
+    $
+    其中 $omega$ 是沿 $xi$ 方向的角速度。注意到 $A$ 取轴上任何一点结果都一样，这是因为：
+    $
+      omega times (Xv - A + k xi) = omega times (Xv - A)
+    $
+    类似的，角动量在 $xi$ 方向上的分量也和具体选点无关，因为：
+    $
+      xi dot (intXv m (Xv - A + k xi) times vt(Xv)) = intXv m (Xv - A) times vt(Xv)
+    $
+    有时，我们称 $G dot xi$ 为刚体绕轴旋转的角动量。同时：
+
+    $
+      G_(A) = I_xi omega = (bI xi) omega\
+      I_xi vt(omega) = vt(G_(A)) = intXv (Xv - A) times F = L_(A)
     $
     这里，$L_A$ 就是相对 $A$ 点的外力矩。更详细的，假设轴被 $A, B$ 点约束，我们可以求轴承的受力。事实上，我们有公式：
     $
@@ -1865,11 +1895,21 @@ Pv^T + e A
     $
       Xv = E(t) Xv'\
       omega = E(t) omega'\
-      G = D omega' where D = diag(I_1, I_2, I_3)
+      G = E(t) D omega' where D = diag(I_1, I_2, I_3)
     $
     可以计算出：
     $
-      L = vt(G) = vt(G') + omega times G\
+      L 
+      &= vt(G) \
+      &= E D vt(omega') + vt(E) D omega'\
+      &= E D vt(omega') + vt((e_1, e_2, e_3)) D omega'\
+      &= E D vt(omega') + vt((omega times e_1, omega times e_2, omega times e_3)) D omega'\
+      &= E D vt(omega') + omega times E D omega'\
+      &= E D vt(omega') + omega times G\
+      &= E D vt(omega') + (E omega') times E D omega'\
+      &= E D vt(omega') + E (omega' times D omega')\
+      &= E (D vt(omega') + omega' times D omega')\
+      &= vt(G') + omega times G\
     $
     上面的等式在主轴坐标系下，就得到了*定点运动基本方程*，也叫*欧拉方程*
     #definition()[欧拉角][
@@ -1879,17 +1919,46 @@ Pv^T + e A
       - 最后绕极轴 $e''_3$ 作旋转，旋转角 $phi$ 称为自转角。
       这三个角度称为*欧拉角*，它当然与转动的实际选择和顺序有关，不能叠加。
 
-      设 $2 times 2$ 转动矩阵为 $R_2 (theta)$，则旋转过程 $R$ 可写成：
+      设 $2 times 2$ 转动矩阵为 $R (theta)$，则上面说的就是任何正交矩阵 $E$ 可写成：
       $
-        R = mat(R_2 (phi), 0;0, 1) mat(1, 0;0, R_2 (theta)) mat(R_2 (psi), 0;0, 1)
+        E = mat(R (phi), 0;0, 1) mat(1, 0;0, R (theta)) mat(R (psi), 0;0, 1)
       $
     ]
+    用上面的式子，可以进行计算：
+    $
+      vt(E) =  mat(R' (phi) vt(phi), 0;0, 1) mat(1, 0;0, R (theta)) mat(R (psi), 0;0, 1) + \
+      mat(R (phi), 0;0, 1) mat(1, 0;0, R' (theta) vt(theta)) mat(R (psi), 0;0, 1) + \
+      mat(R (phi), 0;0, 1) mat(1, 0;0, R (theta)) mat(R' (psi) vt(psi), 0;0, 1)
+    $
+    我们希望角速度 $omega$ 满足：
+    $
+      vt(E) = omega times E
+    $
+    事实上，设：
+    $
+      vt(bphi) = vec(0, 0, vt(phi))\
+      vt(btheta) = vec(vt(theta), 0, 0)\
+      vt(bpsi) = vec(0, 0, vt(psi))
+    $
+    可以验证：
+    $
+      vt(bphi) times E = mat(R' (phi) vt(phi), 0;0, 1) mat(1, 0;0, R (theta)) mat(R (psi), 0;0, 1)\
+      vt(btheta) times E = mat(R (phi), 0;0, 1) mat(1, 0;0, R' (theta) vt(theta)) mat(R (psi), 0;0, 1)\
+      vt(bpsi) times E = mat(R (phi), 0;0, 1) mat(1, 0;0, R (theta)) mat(R' (psi) vt(psi), 0;0, 1)
+    $
+    因此，我们就有下面的结论：
     #theorem[][
-      实际的加速度成立：
+      实际的速度成立：
       $
-        omega = vt(psi) + vt(theta) + vt(phi)\
+        omega = vt(bpsi) + vt(btheta) + vt(bphi)\
       $
-      其中 $vt(psi)$ 和 $vt(phi)$ 不垂直，其余都是垂直的。这给出了欧拉运动学方程：
+      其中 $vt(bpsi)$ 和 $vt(bphi)$ 不垂直，其余都是垂直的。同时，有：
+      $
+        omega = E omega' = vt(bpsi) + vt(btheta) + vt(bphi)\
+        omega' = E^T (vt(bpsi) + vt(btheta) + vt(bphi))\
+        = mat(R (-psi), 0;0, 1) mat(1, 0;0, R (-theta)) mat(R (-phi), 0;0, 1) (vt(bpsi) + vt(btheta) + vt(bphi))\
+      $
+      如果将其展开，就得到了欧拉运动学方程：
       $
         omega'_1 = vt(psi) sin theta sin phi + vt(theta) cos phi\
         omega'_2 = vt(psi) sin theta cos phi - vt(theta) sin phi\
@@ -2037,21 +2106,22 @@ Pv^T + e A
 
     假设扰动刚体绕某个惯量主轴转动，也即 $omega$ 是稳定的，不随时间变化。我们考察做小扰动后 $omega$ 是否能保持稳定。做小扰动后，有：
     $
-      omega = omega_0 + omega_1 (t)
+      omega' = omega'_0 + omega'_1 (t)
     $
     代入欧拉动力学方程：
     $
-      vt(omega') = quadFormSym(omega', L) where L = 1/2 vec(mat(0, (I_3 - I_1)/I_2; (I_1 - I_2)/I_3, 0), mat(0, (I_2 - I_3)/I_1; (I_1 - I_2)/I_3, 0), mat(0, (I_1 - I_2)/I_3; (I_2 - I_1)/I_3, 0))
+      D vt(omega') + omega' times D omega' = 0\
     $
     就有：
     $
-      vt(omega'_0 + omega'_1) = quadFormSym(omega'_0 + omega'_1, L)
+      D vt(omega'_1) + (omega'_0 + omega'_1) times D (omega'_0 + omega'_1) = 0\
+      D vt(omega'_1) + omega'_0 times D omega'_1 + omega'_1 times D omega'_0 + omega'_1 times D omega'_1 = 0
     $
     忽略高阶项就是：
     $
-      vt(omega'_1) = quadForm(omega'_0, L, omega'_1)
+      D vt(omega'_1) + omega'_0 times D omega'_1 + omega'_1 times D omega'_0 = 0
     $
-    因此，它的稳定性取决于 $omega'_0^T L$ 的正定性。如果它完全负定，则扰动会导致周期运动，进而是稳定的。否则，扰动会导致指数增长，进而是不稳定的。
+    这是关于 $omega'_1$ 的线性常系数微分方程，因此，它的稳定性取决于一次项系数的正定性。如果它完全负定，则扰动会导致周期运动，进而是稳定的。否则，扰动会导致指数增长，进而是不稳定的。
   == NAZ 坐标系
     有时，我们会使用 NKZ 坐标系来描述刚体的定点运动。设 $e_z$ 是刚体的某个旋转对称轴，则 $e_x', e_y', e_z$ 构成部分随刚体转动的主轴坐标系。设其角速度为 $Omega$，则：
     $
@@ -2066,4 +2136,53 @@ Pv^T + e A
       Omega = (e_x', e_y', e_z) vec(vt(theta), vt(psi) sin theta, vt(psi) cos theta)\
     $
     但是其动力学方程会更复杂
+  == 高速陀螺的近似处理
+    当 $omega_z$ 很大时，称陀螺为高速陀螺。此时，我们有：
+    $
+      G = I  omega approx vec(0, 0, I_3 omega_z)
+    $
+    根据角动量定理：
+    $
+      vt(G) = a times m g
+    $
+    注意到此时我们有：
+    $
+      vt(G) dot G = 0
+    $
+    这导致 $G$ 的大小不变。事实上，我们有：
+    $
+      vt(G) = Omega times G = vt(psi) times G
+    $
+    代入之前的欧拉公式，就有：
+    $
+      vt(psi) = (m g a)/(I_z omega)
+    $
+    因此 $omega$ 若很大，则上式很小，进动很慢。
+  == 拉摩进动
+    人们发现，在磁场中放一金属，则金属内部磁场可能变弱，这被称为*抗磁性*。 拉摩给出了解释。假设金属原子周围有电子做圆周运动，则：
+    $
+      v = omega times r
+    $
+    角动量为：
+    $
+      G = r times m v = r times m (omega times r) = m norm2(r) omega
+    $
+    可以计算出，磁矩 $M$ 满足：
+    $
+      G = - e / (2 m) G
+    $
+    外加磁场后，就有：
+    $
+      vt(G) = L = M times B = (e / (2 m)) (B times G)
+    $
+    之前推导过，这种情况下相当于只有进动。因此这个运动称为拉摩进动，$Omega = e / (2m)$ 称为拉摩频率。因为 $M$ 往往与 $B$ 反向，因此通常表现为抗磁性。（也有一些材料会表现出顺磁性）
+= 期末考试
+  - 五道题，每道 20 分
+  - 哈密顿正则方程之后内容
+  - 散射要求，散射面积不考
+  - 潘索法不考，刚体其他的都要求，定点运动重点
+  - 有心运动：比内公式重点（可能考推导），复杂公式（例如偏心率能量）不会涉及
+  - 欧拉动力学、欧拉运动学公式会提供，其他不提供
+  - 推导证明不要求
+  - 答疑：加速器楼 418 星期一 9:00 - 12:00
 
