@@ -2,5 +2,9 @@
     "cSpell.enableFiletypes": [
         "typst"
     ],
-    "tinymist.formatterMode": "typstfmt"
+    "tinymist.formatterMode": "typstfmt",
+    "nixEnvSelector.suggestion": false,
+    "nixEnvSelector.nixFile": "${workspaceFolder}/flake.nix",
+    "tinymist.serverPath": "tinymist"
+
 }

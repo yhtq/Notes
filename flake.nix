@@ -26,8 +26,8 @@
           buildInputs = [ self.packages.${system}.default ];
           TINYMIST_OUT = "${self.packages.${system}.default}/bin";
           shellHook = ''
-            export TINYMIST_OUT=${TINYMIST_OUT}
-            echo "TINYMIST_OUT set to $TINYMIST_OUT"
+            export PATH=$TINYMIST_OUT:$PATH
+            echo "Tinymist binary is available in PATH."
           '';
         };
       }

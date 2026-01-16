@@ -5,7 +5,7 @@
 #import "@preview/lemmify:0.1.8": *
 // #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 #import "@preview/showybox:2.0.3": showybox
-#import "autoArithExp/lib.typ": *
+#import "./autoArithExp/lib.typ": *
 
 #let __print_commute = true
 // #let old-commutative-diagram = commutative-diagram
