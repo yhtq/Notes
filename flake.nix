@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     tinymist-src.url = "github:Myriad-Dreamin/tinymist/main";
+    tinymist-src.flake = false; # 不需要将源代码作为一个flake输入
   };
 
   outputs = { self, nixpkgs, flake-utils, tinymist-src }:
@@ -16,7 +17,7 @@
           pname = "tinymist";
           version = "main";
           src = tinymist-src;
-          cargoHash = "sha256-R5IxEjd6gvlUgH4dn7s95yj2rZzhkDAVi5VF242bOWI=";
+          cargoHash = "sha256-BPb+EIZLaYMMav6OFi8g+tHXnnTqO4l0p7WXVWlEVK0=";
           CARGO_PROFILE_RELEASE_LTO = "fat";
           buildType = "release";
           RUSTFLAGS = "-C target-cpu=native";
