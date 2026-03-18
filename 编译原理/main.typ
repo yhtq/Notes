@@ -196,5 +196,60 @@
       A -> alpha B => FOLLOW(A) subset FOLLOW(B)\
       A -> B alpha => FIRST(alpha) subset FOLLOW(B)\
       A -> alpha beta => FOLLOW(beta) subset FOLLOW(A)\
-
+      #TODO
     $
+
+    我们希望预测分析过程无回溯，自然希望对于非终结符号 $A$ 的所有产生规则 $beta_i$ 满足：
+    - 对于不同的 $i, j$，有 $FIRST(beta_i) inter FIRST(beta_j) = emptyset$
+    - 如果 $epsilon in FIRST(beta_i)$，则 $FIRST(beta_i) inter FIRST(beta_j) = emptyset$ 对于所有 $j != i$ 都成立，并且 $FIRST(beta_i) inter FOLLOW(A) = emptyset$
+
+    常见的破坏以上产生规则的情形包括：
+    - 左公因子：例如有文法 $A ::= alpha beta_1 | alpha beta_2$，它的 FIRST 集合就有交集了。我们可以通过提取公因子，将其变为：
+      $
+        A ::= alpha A'\
+        A' ::= beta_1 | beta_2
+      $
+
+    我们称符合上面要求的，能够通过无回溯递归下降实现预测分析的文法为 LL(1) 文法。也就是从左扫描 token，构造最左推导的分析树。一般的，我们称访问前 $k$ 个向前看 token 的文法为 LL(k) 文法。
+    #remark[][
+      上面的要求给出了 LL(1) 文法的定义，可以通过计算判定一个文法是否是 LL(1) 文法。LL(1) 文法一定是无左递归，无左公因子，无歧义的。
+
+      然而，有些语言不是 LL 语言。例如语言 ${a^i b^j | i >= j}$，其文法为：
+      ```
+      S -> a S
+      S -> P
+      P -> a P b
+      P -> epsilon
+      ```
+      这就不是一个 LL 语言。
+    ]
+  == Parsing Expression Grammar
+    之前的介绍基于传统的 CFG，然而在实践中，CFG 往往对于算法设计并不友好。一个替代技术是 Parsing Expression Grammar（PEG）。PEG 的定义和 CFG 类似，但它的每条规则的右边是一个 Parsing Expression，包括：
+    - 
+      $
+        A <- alpha_1 \/ alpha_2 \/... alpha_n
+      $
+      含义是，优先尝试 $alpha_1$，如果失败了再尝试 $alpha_2$，以此类推。
+    - $e?, e^*, e^+$：类似正则表达式，但*贪心的*识别尽可能多的 $e$
+    
+    可以看出，PEG 的每条规则的选择是有序的，因此一定不会出现二义性问题。然而，其定义并不能避免回溯的问题。一个经典的优化是，采用记忆化搜索的方式，记录当前位置往后按照哪种规则可以成功匹配，这样就能避免重复的回溯尝试了。这种算法称为 Packrat Parsing，能够在 $O(n)$ 的时间内完成解析。
+= 语义分析
+  通常来说语法分析之后的阶段是语义分析（semantic analysis），有时也叫 semantic elaboration，在不同场景下有不同的工作，常见的包括：
+  - 类型检查：分析不同表达式的类型
+  - 翻译到中间表示
+  - 解释执行
+  语义分析往往需要大量的上下文有关信息。可以选择独立于语法分析的方式实现，也可以和语法分析合在一起实现。
+  = 语义分析的规约
+    通常来说语义分析很难给出通用的规约方法。一种经典的规约方式是属性文法（也叫语法制导定义），可以理解为上下文无关文法 + 属性计算规则。例如二进制数的解释执行文法：
+    ```
+    Number -> Sign List  Number.val := Sign.val * List.val; List.pos := 1
+    Sign -> +  Sign.val := 1
+    Sign -> -  Sign.val := -1
+    List -> Bit   List.val := Bit.val; Bit.pos := List.pos
+    List -> List Bit  List.val := List.val + Bit.val; Bit.pos := List.pos + 1
+    Bit -> 0  Bit.val := 0
+    Bit -> 1  Bit.val := 2^(Bit.pos - 1)
+    ```
+    从上面的规约可以看出，属性文法的信息流非常复杂。原则上，语法树上任何两个节点都有可能产生信息依赖。理论上可以建立依赖图，如果依赖图中没有环，那么就可以按照拓扑排序的顺序计算属性值。理论上，如果有环，也可能可以处理但很困难。更常见的情形是，我们希望设计属性文法时就避免环的出现，这样就能保证属性值的计算是可行的了。常见的包括：
+    - $S$ 属性：一个节点的信息只依赖其子节点的信息
+    - $L$ 属性：一个节点的信息只依赖其父节点和左侧节点的信息
