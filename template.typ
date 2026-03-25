@@ -751,6 +751,62 @@
 #let algorithmLinear(footer: "",name, body) = _convert(alg1, footer: "",name, body)
 
 
+  // show raw.where(block: false): box.with(
+  //   fill: luma(240),
+  //   inset: (x: 3pt, y: 0pt),
+  //   outset: (y: 3pt),
+  //   radius: 2pt,
+  // )
+
+  // show raw.where(block: true): block.with(
+  //   width: 100%,
+  //   fill: luma(240),
+  //   inset: 10pt,
+  //   radius: 4pt,
+  // )
+#let Code(body) = {
+  set text(font: ("JetBrains Mono"))
+  box(
+    body,
+    fill: luma(240),
+    inset: (x: 3pt, y: 0pt),
+    outset: (y: 3pt),
+    radius: 2pt,
+  )
+}
+#let nspace(n) = $space$ * n
+#let CodeBlock(body) = {
+  set text(font: ("JetBrains Mono"))
+  let indentCounter = counter("indent")
+  context indentCounter.update(0)
+  block(
+    body,
+    width: 100%,
+    fill: luma(240),
+    inset: 10pt,
+    radius: 4pt,
+  )
+}
+#let Lines(..lines) = lines.pos().join(linebreak())
+// 请将该函数作为 CodeBlock 的一部分使用
+#let CodeLines(indent: 0, ..lines) = context {
+  let indentCounter = counter("indent")
+  let prevIndent = indentCounter.get().at(0)
+  indentCounter.update(prevIndent + indent)
+  lines.pos().map(line =>  context {
+    let indent = indentCounter.get().at(0)
+    nspace(indent) + line
+  }).join(linebreak())
+  indentCounter.update(prevIndent)
+}
+
+// 请将该函数作为 CodeLines 的一部分使用
+#let CodeBraces(pre, ..lines) = Lines[#pre {][
+  #CodeLines(indent: 4, ..lines)
+][
+  #CodeLines(indent: 0, "}")
+]
+
 #let note(title: "Note title", author: "Name", logo: none, date: none,
           preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, withHeadingNumbering: true, 
           withChapterNewPage: false,

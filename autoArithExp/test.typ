@@ -1,3 +1,4 @@
+#import "lib.typ": *
 #let NormalDis(x, mu, sigma) = autoMul(
   autoFraction(
     oneContent, autoMul(
