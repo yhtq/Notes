@@ -20,7 +20,7 @@
             pname = "tinymist";
             version = "main";
             src = tinymist-src;
-            cargoHash = "sha256-Lvkmy5q1oZKaKWb6963AaNYURxLpViRqJ3dTgFxsGhs=";
+            cargoHash = "sha256-4xIGW0WCd7RF6mGY753qK6Ncs72AJbs3kzOVBp9sGYY=";
             CARGO_PROFILE_RELEASE_LTO = "fat";
             buildType = "release";
             RUSTFLAGS = "-C target-cpu=native";
@@ -37,6 +37,7 @@
           '';
         };
         apps.default = unisonSync.apps.${system}.unison-sync;
+        apps.unison-sync = unisonSync.apps.${system}.unison-sync;
       }
     );
 }

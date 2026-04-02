@@ -4,6 +4,7 @@
 
 #import "@preview/lemmify:0.1.8": *
 // #import "@preview/commute:0.2.0": node, arr, commutative-diagram
+#import "@preview/oxifmt:1.0.0": strfmt
 #import "@preview/showybox:2.0.3": showybox
 #import "./autoArithExp/lib.typ": *
 
@@ -109,6 +110,7 @@
 #let bp = $bold(p)$
 #let bE = $bold(E)$
 #let bF = $bold(F)$
+#let ba = $bold(a)$
 #let bA = $bold(A)$
 #let bB = $bold(B)$
 #let bC = $bold(C)$
@@ -789,12 +791,17 @@
 }
 #let Lines(..lines) = lines.pos().join(linebreak())
 // 请将该函数作为 CodeBlock 的一部分使用
-#let CodeLines(indent: 0, ..lines) = context {
+// 行号暂时只能从零计数
+#let CodeLines(indent: 0, withCountNumber: false, ..lines) = context {
   let indentCounter = counter("indent")
   let prevIndent = indentCounter.get().at(0)
   indentCounter.update(prevIndent + indent)
-  lines.pos().map(line =>  context {
+  lines.pos().enumerate().map(iline =>  context {
+    let (i, line) = iline
     let indent = indentCounter.get().at(0)
+    if withCountNumber {
+      line = $space$ + strfmt("{:<4}", i + 1) + [ ] + line
+    }
     nspace(indent) + line
   }).join(linebreak())
   indentCounter.update(prevIndent)

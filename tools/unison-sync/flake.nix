@@ -10,14 +10,6 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        # profile = {sourceDir, destDir}: pkgs.writeText "sync-courses.prf" ''
-        #   # Unison profile for syncing this workspace while ignoring generated outputs.
-        #   ignore = Name .git
-        #   ignore = Name result
-        #   ignore = Name target
-        #   fastcheck = true
-        #   times = true
-        # '';
         script = pkgs.writeShellScript "unison-sync" ''
           #!/usr/bin/env bash
           if [ "$#" -ne 2 ]; then
@@ -27,8 +19,10 @@
           exec ${pkgs.unison}/bin/unison \
             $1 $2 \
             -ignore 'Name .git' \
+            -ignore 'Name .venv' \
             -ignore 'Name result' \
             -ignore 'Name target' \
+            -perms 0
         '';
         unisonSync = let 
             currScript = script;
