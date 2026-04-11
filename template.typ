@@ -791,7 +791,7 @@
 }
 #let Lines(..lines) = lines.pos().join(linebreak())
 // 请将该函数作为 CodeBlock 的一部分使用
-// 行号暂时只能从零计数
+// 行号暂时只能从头计数
 #let CodeLines(indent: 0, withCountNumber: false, ..lines) = context {
   let indentCounter = counter("indent")
   let prevIndent = indentCounter.get().at(0)

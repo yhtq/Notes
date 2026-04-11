@@ -6,7 +6,11 @@
     flake-utils.url = "github:numtide/flake-utils";
     tinymist-src.url = "github:Myriad-Dreamin/tinymist/main";
     tinymist-src.flake = false; # 不需要将源代码作为一个flake输入
-    unisonSync.url = "path:tools/unison-sync";
+    unisonSync = {
+      url = "path:tools/unison-sync";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
   };
 
   outputs = { self, nixpkgs, flake-utils, tinymist-src, unisonSync }:
