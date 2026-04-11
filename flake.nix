@@ -24,7 +24,7 @@
             pname = "tinymist";
             version = "main";
             src = tinymist-src;
-            cargoHash = "sha256-4xIGW0WCd7RF6mGY753qK6Ncs72AJbs3kzOVBp9sGYY=";
+            cargoHash = "sha256-SaeaylM8yms9WkCJ1iVPGGNr7aVIgt6652J6QRR8XaE=";
             CARGO_PROFILE_RELEASE_LTO = "fat";
             buildType = "release";
             RUSTFLAGS = "-C target-cpu=native";
