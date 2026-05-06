@@ -5,6 +5,6 @@
     "tinymist.formatterMode": "typstfmt",
     "nixEnvSelector.suggestion": false,
     "nixEnvSelector.nixFile": "${workspaceFolder}/flake.nix",
-    "tinymist.serverPath": "tinymist"
+    // "tinymist.serverPath": "tinymist"
 
 }
