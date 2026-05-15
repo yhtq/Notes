@@ -24,7 +24,7 @@
             pname = "tinymist";
             version = "main";
             src = tinymist-src;
-            cargoHash = "sha256-ifRJwE+W88dnk4r6f6frlk6Rfl6IDMb9Lu+MemYg0Vo=";
+            cargoHash = "sha256-0Y2By8UcS1TWc8a5m7Ez27JELHCbGXllf4a1VSHLOK0=";
             CARGO_PROFILE_RELEASE_LTO = "fat";
             buildType = "release";
             RUSTFLAGS = "-C target-cpu=native";
@@ -36,8 +36,8 @@
           buildInputs = [ self.packages.${system}.default ];
           TINYMIST_OUT = "${self.packages.${system}.default}/bin";
           shellHook = ''
-            export PATH=$TINYMIST_OUT:$PATH
-            echo "Tinymist binary is available in PATH."
+            # export PATH=$TINYMIST_OUT:$PATH
+            # echo "Tinymist binary is available in PATH."
           '';
         };
         apps.default = unisonSync.apps.${system}.unison-sync;

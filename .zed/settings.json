@@ -1,0 +1,18 @@
+{
+  "languages": {
+    "Typst": {
+      "document_symbols": "on",
+      // "language_servers": ["tinymist"]
+    }
+  },
+  "lsp": {
+    "tinysmist": {
+      "initialization_options": {
+        "exportPdf": "onType",
+        "outputPath": "$root/target/main.pdf"
+      }
+    }
+  },
+  "format_on_save": "off",
+
+}
