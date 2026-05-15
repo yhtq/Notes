@@ -5,9 +5,13 @@
     "tinymist.formatterMode": "typstfmt",
     "nixEnvSelector.suggestion": false,
     "nixEnvSelector.nixFile": "${workspaceFolder}/flake.nix",
+<<<<<<< HEAD
     "tinymist.serverPath": "tinymist",
     "cSpell.words": [
         "axiomazation"
     ]
+=======
+    // "tinymist.serverPath": "tinymist"
+>>>>>>> 3d1d374e2898bba51ffda3a7f2bb5c9758532081
 
 }
