@@ -41,4 +41,4 @@
       Pages 3-47,
       ISSN 0167-6423,
       https://doi.org/10.1016/S0167-6423(97)00029-4.
-    + Peyton Jones, Simon & Marlow, Simon. (2002). Secrets of the Glasgow Haskell Compiler inliner. J. Funct. Program.. 12. 393-433. 10.1017/S0956796802004331. 
+    + Peyton Jones, Simon & Marlow, Simon. (2002). Secrets of the Glasgow Haskell Compiler inliner. J. Funct. Program.. 12. 393-433. 10.1017/S0956796802004331.

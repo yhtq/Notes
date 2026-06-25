@@ -2,7 +2,7 @@
   "languages": {
     "Typst": {
       "document_symbols": "on",
-      // "language_servers": ["tinymist"]
+      "language_servers": ["tinymist"]
     }
   },
   "lsp": {

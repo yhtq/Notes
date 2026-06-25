@@ -65,7 +65,7 @@
     let row = range(1, pre + 1).map(i => $dots.v$)  + ($dots.down$,) + range(post - 1, -1, step: -1).map(i => $dots.v$)
     row_dots.push(row)
   }
-  
+
   let rows_post = ()
   for i in range(post - 1, -1, step: -1) {
     let row = ();
@@ -76,7 +76,7 @@
   }
   math.mat(delim: delim, ..rows_pre, ..row_dots, ..rows_post)
 }
-// #let autoMat(delim: "(", f) = 
+// #let autoMat(delim: "(", f) =
 #let sep(..xs) = xs.pos().join($space$)
 #let where = "where"
 #let with = "with"
@@ -209,7 +209,7 @@
   if x == [1] {
     []
   } else {
-    [#x] 
+    [#x]
   }
 }
 #let argmax = math.op("argmax")
@@ -236,8 +236,8 @@
     //     $C_(#(i + 1)) #x $
     //     })
     //     .join(" + ")
-          
-      
+
+
     fun(args.pos())
 }
 #let linearCombinationC = linearCombination.with(name: $C$)
@@ -284,7 +284,7 @@
     autoPow($e$,
       autoNeg(
         // $1/2 autoSub(x, mu)^T autoPow(sigma, -1) autoSub(x, mu)$
-        autoMul($1/2$, 
+        autoMul($1/2$,
           autoMul(
             autoPow(autoSub(x, mu), $T$),
             autoMul(
@@ -297,7 +297,7 @@
     )
   )
 )
-#let ExpDis(x, lambda) = autoMul(lambda, autoPow($e$, autoNeg(autoMul(lambda, x)))) 
+#let ExpDis(x, lambda) = autoMul(lambda, autoPow($e$, autoNeg(autoMul(lambda, x))))
 
 #let PoissonDis(k, lambda) = autoFraction(
   autoMul(autoPow(lambda, k),
@@ -340,7 +340,7 @@
 #let prodf(var: defaultProd.Var, lower: defaultProd.Lower, upper: defaultProd.Upper) = $product_(#var = #lower)^(#upper)$
 #let directSumf(var: defaultDirectSum.Var, lower: defaultDirectSum.Lower, upper: defaultDirectSum.Upper) = $directSum_(#var = #lower)^(#upper)$
 
-#let bigOpBr(config, body) = $#(config.Op)_(#config.Var  #showIf(not checkEmpty(config.Lower))[=] #config.Lower)^(#config.Upper) #autoBraceIfAddOrSub(body)$ 
+#let bigOpBr(config, body) = $#(config.Op)_(#config.Var  #showIf(not checkEmpty(config.Lower))[=] #config.Lower)^(#config.Upper) #autoBraceIfAddOrSub(body)$
 
 #let sumfBr(config: defaultSum, body) = bigOpBr((Op: $sum$) + config, body)
 #let prodfBr(config: defaultProd, body) = bigOpBr((Op: $product$) + config, body)
@@ -496,7 +496,7 @@
 #let AModule(A) = [$#A -$模]
 #let closedBall(a, r) = $overline(B(#a, #r))$
 #let GEquiv(G) = {
-  $#G -$ 
+  $#G -$
   "等变"
 }
 #let Mod = math.op("Mod")
@@ -575,14 +575,14 @@
         else{
           [ #(i+1).]
         }
-        
+
       }
       $)
-      $#if name != [] [ 
+      $#if name != [] [
         (#name)
       ]$
       set enum(numbering: "1)")
-      " " 
+      " "
       body
       // if name != none {
       //   label(name)
@@ -792,7 +792,7 @@
 #let Lines(..lines) = lines.pos().join(linebreak())
 // 请将该函数作为 CodeBlock 的一部分使用
 // 行号暂时只能从头计数
-#let CodeLines(indent: 0, withCountNumber: false, ..lines) = context {
+#let CodeLines(indent: 0, withCountNumber: false, start: 1, ..lines) = context {
   let indentCounter = counter("indent")
   let prevIndent = indentCounter.get().at(0)
   indentCounter.update(prevIndent + indent)
@@ -800,7 +800,7 @@
     let (i, line) = iline
     let indent = indentCounter.get().at(0)
     if withCountNumber {
-      line = $space$ + strfmt("{:<4}", i + 1) + [ ] + line
+      line = $space$ + strfmt("{:<4}", i + start) + [ ] + line
     }
     nspace(indent) + line
   }).join(linebreak())
@@ -815,7 +815,7 @@
 ]
 
 #let note(title: "Note title", author: "Name", logo: none, date: none,
-          preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, withHeadingNumbering: true, 
+          preface: none, code_with_line_number: true, withOutlined: true, withTitle: true, withHeadingNumbering: true,
           withChapterNewPage: false,
           body) = {
   // Set the document's basic properties.
@@ -830,7 +830,7 @@
     number-align: end,
     // Running header.
     header-ascent: 14pt,
-    header: [ 
+    header: [
       #context [
         #let i = here().position().at("page")
         #{
@@ -1018,7 +1018,7 @@
   let mean = calcMean(xs)
   let n = xs.len()
   let sum = xs.map(x => (x - mean) * (x - mean)).sum()
-  sum 
+  sum
 }
 
 // S^2 = 1/(n-1) * sum((x - x_bar)^2)
