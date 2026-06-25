@@ -91,7 +91,7 @@
     同时，三个方向应当是对称的，因此：
     $
       overline(v_x^2) = overline(v_y^2) = overline(v_z^2) = 1/3 overline(v^2)\
-      p = 1/3 n m overline(v^2) 
+      p = 1/3 n m overline(v^2)
     $
     如果设分子的平均动能为：
     $
@@ -107,7 +107,7 @@
     $
     这提示我们，温度就是宏观上衡量分子平均动能的参量。可以计算出，一般情况下气体分子的平均速率相当大，约为 $100 ~ 1000 m\/s$ 之间。
     #example()[][
-      
+
     ]
   == 麦克斯韦分布律与麦克斯韦-玻尔兹曼分布
     对于 $N$ 个粒子组成的系统，系统处于平衡态时，分子的速度应当有一定的分布。麦克斯韦假设：
@@ -122,12 +122,12 @@
     两式结合：
     $
       h(v_x^2 + v_y^2 + v_z^2) = phi(v_x) phi(v_y) phi(v_z)\
-      2 v_x der(h(v^2), v^2) diff v_x + 2 v_y der(h(v^2), v^2) diff v_y + 2 v_z der(h(v^2), v^2) diff v_z \
-      = phi'(v_x) phi(v_y) phi(v_z) diff v_x + phi(v_x) phi'(v_y) phi(v_z) diff v_y + phi(v_x) phi(v_y) phi'(v_z) diff v_z\
+      2 v_x der(h(v^2), v^2) partial v_x + 2 v_y der(h(v^2), v^2) partial v_y + 2 v_z der(h(v^2), v^2) partial v_z \
+      = phi'(v_x) phi(v_y) phi(v_z) partial v_x + phi(v_x) phi'(v_y) phi(v_z) partial v_y + phi(v_x) phi(v_y) phi'(v_z) partial v_z\
     $
     可以得到：
     $
-      h'/h = (phi'(v_x))/phi(v_x) = (phi'(v_y))/phi(v_y) = (phi'(v_z))/phi(v_z) 
+      h'/h = (phi'(v_x))/phi(v_x) = (phi'(v_y))/phi(v_y) = (phi'(v_z))/phi(v_z)
     $
     由于三个方向相互独立，上面的式子只能是常数 $-alpha$。因此分布函数形如：
     $
@@ -184,7 +184,7 @@
       f = - eta der(u, z) Delta S
     $
     其中 $eta$ 是流体的粘性系数，与温度、流体性质有关。$u(z)$ 是 $z$ 方向上的气体流速分布。
-  ] 
+  ]
   #example()[傅里叶热传导定律][
     一般，称单位时间内通过某一面积的热量为热流量。实验表明，热传导的热流量有公式：
     $
@@ -275,7 +275,7 @@
       dif W = - p S dif x = - p dif V
     $
     其中 $W$ 取符号按照 $dif W > 0$ 表明外界对气体做正功，$dif W < 0$ 表明气体对外界做正功。
-  ]  
+  ]
   #definition()[热量][
     系统因为温差存在，从外界吸收的热量称为热量 $Q$。若向外界传递热量，则 $Q < 0$。
   ]
@@ -379,7 +379,7 @@
     假设气体没有热量交换，$dif Q = 0$，应该有：
     $
       dif U = dif W\
-      n C_V dif T = (- p dif V) 
+      n C_V dif T = (- p dif V)
     $
     由状态方程：
     $
@@ -420,7 +420,7 @@
     注意到：
     $
       p = 1/m_n rho R T\
-      rho = (p m_n)/(R T)\ 
+      rho = (p m_n)/(R T)\
     $
     由阿基米德定律：
     $
@@ -514,7 +514,7 @@
     #proposition()[][
       热力学系统经历任何过程，棋手的热量与相应热源的温度比值的积分：
       $
-        integral.cont_()^() (dif Q)/T <= 0 
+        integral.cont_()^() (dif Q)/T <= 0
       $
       对于可逆过程，不等式取等。
     ]
@@ -535,7 +535,7 @@
     $
     因此：
     $
-      integral_(A)^(B) (dif Q)/T = C_V ln(T_B / T_A) + nu R ln(V_B / V_A) 
+      integral_(A)^(B) (dif Q)/T = C_V ln(T_B / T_A) + nu R ln(V_B / V_A)
     $
     #definition()[熵][
       对于任何可逆过程，定义：
@@ -544,7 +544,7 @@
       $
       对于不可逆过程，定义其熵变是相同初态终态的可逆过程的熵变。因此，$S$ 一定是系统的状态函数。对于不可逆过程，一定有：
       $
-        integral_()^() (dif Q)/T < Delta S 
+        integral_()^() (dif Q)/T < Delta S
       $
     ]
     #proposition()[熵增加原理][
@@ -618,7 +618,7 @@
       当一束光到介质表面时，将分离为反射光的透射光。两束光天然是相干的，因此会产生干涉现象。
 
       典型的分振幅干涉是薄膜干涉。设有一薄膜，则上方入射的光线直接反射和透射后反射再透射的光线会产生干涉现象。
-      
+
       若上方介质是空气，薄膜是光疏介质，可以计算出：
       $
         Delta = 2 n h cos gamma + lambda / 2
@@ -667,7 +667,7 @@
       采用瑞利判据，可以根据望远/放大仪器
       $
         theta_m = 1.22 lambda / D\
-        Delta y_m = L theta_m  
+        Delta y_m = L theta_m
       $
       来计算最小分辨角和最小分辨距离。其中 $D$ 为物镜的光瞳直径（例如人的瞳孔直径），$L$ 为物距。
 
@@ -798,7 +798,7 @@
     - 对于每种金属，只有入射光频率大于某个值（称为截止频率或者红限频率 $nu_0$）时，才会发生光电效应
     爱因斯坦提出了光量子理论，成功解释了光电效应现象。他认为，光是由一个个光量子组成的，光量子静质量为零，以光速运动，能量为：
     $
-      E = m c^2 = h nu => nu = E / h 
+      E = m c^2 = h nu => nu = E / h
     $
     动量为：
     $
@@ -814,7 +814,7 @@
     - 定态假设：原子系统只能具有一些列的不连续能量状态
     - 角动量假设：角动量是量子化的：
       $
-        L = m v r = n h / (2 pi) 
+        L = m v r = n h / (2 pi)
       $
     - 跃迁假设 $h nu = E_i - E_f$
     这就可以推导出不同能级的能量公式：
@@ -838,4 +838,3 @@
   - 量子力学：
     - 氢原子能级跃迁
     - 光电效应
-

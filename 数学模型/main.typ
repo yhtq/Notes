@@ -68,7 +68,7 @@
       - $"cut"(A) = sum_({i, j} in E(A, V - A)) w(i, j) = sum_({i, j} in E) |x_i - x_j| = sum_({i, j} in E) (x_i - x_j)^2$
       - $"vol"(A) = sum_(i in V) d_i x_i = sum_(i in V) d_i x_i^2$
       - $"vol"(V - A) = sum_(i in V) d_i (1 - x_i)^2$
-      - 
+      -
         $
         min("vol"(A), vol(V - A)) = min_(c in {0, 1}) sum_(i in V) d_i (x_i - c)^2
         $
@@ -104,8 +104,8 @@
     假设 $A$ 是一个取得 $h$ 的图割，也就是：
     $
     h(G) = "cut"(A)/(min("vol"(A), vol(V-A)))
-    $ 
-    令指示向量 
+    $
+    令指示向量
     $
     y_i = cases(
       1 / (vol A)\, quad i in A,
@@ -117,7 +117,7 @@
       $
       sum_(i in V) d_i y_i = sum_(i in A) d_i / ("vol"A) - sum_(i in V-A) d_i / ("vol"(V-A)) = 0
       $
-    因此由定义，当然有 
+    因此由定义，当然有
     $
     lambda_2 <= (y^T L y)/(y^T D y) = (sum_(i, j in E) (y_i - y_j)^2)/(sum_(i in V) d_i y_i^2)\
     = "cut"(A)(1/("vol"A) + 1/("vol"(V-A))) \
@@ -165,8 +165,8 @@
         sum_({i, j} in E) integral_0^1  i_(A_(i j)) (t) dif t\
         = sum_({i, j} in E) |y_j^2 - y_i^2| \
         = sum_({i, j} in E) |(y_j - y_i)(y_j+y_i)|\
-        <= sqrt( sum_({i, j} in E) (y_j - y_i)^2) sqrt(sum_({i, j} in E) (y_j + y_i)^2)("柯西-施瓦兹不等式")\ 
-        <= sqrt( sum_({i, j} in E) (y_j - y_i)^2) sqrt(sum_({i, j} in E) 2(y_i^2 + y_j^2))\ 
+        <= sqrt( sum_({i, j} in E) (y_j - y_i)^2) sqrt(sum_({i, j} in E) (y_j + y_i)^2)("柯西-施瓦兹不等式")\
+        <= sqrt( sum_({i, j} in E) (y_j - y_i)^2) sqrt(sum_({i, j} in E) 2(y_i^2 + y_j^2))\
         = sqrt( sum_({i, j} in E) (y_j - y_i)^2) sqrt(sum_(i in V) 2 d_i y_i^2)\
         = sqrt(2 R(y)) (sum_(i in V) d_i y_i^2)
         $
@@ -197,7 +197,7 @@
     sum_(i=1)^(k+1) d_i >= 1/2 "vol"(V)
     $
     取 $C = x_(k+1)$ 即可，某种意义上只是在取中位数。我们把所有这样的取值集合称为 $"median"(x)$
-    
+
     #proof[
       设 $x$ 是 $lambda_2$ 所对应的特征向量，取 $c in "median"(x)$，进而有：
       $
@@ -220,7 +220,7 @@
       $
       由引理，将有：
       $
-      sqrt(2 R_(y_+)) >= ("cut" S)/(vol S) = ("cut" S)/(min {vol(S), vol(V - S)}) >= h(G) 
+      sqrt(2 R_(y_+)) >= ("cut" S)/(vol S) = ("cut" S)/(min {vol(S), vol(V - S)}) >= h(G)
       $
       进而连上之前的不等式，结果成立
     ]
@@ -376,7 +376,7 @@
         得证
       ]
 
-       延续 $I(x), N(x)$ 的定义，接下来需要考虑如何解决这个绝对值函数的最优值。我们仍然希望使用拉格朗日乘子法，由于 $I(x)/N(x)$ 齐次，依然只在 $norm(x)_d = sum_i d_i abs(x_i) = 
+       延续 $I(x), N(x)$ 的定义，接下来需要考虑如何解决这个绝对值函数的最优值。我们仍然希望使用拉格朗日乘子法，由于 $I(x)/N(x)$ 齐次，依然只在 $norm(x)_d = sum_i d_i abs(x_i) =
        1$ 上讨论，更进一步，按照之前的讨论，我们有：
        $
        h(G) = min_(x in pi) I(x), pi = {x | norm(x)_d = 1 and 0 in "median"(x)}
@@ -429,7 +429,7 @@
        (partial norm(x))_j = d_j "Sgn"(x_j) := D "Sgn"(x)
        $
        其中 $"Sgn"(x)$ 定义为 $product_i "Sgn"(x_i) in RR^n$（作为子集的外积）\
-       对于另一侧，将 $I(x)$ 看作复合函数 $I(x) = norm(B x)_1$，其中 $B$ 是关联矩阵，$norm(x)_1 = sum_i abs(x_i)$ 
+       对于另一侧，将 $I(x)$ 看作复合函数 $I(x) = norm(B x)_1$，其中 $B$ 是关联矩阵，$norm(x)_1 = sum_i abs(x_i)$
        #lemma[][
         设 $h$ 是凸函数，$f$ 是线性函数，则 $h compose f$ 是凸函数
         ]<convexity>
@@ -477,7 +477,7 @@
         $
         partial I(x) inter mu D "Sgn"(x) != emptyset
         $
-        
+
        ]
        #theorem[][
           对于任意一组特征对 $mu, x$，存在 $V$ 的子集 $A$ 使得 $mu = "cut"(A)/("vol"(A))$
@@ -519,9 +519,9 @@
       #proof[
         设 $g(c, x) = sum_(i in V) d_i abs(x_i -c)$，则：
         $
-        0 in partial g(0, x) = sum_(i in V) d_i "Sgn"(x_i) <=> c = 0 "是 " g(c, x) "的最小值点" <=> 0 in "median"_d (x) 
+        0 in partial g(0, x) = sum_(i in V) d_i "Sgn"(x_i) <=> c = 0 "是 " g(c, x) "的最小值点" <=> 0 in "median"_d (x)
         $
-      ]        
+      ]
 
       容易验证 $(0, arrow(1))$ 成为一个 $Delta_1$ 特征对，从而设 $mu > 0$ 是非零的特征值 $x$ 是一个对应的特征向量，我们希望依次验证：
       - $mu = I(x)$\
@@ -629,7 +629,7 @@
       $<eq11>
       另一方面，容易计算得到：
       $
-      h_(max) (G) = max_(x in {0, 1}^n) (I_p (x))/("vol" V) 
+      h_(max) (G) = max_(x in {0, 1}^n) (I_p (x))/("vol" V)
       $
       定义一一映射：
       $
@@ -650,7 +650,7 @@
     然而凸函数在凸区域的上的最大值问题并不容易，上面的证明本质上只有形式上的意义，丝毫没有减少求最大值的困难。
   == Lovasz 延拓
     回顾之前的过程，我们发现我们总是在将一个离散的最值问题延拓到连续区间，变成连续的优化问题。更加广泛地说，我们发现解决连续的问题往往比解决离散的问题更加简单，因此当然希望能把离散的问题延拓到连续的问题进行求解。
-    
+
     显然，对于任何一个离散最优化问题，我们可以找到无穷个连续曲线使得它们有相同的最优解。而给出一个具体的并不容易，本节就给出了一种具体的方法
     #let absSigmaI(i) = $abs(x_sigma(#i))$
     #let fL = $f^L$
@@ -738,7 +738,7 @@
           因此只要证明另一侧不等式
         - 任取 $x !=0 $:
           $
-          (f^L (x))/(g^L (x)) = (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i)))) /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) 
+          (f^L (x))/(g^L (x)) = (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i)))) /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i))))
           $
           注意到我们总可以取得 $(C, D) in P_2 (V)$ 使得：
           $
@@ -750,7 +750,7 @@
             &=
             (
               sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i)))
-               - 
+               -
               (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(C, D))/(g(C, D))
             )
             /
@@ -758,13 +758,13 @@
               sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))
             )
               \
-              &>= (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i))) 
-              - 
+              &>= (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) f(V^+_(sigma(i)), V^-_(sigma(i)))
+              -
               (sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i)))) (f(V^+_(sigma(i)), V^-_(sigma(i))))/(g(V^+_(sigma(i)), V^-_(sigma(i)))))
              /(sum_(i=0)^(n-1) (absSigmaI(i+1) - absSigmaI(i)) g(V^+_(sigma(i)), V^-_(sigma(i))))\
             &= 0
           $
-          因此 
+          因此
           $
           min_(x in RR^n - {0}) (f^L (x))/(g^L (x)) >= (f(C, D))/(g(C, D)) >= min_((A, B) in P_2 (V) - {(emptyset, emptyset)}) (f(A, B))/(g(A, B))
           $
@@ -818,9 +818,9 @@
       $
       F^L (x) &= integral_0^(norm(x)_infinity) ("cut"(V_t^+ (x)) + "cut"(V_t^- (x))) dif t\
       &= integral_0^(norm(x)_infinity) "cut"(V_t^+ (x)) dif t + integral_0^(norm(x)_infinity)  "cut"(V_t^- (x)) dif t\
-      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t \ &+ integral_0^(norm(x)_infinity) chi_{x_j <= -t < x_i} (t) + chi_{x_i <= -t < x_j} (t) dif t\ 
+      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t \ &+ integral_0^(norm(x)_infinity) chi_{x_j <= -t < x_i} (t) + chi_{x_i <= -t < x_j} (t) dif t\
       &"（注意这里积分可以改变有限个点值，因此正负号无所谓）"\
-      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t \ &+ integral_(-norm(x)_infinity)^(0) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t\ 
+      &= sum_({i, j} in E) integral_0^(norm(x)_infinity) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t \ &+ integral_(-norm(x)_infinity)^(0) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t\
       &= sum_({i, j} in E) integral_(-norm(x)_infinity)^(norm(x)_infinity) chi_{x_j <= t < x_i} (t) + chi_{x_i <= t < x_j} (t) dif t \
       &= sum_({i, j} in E) abs(x_i - x_j)\
       G^L (x) &= integral_0^(norm(x)_infinity) "vol"(V) dif t = "vol"(V) norm(x)_infinity
@@ -860,7 +860,7 @@
       $
       则一定存在 $k_0$ （中位数）使得：
       $
-      sum_(i=1)^(k_0 - 1) d_(sigma(i)) < 1/2 "vol" V <= sum_(i=1)^(k_0) d_(sigma(i)) 
+      sum_(i=1)^(k_0 - 1) d_(sigma(i)) < 1/2 "vol" V <= sum_(i=1)^(k_0) d_(sigma(i))
       $
       则有：
       $
@@ -883,7 +883,7 @@
       min_(c in RR) sum_(i=1)^n d_i abs(x_i - c)
       $
 
-      
+
     ]
   == 图模型算法简介
     本节我们给出一些近似算法。以最大割问题为例，前面已经证明答案就是：
@@ -983,16 +983,16 @@
     + 如何计算上面的最优化
     + 如何从上面的问题回到最初的 cut
     + $P_8$ 的解与 $P_3$ 的解有什么关系
-    这已经是非常前沿的问题，这里不再赘述。这种算法的误差很好，但是计算量大，主要问题还没有非常快的方法解决 $P_8$ 
+    这已经是非常前沿的问题，这里不再赘述。这种算法的误差很好，但是计算量大，主要问题还没有非常快的方法解决 $P_8$
 
     回到之前的 $P_3$，还有更激进的方法是在 $P_3$ 中放弃秩 1 的要求，放弃后的最优化问题称为 $P_4$。这种算法是所谓的 Goemans-Williamson (G-W) 算法，问题转化为了标准的 SDP 问题，已经是多项式内可解。
 
     假设 $P_4$ 的最优值点是 $X^*$，反推代回原问题可以得到最大割问题的一个近似解 $Z_("SDP")$，我们还要面临如何恢复 cut 以及近似解的估计问题，G-W 算法采取的策略是
-    - 首先将 $X^*$ 分解为 $u^T u$，再设 $u$ 的列向量组为 $u_i$。注意到由约束条件，$u_i in SS^(n-1)$，为了将其恢复到 ${-1, 1}$ 上，以均匀分布在 $SS^(n-1)$ 上随机选择 $a in SS^(n-1)$，再令 $u_i$ 取 $a, -a$ 中夹角为锐角的一方 $u'_i$（也就是以 $a$ 为轴分成两个半球，取 $u_i$ 在的一方），最后取 $x_i := u'_i / a$ 
+    - 首先将 $X^*$ 分解为 $u^T u$，再设 $u$ 的列向量组为 $u_i$。注意到由约束条件，$u_i in SS^(n-1)$，为了将其恢复到 ${-1, 1}$ 上，以均匀分布在 $SS^(n-1)$ 上随机选择 $a in SS^(n-1)$，再令 $u_i$ 取 $a, -a$ 中夹角为锐角的一方 $u'_i$（也就是以 $a$ 为轴分成两个半球，取 $u_i$ 在的一方），最后取 $x_i := u'_i / a$
     - 计算这个 $X$ 对应的割值，记为 $z$
     #theorem[][
       $
-      E z >= alpha h_(max "cut") where alpha = min_(theta in [0, pi]) {2/pi theta/(1 - cos theta)} approx 0.879 
+      E z >= alpha h_(max "cut") where alpha = min_(theta in [0, pi]) {2/pi theta/(1 - cos theta)} approx 0.879
       $
     ]
     #proof[
@@ -1045,7 +1045,7 @@
       $
     ]
 
-    然而，这个算法的实际表现往往不如一些简单的启发式算法，只不过它作为有理论保证的算法具有重要意义。  
+    然而，这个算法的实际表现往往不如一些简单的启发式算法，只不过它作为有理论保证的算法具有重要意义。
 = 高维模型
   高维模型往往追求精度与效率的平衡
   == 傅里叶级数
@@ -1071,12 +1071,12 @@
     $\
 
     注意到$sin n x \/ cos n x \/ e^(i n x)$ 都是周期函数，周期为 $(2 pi )/n$，换言之 $n$ 恰好是其对应的频率。因此在实际应用中往往会将 $n$ 看作频率。在复形式的求和式中，$n >= 0$ 的部分称为正频，$n < 0$ 的部分称为负频，它们往往都很关键，往往应该对称考虑而不能只考虑一部分。
-    
+
   == 函数空间与傅里叶变换
     令 $E([-pi, pi])$ 为 $(-pi, pi]$ 上所有复值连续函数构成的线性空间：
     $
     E([-pi, pi]) = {f(x) + i g(x) | f, g in C([-pi, pi])}
-    $ 
+    $
     并且定义复内积：
     $
     (f, g) = integral_(-pi)^pi f(x) overline(g(x))  dif x
@@ -1123,7 +1123,7 @@
     #let (hu, tu) = ($hat(u)$, $tilde(u)$)
     目标是逼近：
     $
-    hu_k = 1/(2 pi) integral_(0)^(2 pi ) u(x) e^(-i k x) dif x 
+    hu_k = 1/(2 pi) integral_(0)^(2 pi ) u(x) e^(-i k x) dif x
     $
     最简单的想法当然是用黎曼和，用：
     $
@@ -1139,7 +1139,7 @@
       事实上，容易验证 $tu_(k+N) = tu_k$，表明约 $A = N/2$ 是较好的选择。继而，我们得到的逼近空间是：
       $
       g_N = {sum_(i = -N/2)^(N/2) tu_k e^(i k x) | tu_(N/2) = tu_(-N/2)}
-      $ 
+      $
       同时，应该处理一下边界情况，实际使用：
       $
       tu_k := 1/N 1/c_k sum_(j = 0)^(N - 1) u_j e^(-i k x_j)\
@@ -1152,7 +1152,7 @@
     - 逼近的效果如何：\
       令：
       $
-      I_N (u: L^2(omega)) = x: omega -> sum_(k = -N/2)^(N/2) tu_k e^(i k x)  
+      I_N (u: L^2(omega)) = x: omega -> sum_(k = -N/2)^(N/2) tu_k e^(i k x)
       $
       #theorem[][
         $
@@ -1164,7 +1164,7 @@
           $
           D_N (x) = sum_(k=-N)^N e^(i k x) = (e^(-i N x)(1 - e^((2 N + 1) i x)))/(1 - e^(i x))\
           = (e^(i (N+1/2) x) - e^(- i (N + 1/2) x))/(e^(1/2 x) - e^(-1/2 x))\
-          = sin((N + 1/2) x)/sin(x/2) 
+          = sin((N + 1/2) x)/sin(x/2)
           $
         ]
         计算可得：
@@ -1190,7 +1190,7 @@
         $
         norm((I(u) - u)^((mu)))_mu <= k N^(mu - m) abs(u)_mu
         $
-        其中 
+        其中
         - $H_p^m (omega)$ 是指 ${u in L^2(Omega) | forall mu = 0, 1, 2, ..., m, u^((mu))(x) in L^2(Omega) "且以" 2 pi "为周期"}$
         - $norm(u) = (sum_(k = -infinity)^(+infinity) (1+k^2)^mu norm(hu_k)^2)^(1/2)$
         - $abs(u)_mu =  (sum_(k = -infinity)^(+infinity) (k^2)^mu norm(hu_k)^2)^(1/2)$
@@ -1291,7 +1291,7 @@
         <= N^mu k N^(-m) abs(u)_m + N^(mu - m) abs(u)_m\
         $
         证毕
-        
+
       ]
   == 快速傅里叶变换
     用最朴素的方法，计算 $N$ 个傅里叶级数的系数需要 $O(N^2)$ 的时间，这在 $N$ 较大时是不可接受的。因此，我们需要一种快速算法，这就是快速傅里叶变换（FFT, Fast Fourier Transformation）。它的出现确保了谱分析方法的实用性。\
@@ -1323,7 +1323,7 @@
       快速傅里叶变换是指一个递归算法，使得：
       $
       FFT(X)_k &= p(w^(k-1)) := Y_k\
-      where p(theta) &= x_1 + x_2 theta + x_3 theta^2 + ... + x_n theta^(n-1)\ 
+      where p(theta) &= x_1 + x_2 theta + x_3 theta^2 + ... + x_n theta^(n-1)\
       $
       计算 $p(theta)$ 时，进行奇偶分拆：
       $
@@ -1383,7 +1383,7 @@
     #let absMix2(x) = $abs(#x)_"mix"^2$
     设 $xv, kv$ 是 $d$ 维向量，注意到有简单的计算式：
     $
-    e^(i kv^T xv) = product_(k) e^(i kv_k xv_k) 
+    e^(i kv^T xv) = product_(k) e^(i kv_k xv_k)
     $
     表明高维的平面波可以自然地分裂成一维平面波的乘积，也称其为张量形式。用这种形式可以进行函数逼近：
     $
@@ -1452,7 +1452,7 @@
         这里函数空间的限制（也即 $absKpm(u) < infinity$ ）是非常重要的，不难看出一旦失去了这个条件精度便会失去估计。从形式上看，这需要 $tu_k$ 衰减地非常之快，谱方法中它确实往往有较好的收敛速度，但在一般的数值方法中未必。
 
         然而有趣的是，双曲截断方法的提出在历史上并非最早为了谱逼近方法提出，而是为了在谱方法之前更加常用的分片常数/多项式逼近设计的。
-        
+
       ]<approx-remark>
 
     - 使用该方法需要取多少格点，也即稀疏性如何。为此，希望计算 $abs(SG_N)$
@@ -1480,8 +1480,8 @@
           只需要估计 $sum_(s=1)^N O(1/s (log N - log s)^(d-2) )$，利用积分有：
           $
           sum_(s=1)^N O(1/s (log N - log s)^(d-2) )&<= integral_(1)^(N) 1/x (log N - log x)^(d-2) dif s\
-          &=^(t = log s) k integral_(0)^(log N) (log N - t)^(d-2) dif t\ 
-          &=^(u = log N - t) k integral_(0)^(log N) u^(d-2) dif u\ 
+          &=^(t = log s) k integral_(0)^(log N) (log N - t)^(d-2) dif t\
+          &=^(u = log N - t) k integral_(0)^(log N) u^(d-2) dif u\
           &= O((log N)^(d-1))
           $
           故原式约为 $O(N (log N)^(d-1)) + O(N (log N)^(d-2)) = O(N (log N)^(d-1))$，证毕
@@ -1521,11 +1521,11 @@
       #proposition[][
         在不考虑边界的情况下，有：
         $
-        V_L = plus.circle_(1 <= l <= k) w_l 
+        V_L = plus.o _(1 <= l <= k) w_l
         $
         继而任取 $u in V_L$ 将有：
         $
-        u(x) = sum_(l=1)^L sum_(i in oddl) hu_(l i) Phi_(l i)(x) 
+        u(x) = sum_(l=1)^L sum_(i in oddl) hu_(l i) Phi_(l i)(x)
         $<linear-approx>
       ]
       #let diffI(y, h) = $I_((#y, #h))$
@@ -1586,16 +1586,16 @@
       #let twov = $bold(2)$
       #let vninf = $V_n^((infinity))$
       #let vn1 = $V_n^((1))$
-      接下来，讨论全网格和稀疏网格。记：  
+      接下来，讨论全网格和稀疏网格。记：
       $
-      vninf &:= V_nv = plus.circle_(1 <= lv <= nv) w_lv = plus.circle_(norm(l)_infinity <= n) w_lv\
+      vninf &:= V_nv = plus.o_(1 <= lv <= nv) w_lv = plus.o_(norm(l)_infinity <= n) w_lv\
       where nv &= vec(n, n, dots.v, n)\
       1& = vec(1, 1, dots.v, 1)\
       alpha <= beta &<=> alpha_i <= beta_i, forall i
       $
       这是全网格，而*稀疏网格*是：
       $
-      vninf = plus.circle_(norm(l)_1 <= d + (n-1)) w_lv
+      vninf = plus.o_(norm(l)_1 <= d + (n-1)) w_lv
       $
       意指每个维度所分层数总和不超过一定的上界。
 
@@ -1636,7 +1636,7 @@
         norm(u-u_n^((infinity)))_infinity <= d/6^d 2^(-2n) norm(u)_(twov, infinity)\
         norm(u-u_n^((1)))_infinity <= d/8^d 2^(-2n) A(d, n) norm(u)_(twov, infinity)\
         $
-        其中： 
+        其中：
         - $A(d, n)$ 的量级约为 $n^(d-1)$
         - $u$ 可以被展开为：
           $
@@ -1695,15 +1695,15 @@
     #let xspace(x) = $#x space$
     #let Is = $xspace(I)$
     #let Rs = $xspace(R)$
-    #let Qs = $xspace(Q)$ 
+    #let Qs = $xspace(Q)$
     在许多数学分支中，高维积分的计算都是很重要的问题。例如函数的分解往往涉及在若干基上的投影，而投影往往需要设计内积也就是高维函数的积分进行表示。\
     通常的积分问题可以表示为：
     $
-    integral_(Omega)^() u(x) w(x) dif x 
+    integral_(Omega)^() u(x) w(x) dif x
     $
     其中 $Omega$ 是积分区域，$w$ 是给定权函数。方便起见，记：
     $
-    Is u = integral_(Omega)^() u(x) w(x) dif x 
+    Is u = integral_(Omega)^() u(x) w(x) dif x
     $<N-integral>
     === 一维情形
       我们先考虑如何计算一维的积分
@@ -1726,7 +1726,7 @@
           若 $u(x) in C^(N+1) ([a, b])$，则对任意 $x in [a, b]$，存在 $xi in [a, b]$ 使得：
           $
           u(x) = h(x) + r(x)\
-          where r(x) = 1/(N+1)! u^((N+1)) (xi) product_(i=0)^N (x - x_i) 
+          where r(x) = 1/(N+1)! u^((N+1)) (xi) product_(i=0)^N (x - x_i)
           $
           其中 $r(x)$ 也称作残量
         ]
@@ -1737,8 +1737,8 @@
           用上式估计@N-integral 可得：
           $
           integral_(a)^(b) u(x) w(x) dif x\
-          = integral_(a)^(b) h(x) w(x) dif x + integral_(a)^(b) r(x) w(x) dif x\ 
-          = sum_(i=0)^N u(x_i)  integral_(a)^(b) h_i (x) w(x) dif x + integral_(a)^(b) r(x) w(x) dif x\ 
+          = integral_(a)^(b) h(x) w(x) dif x + integral_(a)^(b) r(x) w(x) dif x\
+          = sum_(i=0)^N u(x_i)  integral_(a)^(b) h_i (x) w(x) dif x + integral_(a)^(b) r(x) w(x) dif x\
           $
           令：
           $
@@ -1749,7 +1749,7 @@
           用 $Q u$ 计算 $I u$ 的方法称为数值积分公式。
 
         ]<Lang-integral>
-      
+
         为了衡量数值积分公式的好坏，一种方式是所谓的*代数精度*，它利用了试验函数的方法，利用公式在某种具体函数上的表现来衡量精度
         #definition[代数精度][
           对于一般的数值积分公式，设其逼近函数 $u$ 产生残量为 $R u$，若自然数 $m$ 使得：
@@ -1799,7 +1799,7 @@
         ]
         #proof[
           - 对于存在性，直接对 $generatedBy(1\, x\, ...\, x^n\, ... )$ 从低次到高次进行施密特正交化，观察施密特正交化的算法可得次数的条件也是满足的。
-            
+
             这里我们也可以采用与一般的施密特正交化在形式上略微不同的三项递推形式。事实上，假设 $p_(n), p_(n-1)$ 已经求得，由带余除法我们希望有如下的形式：
             $
             p_(n+1) = (x + a_n) p_n + r_n (x)
@@ -1823,9 +1823,9 @@
               beta_1, alpha_1, beta_2, ..., 0;
               0, beta_2, alpha_3, ..., 0;
               dots.v, dots.v, dots.v, ..., dots.v;
-              0, ..., 0, beta_(n), alpha_n) 
-          
-          
+              0, ..., 0, beta_(n), alpha_n)
+
+
           $
           的所有特征值，其中：
           $
@@ -1878,11 +1878,11 @@
               beta_1, alpha_1, beta_2, ..., 0;
               0, beta_2, alpha_3, ..., 0;
               dots.v, dots.v, dots.v, ..., dots.v;
-              0, ..., 0, beta_(n), alpha_n) vec(tp_0 (x_j), tp_1 (x_j), tp_2 (x_j), dots.v, tp_n (x_j)) 
+              0, ..., 0, beta_(n), alpha_n) vec(tp_0 (x_j), tp_1 (x_j), tp_2 (x_j), dots.v, tp_n (x_j))
           $
           表明对所有 $N + 1$ 个 $j$，$x_j$ 都是特征值，证毕
         ]
-        使用 @Gauss-integral 的方法计算积分便称为 *Gauss 积分公式* 
+        使用 @Gauss-integral 的方法计算积分便称为 *Gauss 积分公式*
     === 高维情形
       Gauss 积分公式已经能很好地解决一维积分的问题，然而更高维的数值积分至今仍是比较困难的问题。高维积分的方式大致可以分为两种方案：
       + 仍然基于多项式（仍是通过巧妙选择格点获得好的代数精度，它类似于谱方法利用正交性获得方便的全局逼近）
@@ -1902,7 +1902,7 @@
         下设积分点个数为 $N$，分别为 $x_1, x_2, ..., x_N$
         #proposition[][
           若 $Q f$ 有 $2n-1$ 阶代数精度，则 $N >= dim pnd(n-1)$
-        ] 
+        ]
         #let dm = $dim pnd(n-1)$
         #proof[
           #let sumi = $sum_(i=1)^dm$
@@ -1918,7 +1918,7 @@
           将其看成 $c_i$ 的线性方程，由于 $N < dm$，未知数的个数小于方程的个数，因此一定有非零解 $c_i$，这组解便产生了 $p$ 使得 $x_1, x_2, ..., x_N$ 都是零点。类似之前的操作，有：
           $
           I p^2 > 0\
-          Q p^2 = 0 
+          Q p^2 = 0
           $
           表明代数精度将小于 $2 deg p = 2 n - 2$ ，矛盾！
         ]
@@ -1943,7 +1943,7 @@
           - 假设高斯公式存在，对 $pnd(n-1)$ 中所有（不超过 $n-1$ 次的单项式）做 Schmidt 正交化和归一化，可以得到 $N = dm$ 个标准正交的多项式。此时当然有 $inner(q_i, q_j) = delta_(i, j)$\
             注意到：
             $
-            inner(q_i, q_j) = integral q_i q_j w 
+            inner(q_i, q_j) = integral q_i q_j w
             $
             被积函数至多 $2 n - 2$ 次，因此不超过高斯公式的代数精度，进而：
             $
@@ -1972,7 +1972,7 @@
             $
             注意到 $g$ 是 $n-1$ 次多项式，由假设 $x_1, ..., x_dm$ 不全为其零点，这就表明 $A c != 0$，进而 $A$ 是满秩矩阵，下面的线性方程：
             $
-            A^T vec(w_1, dots.v, w_dm) = vec(integral q_1 w, dots.v, integral q_dm w) 
+            A^T vec(w_1, dots.v, w_dm) = vec(integral q_1 w, dots.v, integral q_dm w)
             $
             有唯一解。这个解对应的积分公式至少 $n - 1$ 阶代数精度，而任取不超过 $2 n - 1$ 阶的 $d$ 维多项式 $f$，可将 $f(x)$ 分解为：
             $
@@ -2016,7 +2016,7 @@
           $
           E (Q f) = I f\
 
-          sigma(R f) := sqrt(E (I f - Q f)^2) = (sigma(f))/sqrt(n) where sigma(f) = sqrt(I f^2 - (I f)^2)  
+          sigma(R f) := sqrt(E (I f - Q f)^2) = (sigma(f))/sqrt(n) where sigma(f) = sqrt(I f^2 - (I f)^2)
           $
         ]
         #proof[
@@ -2024,9 +2024,9 @@
           E (I f - Q f)^2 = E (Q f)^2 - 2 I f E (Q f) + (I f)^2
           $
           有：
-          - 
+          -
             $
-            E (Q f) 
+            E (Q f)
             &= integral Q f dif t\
             &= 1/n sumn0(i) integral f(t_i) dif t\
             &= 1/n sumn0(i) integral f(t_i) dif t_i\
@@ -2034,7 +2034,7 @@
             $
           -
             $
-            E (Q f)^2 
+            E (Q f)^2
             &= integral (Q f)^2 dif t\
             &= 1/n^2 sumn0(i) sumn0(j) integral f(t_i)f(t_j) dif t\
             &= 1/n^2 (sumn0(i) integral f(t_i)^2 dif t + sumn0(i) sum_(j != i) integral f(t_i)f(t_j) dif t)\
@@ -2043,7 +2043,7 @@
             $
             代入得：
             $
-            E (I f - Q f)^2 
+            E (I f - Q f)^2
             &= E (Q f)^2 -  2 (I f)^2 + (I f)^2 \
             &= (I f^2)/n + (n-1)/n (I f)^2 - (I f)^2 \
             &= (I f^2 - (I f)^2)/n
@@ -2058,7 +2058,7 @@
           注意到：
           $
           f(x) = f(1) - integral_(x)^(1) f'(y) dif y\
-          = f(1) - integral_(0)^(1) i_(y > x) f'(y) dif y 
+          = f(1) - integral_(0)^(1) i_(y > x) f'(y) dif y
           $
           从而：
           $
@@ -2124,7 +2124,7 @@
 
           对 $d >= 2$，取 $b_1, b_2, ..., b_d >= 2$，令：
           $
-          x_i = (Phi_(b_1) (i), Phi_(b_2) (i), ..., Phi_(b_d) (i)) in [0, 1]^d, forall i = 0, 1, 2, ..., n-1 
+          x_i = (Phi_(b_1) (i), Phi_(b_2) (i), ..., Phi_(b_d) (i)) in [0, 1]^d, forall i = 0, 1, 2, ..., n-1
           $
           为 $d$ 维 Halton 序列
         ]
@@ -2176,7 +2176,7 @@
         + $u != v => integral_(Omega)^() f_u (xv) g_u (xv) dif xv = 0 $
       ]
       #proof[
-        + 
+        +
           - $abs(u) = 1$ 时，有：
             $
             integral_0^1 f_{j} (xv) dif x_j &=  integral_0^1 integral_([0, 1]^(d-1))^() (f(xv) - mu) dif xv_(-{j})  dif x_j\
@@ -2210,13 +2210,13 @@
       #definition[方差][
         定义函数 $f$ 的方差：
         $
-        sigma^2 (f) = integral_(Omega)^() (f(xv) - mu)^2 dif xv where mu = integral_(Omega)^() f(xv) dif xv  
+        sigma^2 (f) = integral_(Omega)^() (f(xv) - mu)^2 dif xv where mu = integral_(Omega)^() f(xv) dif xv
         $
         同时在上面的方差分解中，定义：
         $
         sigma^2_u (f) = cases(
           integral_([0, 1]^d)^() f^2_u (xv) dif xv quad u != emptyset,
-          0 quad u = emptyset 
+          0 quad u = emptyset
         )
         $
       ]
@@ -2305,10 +2305,10 @@
       sigma(I, M) = M / (1 + e^(- beta(I - I_0)))
     )
     $
-    
+
     其中 $phi$ 表示趋化因子浓度，$I$ 表示 T 细胞浓度，$M$ 表示黑色素浓度（都是某个点处的浓度），$k, lambda, I_0$ 是常数。\
     为了找出其平衡点，先设 $M = 1$ 并令 $der(phi, t) = der(I, t) = 0$，可以求出其在相平面上的若干平衡点，再计算 Jacobi 矩阵的特征值来判断其稳定性。\
-    之后，再考虑 $M$ 的衰减，发现随着 $M$  降低稳态也会降低。 
+    之后，再考虑 $M$ 的衰减，发现随着 $M$  降低稳态也会降低。
   == 扩散效应与 Laplace 算子
     #let Jv = $bold(J)$
     为了完整描述白癜风的的过程，还需要考虑每点处的浓度平衡破坏如何扩散到周围。可以用扩散模型描述。设区域 $V$ 内有物质，其浓度为 $c$，有以下几个方程：
@@ -2474,8 +2474,8 @@
       #theorem[Hohenberg-Kohn][
         设 $rho(r)$ 是基态下单位体积内电子的个数:
         $
-        rho(r) = integral_()^() phi^* (sumf1 delta(r - r_i)) phi dif r_i 
-        $   
+        rho(r) = integral_()^() phi^* (sumf1 delta(r - r_i)) phi dif r_i
+        $
         则 $rho(r)$ 可以与 $v(r) = sumf1 v(r_i)$ 在差一个常数的意义下一一对应。
       ]
       上面的定理表明，$rho(r)$ 就可以确定该体系的性质。下面的目标是试图推导 $rho$ 满足的方程，这是一个相当困难的问题，常用的是所谓 Kohn-Sham 方法，大致思想是找一个人造体系，这个体系内无相互作用，且其中的 $rho$ 与所求的 $rho$ 一致。希望构造出方程：
@@ -2492,5 +2492,3 @@
       $
       h_i phi_i = epsilon_i phi_i
       $
-
-  

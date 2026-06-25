@@ -150,7 +150,7 @@
 #let autoHomoCoor3 = autoVec3.with(delim: "[")
 #let Det = math.mat.with(delim: "|")
 
-#let notModels = sym.tack.r.double.not
+#let notModels = sym.tack.rr.not
 #let Gal = math.op("Gal")
 #let Hom = math.op("Hom")
 #let Ext = math.op("Ext")
@@ -509,7 +509,7 @@
 #let generatedBy(body) = $chevron.l #body chevron.r$
 #let norm2(x) = $norm(#x)^2$
 #let normalSub(H, G) = $#H lt.tri.eq #G$
-#let norS = math.class("relation", math.lt.tri.eq)
+#let norS = math.class("relation", math.lt.closed.eq)
 #let semiProd = math.class("relation", math.times.r)
 #let diam = math.op("diam")
 //#let quot = math.class("relation", $\/$)
