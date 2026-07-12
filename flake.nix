@@ -33,7 +33,8 @@
           unison-sync = syncPackage;
         };
         devShells.default = pkgs.mkShell {
-          buildInputs = [ self.packages.${system}.default ];
+          # buildInputs = [ self.packages.${system}.default ];
+          nativeBuildInputs = [ self.packages.${system}.default ];
           TINYMIST_OUT = "${self.packages.${system}.default}/bin";
           shellHook = ''
             # export PATH=$TINYMIST_OUT:$PATH
